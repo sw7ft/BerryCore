@@ -72,13 +72,12 @@ To **extend**, **modernize**, and **streamline** the vision of Berry Much OS.
 
 By uniting QNX’s real-time reliability with modern open-source tooling, we aim to make these devices **usable, hackable, and developer-friendly again** — both as daily drivers and as educational systems for embedded computing.
 
----
+## 💖 **Support Development**
 
-## 🧩 **Project Information**
+BerryCore and the broader **SW7FT QNX Initiative** are community-driven projects built out of passion for open systems, education, and the preservation of embedded computing.  
 
-**Project Name:** BerryCore – QNX Extended Userland  
-**Inspired by:** [Berry Much OS](https://github.com/BerryFarm/BerryMuch)  
-**Platform:** QNX / BlackBerry 10  
-**Focus:** Modern Binaries, System Expansion, Developer Tools  
-**Status:** In Active Development  
-**License:** Open Source (TBD)
+If you’d like to help sustain ongoing development, testing, and device support, consider supporting the project through Patreon:  
+
+👉 **[Support on Patreon – Sw7ft Developer](https://www.patreon.com/c/Sw7ft)**  
+
+Every contribution directly supports continued development of QNX ports, documentation, and new open-source tooling for the next generation of embedded devices.
