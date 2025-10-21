@@ -1,6 +1,5 @@
 # 🍇 **Introducing BerryCore for BlackBerry 10 Devices**
 
-### **A Project of the SW7FT Initiative**  
 ### **BerryCore – QNX Extended Userland**
 
 ---
@@ -78,21 +77,8 @@ By uniting QNX’s real-time reliability with modern open-source tooling, we aim
 ## 🧩 **Project Information**
 
 **Project Name:** BerryCore – QNX Extended Userland  
-**Parent Initiative:** SW7FT QNX Development Stack  
 **Inspired by:** [Berry Much OS](https://github.com/BerryFarm/BerryMuch)  
 **Platform:** QNX / BlackBerry 10  
 **Focus:** Modern Binaries, System Expansion, Developer Tools  
 **Status:** In Active Development  
 **License:** Open Source (TBD)
-
----
-
-### 🧰 Example Structure
-
-```bash
-/berrycore/
-├── bin/             # Modern binaries (python3, git, curl, etc.)
-├── lib/             # Supporting shared libraries
-├── include/         # Headers for SDK integration
-├── env.sh           # Environment setup for PATH and LD_LIBRARY_PATH
-└── docs/            # Technical notes and build guides
