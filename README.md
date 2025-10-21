@@ -1,5 +1,4 @@
-# **Project Description**
-
+# **Introducing BerryCore For Blackberry 10 Devices
 ## **Honoring the Legacy**
 
 This project is built as a **continuation and tribute** to the incredible work done by the developers of **Berry Much OS**.  
