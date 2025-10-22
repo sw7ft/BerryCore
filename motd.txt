@@ -1,17 +1,1 @@
-===========================================================
-  🎉 BerryCore v0.6 Launch - Bringing BB10 into 2025! 🎉
-===========================================================
-
-New in this release:
-  • 4 new packages: nano, sshpass, nmap, quickjs
-  • Binary catalog system (bclist, bcinfo)
-  • Enhanced installation with custom paths
-  • Terminal customization support
-  • Critical bug fixes for system compatibility
-
-Total: 69 packages | 100+ binaries available
-
-Explore tools: bclist | bclist -s TERM | bcinfo BINARY
-
-Latest updates: https://github.com/sw7ft/BerryCore
-===========================================================
+BerryCore v0.6 Launch - Bringing BB10 into 2025! 🎉
