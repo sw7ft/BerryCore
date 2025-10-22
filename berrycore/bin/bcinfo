@@ -1,0 +1,64 @@
+#!/bin/sh
+# BerryCore Binary Info
+# Show detailed information about a specific binary
+
+CATALOG="$NATIVE_TOOLS/CATALOG"
+
+if [ -z "$1" ]; then
+    echo "Usage: bcinfo BINARY_NAME"
+    echo ""
+    echo "Examples:"
+    echo "  bcinfo nano"
+    echo "  bcinfo nmap"
+    exit 1
+fi
+
+binary="$1"
+
+# Check if binary exists in bin/
+if [ -f "$NATIVE_TOOLS/bin/$binary" ]; then
+    echo ""
+    echo "Binary: $binary"
+    echo "==========================================================="
+    echo ""
+    echo "Location: $NATIVE_TOOLS/bin/$binary"
+    
+    # Get info from catalog
+    info=$(grep "^$binary|" "$CATALOG" 2>/dev/null)
+    if [ -n "$info" ]; then
+        category=$(echo "$info" | cut -d'|' -f2)
+        description=$(echo "$info" | cut -d'|' -f3)
+        echo "Category: $category"
+        echo "Description: $description"
+    fi
+    
+    # Show file info
+    echo ""
+    ls -lh "$NATIVE_TOOLS/bin/$binary" | awk '{print "Size: " $5 "  Permissions: " $1}'
+    
+    # Try to get version
+    echo ""
+    if "$NATIVE_TOOLS/bin/$binary" --version 2>/dev/null | head -1; then
+        :
+    elif "$NATIVE_TOOLS/bin/$binary" -v 2>/dev/null | head -1; then
+        :
+    else
+        echo "Version: (unknown)"
+    fi
+    
+    # Check for man page
+    echo ""
+    if [ -f "$NATIVE_TOOLS/man/man1/$binary.1" ] || [ -f "$NATIVE_TOOLS/share/man/man1/$binary.1" ]; then
+        echo "Manual: Available (run 'man $binary')"
+    else
+        echo "Manual: Not available"
+    fi
+    
+    echo ""
+else
+    echo "Error: Binary '$binary' not found in $NATIVE_TOOLS/bin/"
+    echo ""
+    echo "Try: bclist -s $binary"
+    exit 1
+fi
+

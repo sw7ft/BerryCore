@@ -1,0 +1,172 @@
+#!/bin/sh
+# BerryCore Binary Catalog Browser
+# POSIX-compliant utility to browse available binaries
+
+CATALOG="$NATIVE_TOOLS/CATALOG"
+
+# Colors (optional, will work without them too)
+if [ -t 1 ]; then
+    BOLD='\033[1m'
+    BLUE='\033[34m'
+    GREEN='\033[32m'
+    YELLOW='\033[33m'
+    RESET='\033[0m'
+else
+    BOLD=''
+    BLUE=''
+    GREEN=''
+    YELLOW=''
+    RESET=''
+fi
+
+show_usage() {
+    echo "BerryCore Binary Catalog"
+    echo ""
+    echo "Usage: bclist [OPTION] [SEARCH]"
+    echo ""
+    echo "Options:"
+    echo "  (none)        List all binaries"
+    echo "  -c CATEGORY   List binaries in category"
+    echo "  -s SEARCH     Search for binary or description"
+    echo "  -h            Show this help"
+    echo ""
+    echo "Categories:"
+    echo "  dev      Development tools"
+    echo "  shell    Shells"
+    echo "  editor   Text editors"
+    echo "  util     Core utilities"
+    echo "  net      Networking tools"
+    echo "  vcs      Version control"
+    echo "  sys      System tools"
+    echo "  archive  Archiving & compression"
+    echo "  media    Multimedia"
+    echo "  data     Data processing"
+    echo "  x11      X11 applications"
+    echo "  js       JavaScript engines"
+    echo "  doc      Documentation"
+    echo ""
+    echo "Examples:"
+    echo "  bclist              # List all binaries"
+    echo "  bclist -c net       # List networking tools"
+    echo "  bclist -s compress  # Search for compression tools"
+}
+
+list_all() {
+    echo ""
+    printf "${BOLD}Available BerryCore Binaries${RESET}\n"
+    echo "==========================================================="
+    echo ""
+    
+    current_cat=""
+    grep -v "^#" "$CATALOG" | grep -v "^$" | sort -t'|' -k2,2 -k1,1 | while IFS='|' read -r name cat desc; do
+        if [ "$cat" != "$current_cat" ]; then
+            current_cat="$cat"
+            echo ""
+            printf "${YELLOW}[$cat]${RESET}\n"
+        fi
+        printf "  ${GREEN}%-25s${RESET} %s\n" "$name" "$desc"
+    done
+    echo ""
+}
+
+list_category() {
+    category="$1"
+    echo ""
+    printf "${BOLD}BerryCore Binaries - Category: $category${RESET}\n"
+    echo "==========================================================="
+    echo ""
+    
+    found=0
+    grep -v "^#" "$CATALOG" | grep -v "^$" | while IFS='|' read -r name cat desc; do
+        if [ "$cat" = "$category" ]; then
+            printf "  ${GREEN}%-25s${RESET} %s\n" "$name" "$desc"
+            found=1
+        fi
+    done
+    
+    if [ $found -eq 0 ]; then
+        echo "  No binaries found in category: $category"
+    fi
+    echo ""
+}
+
+search_catalog() {
+    query="$1"
+    echo ""
+    printf "${BOLD}Search results for: $query${RESET}\n"
+    echo "==========================================================="
+    echo ""
+    
+    found=0
+    grep -v "^#" "$CATALOG" | grep -v "^$" | grep -i "$query" | while IFS='|' read -r name cat desc; do
+        printf "  ${GREEN}%-25s${RESET} ${BLUE}[$cat]${RESET} %s\n" "$name" "$cat" "$desc"
+        found=1
+    done
+    
+    if [ $found -eq 0 ]; then
+        echo "  No results found for: $query"
+    fi
+    echo ""
+}
+
+list_bins_dir() {
+    echo ""
+    printf "${BOLD}Installed Binaries (from bin/)${RESET}\n"
+    echo "==========================================================="
+    echo ""
+    
+    if [ -d "$NATIVE_TOOLS/bin" ]; then
+        ls -1 "$NATIVE_TOOLS/bin" | while read -r bin; do
+            # Try to find it in catalog
+            desc=$(grep "^$bin|" "$CATALOG" 2>/dev/null | cut -d'|' -f3)
+            if [ -n "$desc" ]; then
+                printf "  ${GREEN}%-25s${RESET} %s\n" "$bin" "$desc"
+            else
+                printf "  ${GREEN}%-25s${RESET} (no description)\n" "$bin"
+            fi
+        done
+    else
+        echo "  bin directory not found"
+    fi
+    echo ""
+}
+
+# Check if catalog exists
+if [ ! -f "$CATALOG" ]; then
+    echo "Error: Catalog file not found: $CATALOG"
+    exit 1
+fi
+
+# Parse arguments
+case "$1" in
+    -h|--help)
+        show_usage
+        ;;
+    -c|--category)
+        if [ -z "$2" ]; then
+            echo "Error: Category required"
+            show_usage
+            exit 1
+        fi
+        list_category "$2"
+        ;;
+    -s|--search)
+        if [ -z "$2" ]; then
+            echo "Error: Search term required"
+            show_usage
+            exit 1
+        fi
+        search_catalog "$2"
+        ;;
+    -b|--bins)
+        list_bins_dir
+        ;;
+    "")
+        list_all
+        ;;
+    *)
+        # Treat as search term
+        search_catalog "$1"
+        ;;
+esac
+
