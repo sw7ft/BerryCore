@@ -1,0 +1,161 @@
+#!/bin/sh
+# BerryCore Message of the Day utility
+# Manage MOTD settings and cache
+
+MOTD_CACHE="$HOME/.berrycore_motd"
+
+show_usage() {
+    echo "BerryCore Message of the Day (MOTD) Utility"
+    echo ""
+    echo "Usage: bcmotd [OPTION]"
+    echo ""
+    echo "Options:"
+    echo "  show              Display current MOTD"
+    echo "  fetch             Force fetch new MOTD"
+    echo "  clear             Clear MOTD cache"
+    echo "  enable URL        Enable MOTD with URL"
+    echo "  disable           Disable MOTD"
+    echo "  status            Show MOTD configuration"
+    echo ""
+    echo "Examples:"
+    echo "  bcmotd enable https://example.com/motd.txt"
+    echo "  bcmotd fetch"
+    echo "  bcmotd disable"
+}
+
+show_motd() {
+    if [ -f "$MOTD_CACHE" ]; then
+        cat "$MOTD_CACHE"
+    else
+        echo "No MOTD cached. Run 'bcmotd fetch' to retrieve."
+    fi
+}
+
+fetch_motd() {
+    if [ -z "$BERRYCORE_MOTD_URL" ]; then
+        echo "Error: BERRYCORE_MOTD_URL not set"
+        echo "Run: bcmotd enable URL"
+        exit 1
+    fi
+    
+    echo "Fetching MOTD from: $BERRYCORE_MOTD_URL"
+    if curl -s -m 5 "$BERRYCORE_MOTD_URL" > "$MOTD_CACHE.tmp" 2>/dev/null; then
+        mv "$MOTD_CACHE.tmp" "$MOTD_CACHE"
+        echo "MOTD updated successfully"
+        echo ""
+        cat "$MOTD_CACHE"
+    else
+        rm -f "$MOTD_CACHE.tmp"
+        echo "Error: Failed to fetch MOTD"
+        exit 1
+    fi
+}
+
+clear_cache() {
+    rm -f "$MOTD_CACHE" "$MOTD_CACHE.tmp"
+    echo "MOTD cache cleared"
+}
+
+enable_motd() {
+    url="$1"
+    if [ -z "$url" ]; then
+        echo "Error: URL required"
+        echo "Usage: bcmotd enable URL"
+        exit 1
+    fi
+    
+    # Add to .profile if not already there
+    if ! grep -q "BERRYCORE_MOTD_URL" "$HOME/.profile" 2>/dev/null; then
+        echo "" >> "$HOME/.profile"
+        echo "# BerryCore MOTD" >> "$HOME/.profile"
+        echo "export BERRYCORE_MOTD_URL=\"$url\"" >> "$HOME/.profile"
+        echo "export BERRYCORE_MOTD_ENABLED=1" >> "$HOME/.profile"
+        echo ""
+        echo "MOTD enabled with URL: $url"
+        echo "Added to $HOME/.profile"
+        echo ""
+        echo "To see MOTD now, run: bcmotd fetch"
+        echo "It will appear automatically in new shells"
+    else
+        echo "MOTD already configured in .profile"
+        echo "Edit $HOME/.profile to change URL"
+    fi
+}
+
+disable_motd() {
+    # Add disable flag to .profile
+    if grep -q "BERRYCORE_MOTD_ENABLED" "$HOME/.profile" 2>/dev/null; then
+        sed -i.bak 's/BERRYCORE_MOTD_ENABLED=1/BERRYCORE_MOTD_ENABLED=0/' "$HOME/.profile"
+        rm -f "$HOME/.profile.bak"
+    else
+        echo "export BERRYCORE_MOTD_ENABLED=0" >> "$HOME/.profile"
+    fi
+    echo "MOTD disabled"
+    echo "It will not appear in new shells"
+}
+
+show_status() {
+    echo "BerryCore MOTD Status"
+    echo "==========================================================="
+    echo ""
+    
+    if [ -n "$BERRYCORE_MOTD_URL" ]; then
+        echo "URL: $BERRYCORE_MOTD_URL"
+    else
+        echo "URL: Not configured"
+    fi
+    
+    if [ "$BERRYCORE_MOTD_ENABLED" = "0" ]; then
+        echo "Status: Disabled"
+    elif [ -n "$BERRYCORE_MOTD_URL" ]; then
+        echo "Status: Enabled"
+    else
+        echo "Status: Not configured"
+    fi
+    
+    echo ""
+    
+    if [ -f "$MOTD_CACHE" ]; then
+        CACHE_TIME=$(stat -f %m "$MOTD_CACHE" 2>/dev/null || stat -c %Y "$MOTD_CACHE" 2>/dev/null)
+        if [ -n "$CACHE_TIME" ]; then
+            echo "Cache: Present (updated $(date -r $CACHE_TIME 2>/dev/null || date -d @$CACHE_TIME 2>/dev/null))"
+        else
+            echo "Cache: Present"
+        fi
+    else
+        echo "Cache: None"
+    fi
+    
+    echo ""
+}
+
+# Parse command
+case "${1:-show}" in
+    show)
+        show_motd
+        ;;
+    fetch)
+        fetch_motd
+        ;;
+    clear)
+        clear_cache
+        ;;
+    enable)
+        enable_motd "$2"
+        ;;
+    disable)
+        disable_motd
+        ;;
+    status)
+        show_status
+        ;;
+    -h|--help|help)
+        show_usage
+        ;;
+    *)
+        echo "Unknown option: $1"
+        show_usage
+        exit 1
+        ;;
+esac
+

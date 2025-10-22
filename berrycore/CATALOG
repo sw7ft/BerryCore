@@ -1,0 +1,113 @@
+# BerryCore Binary Catalog
+# Format: binary_name|category|description
+# Lines starting with # are comments
+
+# Development Tools
+autoconf|dev|Automatic configure script builder
+automake|dev|Tool for generating Makefile.in files
+bison|dev|Parser generator (yacc replacement)
+cflow|dev|C program call graph analyzer
+flex|dev|Fast lexical analyzer generator
+gcc|dev|GNU Compiler Collection (C/C++)
+gdb|dev|GNU Debugger (if available)
+git|dev|Distributed version control system
+m4|dev|Macro processor
+make|dev|Build automation tool
+patch|dev|Apply diff files to originals
+
+# Shells
+bash|shell|Bourne Again Shell
+zsh|shell|Z Shell with advanced features
+
+# Text Editors
+ed|editor|Line-oriented text editor
+nano|editor|Simple, user-friendly text editor
+vim|editor|Vi IMproved text editor
+
+# Core Utilities (from coreutils)
+ls|util|List directory contents
+cat|util|Concatenate and display files
+cp|util|Copy files and directories
+mv|util|Move/rename files
+rm|util|Remove files and directories
+grep|util|Search text using patterns
+find|util|Search for files in directory hierarchy
+sed|util|Stream editor for filtering/transforming text
+awk|util|Pattern scanning and processing language
+tar|util|Archive files (tape archive)
+gzip|util|Compress files
+gunzip|util|Decompress gzip files
+bzip2|util|Compress files with bzip2
+xz|util|Compress files with xz
+
+# Networking Tools
+curl|net|Transfer data from/to servers
+wget|net|Download files from the web
+ssh|net|Secure shell client
+sshpass|net|Non-interactive SSH password provider
+rsync|net|Remote file synchronization
+nmap|net|Network exploration and security scanner
+nc|net|Netcat - network utility
+dropbear|net|Lightweight SSH server/client
+
+# Version Control
+git|vcs|Distributed version control
+tig|vcs|Text-mode interface for Git
+
+# System Tools
+tmux|sys|Terminal multiplexer
+htop|sys|Interactive process viewer
+lsof|sys|List open files
+file|sys|Determine file type
+which|sys|Locate a command
+
+# Archiving & Compression
+tar|archive|Create/extract tar archives
+gzip|archive|GNU zip compression
+bzip2|archive|High-quality data compressor
+xz|archive|XZ compression utility
+unzip|archive|Extract ZIP archives
+
+# Multimedia
+ffmpeg|media|Audio/video converter and streamer
+youtube-dl|media|Download videos from YouTube and others
+
+# Data Processing
+jq|data|Command-line JSON processor
+sqlite3|data|SQLite database shell
+bc|data|Arbitrary precision calculator
+
+# X11 Applications
+xeyes|x11|Classic X11 demo - eyes follow cursor
+
+# JavaScript Engines
+qjsc|js|QuickJS compiler
+quickjs_simple_console|js|QuickJS simple REPL
+quickjs_shell_console|js|QuickJS shell interface
+quickjs_web_console|js|QuickJS web-based console
+quickjs_web_console_es5|js|QuickJS web console (ES5)
+
+# Calendar & Time
+gcal|time|GNU calendar program
+calcurse|time|Text-based calendar and scheduling
+
+# IRC & Communication
+irc|comm|IRC client
+
+# Games
+nbsdgames|game|Collection of BSD games
+
+# Documentation
+man|doc|Display manual pages
+groff|doc|GNU troff document formatting system
+
+# Build Tools (additional)
+autoheader|build|Create template header for configure
+autoreconf|build|Update configure scripts
+aclocal|build|Generate aclocal.m4
+libtool|build|Generic library support script
+
+# System Configuration
+sc|calc|Spreadsheet calculator
+task|todo|Command-line todo list manager
+

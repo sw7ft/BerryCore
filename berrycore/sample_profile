@@ -1,0 +1,29 @@
+umask 002
+
+# BerryCore Environment
+BERRYCORE_ENV="/accounts/1000/shared/misc/berrycore/env.sh"
+if [ -e $BERRYCORE_ENV ];then
+    . $BERRYCORE_ENV
+fi
+
+# BerryCore Message of the Day
+export BERRYCORE_MOTD_URL="https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt"
+export BERRYCORE_MOTD_ENABLED=1
+
+# Clear Screen Function and Aliases
+clear_screen() {
+    printf '\033[2J\033[H'
+}
+
+alias cls='printf "\033[2J\033[H"'
+alias clear='printf "\033[2J\033[H"'
+
+# AI CLI Integration (optional - uncomment if you have .ai_cli.sh)
+# if [ -f ~/.ai_cli.sh ]; then
+#     source ~/.ai_cli.sh
+# fi
+
+# Auto-Start for copyclip (optional - uncomment and adjust path if needed)
+# if [ -f "/accounts/1000/appdata/com.update.Term49.gYABgHeOVx7TI8ajV86LufpS8jM/data/apps/copyclip/app.py" ]; then
+#     python3 "/accounts/1000/appdata/com.update.Term49.gYABgHeOVx7TI8ajV86LufpS8jM/data/apps/copyclip/app.py" &
+# fi
