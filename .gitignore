@@ -1,1 +1,6 @@
+# Build artifact - distribute via GitHub Releases
 berrycore.zip
+
+# macOS files
+.DS_Store
+.frolic-session.json
