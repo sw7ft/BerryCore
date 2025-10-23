@@ -2,6 +2,8 @@
 
 ### **BerryCore – QNX Extended Userland**
 
+For installation instructions please visit the wiki page and download the code on the releases section.
+
 ---
 
 ## 🧭 **Overview**

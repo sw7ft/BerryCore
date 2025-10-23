@@ -1,8 +1,8 @@
 # BerryCore Package Inventory
 
 **Version**: 0.6.0  
-**Last Updated**: October 21, 2025  
-**Total Packages**: 69
+**Last Updated**: October 23, 2025  
+**Total Packages**: 70
 
 This document tracks all packages included in BerryCore.
 
@@ -139,6 +139,12 @@ This document tracks all packages included in BerryCore.
 | Package | Version | Size | Description |
 |---------|---------|------|-------------|
 | quickjs | 2024.06 | 19 MB | ES2023 JavaScript engine ✨ **NEW in 0.6** |
+
+### Programming Languages (1)
+
+| Package | Version | Size | Description |
+|---------|---------|------|-------------|
+| pforth | 28 | 203 KB | Portable ANS Forth interpreter ✨ **NEW in 0.6** |
 
 ### Miscellaneous (1)
 
