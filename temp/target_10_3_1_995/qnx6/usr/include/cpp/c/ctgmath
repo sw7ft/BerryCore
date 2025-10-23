@@ -1,0 +1,48 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// ctgmath standard header
+#ifndef _CTGMATH_
+#define _CTGMATH_
+#include <yvals.h>
+
+#ifdef _STD_USING
+ #undef _STD_USING
+  #include <tgmath.h>
+ #define _STD_USING
+
+#else /* _STD_USING */
+ #include <tgmath.h>
+
+ #ifdef _GLOBAL_USING
+_STD_BEGIN
+using _CSTD acos; using _CSTD acosh;
+using _CSTD asin; using _CSTD asinh;
+using _CSTD atan; using _CSTD atanh; using _CSTD atan2;
+using _CSTD carg; using _CSTD cbrt; using _CSTD ceil;
+using _CSTD cimag; using _CSTD conj; using _CSTD copysign;
+using _CSTD cos; using _CSTD cosh; using _CSTD cproj;
+using _CSTD creal; using _CSTD erf; using _CSTD erfc;
+using _CSTD exp; using _CSTD exp2; using _CSTD expm1;
+using _CSTD fabs; using _CSTD fdim; using _CSTD floor;
+using _CSTD fma; using _CSTD fmax; using _CSTD fmin;
+using _CSTD fmod; using _CSTD hypot; using _CSTD ilogb;
+using _CSTD ldexp; using _CSTD lgamma; using _CSTD llrint;
+using _CSTD llround; using _CSTD log; using _CSTD log1p;
+using _CSTD log10; using _CSTD log2; using _CSTD logb;
+using _CSTD lrint; using _CSTD lround; using _CSTD nearbyint;
+using _CSTD nextafter; using _CSTD nexttoward;
+using _CSTD pow; using _CSTD remainder; using _CSTD remquo;
+using _CSTD rint; using _CSTD round; using _CSTD scalbln;
+using _CSTD scalbn; using _CSTD sin; using _CSTD sinh;
+using _CSTD sqrt; using _CSTD tan; using _CSTD tanh;
+using _CSTD tgamma; using _CSTD trunc;
+_STD_END
+ #endif /* _GLOBAL_USING */
+
+#endif /* _STD_USING */
+#endif /* _CTGMATH_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

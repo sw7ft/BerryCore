@@ -1,0 +1,106 @@
+#!/bin/sh
+
+LD_LIBRARY_PATH=/proc/boot:$LD_LIBRARY_PATH
+
+#
+# Copyright kabe
+# http://www.openqnx.com/newsgroups/viewtopic.php?f=13&t=13791
+#
+# shellscripted ldd
+#	(requires objdump,awk)
+#	does NOT recurse into dependencies
+#
+#ifdef __USAGE
+#%C - display dynamic library dependency of the ELF executable
+#
+#%C [-v] a.out [a.out...]
+#	-v	Verbose
+#endif
+#
+
+verbose=
+
+unset IFS
+
+# get default lib search path
+CS_LIBPATH=`getconf CS_LIBPATH 2>/dev/null`
+if [ $? != 0 ]; then CS_LIBPATH="/lib:/usr/lib"; fi
+
+for bin do
+if [ x$bin = x-v ]; then verbose=$bin; continue; fi
+
+if [ $# -gt 1 ]; then
+echo ${bin}:
+fi
+
+# LDLIBS="libc.so.2 libsocket.so";RPATH="/embedded/rpath:/path2"
+eval `objdump -p -- $bin | awk '
+$1 == "NEEDED" { needs=needs $2 " "}
+$1 == "RPATH" { rpath=rpath ":" $2}
+END {
+## strip things after malicious chars
+#sub("\`.*","",rpath)
+if (p=match(needs,"[\`<>();&|$]")) needs=substr(needs,1,p-1);
+if (p=match(rpath,"[\`<>();&|$]")) rpath=substr(rpath,1,p-1);
+# strip first ":"
+rpath=substr(rpath,2)
+# result
+print "LDLIBS=\"" needs "\";RPATH=\"" rpath "\""
+}'`
+
+if [ x$verbose = x-v ]; then echo RPATH: $RPATH; fi
+
+
+IFS=:
+set -- $RPATH $LD_LIBRARY_PATH $CS_LIBPATH
+case `uname -r` in
+6.1.*|6.0.*)
+## 6.1.0 won't honor RPATH in the binary
+## will search "" (current dir) if LD_LIBRARY_PATH undefined
+set -- "$LD_LIBRARY_PATH" $CS_LIBPATH;;
+6.2.*)
+## will search "" (current dir) if LD_LIBRARY_PATH undefined
+set -- $RPATH "$LD_LIBRARY_PATH" $CS_LIBPATH;;
+esac
+if [ x$verbose = x-v ]; then echo Search Path: "$*"; fi
+unset IFS
+
+for i in $LDLIBS; do
+case $i in
+/*)
+if [ -r $i ]; then
+m="\011$i"
+test ! -x $i && m=${m}"\011(not executable)"
+i="found"
+fi
+;;
+*)
+for p do
+test "$p" = "" && p="."
+if [ -r $p/$i ]; then
+m="\011$i =>\011$p/$i"
+test ! -x $p/$i && m=${m}"\011(not executable)"
+i="found"
+break
+fi
+done
+;;
+esac
+test "$i" != "found" && m="\011$i =>\011(file not found)"
+echo "$m"
+done
+done
+
+exit 0
+
+## output format of SunOS ldd:
+#/bin/filename:
+#	libx.so =>	(file not found)
+#	libc.so.1 =>	/usr/lib/libc.so.1
+#	/usr/platform/SUNW,Ultra-1/lib/libc_psr.so.1
+
+# Changelog:
+# 2002/09/02	use ":" for LDPATH separator, use IFS=: to split LDPATH
+#	properly search for "." when RPATH=:....
+# 2003/10/16	Switch between 6.1.0 and 6.2.0.
+#	Switch search "." when LD_LIBRARY_PATH undefined.

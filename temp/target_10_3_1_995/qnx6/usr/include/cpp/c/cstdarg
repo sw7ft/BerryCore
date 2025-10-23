@@ -1,0 +1,35 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// cstdarg standard header
+
+ #if !defined(_CSTDARG_) && defined(__MWERKS__)	/* compiler test */
+ #define _CSTDARG_
+ #include <va_list.h>
+ #include <stdarg.win32.h>
+ #endif /* __MWERKS__ */
+
+#ifndef _CSTDARG_
+#define _CSTDARG_
+#include <yvals.h>
+
+#ifdef _STD_USING
+ #undef _STD_USING
+  #include <stdarg.h>
+ #define _STD_USING
+
+#else /* _STD_USING */
+ #include <stdarg.h>
+
+ #ifdef _GLOBAL_USING
+_STD_BEGIN
+using _CSTD va_list;
+_STD_END
+ #endif /* _GLOBAL_USING */
+
+#endif /* _STD_USING */
+#endif /* _CSTDARG_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

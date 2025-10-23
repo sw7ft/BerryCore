@@ -1,0 +1,11 @@
+/*!
+ * @copyright
+ * Copyright Research In Motion Limited, 2011-2013
+ * Research In Motion Limited. All rights reserved.
+ *
+ *@xmlonly
+ *<apigrouping group="Data Management"/>
+ *@endxmlonly
+ */
+
+#include <bb/cascades/pickers/FilePickerViewMode.hpp>

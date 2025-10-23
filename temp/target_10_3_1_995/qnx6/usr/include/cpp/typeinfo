@@ -1,0 +1,177 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+
+// typeinfo standard header for gcc/EDG
+#ifndef _TYPEINFO_
+#define _TYPEINFO_
+#include <exception>
+
+ #if defined(__BORLANDC__) && !__EDG__
+  #include <typeinfo.h>
+
+ #else /* defined(__BORLANDC__) && !__EDG__ */
+_STD_BEGIN
+		// CLASS bad_cast
+class bad_cast
+	: public _XSTD exception
+	{	// base of all bad-cast exceptions
+public:
+	bad_cast() _THROW0()
+		{	// construct with no message string
+		}
+
+	virtual const char *what() const _THROW0()
+		{	// report a bad cast
+		return ("bad cast");
+		}
+
+ #if _HAS_EXCEPTIONS
+
+ #else /* _HAS_EXCEPTIONS */
+
+protected:
+	virtual void _Doraise() const
+		{	// perform class-specific exception handling
+		_RAISE(*this);
+		}
+ #endif /* _HAS_EXCEPTIONS */
+
+	};
+
+		// CLASS bad_typeid
+class bad_typeid
+	: public _XSTD exception
+	{	// base of all bad-typeid exceptions
+public:
+	bad_typeid() _THROW0()
+		{	// construct with no message string
+		}
+
+	virtual const char *what() const _THROW0()
+		{	// report a bad typeid
+		return ("bad typeid");
+		}
+
+ #if _HAS_EXCEPTIONS
+
+ #else /* _HAS_EXCEPTIONS */
+
+protected:
+	virtual void _Doraise() const
+		{	// perform class-specific exception handling
+		_RAISE(*this);
+		}
+ #endif /* _HAS_EXCEPTIONS */
+
+	};
+_STD_END
+
+ #if __GNUC__ < 3
+
+ #else /* __GNUC__ < 3 */
+namespace __cxxabivl
+	{	// declare forward reference to __class_type_info
+	class __class_type_info;
+	}
+ #endif /* __GNUC__ < 3 */
+
+namespace std {
+
+ #if __EDG__
+  #pragma define_type_info
+ #endif /* __EDG__ */
+
+		// CLASS type_info
+class type_info
+	{	// translator-supplied descriptor for a type
+public:
+	virtual ~type_info();	// destroy the object
+
+  #if __EDG__ || defined(__SUNPRO_CC)
+	bool before(const type_info&) const;	// test if this precedes arg
+
+	bool operator==(const type_info&) const;	// test for equality
+
+	bool operator!=(const type_info&) const;	// test for inequality
+
+	const char *name() const;	// return name of type
+
+  #elif __GNUC__ < 3
+	bool before(const type_info&) const;	// test if this precedes arg
+
+	bool operator==(const type_info&) const;	// test for equality
+
+	bool operator!=(const type_info&) const;	// test for inequality
+
+	const char *name() const;	// return name of type
+
+protected:
+	explicit type_info(const char *);	// construct with name
+
+	const char *_Myname;
+
+  #else /* GCC V3.0 */
+
+   #if defined(__MINGW32__)
+	bool before(const type_info&) const;	// test if this precedes arg
+
+	bool operator==(const type_info&) const;	// test for equality
+
+   #else /* defined(__MINGW32__) */
+	bool before(const type_info& _Right) const
+		{	// test if this precedes arg
+		return (_Myname < _Right._Myname);
+		}
+
+	bool operator==(const type_info& _Right) const
+		{	// test for equality
+		return (_Myname == _Right._Myname);
+		}
+   #endif /* defined(__MINGW32__) */
+
+	bool operator!=(const type_info& _Right) const
+		{	// test for inequality
+		return (!(*this == _Right));
+		}
+
+	const char *name() const
+		{	// return name of type
+		return (_Myname);
+		}
+
+	virtual bool __is_pointer_p() const;
+	virtual bool __is_function_p() const;
+	virtual bool __do_catch(const type_info *, void **, unsigned) const;
+	virtual bool __do_upcast(const __cxxabivl::__class_type_info *, void **)
+		const;
+
+protected:
+	explicit type_info(const char *_Name)
+		: _Myname(_Name)
+		{	// construct with name
+		}
+
+	const char *_Myname;
+  #endif /* __EDG__ etc. */
+
+protected:	// to shut up compiler
+	type_info(const type_info&);	// not defined
+
+private:
+	type_info& operator=(const type_info&);	// not defined
+	};
+}	/* namespace std */
+
+ #if _HAS_NAMESPACE
+
+ #else /* _HAS_NAMESPACE */
+using std::type_info;
+ #endif /* _HAS_NAMESPACE */
+
+ #endif /* defined(__BORLANDC__) && !__EDG__ */
+#endif /* _TYPE_INFO_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */
