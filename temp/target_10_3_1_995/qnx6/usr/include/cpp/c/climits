@@ -1,0 +1,14 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// climits standard header
+#ifndef _CLIMITS_
+#define _CLIMITS_
+#include <yvals.h>
+
+#include <limits.h>
+#endif /* _CLIMITS_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

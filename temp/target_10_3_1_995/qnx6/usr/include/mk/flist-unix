@@ -1,0 +1,3 @@
+#!/bin/sh
+\find $* \( \( -name CVS -o -name RCS -o -name .svn \) -prune -o -type f \) \
+	! -name CVS ! -name RCS ! -name .svn ! -name Makefile ! -name .#\*

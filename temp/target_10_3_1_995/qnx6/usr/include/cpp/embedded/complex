@@ -1,0 +1,645 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// complex standard header
+#ifndef _COMPLEX_
+#define _COMPLEX_
+#include <ymath.h>
+#include <cmath>
+#include <sstream>
+
+ #ifndef _C_COMPLEX_T
+_C_STD_BEGIN
+  #define _C_COMPLEX_T
+
+typedef struct _C_double_complex
+	{	/* double complex */
+	double _Val[2];
+	} _C_double_complex;
+
+typedef struct _C_float_complex
+	{	/* float complex */
+	float _Val[2];
+	} _C_float_complex;
+
+typedef struct _C_ldouble_complex
+	{	/* long double complex */
+	long double _Val[2];
+	} _C_ldouble_complex;
+_C_STD_END
+ #endif /* _C_COMPLEX_T */
+
+	// COMPLEX _Val OFFSETS
+ #define _RE	0
+ #define _IM	1
+
+_STD_BEGIN
+typedef _CSTD _C_double_complex _Dcomplex_value;
+typedef _CSTD _C_float_complex _Fcomplex_value;
+typedef _CSTD _C_ldouble_complex _Lcomplex_value;
+
+#define __STD_COMPLEX	/* signal presence of complex classes */
+
+
+		// CLASS _Ctraits_double
+class _Ctraits_double
+	{	// complex traits for double
+public:
+	typedef double _Ty;
+
+	static _Ty _Cosh(_Ty _Left, _Ty _Right)
+		{	// return cosh(_Left) * _Right
+		return (_CSTD _Cosh(_Left, _Right));
+		}
+
+	static short _Exp(_Ty *_Pleft, _Ty _Right, short _Exponent)
+		{	// compute exp(*_Pleft) * _Right * 2 ^ _Exponent
+		return (_CSTD _Exp(_Pleft, _Right, _Exponent));
+		}
+
+	static _Ty _Infv(_Ty)
+		{	// return infinity
+		return (_CSTD _Inf._Double);
+		}
+
+	static bool _Isinf(_Ty _Left)
+		{	// test for infinity
+		return (_CSTD _Dtest(&_Left) == _INFCODE);
+		}
+
+	static bool _Isnan(_Ty _Left)
+		{	// test for NaN
+		return (_CSTD _Dtest(&_Left) == _NANCODE);
+		}
+
+	static _Ty _Nanv(_Ty)
+		{	// return NaN
+		return (_CSTD _Nan._Double);
+		}
+
+	static _Ty _Sinh(_Ty _Left, _Ty _Right)
+		{	// return sinh(_Left) * _Right
+		return (_CSTD _Sinh(_Left, _Right));
+		}
+
+	static _Ty atan2(_Ty _Yval, _Ty _Xval)
+		{	// return atan(_Yval / _Xval)
+		return (_CSTD atan2(_Yval, _Xval));
+		}
+
+	static _Ty cos(_Ty _Left)
+		{	// return cos(_Left)
+		return (_CSTD cos(_Left));
+		}
+
+	static _Ty exp(_Ty _Left)
+		{	// return exp(_Left)
+		return (_CSTD exp(_Left));
+		}
+
+	static _Ty ldexp(_Ty _Left, int _Exponent)
+		{	// return _Left * 2 ^ _Exponent
+		return (_CSTD ldexp(_Left, _Exponent));
+		}
+
+	static _Ty log(_Ty _Left)
+		{	// return log(_Left)
+		return (_CSTD log(_Left));
+		}
+
+	static _Ty pow(_Ty _Left, _Ty _Right)
+		{	// return _Left ^ _Right
+		return (_CSTD pow(_Left, _Right));
+		}
+
+	static _Ty sin(_Ty _Left)
+		{	// return sin(_Left)
+		return (_CSTD sin(_Left));
+		}
+
+	static _Ty sqrt(_Ty _Left)
+		{	// return sqrt(_Left)
+		return (_CSTD sqrt(_Left));
+		}
+
+	static _Ty tan(_Ty _Left)
+		{	// return tan(_Left)
+		return (_CSTD tan(_Left));
+		}
+	};
+
+		// CLASS _Ctraits_float
+class _Ctraits_float
+	{	// complex traits for float
+public:
+	typedef float _Ty;
+
+	static _Ty _Cosh(_Ty _Left, _Ty _Right)
+		{	// return cosh(_Left) * _Right
+		return (_CSTD _FCosh(_Left, _Right));
+		}
+
+	static short _Exp(_Ty *_Pleft, _Ty _Right, short _Exponent)
+		{	// compute exp(*_Pleft) * _Right * 2 ^ _Exponent
+		return (_CSTD _FExp(_Pleft, _Right, _Exponent));
+		}
+
+	static _Ty _Infv(_Ty)
+		{	// return infinity
+		return (_CSTD _FInf._Float);
+		}
+
+	static bool _Isinf(_Ty _Left)
+		{	// test for infinity
+		return (_CSTD _FDtest(&_Left) == _INFCODE);
+		}
+
+	static bool _Isnan(_Ty _Left)
+		{	// test for NaN
+		return (_CSTD _FDtest(&_Left) == _NANCODE);
+		}
+
+	static _Ty _Nanv(_Ty)
+		{	// return NaN
+		return (_CSTD _FNan._Float);
+		}
+
+	static _Ty _Sinh(_Ty _Left, _Ty _Right)
+		{	// return sinh(_Left) * _Right
+		return (_CSTD _FSinh(_Left, _Right));
+		}
+
+	static _Ty atan2(_Ty _Yval, _Ty _Xval)
+		{	// return atan(_Yval / _Xval)
+		return (_CSTD atan2f(_Yval, _Xval));
+		}
+
+	static _Ty cos(_Ty _Left)
+		{	// return cos(_Left)
+		return (_CSTD cosf(_Left));
+		}
+
+	static _Ty exp(_Ty _Left)
+		{	// return exp(_Left)
+		return (_CSTD expf(_Left));
+		}
+
+	static _Ty ldexp(_Ty _Left, int _Exponent)
+		{	// return _Left * 2 ^ _Exponent
+		return (_CSTD ldexpf(_Left, _Exponent));
+		}
+
+	static _Ty log(_Ty _Left)
+		{	// return log(_Left)
+		return (_CSTD logf(_Left));
+		}
+
+	static _Ty pow(_Ty _Left, _Ty _Right)
+		{	// return _Left ^ _Right
+		return (_CSTD powf(_Left, _Right));
+		}
+
+	static _Ty sin(_Ty _Left)
+		{	// return sin(_Left)
+		return (_CSTD sinf(_Left));
+		}
+
+	static _Ty sqrt(_Ty _Left)
+		{	// return sqrt(_Left)
+		return (_CSTD sqrtf(_Left));
+		}
+
+	static _Ty tan(_Ty _Left)
+		{	// return tan(_Left)
+		return (_CSTD tanf(_Left));
+		}
+	};
+
+class double_complex;
+
+		// CLASS float_complex
+class float_complex
+	: public _Fcomplex_value
+	{	// complex with float components
+public:
+	typedef float _Ty;
+	typedef float_complex _Myt;
+	typedef _Ctraits_float _Myctraits;
+	typedef _Ty value_type;
+
+	explicit float_complex(const double_complex&);	// defined below
+
+	float_complex(const _Ty& _Realval = 0, const _Ty& _Imagval = 0)
+		{	// construct from float components
+		_Val[_RE] = _Realval;
+		_Val[_IM] = _Imagval;
+		}
+
+	float_complex(const _Fcomplex_value& _Right)
+		{	// construct from float complex value
+		_Val[_RE] = _Right._Val[_RE];
+		_Val[_IM] = _Right._Val[_IM];
+		}
+
+	_Myt& operator=(const _Ty& _Right)
+		{	// assign real
+		_Val[_RE] = _Right;
+		_Val[_IM] = 0;
+		return (*this);
+		}
+
+	_Myt& operator+=(const _Ty& _Right)
+		{	// add real
+		_Val[_RE] = _Val[_RE] + _Right;
+		return (*this);
+		}
+
+	_Myt& operator-=(const _Ty& _Right)
+		{	// subtract real
+		_Val[_RE] = _Val[_RE] - _Right;
+		return (*this);
+		}
+
+	_Myt& operator*=(const _Ty& _Right)
+		{	// multiply by real
+		_Val[_RE] = _Val[_RE] * _Right;
+		_Val[_IM] = _Val[_IM] * _Right;
+		return (*this);
+		}
+
+	_Myt& operator/=(const _Ty& _Right)
+		{	// divide by real
+		_Val[_RE] = _Val[_RE] / _Right;
+		_Val[_IM] = _Val[_IM] / _Right;
+		return (*this);
+		}
+
+	_Myt& operator+=(const _Myt& _Right)
+		{	// add complex
+		_Val[_RE] = _Val[_RE] + (_Ty)_Right.real();
+		_Val[_IM] = _Val[_IM] + (_Ty)_Right.imag();
+		return (*this);
+		}
+
+	_Myt& operator-=(const _Myt& _Right)
+		{	// subtract complex
+		_Val[_RE] = _Val[_RE] - (_Ty)_Right.real();
+		_Val[_IM] = _Val[_IM] - (_Ty)_Right.imag();
+		return (*this);
+		}
+
+	_Myt& operator*=(const _Myt& _Right)
+		{	// multiply by complex
+		_Ty _Rightreal = (_Ty)_Right.real();
+		_Ty _Rightimag = (_Ty)_Right.imag();
+
+		_Ty _Tmp = _Val[_RE] * _Rightreal - _Val[_IM] * _Rightimag;
+		_Val[_IM] = _Val[_RE] * _Rightimag + _Val[_IM] * _Rightreal;
+		_Val[_RE] = _Tmp;
+		return (*this);
+		}
+
+	_Myt& operator/=(const _Myt& _Right)
+		{	// divide by complex
+		_Ty _Rightreal = (_Ty)_Right.real();
+		_Ty _Rightimag = (_Ty)_Right.imag();
+
+		if (_Myctraits::_Isnan(_Rightreal) || _Myctraits::_Isnan(_Rightimag))
+			_Val[_RE] = _Myctraits::_Nanv(_Rightreal), _Val[_IM] = _Val[_RE];
+		else if ((_Rightimag < 0 ? -_Rightimag : +_Rightimag)
+			< (_Rightreal < 0 ? -_Rightreal : +_Rightreal))
+			{	// |_Right.imag()| < |_Right.real()|
+			_Ty _Wr = _Rightimag / _Rightreal;
+			_Ty _Wd = _Rightreal + _Wr * _Rightimag;
+			if (_Myctraits::_Isnan(_Wd) || _Wd == 0)
+				{	// make both parts NaN
+				_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+				_Val[_IM] = _Val[_RE];
+				}
+			else
+				{	// compute representable result
+				_Ty _Tmp = (_Val[_RE] + _Val[_IM] * _Wr) / _Wd;
+				_Val[_IM] = (_Val[_IM] - _Val[_RE] * _Wr) / _Wd;
+				_Val[_RE] = _Tmp;
+				}
+			}
+		else if (_Rightimag == 0)
+				{	// make both parts NaN
+				_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+				_Val[_IM] = _Val[_RE];
+				}
+		else
+			{	// 0 < |_Right.real()| <= |_Right.imag()|
+			_Ty _Wr = _Rightreal / _Rightimag;
+			_Ty _Wd = _Rightimag + _Wr * _Rightreal;
+			if (_Myctraits::_Isnan(_Wd) || _Wd == 0)
+				{	// make both parts NaN
+				_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+				_Val[_IM] = _Val[_RE];
+				}
+			else
+				{	// compute representable result
+				_Ty _Tmp = (_Val[_RE] * _Wr + _Val[_IM]) / _Wd;
+				_Val[_IM] = (_Val[_IM] * _Wr - _Val[_RE]) / _Wd;
+				_Val[_RE] = _Tmp;
+				}
+			}
+		return (*this);
+		}
+
+	_Ty real(const _Ty& _Right)
+		{	// set real component
+		return (_Val[_RE] = _Right);
+		}
+
+	_Ty real() const
+		{	// return real component
+		return (_Val[_RE]);
+		}
+
+	_Ty imag(const _Ty& _Right)
+		{	// set imaginary component
+		return (_Val[_IM] = _Right);
+		}
+
+	_Ty imag() const
+		{	// return imaginary component
+		return (_Val[_IM]);
+		}
+	};
+
+		// CLASS double_complex
+class double_complex
+	: public _Dcomplex_value
+	{	// complex with double components
+public:
+	typedef double _Ty;
+	typedef double_complex _Myt;
+	typedef _Ctraits_double _Myctraits;
+	typedef _Ty value_type;
+
+	double_complex(const float_complex& _Right)
+		{	// construct from float complex components
+		_Val[_RE] = (_Ty)_Right.real();
+		_Val[_IM] = (_Ty)_Right.imag();
+		}
+
+	double_complex(const _Ty& _Realval = 0, const _Ty& _Imagval = 0)
+		{	// construct from double complex components
+		_Val[_RE] = _Realval;
+		_Val[_IM] = _Imagval;
+		}
+
+	double_complex(const _Dcomplex_value& _Right)
+		{	// construct from double complex value
+		_Val[_RE] = _Right._Val[_RE];
+		_Val[_IM] = _Right._Val[_IM];
+		}
+
+	_Myt& operator=(const _Ty& _Right)
+		{	// assign real
+		_Val[_RE] = _Right;
+		_Val[_IM] = 0;
+		return (*this);
+		}
+
+	_Myt& operator+=(const _Ty& _Right)
+		{	// add real
+		_Val[_RE] = _Val[_RE] + _Right;
+		return (*this);
+		}
+
+	_Myt& operator-=(const _Ty& _Right)
+		{	// subtract real
+		_Val[_RE] = _Val[_RE] - _Right;
+		return (*this);
+		}
+
+	_Myt& operator*=(const _Ty& _Right)
+		{	// multiply by real
+		_Val[_RE] = _Val[_RE] * _Right;
+		_Val[_IM] = _Val[_IM] * _Right;
+		return (*this);
+		}
+
+	_Myt& operator/=(const _Ty& _Right)
+		{	// divide by real
+		_Val[_RE] = _Val[_RE] / _Right;
+		_Val[_IM] = _Val[_IM] / _Right;
+		return (*this);
+		}
+
+	_Myt& operator+=(const _Myt& _Right)
+		{	// add complex
+		_Val[_RE] = _Val[_RE] + (_Ty)_Right.real();
+		_Val[_IM] = _Val[_IM] + (_Ty)_Right.imag();
+		return (*this);
+		}
+
+	_Myt& operator-=(const _Myt& _Right)
+		{	// subtract complex
+		_Val[_RE] = _Val[_RE] - (_Ty)_Right.real();
+		_Val[_IM] = _Val[_IM] - (_Ty)_Right.imag();
+		return (*this);
+		}
+
+	_Myt& operator*=(const _Myt& _Right)
+		{	// multiply by complex
+		_Ty _Rightreal = (_Ty)_Right.real();
+		_Ty _Rightimag = (_Ty)_Right.imag();
+		_Ty _Tmp = _Val[_RE] * _Rightreal - _Val[_IM] * _Rightimag;
+		_Val[_IM] = _Val[_RE] * _Rightimag + _Val[_IM] * _Rightreal;
+		_Val[_RE] = _Tmp;
+		return (*this);
+		}
+
+	_Myt& operator/=(const _Myt& _Right)
+		{	// divide by complex
+		_Ty _Rightreal = (_Ty)_Right.real();
+		_Ty _Rightimag = (_Ty)_Right.imag();
+
+		if (_Myctraits::_Isnan(_Rightreal) || _Myctraits::_Isnan(_Rightimag))
+			{	// make both parts NaN
+			_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+			_Val[_IM] = _Val[_RE];
+			}
+		else if ((_Rightimag < 0 ? -_Rightimag : +_Rightimag)
+			< (_Rightreal < 0 ? -_Rightreal : +_Rightreal))
+			{	// |_Right.imag()| < |_Right.real()|
+			_Ty _Wr = _Rightimag / _Rightreal;
+			_Ty _Wd = _Rightreal + _Wr * _Rightimag;
+			if (_Myctraits::_Isnan(_Wd) || _Wd == 0)
+				{	// make both parts NaN
+				_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+				_Val[_IM] = _Val[_RE];
+				}
+			else
+				{	// compute representable result
+				_Ty _Tmp = (_Val[_RE] + _Val[_IM] * _Wr) / _Wd;
+				_Val[_IM] = (_Val[_IM] - _Val[_RE] * _Wr) / _Wd;
+				_Val[_RE] = _Tmp;
+				}
+			}
+		else if (_Rightimag == 0)
+				{	// make both parts NaN
+			_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+			_Val[_IM] = _Val[_RE];
+				}
+		else
+			{	// 0 < |_Right.real()| <= |_Right.imag()|
+			_Ty _Wr = _Rightreal / _Rightimag;
+			_Ty _Wd = _Rightimag + _Wr * _Rightreal;
+			if (_Myctraits::_Isnan(_Wd) || _Wd == 0)
+				{	// make both parts NaN
+				_Val[_RE] = _Myctraits::_Nanv(_Rightreal);
+				_Val[_IM] = _Val[_RE];
+				}
+			else
+				{	// compute representable result
+				_Ty _Tmp = (_Val[_RE] * _Wr + _Val[_IM]) / _Wd;
+				_Val[_IM] = (_Val[_IM] * _Wr - _Val[_RE]) / _Wd;
+				_Val[_RE] = _Tmp;
+				}
+			}
+		return (*this);
+		}
+
+	_Ty real(const _Ty& _Right)
+		{	// set real component
+		return (_Val[_RE] = _Right);
+		}
+
+	_Ty real() const
+		{	// return real component
+		return (_Val[_RE]);
+		}
+
+	_Ty imag(const _Ty& _Right)
+		{	// set imaginary component
+		return (_Val[_IM] = _Right);
+		}
+
+	_Ty imag() const
+		{	// return imaginary component
+		return (_Val[_IM]);
+		}
+	};
+
+inline float_complex::float_complex(const double_complex& _Right)
+		{	// construct from double complex components
+		_Val[_RE] = (_Ty)_Right.real();
+		_Val[_IM] = (_Ty)_Right.imag();
+		}
+
+
+ #define _CMPLX(T)	_CMPLX1(T)
+ #define _CMPLX1(T)	T##_complex
+ #define _CTR(T)	_CTR1(T)
+ #define _CTR1(T)	_Ctraits_##T
+ #define _TMPLT(T)
+ #define _Ty	float
+ #include <xcomplex>	/* define all float_complex functions */
+
+ #undef _Ty
+ #define _Ty	double
+ #undef _XCOMPLEX_
+ #include <xcomplex>	/* define all double_complex functions */
+ #undef _Ty
+
+		// FUNCTION operator>>
+inline istream& operator>>(istream& _Istr, float_complex& _Right)
+	{	// extract a float_complex
+	typedef float_complex _Myt;
+	typedef float _Ty;
+	char _Ch;
+	_Ty _Real, _Imag;
+
+	if (_Istr >> _Ch && _Ch != '(')
+		{	// no leading '(', treat as real only
+		_Istr.putback(_Ch);
+		_Istr >> _Real;
+		_Imag = 0;
+		}
+	else if (_Istr >> _Real >> _Ch && _Ch != ',')
+		if (_Ch == ')')
+			_Imag = 0;	// (real)
+		else
+			{	// no trailing ')' after real, treat as bad field
+			_Istr.putback(_Ch);
+			_Istr.setstate(ios_base::failbit);
+			}
+	else if (_Istr >> _Imag >> _Ch && _Ch != ')')
+			{	// no imag or trailing ')', treat as bad field
+			_Istr.putback(_Ch);
+			_Istr.setstate(ios_base::failbit);
+			}
+
+	if (!_Istr.fail())
+		_Right = _Myt((_Ty)_Real, (_Ty)_Imag);	// store valid result
+	return (_Istr);
+	}
+
+inline istream& operator>>(istream& _Istr, double_complex& _Right)
+	{	// extract a double_complex
+	typedef double_complex _Myt;
+	typedef double _Ty;
+	char _Ch;
+	_Ty _Real, _Imag;
+
+	if (_Istr >> _Ch && _Ch != '(')
+		{	// no leading '(', treat as real only
+		_Istr.putback(_Ch);
+		_Istr >> _Real;
+		_Imag = 0;
+		}
+	else if (_Istr >> _Real >> _Ch && _Ch != ',')
+		if (_Ch == ')')
+			_Imag = 0;	// (real)
+		else
+			{	// no trailing ')' after real, treat as bad field
+			_Istr.putback(_Ch);
+			_Istr.setstate(ios_base::failbit);
+			}
+	else if (_Istr >> _Imag >> _Ch && _Ch != ')')
+			{	// no imag or trailing ')', treat as bad field
+			_Istr.putback(_Ch);
+			_Istr.setstate(ios_base::failbit);
+			}
+
+	if (!_Istr.fail())
+		_Right = _Myt((_Ty)_Real, (_Ty)_Imag);	// store valid result
+	return (_Istr);
+	}
+
+		// FUNCTION operator<<
+inline ostream& operator<<(ostream& _Ostr,
+	const float_complex& _Right)
+	{	// insert a float_complex
+	ostringstream _Sstr;
+	_Sstr.flags(_Ostr.flags());
+//	_Sstr.imbue(_Ostr.getloc());
+	_Sstr.precision(_Ostr.precision());
+	_Sstr << '(' << real(_Right) << ',' << imag(_Right) << ')';
+
+	string _Str = _Sstr.str();
+	return (_Ostr << _Str.c_str());
+	}
+
+inline ostream& operator<<(ostream& _Ostr,
+	const double_complex& _Right)
+	{	// insert a double_complex
+	ostringstream _Sstr;
+	_Sstr.flags(_Ostr.flags());
+//	_Sstr.imbue(_Ostr.getloc());
+	_Sstr.precision(_Ostr.precision());
+	_Sstr << '(' << real(_Right) << ',' << imag(_Right) << ')';
+
+	string _Str = _Sstr.str();
+	return (_Ostr << _Str.c_str());
+	}
+_STD_END
+#endif /* _COMPLEX_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

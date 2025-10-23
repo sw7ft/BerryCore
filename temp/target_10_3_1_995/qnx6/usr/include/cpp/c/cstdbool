@@ -1,0 +1,14 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// cstdbool standard header
+#ifndef _CSTDBOOL_
+#define _CSTDBOOL_
+#include <yvals.h>
+
+#include <stdbool.h>
+#endif /* _CSTDBOOL_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

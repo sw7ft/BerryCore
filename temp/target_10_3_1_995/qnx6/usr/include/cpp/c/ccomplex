@@ -1,0 +1,76 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+
+// ccomplex standard header
+#ifndef _CCOMPLEX_
+#define _CCOMPLEX_
+#include <yvals.h>
+
+#ifdef _STD_USING
+ #undef _STD_USING
+  #include <complex.h>
+ #define _STD_USING
+
+#else /* _STD_USING */
+ #include <complex.h>
+
+ #ifdef _GLOBAL_USING
+_STD_BEGIN
+using _CSTD _Dcomplex; using _CSTD _Fcomplex; using _CSTD _Lcomplex;
+
+using _CSTD _Cbuild; using _CSTD _Cmulcc; using _CSTD _Cmulcr;
+using _CSTD _Cdivcc; using _CSTD _Cdivcr; using _CSTD _Caddcc;
+using _CSTD _Caddcr; using _CSTD _Csubcc; using _CSTD _Csubcr;
+
+using _CSTD _FCbuild; using _CSTD _FCmulcc; using _CSTD _FCmulcr;
+using _CSTD _FCdivcc; using _CSTD _FCdivcr; using _CSTD _FCaddcc;
+using _CSTD _FCaddcr; using _CSTD _FCsubcc; using _CSTD _FCsubcr;
+
+using _CSTD _LCbuild; using _CSTD _LCmulcc; using _CSTD _LCmulcr;
+using _CSTD _LCdivcc; using _CSTD _LCdivcr; using _CSTD _LCaddcc;
+using _CSTD _LCaddcr; using _CSTD _LCsubcc; using _CSTD _LCsubcr;
+
+using _CSTD cabs; using _CSTD cacos; using _CSTD cacosh;
+using _CSTD carg; using _CSTD casin; using _CSTD casinh;
+using _CSTD catan; using _CSTD catanh; using _CSTD ccos;
+using _CSTD ccosh; using _CSTD cexp; using _CSTD cimag;
+using _CSTD clog; using _CSTD conj; using _CSTD cpow;
+using _CSTD cproj; using _CSTD creal; using _CSTD csin;
+using _CSTD csinh; using _CSTD csqrt; using _CSTD ctan;
+using _CSTD ctanh;
+
+using _CSTD cabsf; using _CSTD cacosf; using _CSTD cacoshf;
+using _CSTD cargf; using _CSTD casinf; using _CSTD casinhf;
+using _CSTD catanf; using _CSTD catanhf; using _CSTD ccosf;
+using _CSTD ccoshf; using _CSTD cexpf; using _CSTD cimagf;
+using _CSTD clogf; using _CSTD conjf; using _CSTD cpowf;
+using _CSTD cprojf; using _CSTD crealf; using _CSTD csinf;
+using _CSTD csinhf; using _CSTD csqrtf; using _CSTD ctanf;
+using _CSTD ctanhf;
+
+using _CSTD cabsl; using _CSTD cacosl; using _CSTD cacoshl;
+using _CSTD cargl; using _CSTD casinl; using _CSTD casinhl;
+using _CSTD catanl; using _CSTD catanhl; using _CSTD ccosl;
+using _CSTD ccoshl; using _CSTD cexpl; using _CSTD cimagl;
+using _CSTD clogl; using _CSTD conjl; using _CSTD cpowl;
+using _CSTD cprojl; using _CSTD creall; using _CSTD csinl;
+using _CSTD csinhl; using _CSTD csqrtl; using _CSTD ctanl;
+using _CSTD ctanhl;
+
+using _CSTD abs; using _CSTD acos; using _CSTD acosh;
+using _CSTD arg; using _CSTD imag; using _CSTD real;
+using _CSTD asin; using _CSTD asinh; using _CSTD atan;
+using _CSTD atanh; using _CSTD cos; using _CSTD cosh;
+using _CSTD exp; using _CSTD log; using _CSTD pow;
+using _CSTD sin; using _CSTD sinh; using _CSTD sqrt;
+using _CSTD tan; using _CSTD tanh; using _CSTD fabs;
+_STD_END
+ #endif /* _GLOBAL_USING */
+
+#endif /* _STD_USING */
+#endif /* _CCOMPLEX_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

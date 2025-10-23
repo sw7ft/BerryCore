@@ -1,0 +1,49 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// cstdio standard header
+#ifndef _CSTDIO_
+#define _CSTDIO_
+#include <yvals.h>
+
+#ifdef _STD_USING
+ #undef _STD_USING
+  #include <stdio.h>
+ #define _STD_USING
+
+#else /* _STD_USING */
+ #include <stdio.h>
+
+ #ifdef _GLOBAL_USING
+_STD_BEGIN
+using _CSTD size_t; using _CSTD fpos_t; using _CSTD FILE;
+using _CSTD clearerr; using _CSTD fclose; using _CSTD feof;
+using _CSTD ferror; using _CSTD fflush; using _CSTD fgetc;
+using _CSTD fgetpos; using _CSTD fgets; using _CSTD fopen;
+using _CSTD fprintf; using _CSTD fputc; using _CSTD fputs;
+using _CSTD fread; using _CSTD freopen; using _CSTD fscanf;
+using _CSTD fseek; using _CSTD fsetpos; using _CSTD ftell;
+using _CSTD fwrite; using _CSTD getc; using _CSTD getchar;
+using _CSTD gets; using _CSTD perror;
+using _CSTD putc; using _CSTD putchar;
+using _CSTD printf; using _CSTD puts; using _CSTD remove;
+using _CSTD rename; using _CSTD rewind; using _CSTD scanf;
+using _CSTD setbuf; using _CSTD setvbuf; using _CSTD sprintf;
+using _CSTD sscanf; using _CSTD tmpfile; using _CSTD tmpnam;
+using _CSTD ungetc; using _CSTD vfprintf; using _CSTD vprintf;
+using _CSTD vsprintf;
+
+ #if _HAS_C9X
+using _CSTD snprintf; using _CSTD vsnprintf;
+using _CSTD vfscanf; using _CSTD vscanf; using _CSTD vsscanf;
+ #endif /* _HAS_C9X */
+
+_STD_END
+ #endif /* _GLOBAL_USING */
+
+#endif /* _STD_USING */
+#endif /* _CSTDIO_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

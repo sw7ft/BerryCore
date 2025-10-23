@@ -103,12 +103,12 @@ if [ "$BERRYCORE_MOTD_ENABLED" != "0" ]; then
                 MOTD_SHOWN=1
             fi
             (curl -s -m 3 "$BERRYCORE_MOTD_URL" > "$MOTD_CACHE.tmp" 2>/dev/null && \
-             [ -s "$MOTD_CACHE.tmp" ] && mv "$MOTD_CACHE.tmp" "$MOTD_CACHE") >/dev/null 2>&1 &
+             [ -s "$MOTD_CACHE.tmp" ] && mv "$MOTD_CACHE.tmp" "$MOTD_CACHE") </dev/null >/dev/null 2>&1 &
         fi
     else
         # No cache exists - try quick fetch (with timeout, non-blocking)
         (curl -s -m 2 "$BERRYCORE_MOTD_URL" > "$MOTD_CACHE.tmp" 2>/dev/null && \
-         [ -s "$MOTD_CACHE.tmp" ] && mv "$MOTD_CACHE.tmp" "$MOTD_CACHE") >/dev/null 2>&1 &
+         [ -s "$MOTD_CACHE.tmp" ] && mv "$MOTD_CACHE.tmp" "$MOTD_CACHE") </dev/null >/dev/null 2>&1 &
         
         # Wait briefly for first fetch (max 0.5 seconds)
         sleep 0.1
