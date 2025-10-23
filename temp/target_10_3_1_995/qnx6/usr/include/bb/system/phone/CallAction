@@ -1,6 +1,0 @@
-/*!
- * @copyright
- * Copyright (C) 2014 BlackBerry Limited. All rights reserved.
- */
-
-#include <bb/system/phone/CallAction.hpp>

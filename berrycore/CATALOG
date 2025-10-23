@@ -87,6 +87,9 @@ quickjs_shell_console|js|QuickJS shell interface
 quickjs_web_console|js|QuickJS web-based console
 quickjs_web_console_es5|js|QuickJS web console (ES5)
 
+# Programming Languages
+pforth|lang|Portable ANS Forth interpreter (v28)
+
 # Calendar & Time
 gcal|time|GNU calendar program
 calcurse|time|Text-based calendar and scheduling
