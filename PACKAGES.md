@@ -82,7 +82,7 @@ This document tracks all packages included in BerryCore.
 | libuuid | 1.0.3 | - | UUID generation library |
 | nettle | 3.5 | - | Cryptographic library |
 | onig | 6.9.4 | - | Regular expression library |
-| openssl | 1.0.2u | - | Cryptography and SSL/TLS |
+| openssl | 3.3.2 | 7.5 MB | Cryptography and SSL/TLS ✨ **UPGRADED in 0.6** |
 | readline | 8.0 | - | Command-line editing library |
 | yaml | 0.1.4 | - | YAML parser library |
 | zeromq | 4.2.3 | - | High-performance messaging |

@@ -61,6 +61,9 @@ lsof|sys|List open files
 file|sys|Determine file type
 which|sys|Locate a command
 
+# Security & Cryptography
+openssl|security|SSL/TLS toolkit and cryptography library
+
 # Archiving & Compression
 tar|archive|Create/extract tar archives
 gzip|archive|GNU zip compression
