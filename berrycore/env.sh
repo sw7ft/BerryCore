@@ -71,59 +71,17 @@ echo "Quick start: nano, vim, git, nmap, curl, tmux, quickjs"
 echo "==========================================================="
 
 # Message of the Day (MOTD) - Enabled by default
-# Fetches updates from: https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt
 # To disable: export BERRYCORE_MOTD_ENABLED=0 in your .profile
 if [ "$BERRYCORE_MOTD_ENABLED" != "0" ]; then
-    MOTD_CACHE="$HOME/.berrycore_motd"
-    MOTD_AGE=3600  # Cache for 1 hour (in seconds)
-    MOTD_SHOWN=0
-    
     # Default MOTD URL if not set
     : ${BERRYCORE_MOTD_URL:="https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt"}
     
-    # Check if cache exists and is recent
-    if [ -f "$MOTD_CACHE" ]; then
-        CACHE_TIME=$(stat -f %m "$MOTD_CACHE" 2>/dev/null || stat -c %Y "$MOTD_CACHE" 2>/dev/null || echo 0)
-        CURRENT_TIME=$(date +%s)
-        AGE=$((CURRENT_TIME - CACHE_TIME))
-        
-        if [ $AGE -lt $MOTD_AGE ]; then
-            # Cache is fresh, use it
-            if [ -s "$MOTD_CACHE" ]; then
-                echo ""
-                cat "$MOTD_CACHE"
-                MOTD_SHOWN=1
-            fi
-        else
-            # Cache is stale, try to fetch new (in background, non-blocking)
-            # Show old cache while fetching
-            if [ -s "$MOTD_CACHE" ]; then
-                echo ""
-                cat "$MOTD_CACHE"
-                MOTD_SHOWN=1
-            fi
-            (curl -s -m 3 "$BERRYCORE_MOTD_URL" > "$MOTD_CACHE.tmp" 2>/dev/null && \
-             [ -s "$MOTD_CACHE.tmp" ] && mv "$MOTD_CACHE.tmp" "$MOTD_CACHE") </dev/null >/dev/null 2>&1 &
-        fi
-    else
-        # No cache exists - try quick fetch (with timeout, non-blocking)
-        (curl -s -m 2 "$BERRYCORE_MOTD_URL" > "$MOTD_CACHE.tmp" 2>/dev/null && \
-         [ -s "$MOTD_CACHE.tmp" ] && mv "$MOTD_CACHE.tmp" "$MOTD_CACHE") </dev/null >/dev/null 2>&1 &
-        
-        # Wait briefly for first fetch (max 0.5 seconds)
-        sleep 0.1
-        if [ -f "$MOTD_CACHE" ] && [ -s "$MOTD_CACHE" ]; then
-            echo ""
-            cat "$MOTD_CACHE"
-            MOTD_SHOWN=1
-        fi
-    fi
+    # Fetch and display MOTD (single request, 2 second timeout)
+    MOTD_TEXT=$(curl -s -m 2 "$BERRYCORE_MOTD_URL" 2>/dev/null)
     
-    # Show default message if no MOTD was displayed (offline/first run)
-    if [ $MOTD_SHOWN -eq 0 ]; then
+    if [ -n "$MOTD_TEXT" ]; then
         echo ""
-        echo ">> Welcome to BerryCore! For latest updates, visit:"
-        echo "   https://github.com/sw7ft/berrycore"
+        echo "$MOTD_TEXT"
     fi
 fi
 

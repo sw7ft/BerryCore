@@ -1,0 +1,31 @@
+========================================================
+  GCC 9.3.0 QNX 8 Toolchain - Quick Reference
+========================================================
+
+📦 PACKAGE FILES
+  gcc-9.3.0-qnx8.tar.gz (316MB) ⭐ USE THIS ONE
+  gcc-9.3.0-qnx8.tar.gz.sha256
+  gcc-9.3.0-qnx8.zip (847MB)
+  gcc-9.3.0-qnx8.zip.sha256
+
+🔐 CHECKSUM
+  f8066a09cf285828a6d7a8358e6c6b381d72cfedbfcfe8c784bfcad1bf9fdada
+
+⚙️ SPECS
+  GCC: 9.3.0
+  Target: arm-blackberry-qnx8eabi
+  Files: 9,406
+  Uncompressed: 676MB
+
+🚀 QUICK START
+  1. Extract: tar -xzf gcc-9.3.0-qnx8.tar.gz
+  2. Verify: sha256sum -c gcc-9.3.0-qnx8.tar.gz.sha256
+  3. Test: ./gcc-9.3.0-berrycore/bin/arm-blackberry-qnx8eabi-gcc --version
+
+📚 DOCUMENTATION
+  - TRANSFER_SUMMARY.txt (Full details)
+  - TOOLCHAIN_INFO.txt (Inside package)
+  - toolchain.txt (Original reference)
+
+✅ STATUS: READY FOR BERRYCORE INTEGRATION
+========================================================

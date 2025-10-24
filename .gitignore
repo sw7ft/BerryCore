@@ -1,4 +1,7 @@
 berrycore.zip
 .DS_Store
 .frolic-session.json
-.frolic-session.json
+.frolic-backup-*.json
+temp/
+openssl332_qnx8_deploy.tar.gz
+*.bak
