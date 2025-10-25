@@ -49,6 +49,7 @@ rsync|net|Remote file synchronization
 nmap|net|Network exploration and security scanner
 nc|net|Netcat - network utility
 dropbear|net|Lightweight SSH server/client
+hydra|net|Fast network logon cracker (password auditing)
 
 # Version Control
 git|vcs|Distributed version control

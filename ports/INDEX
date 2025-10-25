@@ -11,4 +11,5 @@
 # wireshark|net|4.2|18M|Network protocol analyzer
 #
 # Add your ports below:
+hydra|net|9.5|2.3M|Fast network logon cracker - password auditing tool
 
