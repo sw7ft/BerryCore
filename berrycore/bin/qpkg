@@ -276,35 +276,238 @@ cmd_list() {
     fi
 }
 
-# Show package info
+# Show package/binary info
 cmd_info() {
-    PACKAGE="$1"
+    BINARY="$1"
     
-    if [ -z "$PACKAGE" ]; then
-        print_error "Usage: qpkg info <package-name>"
+    if [ -z "$BINARY" ]; then
+        print_error "Usage: qpkg info <binary-name>"
         exit 1
     fi
     
-    print_header "Package Info: $PACKAGE"
+    print_header "Binary Info: $BINARY"
     
-    # Check if installed
-    if [ -f "$NATIVE_TOOLS/packages/${PACKAGE}.zip" ]; then
-        print_success "Installed: Yes"
-        SIZE=$(ls -lh "$NATIVE_TOOLS/packages/${PACKAGE}.zip" | awk '{print $5}')
-        echo "Size: $SIZE"
+    # Check if binary exists in bin/
+    if [ -f "$NATIVE_TOOLS/bin/$BINARY" ]; then
+        echo "Location: $NATIVE_TOOLS/bin/$BINARY"
+        
+        # Get info from catalog
+        if [ -f "$NATIVE_TOOLS/CATALOG" ]; then
+            INFO=$(grep "^$BINARY|" "$NATIVE_TOOLS/CATALOG" 2>/dev/null)
+            if [ -n "$INFO" ]; then
+                CATEGORY=$(echo "$INFO" | cut -d'|' -f2)
+                DESCRIPTION=$(echo "$INFO" | cut -d'|' -f3)
+                echo "Category: $CATEGORY"
+                echo "Description: $DESCRIPTION"
+            fi
+        fi
+        
+        # Show file info
+        echo ""
+        ls -lh "$NATIVE_TOOLS/bin/$BINARY" | awk '{print "Size: " $5 "  Permissions: " $1}'
+        
+        # Try to get version
+        echo ""
+        if "$NATIVE_TOOLS/bin/$BINARY" --version 2>/dev/null | head -1; then
+            :
+        elif "$NATIVE_TOOLS/bin/$BINARY" -v 2>/dev/null | head -1; then
+            :
+        else
+            echo "Version: (unknown)"
+        fi
+        
+        # Check for man page
+        echo ""
+        if [ -f "$NATIVE_TOOLS/man/man1/$BINARY.1" ] || [ -f "$NATIVE_TOOLS/share/man/man1/$BINARY.1" ]; then
+            echo "Manual: Available (run 'man $BINARY')"
+        else
+            echo "Manual: Not available"
+        fi
+        
+        echo ""
     else
-        print_info "Not installed"
-    fi
-    
-    # Check CATALOG
-    if [ -f "$NATIVE_TOOLS/CATALOG" ]; then
-        INFO=$(grep "^[^#]*|.*|.*${PACKAGE}" "$NATIVE_TOOLS/CATALOG" | head -1)
-        if [ -n "$INFO" ]; then
+        # Check if it's a package
+        if [ -f "$NATIVE_TOOLS/packages/${BINARY}.zip" ]; then
+            echo "Package: ${BINARY}.zip"
+            SIZE=$(ls -lh "$NATIVE_TOOLS/packages/${BINARY}.zip" | awk '{print $5}')
+            echo "Size: $SIZE"
+            print_success "Installed: Yes"
+        else
+            print_error "Binary or package '$BINARY' not found"
             echo ""
-            echo "Description:"
-            echo "$INFO" | awk -F'|' '{print "  " $3}'
+            echo "Try: qpkg catalog -s $BINARY"
+            exit 1
         fi
     fi
+}
+
+# Pagination helper
+paginate() {
+    # Use less with smart options:
+    # -F: quit if one screen
+    # -X: don't clear screen on exit
+    # -R: allow ANSI colors
+    # -S: chop long lines (don't wrap)
+    if command -v less >/dev/null 2>&1; then
+        less -FXR
+    else
+        cat
+    fi
+}
+
+# Show binary catalog
+cmd_catalog() {
+    CATALOG="$NATIVE_TOOLS/CATALOG"
+    
+    if [ ! -f "$CATALOG" ]; then
+        print_error "Catalog file not found: $CATALOG"
+        exit 1
+    fi
+    
+    # Parse options
+    MODE="list"
+    ARG=""
+    
+    case "$1" in
+        -c|--category)
+            MODE="category"
+            ARG="$2"
+            if [ -z "$ARG" ]; then
+                print_error "Usage: qpkg catalog -c <category>"
+                exit 1
+            fi
+            ;;
+        -s|--search)
+            MODE="search"
+            ARG="$2"
+            if [ -z "$ARG" ]; then
+                print_error "Usage: qpkg catalog -s <search-term>"
+                exit 1
+            fi
+            ;;
+        -h|--help)
+            cat << 'HELPEOF'
+
+Binary Catalog - Browse available binaries
+
+Usage:
+  qpkg catalog              List all binaries by category
+  qpkg catalog -c CATEGORY  List binaries in specific category
+  qpkg catalog -s TERM      Search for binaries
+
+Categories:
+  dev, shell, editor, util, net, sys, archive, media, data,
+  x11, js, lang, security, time, comm, game, doc, build, calc,
+  todo, emu
+
+Examples:
+  qpkg catalog           # Show all binaries
+  qpkg catalog -c net    # Show networking tools
+  qpkg catalog -s ssh    # Search for SSH-related tools
+
+HELPEOF
+            exit 0
+            ;;
+        "")
+            MODE="list"
+            ;;
+        *)
+            # Treat as search term
+            MODE="search"
+            ARG="$1"
+            ;;
+    esac
+    
+    # Generate output and paginate
+    {
+        case "$MODE" in
+            list)
+                echo ""
+                printf "${BOLD}Available BerryCore Binaries${NC}\n"
+                echo "==========================================================="
+                echo ""
+                
+                current_cat=""
+                grep -v "^#" "$CATALOG" | grep -v "^$" | sort -t'|' -k2,2 -k1,1 | while IFS='|' read -r name cat desc; do
+                    if [ "$cat" != "$current_cat" ]; then
+                        current_cat="$cat"
+                        echo ""
+                        printf "${YELLOW}[$cat]${NC}\n"
+                    fi
+                    printf "  ${GREEN}%-25s${NC} %s\n" "$name" "$desc"
+                done
+                echo ""
+                ;;
+                
+            category)
+                echo ""
+                printf "${BOLD}BerryCore Binaries - Category: $ARG${NC}\n"
+                echo "==========================================================="
+                echo ""
+                
+                RESULTS=$(grep -v "^#" "$CATALOG" | grep -v "^$" | while IFS='|' read -r name cat desc; do
+                    if [ "$cat" = "$ARG" ]; then
+                        printf "  ${GREEN}%-25s${NC} %s\n" "$name" "$desc"
+                    fi
+                done)
+                
+                if [ -z "$RESULTS" ]; then
+                    echo "  No binaries found in category: $ARG"
+                else
+                    echo "$RESULTS"
+                fi
+                echo ""
+                ;;
+                
+            search)
+                echo ""
+                printf "${BOLD}Search results for: $ARG${NC}\n"
+                echo "==========================================================="
+                echo ""
+                
+                RESULTS=$(grep -v "^#" "$CATALOG" | grep -v "^$" | grep -i "$ARG" | while IFS='|' read -r name cat desc; do
+                    printf "  %-25s [%s] %s\n" "$name" "$cat" "$desc"
+                done)
+                
+                if [ -z "$RESULTS" ]; then
+                    echo "  No results found for: $ARG"
+                else
+                    echo "$RESULTS"
+                fi
+                echo ""
+                ;;
+        esac
+    } | paginate
+}
+
+# List all installed binaries
+cmd_bins() {
+    {
+        echo ""
+        printf "${BOLD}Installed Binaries${NC}\n"
+        echo "==========================================================="
+        echo ""
+        
+        if [ -d "$NATIVE_TOOLS/bin" ]; then
+            CATALOG="$NATIVE_TOOLS/CATALOG"
+            ls -1 "$NATIVE_TOOLS/bin" | while read -r bin; do
+                # Try to find it in catalog
+                if [ -f "$CATALOG" ]; then
+                    desc=$(grep "^$bin|" "$CATALOG" 2>/dev/null | cut -d'|' -f3)
+                    if [ -n "$desc" ]; then
+                        printf "  ${GREEN}%-25s${NC} %s\n" "$bin" "$desc"
+                    else
+                        printf "  ${GREEN}%-25s${NC}\n" "$bin"
+                    fi
+                else
+                    printf "  ${GREEN}%-25s${NC}\n" "$bin"
+                fi
+            done
+        else
+            print_error "bin directory not found"
+        fi
+        echo ""
+    } | paginate
 }
 
 # Show help
@@ -318,18 +521,25 @@ ${BOLD}USAGE:${NC}
 
 ${BOLD}COMMANDS:${NC}
   ${GREEN}update${NC}              Check for and install BerryCore updates
+  ${GREEN}catalog${NC} [options]   Browse available binaries (replaces bclist)
+  ${GREEN}bins${NC}                List all installed binaries (replaces bcbins)
+  ${GREEN}info${NC} <binary>       Show binary information (replaces bcinfo)
   ${YELLOW}install${NC} <package>   Install a port package (coming soon)
-  ${YELLOW}search${NC} <keyword>    Search available ports (coming soon)
   list                List installed packages
-  info <package>      Show package information
   help                Show this help message
+
+${BOLD}CATALOG OPTIONS:${NC}
+  qpkg catalog              List all binaries by category
+  qpkg catalog -c net       Show networking tools only
+  qpkg catalog -s ssh       Search for SSH-related tools
 
 ${BOLD}EXAMPLES:${NC}
   qpkg update                  # Update BerryCore to latest version
+  qpkg catalog                 # Browse all available binaries
+  qpkg catalog -s compress     # Search for compression tools
+  qpkg bins                    # List all installed binaries
+  qpkg info nano               # Show info about nano binary
   qpkg install python          # Install Python port (coming soon)
-  qpkg search database         # Search for database packages
-  qpkg list                    # List all installed packages
-  qpkg info git                # Show info about git package
 
 ${BOLD}REPOSITORY:${NC}
   https://github.com/$GITHUB_REPO
@@ -349,6 +559,15 @@ main() {
         update)
             cmd_update "$@"
             ;;
+        catalog)
+            cmd_catalog "$@"
+            ;;
+        bins)
+            cmd_bins "$@"
+            ;;
+        info)
+            cmd_info "$@"
+            ;;
         install)
             cmd_install "$@"
             ;;
@@ -357,9 +576,6 @@ main() {
             ;;
         list)
             cmd_list "$@"
-            ;;
-        info)
-            cmd_info "$@"
             ;;
         help|--help|-h)
             cmd_help

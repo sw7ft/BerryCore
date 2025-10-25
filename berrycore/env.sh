@@ -34,11 +34,11 @@ export NMAPDIR
 # coreutils
 alias ls='ls --color=auto'
 
-# BerryCore utility aliases
-alias bchelp='bclist -h'
-alias bccat='bclist -c'        # Usage: bccat net
-alias bcsearch='bclist -s'     # Usage: bcsearch compress
-alias bcbins='ls -1 $NATIVE_TOOLS/bin'
+# BerryCore utility aliases (legacy - use qpkg commands)
+alias bchelp='qpkg catalog -h'
+alias bccat='qpkg catalog -c'        # Usage: bccat net
+alias bcsearch='qpkg catalog -s'     # Usage: bcsearch compress
+alias bcbins='qpkg bins'
 
 # fakeroot
 #export FAKEROOTUID=100
@@ -62,10 +62,10 @@ echo ""
 echo "69 packages installed with 100+ binaries available"
 echo ""
 echo "Browse available tools:"
-echo "  bclist              List major binaries by category"
-echo "  bclist -s TERM      Search for specific tools"
-echo "  bcinfo BINARY       Get info about a binary"
-echo "  bcbins              See all installed binaries"
+echo "  qpkg catalog        List all binaries by category"
+echo "  qpkg catalog -s     Search for specific tools"
+echo "  qpkg info BINARY    Get info about a binary"
+echo "  qpkg bins           See all installed binaries"
 echo ""
 echo "Quick start: nano, vim, git, nmap, curl, tmux, quickjs"
 echo "==========================================================="
