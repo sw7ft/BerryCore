@@ -1,0 +1,14 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// ciso646 standard header
+#ifndef _CISO646_
+#define _CISO646_
+#include <yvals.h>
+
+#include <iso646.h>
+#endif /* _CISO646_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

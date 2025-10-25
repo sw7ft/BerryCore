@@ -1,0 +1,1 @@
+libcamerafeatures can not be statically linked.  use libcamerafeatures.so instead.

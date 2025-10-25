@@ -1,0 +1,5 @@
+/*!
+ * Copyright (C) 2009-2014 BlackBerry Limited. All rights reserved.
+ */
+
+#include "bb/multimedia/MediaState.hpp"

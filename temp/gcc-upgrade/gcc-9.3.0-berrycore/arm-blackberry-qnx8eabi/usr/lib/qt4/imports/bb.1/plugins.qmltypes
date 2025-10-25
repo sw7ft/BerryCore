@@ -1,0 +1,259 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "QCoreApplication"
+        prototype: "QObject"
+        Property { name: "applicationName"; type: "string" }
+        Property { name: "applicationVersion"; type: "string" }
+        Property { name: "organizationName"; type: "string" }
+        Property { name: "organizationDomain"; type: "string" }
+        Signal { name: "aboutToQuit" }
+        Signal {
+            name: "unixSignal"
+            Parameter { type: "int" }
+        }
+        Method { name: "quit" }
+    }
+    Component {
+        name: "bb::Application"
+        prototype: "QCoreApplication"
+        Property { name: "autoExit"; type: "bool" }
+        Signal { name: "thumbnail" }
+        Signal {
+            name: "windowGroupThumbnailed"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Signal { name: "fullscreen" }
+        Signal {
+            name: "windowGroupFullscreen"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Signal { name: "invisible" }
+        Signal {
+            name: "windowGroupInvisible"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Signal { name: "swipeDown" }
+        Signal { name: "asleep" }
+        Signal {
+            name: "windowGroupAsleep"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Signal { name: "awake" }
+        Signal {
+            name: "windowGroupAwake"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Signal { name: "manualExit" }
+        Signal {
+            name: "autoExitChanged"
+            Parameter { name: "newAutoExit"; type: "bool" }
+        }
+        Signal {
+            name: "processStateChanged"
+            Parameter { name: "processState"; type: "bb::ProcessState::Type" }
+        }
+        Signal {
+            name: "pooling"
+            Parameter { name: "poolRequestID"; type: "string" }
+        }
+        Signal {
+            name: "processStateChanged"
+            Parameter { name: "processState"; type: "int" }
+        }
+        Method {
+            name: "setAutoExit"
+            Parameter { name: "autoExit"; type: "bool" }
+        }
+        Method { name: "autoExit"; type: "bool" }
+        Method { name: "extendTerminationTimeout"; type: "bool" }
+        Method {
+            name: "setIconBadge"
+            type: "bool"
+            Parameter { name: "badge"; type: "bb::IconBadge::Type" }
+        }
+        Method { name: "minimize"; type: "bool" }
+        Method { name: "requestExit"; type: "bool" }
+        Method {
+            name: "poolingComplete"
+            Parameter { name: "poolRequestID"; type: "string" }
+        }
+        Method {
+            name: "setClosePrompt"
+            type: "bool"
+            Parameter { name: "title"; type: "string" }
+            Parameter { name: "message"; type: "string" }
+        }
+        Method { name: "clearClosePrompt"; type: "bool" }
+        Method { name: "isAwake"; type: "bool" }
+        Method { name: "isAsleep"; type: "bool" }
+        Method { name: "isThumbnailed"; type: "bool" }
+        Method { name: "isInvisible"; type: "bool" }
+        Method { name: "isFullscreen"; type: "bool" }
+        Method {
+            name: "isWindowGroupAwake"
+            type: "bool"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Method {
+            name: "isWindowGroupAsleep"
+            type: "bool"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Method {
+            name: "isWindowGroupThumbnailed"
+            type: "bool"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Method {
+            name: "isWindowGroupInvisible"
+            type: "bool"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+        Method {
+            name: "isWindowGroupFullscreen"
+            type: "bool"
+            Parameter { name: "windowGroupID"; type: "string" }
+        }
+    }
+    Component {
+        name: "bb::ApplicationInfo"
+        prototype: "QObject"
+        exports: [
+            "bb/ApplicationInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "signingHash"; type: "string"; isReadonly: true }
+        Property { name: "versionSigningHash"; type: "string"; isReadonly: true }
+        Property { name: "title"; type: "string"; isReadonly: true }
+        Property { name: "version"; type: "string"; isReadonly: true }
+        Property { name: "description"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::FileSystemInfo"
+        prototype: "QObject"
+        exports: [
+            "bb/FileSystemInfo 1.0",
+            "bb/FileSystemInfo 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Method { name: "error"; type: "int" }
+        Method { name: "errorString"; type: "string" }
+        Method {
+            name: "fileSystemCapacity"
+            type: "qint64"
+            Parameter { name: "path"; type: "string" }
+        }
+        Method {
+            name: "availableFileSystemSpace"
+            type: "qint64"
+            Parameter { name: "path"; type: "string" }
+        }
+        Method { name: "physicalCapacity"; revision: 1; type: "qint64" }
+    }
+    Component {
+        name: "bb::IconBadge"
+        exports: [
+            "bb/IconBadge 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Splat": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::LowMemoryWarningLevel"
+        exports: [
+            "bb/LowMemoryWarningLevel 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Clear": 0,
+                "LowPriority": 1,
+                "HighPriority": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::MemoryInfo"
+        prototype: "QObject"
+        exports: [
+            "bb/MemoryInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Signal {
+            name: "lowMemory"
+            Parameter { name: "level"; type: "bb::LowMemoryWarningLevel::Type" }
+        }
+        Signal {
+            name: "lowMemory"
+            Parameter { name: "level"; type: "int" }
+        }
+        Method { name: "totalDeviceMemory"; type: "qint64" }
+        Method { name: "availableDeviceMemory"; type: "qint64" }
+        Method { name: "memoryUsedByCurrentProcess"; type: "qint64" }
+    }
+    Component {
+        name: "bb::PackageInfo"
+        prototype: "QObject"
+        exports: [
+            "bb/PackageInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "installId"; type: "string"; isReadonly: true }
+        Property { name: "signingHash"; type: "string"; isReadonly: true }
+        Property { name: "versionSigningHash"; type: "string"; isReadonly: true }
+        Property { name: "authorSigningHash"; type: "string"; isReadonly: true }
+        Property { name: "compatibilityVersion"; type: "string"; isReadonly: true }
+        Property { name: "name"; type: "string"; isReadonly: true }
+        Property { name: "version"; type: "string"; isReadonly: true }
+        Property { name: "author"; type: "string"; isReadonly: true }
+        Property { name: "locales"; type: "QVariantList"; isReadonly: true }
+        Property { name: "systemDependency"; type: "string"; isReadonly: true }
+        Property { name: "description"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::ProcessState"
+        exports: [
+            "bb/ProcessState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Foreground": 1,
+                "Background": 2,
+                "Stopping": 3
+            }
+        }
+    }
+}

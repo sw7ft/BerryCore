@@ -1,0 +1,1300 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::cascades::BaseObject"
+        prototype: "QObject"
+        Property { name: "objectName"; type: "string" }
+        Property { name: "parent"; type: "QObject"; isReadonly: true; isPointer: true }
+        Signal { name: "creationCompleted" }
+        Signal {
+            name: "objectNameChanged"
+            Parameter { name: "objectName"; type: "string" }
+        }
+        Method { name: "toDebugString"; type: "string" }
+    }
+    Component {
+        name: "bb::cascades::Control"
+        prototype: "bb::cascades::VisualNode"
+        Property { name: "horizontalAlignment"; type: "bb::cascades::HorizontalAlignment::Type" }
+        Property { name: "verticalAlignment"; type: "bb::cascades::VerticalAlignment::Type" }
+        Property { name: "preferredWidth"; type: "float" }
+        Property { name: "preferredWidthSet"; type: "bool"; isReadonly: true }
+        Property { name: "preferredHeight"; type: "float" }
+        Property { name: "preferredHeightSet"; type: "bool"; isReadonly: true }
+        Property { name: "leftPadding"; type: "float" }
+        Property { name: "rightPadding"; type: "float" }
+        Property { name: "topPadding"; type: "float" }
+        Property { name: "bottomPadding"; type: "float" }
+        Property { name: "enabled"; type: "bool" }
+        Property {
+            name: "focusRetentionPolicyFlags"
+            type: "bb::cascades::FocusRetentionPolicy::Types"
+        }
+        Property { name: "focused"; type: "bool"; isReadonly: true }
+        Property { name: "focusPolicy"; type: "bb::cascades::FocusPolicy::Type" }
+        Property { name: "focusAutoShow"; type: "bb::cascades::FocusAutoShow::Type" }
+        Property { name: "locallyFocused"; revision: 4; type: "bool" }
+        Property {
+            name: "inputRoute"
+            type: "bb::cascades::InputRouteProperties"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "layoutProperties"; type: "bb::cascades::LayoutProperties"; isPointer: true }
+        Property {
+            name: "margin"
+            revision: 3
+            type: "bb::cascades::Spacings"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "accessibilityMode"; revision: 2; type: "bb::cascades::A11yMode::Type" }
+        Property {
+            name: "accessibility"
+            revision: 2
+            type: "bb::cascades::AbstractA11yObject"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "leftMargin"; type: "float" }
+        Property { name: "leftMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "rightMargin"; type: "float" }
+        Property { name: "rightMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "topMargin"; type: "float" }
+        Property { name: "topMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "bottomMargin"; type: "float" }
+        Property { name: "bottomMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "minWidth"; type: "float" }
+        Property { name: "maxWidth"; type: "float" }
+        Property { name: "minHeight"; type: "float" }
+        Property { name: "maxHeight"; type: "float" }
+        Property {
+            name: "contextActions"
+            type: "bb::cascades::ActionSet"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "contextMenuHandler"
+            type: "bb::cascades::ContextMenuHandler"
+            isPointer: true
+        }
+        Property { name: "implicitLayoutAnimationsEnabled"; type: "bool" }
+        Property {
+            name: "shortcuts"
+            type: "bb::cascades::AbstractShortcut"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "keyListeners"
+            type: "bb::cascades::KeyListener"
+            isList: true
+            isReadonly: true
+        }
+        Property { name: "builtInShortcutsEnabled"; revision: 2; type: "bool" }
+        Property {
+            name: "navigation"
+            revision: 4
+            type: "bb::cascades::Navigation"
+            isReadonly: true
+            isPointer: true
+        }
+        Signal {
+            name: "horizontalAlignmentChanged"
+            Parameter { name: "newHorizontalAlignment"; type: "bb::cascades::HorizontalAlignment::Type" }
+        }
+        Signal {
+            name: "verticalAlignmentChanged"
+            Parameter { name: "newVerticalAlignment"; type: "bb::cascades::VerticalAlignment::Type" }
+        }
+        Signal {
+            name: "preferredWidthChanged"
+            Parameter { name: "preferredWidth"; type: "float" }
+        }
+        Signal {
+            name: "preferredWidthSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "preferredHeightChanged"
+            Parameter { name: "preferredHeight"; type: "float" }
+        }
+        Signal {
+            name: "preferredHeightSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "leftPaddingChanged"
+            Parameter { name: "leftPadding"; type: "float" }
+        }
+        Signal {
+            name: "rightPaddingChanged"
+            Parameter { name: "rightPadding"; type: "float" }
+        }
+        Signal {
+            name: "topPaddingChanged"
+            Parameter { name: "topPadding"; type: "float" }
+        }
+        Signal {
+            name: "bottomPaddingChanged"
+            Parameter { name: "bottomPadding"; type: "float" }
+        }
+        Signal {
+            name: "enabledChanged"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Signal {
+            name: "focusedChanged"
+            Parameter { name: "focused"; type: "bool" }
+        }
+        Signal {
+            name: "focusPolicyChanged"
+            Parameter { name: "newFocusPolicy"; type: "bb::cascades::FocusPolicy::Type" }
+        }
+        Signal {
+            name: "focusAutoShowChanged"
+            Parameter { name: "newFocusAutoShow"; type: "bb::cascades::FocusAutoShow::Type" }
+        }
+        Signal {
+            name: "locallyFocusedChanged"
+            revision: 4
+            Parameter { name: "newLocallyFocused"; type: "bool" }
+        }
+        Signal {
+            name: "layoutPropertiesChanged"
+            Parameter { name: "layoutProperties"; type: "bb::cascades::LayoutProperties"; isPointer: true }
+        }
+        Signal {
+            name: "leftMarginChanged"
+            Parameter { name: "leftMargin"; type: "float" }
+        }
+        Signal {
+            name: "leftMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "topMarginChanged"
+            Parameter { name: "topMargin"; type: "float" }
+        }
+        Signal {
+            name: "topMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "bottomMarginChanged"
+            Parameter { name: "bottomMargin"; type: "float" }
+        }
+        Signal {
+            name: "bottomMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "rightMarginChanged"
+            Parameter { name: "rightMargin"; type: "float" }
+        }
+        Signal {
+            name: "rightMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "minWidthChanged"
+            Parameter { name: "minWidth"; type: "float" }
+        }
+        Signal {
+            name: "maxWidthChanged"
+            Parameter { name: "maxWidth"; type: "float" }
+        }
+        Signal {
+            name: "minHeightChanged"
+            Parameter { name: "minHeight"; type: "float" }
+        }
+        Signal {
+            name: "maxHeightChanged"
+            Parameter { name: "maxHeight"; type: "float" }
+        }
+        Signal {
+            name: "actionSetAdded"
+            Parameter { name: "actionSet"; type: "bb::cascades::ActionSet"; isPointer: true }
+        }
+        Signal {
+            name: "actionSetRemoved"
+            Parameter { name: "actionSet"; type: "bb::cascades::ActionSet"; isPointer: true }
+        }
+        Signal {
+            name: "contextMenuHandlerChanged"
+            Parameter {
+                name: "contextMenuHandler"
+                type: "bb::cascades::ContextMenuHandler"
+                isPointer: true
+            }
+        }
+        Signal {
+            name: "focusRetentionPolicyFlagsChanged"
+            Parameter { name: "policy"; type: "bb::cascades::FocusRetentionPolicy::Types" }
+        }
+        Signal {
+            name: "implicitLayoutAnimationsEnabledChanged"
+            Parameter { name: "implicitLayoutAnimationsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "builtInShortcutsEnabledChanged"
+            revision: 2
+            Parameter { name: "builtInShortcutsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "accessibilityModeChanged"
+            revision: 2
+            Parameter { name: "newAccessibilityMode"; type: "bb::cascades::A11yMode::Type" }
+        }
+        Method {
+            name: "setBuiltInShortcutsEnabled"
+            revision: 2
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "setHorizontalAlignment"
+            Parameter { name: "horizontalAlignment"; type: "bb::cascades::HorizontalAlignment::Type" }
+        }
+        Method { name: "resetHorizontalAlignment" }
+        Method {
+            name: "setVerticalAlignment"
+            Parameter { name: "verticalAlignment"; type: "bb::cascades::VerticalAlignment::Type" }
+        }
+        Method { name: "resetVerticalAlignment" }
+        Method {
+            name: "setPreferredWidth"
+            Parameter { name: "preferredWidth"; type: "float" }
+        }
+        Method { name: "resetPreferredWidth" }
+        Method {
+            name: "setFocusRetentionPolicyFlags"
+            Parameter { name: "policy"; type: "bb::cascades::FocusRetentionPolicy::Types" }
+        }
+        Method { name: "resetFocusRetentionPolicyFlags" }
+        Method {
+            name: "setPreferredHeight"
+            Parameter { name: "preferredHeight"; type: "float" }
+        }
+        Method { name: "resetPreferredHeight" }
+        Method {
+            name: "setPreferredSize"
+            Parameter { name: "preferredWidth"; type: "float" }
+            Parameter { name: "preferredHeight"; type: "float" }
+        }
+        Method { name: "resetPreferredSize" }
+        Method {
+            name: "setLeftPadding"
+            Parameter { name: "leftPadding"; type: "float" }
+        }
+        Method { name: "resetLeftPadding" }
+        Method {
+            name: "setRightPadding"
+            Parameter { name: "rightPadding"; type: "float" }
+        }
+        Method { name: "resetRightPadding" }
+        Method {
+            name: "setTopPadding"
+            Parameter { name: "topPadding"; type: "float" }
+        }
+        Method { name: "resetTopPadding" }
+        Method {
+            name: "setBottomPadding"
+            Parameter { name: "bottomPadding"; type: "float" }
+        }
+        Method { name: "resetBottomPadding" }
+        Method {
+            name: "setFocusPolicy"
+            Parameter { name: "focusPolicy"; type: "bb::cascades::FocusPolicy::Type" }
+        }
+        Method { name: "resetFocusPolicy" }
+        Method {
+            name: "setFocusAutoShow"
+            Parameter { name: "focusAutoShow"; type: "bb::cascades::FocusAutoShow::Type" }
+        }
+        Method { name: "resetFocusAutoShow" }
+        Method {
+            name: "setLocallyFocused"
+            revision: 4
+            Parameter { name: "locallyFocused"; type: "bool" }
+        }
+        Method { name: "resetLocallyFocused"; revision: 4 }
+        Method {
+            name: "setEnabled"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method { name: "resetEnabled" }
+        Method {
+            name: "setLayoutProperties"
+            Parameter { name: "layoutProperties"; type: "bb::cascades::LayoutProperties"; isPointer: true }
+        }
+        Method { name: "resetLayoutProperties" }
+        Method {
+            name: "setLeftMargin"
+            Parameter { name: "leftMargin"; type: "float" }
+        }
+        Method { name: "resetLeftMargin" }
+        Method {
+            name: "setRightMargin"
+            Parameter { name: "rightMargin"; type: "float" }
+        }
+        Method { name: "resetRightMargin" }
+        Method {
+            name: "setTopMargin"
+            Parameter { name: "topMargin"; type: "float" }
+        }
+        Method { name: "resetTopMargin" }
+        Method {
+            name: "setBottomMargin"
+            Parameter { name: "bottomMargin"; type: "float" }
+        }
+        Method { name: "resetBottomMargin" }
+        Method {
+            name: "setMinWidth"
+            Parameter { name: "minWidth"; type: "float" }
+        }
+        Method { name: "resetMinWidth" }
+        Method {
+            name: "setMaxWidth"
+            Parameter { name: "maxWidth"; type: "float" }
+        }
+        Method { name: "resetMaxWidth" }
+        Method {
+            name: "setMinHeight"
+            Parameter { name: "minHeight"; type: "float" }
+        }
+        Method { name: "resetMinHeight" }
+        Method {
+            name: "setMaxHeight"
+            Parameter { name: "maxHeight"; type: "float" }
+        }
+        Method { name: "resetMaxHeight" }
+        Method { name: "requestFocus" }
+        Method { name: "loseFocus" }
+        Method { name: "resetContextMenuHandler" }
+        Method {
+            name: "setImplicitLayoutAnimationsEnabled"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Method { name: "resetImplicitLayoutAnimationsEnabled" }
+        Method {
+            name: "setAccessibilityMode"
+            revision: 2
+            Parameter { name: "accessibilityMode"; type: "bb::cascades::A11yMode::Type" }
+        }
+        Method { name: "resetAccessibilityMode"; revision: 2 }
+        Method {
+            name: "addShortcut"
+            Parameter { name: "shortcut"; type: "bb::cascades::AbstractShortcut"; isPointer: true }
+        }
+        Method {
+            name: "removeShortcut"
+            type: "bool"
+            Parameter { name: "shortcut"; type: "bb::cascades::AbstractShortcut"; isPointer: true }
+        }
+        Method { name: "removeAllShortcuts" }
+        Method { name: "shortcutCount"; type: "int" }
+        Method {
+            name: "shortcutAt"
+            type: "bb::cascades::AbstractShortcut*"
+            Parameter { name: "index"; type: "int" }
+        }
+        Method { name: "enableAllShortcuts" }
+        Method { name: "disableAllShortcuts" }
+        Method { name: "builtInShortcutsEnabled"; revision: 2; type: "bool" }
+        Method { name: "resetBuiltInShortcutsEnabled"; revision: 2 }
+        Method {
+            name: "setBuiltInShortcutEnabled"
+            revision: 2
+            Parameter { name: "type"; type: "bb::cascades::SystemShortcuts::Type" }
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "addKeyListener"
+            Parameter { name: "keyListener"; type: "bb::cascades::KeyListener"; isPointer: true }
+        }
+        Method {
+            name: "removeKeyListener"
+            type: "bool"
+            Parameter { name: "keyListener"; type: "bb::cascades::KeyListener"; isPointer: true }
+        }
+        Method { name: "removeAllKeyListeners" }
+        Method { name: "keyListenerCount"; type: "int" }
+        Method {
+            name: "keyListenerAt"
+            type: "bb::cascades::KeyListener*"
+            Parameter { name: "index"; type: "int" }
+        }
+        Method {
+            name: "setBuiltInShortcutEnabled"
+            revision: 2
+            Parameter { name: "type"; type: "int" }
+            Parameter { name: "enabled"; type: "bool" }
+        }
+    }
+    Component { name: "bb::cascades::CustomControl"; prototype: "bb::cascades::Control" }
+    Component {
+        name: "bb::cascades::UIObject"
+        prototype: "bb::cascades::BaseObject"
+        Property { name: "attachedObjects"; type: "QObject"; isList: true; isReadonly: true }
+        Property {
+            name: "ui"
+            revision: 3
+            type: "bb::cascades::UIConfig"
+            isReadonly: true
+            isPointer: true
+        }
+        Method { name: "ui"; revision: 3; type: "bb::cascades::UIConfig*" }
+    }
+    Component {
+        name: "bb::cascades::VisualNode"
+        prototype: "bb::cascades::UIObject"
+        Property { name: "opacity"; type: "float" }
+        Property { name: "visible"; type: "bool" }
+        Property { name: "translationX"; type: "float" }
+        Property { name: "translationY"; type: "float" }
+        Property { name: "rotationZ"; type: "float" }
+        Property { name: "scaleX"; type: "float" }
+        Property { name: "scaleY"; type: "float" }
+        Property { name: "pivotX"; type: "float" }
+        Property { name: "pivotY"; type: "float" }
+        Property { name: "touchPropagationMode"; type: "bb::cascades::TouchPropagationMode::Type" }
+        Property { name: "overlapTouchPolicy"; type: "bb::cascades::OverlapTouchPolicy::Type" }
+        Property {
+            name: "touchBehaviors"
+            type: "bb::cascades::TouchBehavior"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "gestureHandlers"
+            type: "bb::cascades::GestureHandler"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "animations"
+            type: "bb::cascades::AbstractAnimation"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "eventHandlers"
+            revision: 3
+            type: "bb::cascades::AbstractEventHandler"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "effects"
+            revision: 4
+            type: "bb::cascades::AbstractEffect"
+            isList: true
+            isReadonly: true
+        }
+        Signal {
+            name: "opacityChanged"
+            Parameter { name: "opacity"; type: "float" }
+        }
+        Signal {
+            name: "opacityChanging"
+            Parameter { name: "opacity"; type: "float" }
+        }
+        Signal {
+            name: "visibleChanged"
+            Parameter { name: "visible"; type: "bool" }
+        }
+        Signal {
+            name: "translationXChanged"
+            Parameter { name: "translationX"; type: "float" }
+        }
+        Signal {
+            name: "translationYChanged"
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Signal {
+            name: "translationXChanging"
+            Parameter { name: "translationX"; type: "float" }
+        }
+        Signal {
+            name: "translationYChanging"
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Signal {
+            name: "rotationZChanging"
+            Parameter { name: "rotationZ"; type: "float" }
+        }
+        Signal {
+            name: "rotationZChanged"
+            Parameter { name: "rotationZ"; type: "float" }
+        }
+        Signal {
+            name: "scaleXChanged"
+            Parameter { name: "scaleX"; type: "float" }
+        }
+        Signal {
+            name: "scaleYChanged"
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Signal {
+            name: "scaleXChanging"
+            Parameter { name: "scaleX"; type: "float" }
+        }
+        Signal {
+            name: "scaleYChanging"
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Signal {
+            name: "pivotXChanged"
+            Parameter { name: "pivotX"; type: "float" }
+        }
+        Signal {
+            name: "pivotYChanged"
+            Parameter { name: "pivotY"; type: "float" }
+        }
+        Signal {
+            name: "touch"
+            Parameter { name: "event"; type: "bb::cascades::TouchEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchCapture"
+            Parameter { name: "event"; type: "bb::cascades::TouchEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchEnter"
+            Parameter { name: "event"; type: "bb::cascades::TouchEnterEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchExit"
+            Parameter { name: "event"; type: "bb::cascades::TouchExitEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchPropagationModeChanged"
+            Parameter { name: "newTouchPropagationMode"; type: "bb::cascades::TouchPropagationMode::Type" }
+        }
+        Signal {
+            name: "overlapTouchPolicyChanged"
+            Parameter { name: "newOverlapTouchPolicy"; type: "bb::cascades::OverlapTouchPolicy::Type" }
+        }
+        Method {
+            name: "setOpacity"
+            Parameter { name: "opacity"; type: "float" }
+        }
+        Method { name: "resetOpacity" }
+        Method {
+            name: "setVisible"
+            Parameter { name: "visible"; type: "bool" }
+        }
+        Method { name: "resetVisible" }
+        Method {
+            name: "setTranslationX"
+            Parameter { name: "translationX"; type: "float" }
+        }
+        Method { name: "resetTranslationX" }
+        Method {
+            name: "setTranslationY"
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Method { name: "resetTranslationY" }
+        Method {
+            name: "setTranslation"
+            Parameter { name: "translationX"; type: "float" }
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Method { name: "resetTranslation" }
+        Method {
+            name: "setRotationZ"
+            Parameter { name: "rotationZ"; type: "float" }
+        }
+        Method { name: "resetRotationZ" }
+        Method {
+            name: "setScaleX"
+            Parameter { name: "scaleX"; type: "float" }
+        }
+        Method { name: "resetScaleX" }
+        Method {
+            name: "setScaleY"
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Method { name: "resetScaleY" }
+        Method {
+            name: "setScale"
+            Parameter { name: "scaleX"; type: "float" }
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Method {
+            name: "setScale"
+            Parameter { name: "scaleXY"; type: "float" }
+        }
+        Method { name: "resetScale" }
+        Method {
+            name: "setPivotX"
+            Parameter { name: "pivotX"; type: "float" }
+        }
+        Method { name: "resetPivotX" }
+        Method {
+            name: "setPivotY"
+            Parameter { name: "pivotY"; type: "float" }
+        }
+        Method { name: "resetPivotY" }
+        Method {
+            name: "setPivot"
+            Parameter { name: "pivotX"; type: "float" }
+            Parameter { name: "pivotY"; type: "float" }
+        }
+        Method { name: "resetPivot" }
+        Method {
+            name: "setTouchPropagationMode"
+            Parameter { name: "mode"; type: "bb::cascades::TouchPropagationMode::Type" }
+        }
+        Method { name: "resetTouchPropagationMode" }
+        Method {
+            name: "setOverlapTouchPolicy"
+            Parameter { name: "policy"; type: "bb::cascades::OverlapTouchPolicy::Type" }
+        }
+        Method { name: "resetOverlapTouchPolicy" }
+        Method {
+            name: "addEffect"
+            revision: 4
+            Parameter { name: "effect"; type: "bb::cascades::AbstractEffect"; isPointer: true }
+        }
+        Method {
+            name: "removeEffect"
+            revision: 4
+            Parameter { name: "effect"; type: "bb::cascades::AbstractEffect"; isPointer: true }
+        }
+    }
+    Component {
+        name: "bb::cascades::maps::DataProvider"
+        prototype: "QObject"
+        exports: [
+            "bb.cascades.maps/DataProvider 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "styles"; type: "bb::platform::geo::StyleSheet" }
+        Property { name: "visible"; type: "bool" }
+        Property { name: "providerId"; type: "string" }
+        Signal {
+            name: "geoAdded"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementId"; type: "string" }
+        }
+        Signal {
+            name: "geoAddedBulk"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementIds"; type: "QStringList" }
+        }
+        Signal {
+            name: "geoRemoved"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementId"; type: "string" }
+        }
+        Signal {
+            name: "geoRemovedBulk"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementIds"; type: "QStringList" }
+        }
+        Signal {
+            name: "visibilityChanged"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "visible"; type: "bool" }
+        }
+        Signal {
+            name: "topographyChanged"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementId"; type: "string" }
+        }
+        Signal {
+            name: "stylesChanged"
+            Parameter { name: "newStyles"; type: "bb::platform::geo::StyleSheet" }
+        }
+        Signal {
+            name: "providerIdChanged"
+            Parameter { name: "providerId"; type: "string" }
+        }
+        Method {
+            name: "setStyles"
+            Parameter { name: "styles"; type: "bb::platform::geo::StyleSheet" }
+        }
+        Method { name: "resetStyles" }
+    }
+    Component {
+        name: "bb::cascades::maps::GeographicsProvisioningBridge"
+        prototype: "QObject"
+        exports: [
+            "bb.cascades.maps/GeographicsProvisioningBridge 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "source"; type: "QUrl" }
+        Property {
+            name: "destinationProvider"
+            type: "bb::cascades::maps::DataProvider"
+            isPointer: true
+        }
+        Property {
+            name: "type"
+            type: "bb::cascades::maps::GeographicsProvisioningBridgeDataSource::Type"
+        }
+        Property { name: "sourceRemote"; type: "bool"; isReadonly: true }
+        Signal {
+            name: "sourceChanged"
+            Parameter { name: "source"; type: "QUrl" }
+        }
+        Signal {
+            name: "destinationProviderChanged"
+            Parameter {
+                name: "destinationProvider"
+                type: "bb::cascades::maps::DataProvider"
+                isPointer: true
+            }
+        }
+        Signal {
+            name: "typeChanged"
+            Parameter {
+                name: "type"
+                type: "bb::cascades::maps::GeographicsProvisioningBridgeDataSource::Type"
+            }
+        }
+        Signal {
+            name: "sourceRemoteChanged"
+            Parameter { name: "sourceRemote"; type: "bool" }
+        }
+        Signal {
+            name: "finished"
+            Parameter {
+                name: "resultType"
+                type: "bb::cascades::maps::GeographicsProvisioningBridgeResult::Type"
+            }
+            Parameter { name: "errorMessage"; type: "string" }
+        }
+        Signal {
+            name: "typeChanged"
+            Parameter { name: "type"; type: "int" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "resultType"; type: "int" }
+            Parameter { name: "errorMessage"; type: "string" }
+        }
+        Method {
+            name: "setSource"
+            Parameter { name: "source"; type: "QUrl" }
+        }
+        Method {
+            name: "setDestinationProvider"
+            Parameter { name: "provider"; type: "bb::cascades::maps::DataProvider"; isPointer: true }
+        }
+        Method {
+            name: "setType"
+            Parameter { name: "type"; type: "GeographicsProvisioningBridgeDataSource::Type" }
+        }
+        Method { name: "load" }
+        Method { name: "abort" }
+    }
+    Component {
+        name: "bb::cascades::maps::GeographicsProvisioningBridgeDataSource"
+        exports: [
+            "bb.cascades.maps/GeographicsProvisioningBridgeDataSource 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "AutoDetect": 0,
+                "Kml": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::maps::GeographicsProvisioningBridgeResult"
+        exports: [
+            "bb.cascades.maps/GeographicsProvisioningBridgeResult 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Success": 0,
+                "SourceNotFound": 1,
+                "ConnectionFailure": 2,
+                "OperationFailure": 3,
+                "UnknownContentType": 4,
+                "InvalidDataProvider": 5,
+                "UnableToOpenFile": 6
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::maps::MapData"
+        prototype: "QObject"
+        exports: [
+            "bb.cascades.maps/MapData 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "styles"; type: "bb::platform::geo::StyleSheet" }
+        Property {
+            name: "dataProviders"
+            type: "bb::cascades::maps::DataProvider"
+            isList: true
+            isReadonly: true
+        }
+        Signal {
+            name: "focusedIdChanged"
+            Parameter { name: "focusedId"; type: "string" }
+        }
+        Signal {
+            name: "geoAdded"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementId"; type: "string" }
+        }
+        Signal {
+            name: "geoAddedBulk"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementIds"; type: "QStringList" }
+        }
+        Signal {
+            name: "geoRemoved"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementId"; type: "string" }
+        }
+        Signal {
+            name: "geoRemovedBulk"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementIds"; type: "QStringList" }
+        }
+        Signal {
+            name: "visibilityChanged"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "visible"; type: "bool" }
+        }
+        Signal {
+            name: "providerAdded"
+            Parameter { name: "providerId"; type: "string" }
+        }
+        Signal {
+            name: "providerRemoved"
+            Parameter { name: "providerId"; type: "string" }
+        }
+        Signal {
+            name: "topographyChanged"
+            Parameter { name: "providerId"; type: "string" }
+            Parameter { name: "elementId"; type: "string" }
+        }
+        Signal {
+            name: "stylesChanged"
+            Parameter { name: "newStyles"; type: "bb::platform::geo::StyleSheet" }
+        }
+        Method {
+            name: "setStyles"
+            Parameter { name: "styles"; type: "bb::platform::geo::StyleSheet" }
+        }
+        Method { name: "resetStyles" }
+    }
+    Component {
+        name: "bb::cascades::maps::MapView"
+        prototype: "bb::cascades::CustomControl"
+        exports: [
+            "bb.cascades.maps/MapView 1.0",
+            "bb.cascades.maps/MapView 1.2",
+            "bb.cascades.maps/MapView 1.3",
+            "bb.cascades.maps/MapView 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1,
+            2,
+            3
+        ]
+        Property { name: "altitude"; type: "double" }
+        Property { name: "altitudeMode"; type: "bb::platform::geo::AltitudeMode::Type" }
+        Property { name: "heading"; type: "double" }
+        Property { name: "latitude"; type: "double" }
+        Property { name: "longitude"; type: "double" }
+        Property { name: "tilt"; type: "int" }
+        Property { name: "focusedId"; type: "string" }
+        Property { name: "followedId"; type: "string" }
+        Property { name: "captionContent"; revision: 1; type: "bb::cascades::Container"; isPointer: true }
+        Property { name: "mapData"; revision: 1; type: "bb::cascades::maps::MapData"; isPointer: true }
+        Property { name: "inlineTrafficEnabled"; revision: 1; type: "bool" }
+        Property { name: "inlineTrafficAvailable"; revision: 1; type: "bool"; isReadonly: true }
+        Property { name: "inlineTrafficSupported"; revision: 1; type: "bool"; isReadonly: true }
+        Property { name: "animationDuration"; revision: 2; type: "int" }
+        Property { name: "animationActive"; revision: 2; type: "bool"; isReadonly: true }
+        Signal {
+            name: "altitudeChanged"
+            Parameter { name: "newAlt"; type: "double" }
+        }
+        Signal {
+            name: "altitudeModeChanged"
+            Parameter { name: "mode"; type: "bb::platform::geo::AltitudeMode::Type" }
+        }
+        Signal {
+            name: "headingChanged"
+            Parameter { name: "newHeading"; type: "double" }
+        }
+        Signal {
+            name: "latitudeChanged"
+            Parameter { name: "newLat"; type: "double" }
+        }
+        Signal {
+            name: "longitudeChanged"
+            Parameter { name: "newLon"; type: "double" }
+        }
+        Signal {
+            name: "tiltChanged"
+            Parameter { name: "newTilt"; type: "int" }
+        }
+        Signal {
+            name: "focusedIdChanged"
+            Parameter { name: "idWithFocus"; type: "string" }
+        }
+        Signal {
+            name: "followedIdChanged"
+            Parameter { name: "idOfFollowed"; type: "string" }
+        }
+        Signal { name: "requestRender" }
+        Signal {
+            name: "locationTapped"
+            Parameter { name: "id"; type: "string" }
+        }
+        Signal {
+            name: "locationLongPressed"
+            Parameter { name: "id"; type: "string" }
+        }
+        Signal {
+            name: "mapLongPressed"
+            Parameter { name: "coordinates"; type: "bb::platform::geo::Point" }
+        }
+        Signal { name: "captionButtonClicked" }
+        Signal {
+            name: "captionLabelTapped"
+            Parameter { name: "tapEvent"; type: "bb::cascades::TapEvent"; isPointer: true }
+        }
+        Signal {
+            name: "captionContentChanged"
+            revision: 1
+            Parameter { name: "newContent"; type: "bb::cascades::Container"; isPointer: true }
+        }
+        Signal {
+            name: "mapDataChanged"
+            revision: 1
+            Parameter { name: "mapData"; type: "bb::cascades::maps::MapData"; isPointer: true }
+        }
+        Signal {
+            name: "inlineTrafficEnabledChanged"
+            revision: 1
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Signal {
+            name: "inlineTrafficAvailableChanged"
+            revision: 1
+            Parameter { name: "available"; type: "bool" }
+        }
+        Signal {
+            name: "inlineTrafficSupportedChanged"
+            revision: 1
+            Parameter { name: "supported"; type: "bool" }
+        }
+        Signal {
+            name: "animationDurationChanged"
+            revision: 2
+            Parameter { name: "milliseconds"; type: "int" }
+        }
+        Signal {
+            name: "animationActiveChanged"
+            revision: 2
+            Parameter { name: "animationActivity"; type: "bool" }
+        }
+        Method {
+            name: "setAltitude"
+            Parameter { name: "newAlt"; type: "double" }
+        }
+        Method { name: "resetAltitude" }
+        Method {
+            name: "setAltitudeMode"
+            Parameter { name: "newAlt"; type: "bb::platform::geo::AltitudeMode::Type" }
+        }
+        Method { name: "resetAltitudeMode" }
+        Method {
+            name: "setHeading"
+            Parameter { name: "newHeading"; type: "double" }
+        }
+        Method { name: "resetHeading" }
+        Method {
+            name: "setLatitude"
+            Parameter { name: "newLat"; type: "double" }
+        }
+        Method { name: "resetLatitude" }
+        Method {
+            name: "setLongitude"
+            Parameter { name: "newLon"; type: "double" }
+        }
+        Method { name: "resetLongitude" }
+        Method {
+            name: "setTilt"
+            Parameter { name: "newTilt"; type: "int" }
+        }
+        Method { name: "resetTilt" }
+        Method {
+            name: "setFocusedId"
+            Parameter { name: "newFocusedId"; type: "string" }
+        }
+        Method { name: "resetFocusedId" }
+        Method {
+            name: "setFollowedId"
+            Parameter { name: "newFollowedId"; type: "string" }
+            Parameter { name: "horizontalOffset"; type: "float" }
+            Parameter { name: "verticalOffset"; type: "float" }
+        }
+        Method {
+            name: "setFollowedId"
+            Parameter { name: "newFollowedId"; type: "string" }
+            Parameter { name: "horizontalOffset"; type: "float" }
+        }
+        Method {
+            name: "setFollowedId"
+            Parameter { name: "newFollowedId"; type: "string" }
+        }
+        Method { name: "resetFollowedId" }
+        Method {
+            name: "setCaptionContent"
+            revision: 1
+            Parameter { name: "captionContent"; type: "bb::cascades::Container"; isPointer: true }
+        }
+        Method { name: "resetCaptionContent"; revision: 1 }
+        Method { name: "setLocationOnFocused" }
+        Method { name: "setLocationOnVisible" }
+        Method {
+            name: "setMapData"
+            Parameter { name: "data"; type: "bb::cascades::maps::MapData"; isPointer: true }
+        }
+        Method {
+            name: "setLocation"
+            type: "bool"
+            Parameter { name: "loc"; type: "bb::platform::geo::Point" }
+        }
+        Method {
+            name: "setLocation"
+            type: "bool"
+            Parameter { name: "area"; type: "bb::platform::geo::BoundingBox" }
+        }
+        Method {
+            name: "animateToLocation"
+            revision: 2
+            Parameter { name: "location"; type: "bb::platform::geo::Point" }
+        }
+        Method {
+            name: "animateToAltitude"
+            revision: 3
+            Parameter { name: "newAlt"; type: "double" }
+        }
+        Method {
+            name: "animateToHeading"
+            revision: 3
+            Parameter { name: "newHeading"; type: "double" }
+        }
+        Method {
+            name: "setRenderEngine"
+            type: "bool"
+            Parameter { name: "pluginName"; type: "string" }
+        }
+        Method { name: "resetViewBoundaries" }
+        Method {
+            name: "setAnimationDuration"
+            revision: 2
+            Parameter { name: "milliSeconds"; type: "int" }
+        }
+        Method { name: "resetAnimationDuration"; revision: 2 }
+        Method {
+            name: "animateToLocation"
+            revision: 2
+            Parameter { name: "latitude"; type: "double" }
+            Parameter { name: "longitude"; type: "double" }
+        }
+        Method {
+            name: "animateToLocation"
+            revision: 2
+            Parameter { name: "latitude"; type: "double" }
+            Parameter { name: "longitude"; type: "double" }
+            Parameter { name: "altitude"; type: "double" }
+        }
+        Method { name: "url"; type: "string" }
+        Method { name: "geoUri"; type: "string" }
+        Method {
+            name: "setCaptionGoButtonVisible"
+            Parameter { name: "showButton"; type: "bool" }
+        }
+    }
+    Component {
+        name: "bb::platform::geo::AltitudeMode"
+        exports: [
+            "bb.cascades.maps/AltitudeMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Absolute": 1,
+                "ClampToGround": 2,
+                "RelativeToGround": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::geo::GeoLocation"
+        prototype: "bb::platform::geo::Geographic"
+        exports: [
+            "bb.cascades.maps/GeoLocation 1.0",
+            "bb.cascades.maps/GeoLocation 1.2",
+            "bb.cascades.maps/GeoLocation 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1,
+            2
+        ]
+        Property { name: "point"; type: "bb::platform::geo::Point" }
+        Property { name: "iconUri"; type: "string" }
+        Property { name: "marker"; type: "bb::platform::geo::Marker" }
+        Property { name: "radius"; revision: 1; type: "double" }
+        Signal {
+            name: "pointChanged"
+            Parameter { name: "point"; type: "bb::platform::geo::Point" }
+        }
+        Signal {
+            name: "iconUriChanged"
+            Parameter { name: "iconUri"; type: "string" }
+        }
+        Signal {
+            name: "markerChanged"
+            Parameter { name: "newMarker"; type: "bb::platform::geo::Marker" }
+        }
+        Signal {
+            name: "radiusChanged"
+            revision: 1
+            Parameter { name: "newRadius"; type: "double" }
+        }
+        Method {
+            name: "setPoint"
+            revision: 2
+            type: "bool"
+            Parameter { name: "point"; type: "bb::platform::geo::Point" }
+        }
+        Method {
+            name: "setAltitude"
+            revision: 2
+            type: "bool"
+            Parameter { name: "alt"; type: "double" }
+        }
+        Method {
+            name: "setAltitudeMode"
+            revision: 2
+            type: "bool"
+            Parameter { name: "mode"; type: "bb::platform::geo::AltitudeMode::Type" }
+        }
+        Method {
+            name: "setLatitude"
+            revision: 2
+            type: "bool"
+            Parameter { name: "lat"; type: "double" }
+        }
+        Method {
+            name: "setLongitude"
+            revision: 2
+            type: "bool"
+            Parameter { name: "lon"; type: "double" }
+        }
+        Method {
+            name: "setIconUri"
+            Parameter { name: "iconUri"; type: "string" }
+        }
+        Method {
+            name: "setMarker"
+            Parameter { name: "marker"; type: "bb::platform::geo::Marker" }
+        }
+        Method { name: "resetMarker" }
+        Method { name: "resetRadius"; revision: 1 }
+    }
+    Component {
+        name: "bb::platform::geo::Geographic"
+        prototype: "QObject"
+        Property { name: "id"; type: "string" }
+        Property { name: "geoId"; type: "string" }
+        Property { name: "name"; type: "string" }
+        Property { name: "description"; type: "string" }
+        Property { name: "boundingBox"; type: "bb::platform::geo::BoundingBox"; isReadonly: true }
+        Property { name: "styleFamily"; type: "string" }
+        Signal {
+            name: "descriptionChanged"
+            Parameter { name: "desc"; type: "string" }
+        }
+        Signal {
+            name: "idChanged"
+            Parameter { name: "id"; type: "string" }
+        }
+        Signal {
+            name: "geoIdChanged"
+            Parameter { name: "id"; type: "string" }
+        }
+        Signal {
+            name: "nameChanged"
+            Parameter { name: "name"; type: "string" }
+        }
+        Signal {
+            name: "boundaryChanged"
+            Parameter { name: "box"; type: "bb::platform::geo::BoundingBox" }
+        }
+        Signal {
+            name: "topographyChanged"
+            Parameter { name: "id"; type: "string" }
+        }
+        Signal {
+            name: "styleFamilyChanged"
+            Parameter { name: "newFamily"; type: "string" }
+        }
+        Signal {
+            name: "boundingBoxChanged"
+            Parameter { name: "box"; type: "BoundingBox" }
+        }
+        Method {
+            name: "setDescription"
+            Parameter { name: "desc"; type: "string" }
+        }
+        Method {
+            name: "setId"
+            Parameter { name: "id"; type: "string" }
+        }
+        Method {
+            name: "setGeoId"
+            Parameter { name: "id"; type: "string" }
+        }
+        Method {
+            name: "setName"
+            Parameter { name: "name"; type: "string" }
+        }
+        Method {
+            name: "setStyleFamily"
+            Parameter { name: "styleFamily"; type: "string" }
+        }
+    }
+}

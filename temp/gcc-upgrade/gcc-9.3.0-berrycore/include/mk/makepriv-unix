@@ -1,0 +1,4 @@
+# parms: owner, group, permissions, filename
+echo Run ${HOME}/priv-script as root to set file permissions properly
+echo chown $1:$2 $4 >>${HOME}/priv-script
+echo chmod $3    $4 >>${HOME}/priv-script

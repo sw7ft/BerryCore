@@ -1,0 +1,205 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::network::PushCommand"
+        exports: [
+            "bb.network/PushCommand 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "CreateSession": 0,
+                "CreateChannel": 1,
+                "DestroyChannel": 2,
+                "RegisterToLaunch": 3,
+                "UnregisterFromLaunch": 4,
+                "AcceptPush": 5,
+                "RejectPush": 6
+            }
+        }
+        Enum {
+            name: "Types"
+            values: {
+                "CreateSession": 0,
+                "CreateChannel": 1,
+                "DestroyChannel": 2,
+                "RegisterToLaunch": 3,
+                "UnregisterFromLaunch": 4,
+                "AcceptPush": 5,
+                "RejectPush": 6
+            }
+        }
+    }
+    Component {
+        name: "bb::network::PushErrorCode"
+        exports: [
+            "bb.network/PushErrorCode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "NoError": 0,
+                "InternalError": 500,
+                "ConnectionClosed": 501,
+                "NoPermCreateConnection": 502,
+                "InvalidPin": 10001,
+                "InvalidProviderId": 10002,
+                "UserAlreadyUnregistered": 10004,
+                "AlreadyUnsubscribedByProvider": 10005,
+                "InvalidSubscriptionStatus": 10006,
+                "PinNotFound": 10007,
+                "SubscriptionRequestTimeOut": 10008,
+                "InvalidAccess": 10009,
+                "SubscriptionLimitExceeded": 10010,
+                "InvalidSubscriptionParameters": 10011,
+                "SubscriptionAlreadySuspendedByProvider": 10012,
+                "SessionNotFound": 10100,
+                "PpgUrlMissing": 10102,
+                "TransportFailure": 10103,
+                "InvalidCommand": 10104,
+                "CommandNotSupported": 10105,
+                "UserNotRegistered": 10106,
+                "SubscribeMissingPort": 10107,
+                "SubscribeMissingRc": 10108,
+                "SubscriptionContentNotAvailable": 10110,
+                "InvalidTargetKey": 10111,
+                "SessionAlreadyExists": 10112,
+                "InvalidPpgUrlOrPpgNotAvailable": 10113,
+                "InvalidPpgUrl": 10114
+            }
+        }
+        Enum {
+            name: "Types"
+            values: {
+                "NoError": 0,
+                "InternalError": 500,
+                "ConnectionClosed": 501,
+                "NoPermCreateConnection": 502,
+                "InvalidPin": 10001,
+                "InvalidProviderId": 10002,
+                "UserAlreadyUnregistered": 10004,
+                "AlreadyUnsubscribedByProvider": 10005,
+                "InvalidSubscriptionStatus": 10006,
+                "PinNotFound": 10007,
+                "SubscriptionRequestTimeOut": 10008,
+                "InvalidAccess": 10009,
+                "SubscriptionLimitExceeded": 10010,
+                "InvalidSubscriptionParameters": 10011,
+                "SubscriptionAlreadySuspendedByProvider": 10012,
+                "SessionNotFound": 10100,
+                "PpgUrlMissing": 10102,
+                "TransportFailure": 10103,
+                "InvalidCommand": 10104,
+                "CommandNotSupported": 10105,
+                "UserNotRegistered": 10106,
+                "SubscribeMissingPort": 10107,
+                "SubscribeMissingRc": 10108,
+                "SubscriptionContentNotAvailable": 10110,
+                "InvalidTargetKey": 10111,
+                "SessionAlreadyExists": 10112,
+                "InvalidPpgUrlOrPpgNotAvailable": 10113,
+                "InvalidPpgUrl": 10114
+            }
+        }
+    }
+    Component {
+        name: "bb::network::PushService"
+        prototype: "QObject"
+        exports: [
+            "bb.network/PushService 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "providerApplicationId"; type: "string" }
+        Property { name: "targetKey"; type: "string" }
+        Property { name: "command"; type: "bb::network::PushCommand::Type"; isReadonly: true }
+        Property { name: "hasConnection"; type: "bool"; isReadonly: true }
+        Signal {
+            name: "createSessionCompleted"
+            Parameter { name: "status"; type: "bb::network::PushStatus" }
+        }
+        Signal {
+            name: "createChannelCompleted"
+            Parameter { name: "status"; type: "bb::network::PushStatus" }
+            Parameter { name: "token"; type: "string" }
+        }
+        Signal {
+            name: "destroyChannelCompleted"
+            Parameter { name: "status"; type: "bb::network::PushStatus" }
+        }
+        Signal {
+            name: "registerToLaunchCompleted"
+            Parameter { name: "status"; type: "bb::network::PushStatus" }
+        }
+        Signal {
+            name: "unregisterFromLaunchCompleted"
+            Parameter { name: "status"; type: "bb::network::PushStatus" }
+        }
+        Signal { name: "simChanged" }
+        Signal {
+            name: "pushTransportReady"
+            Parameter { name: "command"; type: "bb::network::PushCommand::Type" }
+        }
+        Signal { name: "connectionClosed" }
+        Signal {
+            name: "createSessionCompleted"
+            Parameter { name: "status"; type: "int" }
+        }
+        Signal {
+            name: "createChannelCompleted"
+            Parameter { name: "status"; type: "int" }
+            Parameter { name: "token"; type: "string" }
+        }
+        Signal {
+            name: "destroyChannelCompleted"
+            Parameter { name: "status"; type: "int" }
+        }
+        Signal {
+            name: "registerToLaunchCompleted"
+            Parameter { name: "status"; type: "int" }
+        }
+        Signal {
+            name: "unregisterFromLaunchCompleted"
+            Parameter { name: "status"; type: "int" }
+        }
+        Method {
+            name: "setProviderApplicationId"
+            Parameter { name: "providerApplicationId"; type: "string" }
+        }
+        Method {
+            name: "setTargetKey"
+            Parameter { name: "targetKey"; type: "string" }
+        }
+        Method { name: "createSession" }
+        Method {
+            name: "createChannel"
+            Parameter { name: "pushProxyGatewayUrl"; type: "QUrl" }
+        }
+        Method { name: "destroyChannel" }
+        Method { name: "registerToLaunch" }
+        Method { name: "unregisterFromLaunch" }
+        Method {
+            name: "acceptPush"
+            Parameter { name: "payloadId"; type: "string" }
+        }
+        Method {
+            name: "rejectPush"
+            Parameter { name: "payloadId"; type: "string" }
+        }
+        Method { name: "hasConnection"; type: "bool" }
+        Method { name: "reconnect"; type: "bool" }
+    }
+}

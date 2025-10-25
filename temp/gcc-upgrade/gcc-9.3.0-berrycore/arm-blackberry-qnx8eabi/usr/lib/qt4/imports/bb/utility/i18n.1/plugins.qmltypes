@@ -1,0 +1,91 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::utility::i18n::ClockFormat"
+        exports: [
+            "bb.utility.i18n/ClockFormat 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "ApplyUserFormat": 1,
+                "ApplyLocaleFormat": 2,
+                "Use12hourClock": 12,
+                "Use24hourClock": 24
+            }
+        }
+    }
+    Component {
+        name: "bb::utility::i18n::CustomDateFormatter"
+        prototype: "QObject"
+        exports: [
+            "bb.utility.i18n/CustomDateFormatter 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "skeleton"; type: "string" }
+        Method {
+            name: "setSkeleton"
+            Parameter { name: "skeleton"; type: "string" }
+        }
+        Method { name: "isValid"; type: "bool" }
+        Method {
+            name: "format"
+            type: "string"
+            Parameter { name: "dateTime"; type: "QDateTime" }
+        }
+    }
+    Component {
+        name: "bb::utility::i18n::RelativeDateFormat"
+        exports: [
+            "bb.utility.i18n/RelativeDateFormat 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "TimeCritical": 1,
+                "NonTimeCritical": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::utility::i18n::RelativeDateFormatter"
+        prototype: "QObject"
+        exports: [
+            "bb.utility.i18n/RelativeDateFormatter 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "type"; type: "bb::utility::i18n::RelativeDateFormat::Type" }
+        Signal { name: "changed" }
+        Method {
+            name: "setAnchorTime"
+            Parameter { name: "anchorTime"; type: "QDateTime" }
+        }
+        Method { name: "applyCurrentTimeAsAnchor" }
+        Method { name: "applyUserRegionLocale" }
+        Method {
+            name: "setClockFormat"
+            Parameter { name: "format"; type: "bb::utility::i18n::ClockFormat::Type" }
+        }
+        Method {
+            name: "format"
+            type: "string"
+            Parameter { name: "dateTime"; type: "QDateTime" }
+        }
+    }
+}

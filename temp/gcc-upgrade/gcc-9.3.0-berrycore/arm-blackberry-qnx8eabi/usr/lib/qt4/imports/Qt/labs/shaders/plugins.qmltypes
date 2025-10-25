@@ -1,0 +1,74 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "ShaderEffectItem"
+        defaultProperty: "data"
+        prototype: "QDeclarativeItem"
+        exports: [
+            "Qt.labs.shaders/ShaderEffectItem 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "fragmentShader"; type: "string" }
+        Property { name: "vertexShader"; type: "string" }
+        Property { name: "blending"; type: "bool" }
+        Property { name: "meshResolution"; type: "QSize" }
+        Signal { name: "fragmentShaderChanged" }
+        Signal { name: "vertexShaderChanged" }
+        Signal { name: "blendingChanged" }
+        Signal { name: "activeChanged" }
+        Signal { name: "meshResolutionChanged" }
+    }
+    Component {
+        name: "ShaderEffectSource"
+        defaultProperty: "data"
+        prototype: "QDeclarativeItem"
+        exports: [
+            "Qt.labs.shaders/ShaderEffectSource 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Enum {
+            name: "WrapMode"
+            values: {
+                "ClampToEdge": 0,
+                "RepeatHorizontally": 1,
+                "RepeatVertically": 2,
+                "Repeat": 3
+            }
+        }
+        Enum {
+            name: "Format"
+            values: {
+                "Alpha": 6406,
+                "RGB": 6407,
+                "RGBA": 6408
+            }
+        }
+        Property { name: "sourceItem"; type: "QDeclarativeItem"; isPointer: true }
+        Property { name: "sourceRect"; type: "QRectF" }
+        Property { name: "textureSize"; type: "QSize" }
+        Property { name: "live"; type: "bool" }
+        Property { name: "hideSource"; type: "bool" }
+        Property { name: "wrapMode"; type: "WrapMode" }
+        Signal { name: "sourceItemChanged" }
+        Signal { name: "sourceRectChanged" }
+        Signal { name: "textureSizeChanged" }
+        Signal { name: "formatChanged" }
+        Signal { name: "liveChanged" }
+        Signal { name: "hideSourceChanged" }
+        Signal { name: "activeChanged" }
+        Signal { name: "repaintRequired" }
+        Signal { name: "wrapModeChanged" }
+        Method { name: "markSceneGraphDirty" }
+        Method { name: "markSourceSizeDirty" }
+        Method { name: "markSourceItemDirty" }
+        Method { name: "grab" }
+    }
+}

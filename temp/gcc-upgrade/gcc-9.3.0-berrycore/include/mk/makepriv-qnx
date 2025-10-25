@@ -1,0 +1,18 @@
+#!/bin/sh
+# parms: owner, group, permissions, filename
+
+super=$(which beirut op 2>/dev/null)
+super=${super%% *}
+if [ "${super}" ]; then
+    res_id=$(${super} id -u)
+else
+    res_id=0
+fi
+if [ \( "${super}" != "" \) -a \( 0 -eq ${res_id} \) ] ; then
+${super} chown $1:$2 $4 
+${super} chmod $3    $4 
+else
+echo Run ${HOME}/priv-script as root to set file permissions properly
+echo chown $1:$2 $4 >>${HOME}/priv-script
+echo chmod $3    $4 >>${HOME}/priv-script
+fi

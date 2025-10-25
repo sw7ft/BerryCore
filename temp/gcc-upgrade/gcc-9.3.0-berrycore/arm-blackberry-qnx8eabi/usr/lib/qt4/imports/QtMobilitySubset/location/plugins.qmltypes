@@ -1,0 +1,209 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "QDeclarativeCoordinate"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/Coordinate 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "latitude"; type: "double" }
+        Property { name: "longitude"; type: "double" }
+        Property { name: "altitude"; type: "double" }
+        Signal {
+            name: "latitudeChanged"
+            Parameter { name: "latitude"; type: "double" }
+        }
+        Signal {
+            name: "longitudeChanged"
+            Parameter { name: "longitude"; type: "double" }
+        }
+        Signal {
+            name: "altitudeChanged"
+            Parameter { name: "altitude"; type: "double" }
+        }
+        Method {
+            name: "distanceTo"
+            type: "qreal"
+            Parameter { name: "coordinate"; type: "QObject"; isPointer: true }
+        }
+    }
+    Component {
+        name: "QDeclarativeGeoAddress"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/Address 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "country"; type: "string" }
+        Property { name: "countryCode"; type: "string" }
+        Property { name: "state"; type: "string" }
+        Property { name: "county"; type: "string" }
+        Property { name: "city"; type: "string" }
+        Property { name: "district"; type: "string" }
+        Property { name: "street"; type: "string" }
+        Property { name: "postcode"; type: "string" }
+        Signal { name: "countryChanged" }
+        Signal { name: "countryCodeChanged" }
+        Signal { name: "stateChanged" }
+        Signal { name: "countyChanged" }
+        Signal { name: "cityChanged" }
+        Signal { name: "districtChanged" }
+        Signal { name: "streetChanged" }
+        Signal { name: "postcodeChanged" }
+    }
+    Component {
+        name: "QDeclarativeGeoBoundingBox"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/BoundingBox 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "bottomLeft"; type: "QDeclarativeCoordinate"; isPointer: true }
+        Property { name: "bottomRight"; type: "QDeclarativeCoordinate"; isPointer: true }
+        Property { name: "topLeft"; type: "QDeclarativeCoordinate"; isPointer: true }
+        Property { name: "topRight"; type: "QDeclarativeCoordinate"; isPointer: true }
+        Property { name: "center"; type: "QDeclarativeCoordinate"; isPointer: true }
+        Property { name: "height"; type: "double" }
+        Property { name: "width"; type: "double" }
+        Signal { name: "bottomLeftChanged" }
+        Signal { name: "bottomRightChanged" }
+        Signal { name: "topLeftChanged" }
+        Signal { name: "topRightChanged" }
+        Signal { name: "centerChanged" }
+        Signal { name: "heightChanged" }
+        Signal { name: "widthChanged" }
+    }
+    Component {
+        name: "QDeclarativeGeoPlace"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/Place 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "viewport"; type: "QDeclarativeGeoBoundingBox"; isPointer: true }
+        Property { name: "coordinate"; type: "QDeclarativeCoordinate"; isPointer: true }
+        Property { name: "address"; type: "QDeclarativeGeoAddress"; isPointer: true }
+        Signal { name: "viewportChanged" }
+        Signal { name: "coordinateChanged" }
+        Signal { name: "addressChanged" }
+    }
+    Component {
+        name: "QDeclarativeGeoServiceProvider"
+        defaultProperty: "parameters"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/Plugin 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "name"; type: "string" }
+        Property {
+            name: "parameters"
+            type: "QDeclarativeGeoServiceProviderParameter"
+            isList: true
+            isReadonly: true
+        }
+        Signal {
+            name: "nameChanged"
+            Parameter { name: "name"; type: "string" }
+        }
+    }
+    Component {
+        name: "QDeclarativeGeoServiceProviderParameter"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/PluginParameter 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "name"; type: "string" }
+        Property { name: "value"; type: "QVariant" }
+        Signal {
+            name: "nameChanged"
+            Parameter { name: "name"; type: "string" }
+        }
+        Signal {
+            name: "valueChanged"
+            Parameter { name: "value"; type: "QVariant" }
+        }
+    }
+    Component {
+        name: "QDeclarativePosition"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/Position 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "latitudeValid"; type: "bool"; isReadonly: true }
+        Property { name: "longitudeValid"; type: "bool"; isReadonly: true }
+        Property { name: "altitudeValid"; type: "bool"; isReadonly: true }
+        Property { name: "coordinate"; type: "QDeclarativeCoordinate"; isReadonly: true; isPointer: true }
+        Property { name: "timestamp"; type: "QDateTime"; isReadonly: true }
+        Property { name: "speed"; type: "double"; isReadonly: true }
+        Property { name: "speedValid"; type: "bool"; isReadonly: true }
+        Property { name: "horizontalAccuracy"; type: "qreal" }
+        Property { name: "verticalAccuracy"; type: "qreal" }
+        Property { name: "horizontalAccuracyValid"; type: "bool"; isReadonly: true }
+        Property { name: "verticalAccuracyValid"; type: "bool"; isReadonly: true }
+        Signal { name: "latitudeValidChanged" }
+        Signal { name: "longitudeValidChanged" }
+        Signal { name: "altitudeValidChanged" }
+        Signal { name: "timestampChanged" }
+        Signal { name: "speedChanged" }
+        Signal { name: "speedValidChanged" }
+        Signal { name: "coordinateChanged" }
+        Signal { name: "horizontalAccuracyChanged" }
+        Signal { name: "horizontalAccuracyValidChanged" }
+        Signal { name: "verticalAccuracyChanged" }
+        Signal { name: "verticalAccuracyValidChanged" }
+    }
+    Component {
+        name: "QDeclarativePositionSource"
+        prototype: "QObject"
+        exports: [
+            "QtMobilitySubset.location/PositionSource 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Enum {
+            name: "PositioningMethod"
+            values: {
+                "NoPositioningMethod": 0,
+                "SatellitePositioningMethod": 255,
+                "NonSatellitePositioningMethod": -256,
+                "AllPositioningMethods": -1
+            }
+        }
+        Property { name: "position"; type: "QDeclarativePosition"; isReadonly: true; isPointer: true }
+        Property { name: "active"; type: "bool" }
+        Property { name: "nmeaSource"; type: "QUrl" }
+        Property { name: "updateInterval"; type: "int" }
+        Property { name: "positioningMethod"; type: "PositioningMethod"; isReadonly: true }
+        Signal { name: "positionChanged" }
+        Signal { name: "activeChanged" }
+        Signal { name: "nmeaSourceChanged" }
+        Signal { name: "updateIntervalChanged" }
+        Signal { name: "positioningMethodChanged" }
+        Method { name: "update" }
+        Method { name: "start" }
+        Method { name: "stop" }
+    }
+}

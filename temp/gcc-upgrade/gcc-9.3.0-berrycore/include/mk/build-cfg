@@ -1,0 +1,422 @@
+#!/usr/bin/env ksh
+
+#ifdef __USAGE
+# Build a "configure" based (or other external) project
+#endif
+
+##############################################################################
+#  FUNCTIONS
+#
+
+#  OnExit
+#
+
+function OnExit {
+	rm -f ${opwd:-.}/.use.$$
+	hook_exit
+}
+
+#  Error
+#
+
+function Error {
+	_status=$?; [ ${_status} -ne 0 ] || _status=1
+	1>&2 printf "%s\n" "$progname: error: $@"
+	exit ${_status}
+}
+
+#  GeneratePinfo
+#
+
+function GeneratePinfo {
+	unset _pathname _exe
+	while getopts en: _opt $*; do
+		case ${_opt} in
+			e) if [ "${TARGET_SYSNAME}" = "win32" ]; then _exe=".exe"; fi ;;
+            n) _pathname=${OPTARG} ;;
+		esac
+	done
+	shift $((${OPTIND}-1))
+	_givenname=${1:?missing givenname}
+	_givendir=${2:?missing givendir}
+	shift 2
+	: ${_pathname:=${_givenname}}
+	_installname="${_givenname}${_exe}"
+	case "${_givendir}" in
+		/*) _installdir="${_givendir#/}" ;;
+		*) _installdir="${cpudir}/${_givendir}/" ;;
+	esac
+	if [ ".${_installname##*.}" = ".exe" -a -f "${_pathname}.exe" ]; then
+		_name="${_pathname##*/}.exe"
+	else
+		_name="${_pathname##*/}"
+	fi
+	{
+		printf "STATE=${PINFO_STATE}\n"
+		printf "INSTALLDIR=${_installdir}\n"
+		printf "INSTALLNAME=${_installname}\n"
+		printf "NAME=${_name}\n"
+		printf "USER=${PINFO_USER}\n"
+		printf "DATE=${PINFO_DATE}\n"
+		printf "HOST=${PINFO_HOST}\n"
+		if [ "${VERSION_REL}" ]; then printf "VERSION=${VERSION_REL}\n"; fi
+		if [ "${PINFO_TAGID}" ]; then printf "TAGID=${PINFO_TAGID}\n"; fi
+		while [ "$1" ]; do printf "%s\n" "$1"; shift; done
+	} >${_pathname}.pinfo
+}
+
+#  FixMakeEnvironment
+#
+
+function FixMakeEnvironment {
+	if [ "${MAKEFLAGS}" ]; then
+		case "${MAKEFLAGS}" in
+			-*) set -- ${MAKEFLAGS} ;;
+	        *) set -- -${MAKEFLAGS} ;;
+		esac
+		while [ "$1" ]; do
+			case "$1" in
+				--*|*=*|-I*) m="${m+$m }$1" ;;
+				-*) m="${m+$m }$(printf '%s\n' $1 | sed -e 's/[rR]//')" ;;
+				*)  m="${m+$m }$1" ;;
+			esac
+			shift
+		done
+		case "$m" in
+			--*) export MAKEFLAGS="$m" ;;
+			-*) export MAKEFLAGS="${m#-}" ;;
+		esac
+	fi
+}
+
+#  AutoconfVersion
+#
+
+function AutoconfVersion {
+	ac_version=$1
+	case ${ac_version} in
+		2.1|2.12|2.13)
+			# doesn't support command line parameters
+			unset ac_params
+			# doesn't always properly detect all tools
+			export AR="${machine:+${machine}-}ar"
+			export RANLIB="${machine:+${machine}-}ranlib"
+			export STRIP="${machine:+${machine}-}strip"
+			;;
+		2.[56][0-9])
+			;;
+		*) Error "unsupported Autoconf version '$1'" ;;
+	esac
+}
+
+# Aliases for backward compatibility
+#
+
+alias gen_pinfo=GeneratePinfo
+alias strip_r_switch=FixMakeEnvironment
+
+# Hook functions which may be redefined in build-hooks files
+#
+
+function hook_preconfigure { return; }
+function hook_configure {
+	if [ -z "${ac_version}" ]; then
+		unset _guess
+		_pat='/[Gg]enerated.*[Aa]utoconf/s/.*\([1-9]\.[0-9][0-9]*\).*/\1/p'
+		[ "${_guess}" ] || _guess=$(../configure --version | sed -n -e "${_pat}")
+		[ "${_guess}" ] || _guess=$(sed -n -e "1,10{
+			${_pat}
+		}" <../configure)
+		AutoconfVersion ${_guess}
+	fi
+	../configure \
+		${ac_host:+"--host=${ac_host}"} \
+		${ac_build:+"--build=${ac_build}"} \
+		${configure_opts} \
+		${ac_params:+${CC:+"CC=${CC}"}} \
+		${ac_params:+${CFLAGS:+"CFLAGS=${CFLAGS}"}} \
+		${ac_params:+${CPPFLAGS:+"CPPFLAGS=${CPPFLAGS}"}} \
+		${ac_params:+${LDFLAGS:+"LDFLAGS=${LDFLAGS}"}} \
+		${ac_params:+${CXX:+"CXX=${CXX}"}} \
+		${ac_params:+${CXXFLAGS:+"CXXFLAGS=${CXXFLAGS}"}} \
+		${ac_params:+${ac_autotools:+${ac_autotools}}} \
+		|| Error "configure failed";
+}
+function hook_postconfigure { return; }
+function hook_premake { return; }
+function hook_make {
+	FixMakeEnvironment
+	make -fMakefile \
+		${make_CC:+"CC=${make_CC}"} \
+		${make_defns} \
+		${ac_autotools} \
+		${make_opts} \
+		${make_cmds} \
+		${JLEVEL:+"-j${JLEVEL}"} \
+		|| exit;
+}
+function hook_postmake { return; }
+function hook_pinfo { return; }
+function hook_exit { return; }
+
+# (facilitate debugging under bash/ksh)
+case $- in *v*|*x*) typeset -ft $(typeset +f) ;; esac
+
+##############################################################################
+#  MAINLINE
+#
+
+#
+# Set up basic environment
+#
+
+trap 'OnExit' INT QUIT TERM EXIT
+
+progname=$0
+
+make_cmds=$*
+
+opwd=${PWD}
+
+# Attempt to remove cwd from PATH to avoid executing anything which is being built
+PATH=$(printf "%s\n" "${PATH}" | sed -e ':0;s/:\.:/:/g;t0;s/:::*/:/g;s/^\.://;s/^://;s/:\.$//;s/:$//')
+
+#
+# Set defaults for missing variables
+#
+
+: ${SYSNAME:=$(uname -sr)}
+
+: ${USER_HOST:=id -un}
+: ${HOST_HOST:=hostname}
+: ${DATE_HOST:=date +%Y/%m/%d-%T-%Z}
+: ${UM_HOST:=usemsg}
+
+: ${PINFO_STATE:="Experimental"}
+: ${PINFO_USER:=$(${USER_HOST})}
+: ${PINFO_HOST:=$(${HOST_HOST})}
+: ${PINFO_DATE:=$(${DATE_HOST})}
+: ${PINFO_TAGID:=$(printf "%s\n" "${BRANCH_TAG}" | sed -e 's/[^_]*_//;s/_.*$//')}
+
+#
+# Set up target related variables
+#
+
+target=${PWD##*/}
+SIFS=${IFS}
+IFS=-
+set -- ${target}
+IFS=${SIFS}
+
+osdir=$1
+cpu=$2
+variant=$3
+shift 3
+
+cpudir=${cpu}
+case ${cpu} in
+	arm)
+		case ${variant} in
+			be) cpudir="${cpudir}${variant}"; endian='-EB' ;;
+			le) cpudir="${cpudir}${variant}"; endian='-EL' ;;
+		esac
+		case $1 in
+			v7)	shift; cpudir="${cpudir}-v7"; cpu="${cpu}v7"
+			case $1 in
+				hf)	shift; cpudir="${cpudir}hf"; cpu="${cpu}hf" ;;
+			esac
+			;;
+		esac
+		;;
+	sh)
+		case ${variant} in
+			be) cpudir="${cpudir}${variant}"; endian='-mb' ;;
+			le) cpudir="${cpudir}${variant}"; endian='-ml' ;;
+		esac
+		case ${QNXVFLAGS} in
+			*-EL*|*-EB*) QNXVFLAGS=$(printf "%s\n" "${QNXVFLAGS}" | sed -e 's/-EL/-ml/g;s/-EB/-mb/g') ;;
+		esac
+		;;
+	*)
+		case ${variant} in
+			be) cpudir="${cpudir}${variant}"; endian='-EB' ;;
+			le) cpudir="${cpudir}${variant}"; endian='-EL' ;;
+		esac
+		;;
+esac
+while [ "$1" ]; do cpudir="${cpudir}-${1}"; shift; done
+
+case ${SYSNAME} in
+	nto*|procnto*|QNX\ [0123456789]*) SYSNAME="nto" ;;
+	QNX\ *) SYSNAME="qnx4" ;;
+	SunOS\ *) SYSNAME="solaris" ;;
+	Linux\ *) SYSNAME="linux" ;;
+	Darwin*) SYSNAME="darwin" ;;
+	CYGWIN_NT-*) SYSNAME="win32"; cygwin=Y ;;
+	MINGW32_NT-*|MSYS_NT*|Microsoft*) SYSNAME="win32" ;;
+	*) Error "unknown system name '${SYSNAME}'" ;;
+esac
+
+TARGET_SYSNAME=${osdir}
+
+case ${SYSNAME}-${TARGET_SYSNAME} in
+	*-nto)
+		ntoflags="${QNXVFLAGS:+ ${QNXVFLAGS}}${QNXROOTINCS:+ ${QNXROOTINCS}}${QNXROOTLIBS:+ ${QNXROOTLIBS}}"
+		ntogcc="nto${cpu}-gcc${GCC_VERSION:+-${GCC_VERSION}}${ntoflags}"
+		machine=$(${ntogcc} -dumpmachine) || Error "unable to run '${ntogcc} -dumpmachine'"
+		export CC="${machine}-gcc${GCC_VERSION:+-${GCC_VERSION}}"
+		export CFLAGS="${QNXVFLAGS}${CFLAGS:+" ${CFLAGS}"}${CCFLAGS:+" ${CCFLAGS}"}${CCOPTS:+" ${CCOPTS}"}"
+		export CPPFLAGS="${QNXVFLAGS} ${QNXROOTINCS}${CPPFLAGS:+" ${CPPFLAGS}"}"
+		export LDFLAGS="${QNXVFLAGS} ${QNXROOTLIBS}${LDFLAGS:+" ${LDFLAGS}"}${LDOPTS:+" ${LDOPTS}"}"
+		export CXX="${machine}-g++${GCC_VERSION:+-${GCC_VERSION}}"
+		export CXXFLAGS="${QNXVFLAGS}${CXXFLAGS:+" ${CXXFLAGS}"}"
+		make_CC="${CC}${endian:+ ${endian}}${QNXVFLAGS:+ ${QNXVFLAGS}}"
+		;;
+	qnx4-qnx4)
+		make_CC="qcc -Vgcc_qnx4"
+		export CC=${make_CC}
+		export AR="ntox86-ar" # avoid running Watcom AR due to PATH order
+		make_defns="AR=${AR}"
+		;;
+	linux-linux)
+		make_CC="gcc"
+		;;
+	darwin-darwin)
+		make_CC="gcc"
+		;;
+	solaris-solaris)
+		make_CC="gcc"
+		;;
+	win32-win32)
+		make_CC="gcc${cygwin:+ -mno-cygwin}"
+		export CC="gcc"
+		export CFLAGS="${cygwin:+-mno-cygwin}${CFLAGS:+" ${CFLAGS}"}"
+		;;
+	linux-win32) 
+		make_CC="${WIN32_GCC_DRIVER:-i686-mingw32msvc}-gcc"
+		machine=$(${make_CC} -dumpmachine) || Error "unable to run '${make_CC} -dumpmachine'"
+		export CC=${make_CC}
+		;;
+	linux-darwin) 
+		make_CC="${DARWIN_GCC_DRIVER:-x86_64-apple-darwin}-gcc"
+		machine=$(${make_CC} -dumpmachine) || Error "unable to run '${make_CC} -dumpmachine'"
+		export CC=${make_CC}
+		;;
+	*) Error "cannot cross-compile from '${SYSNAME}' to '${TARGET_SYSNAME}' yet" ;;
+esac
+
+case ${TARGET_SYSNAME} in
+	nto)
+		SIFS=${IFS}
+		IFS=-
+		set -- ${machine}
+		IFS=${SIFS}
+		case ${VERSION_REL} in
+			6.3*) ac_host="$1-$2-$3-qnx6.3.0" ;;
+			6.4*) ac_host="$1-$2-$3-qnx6.4.0" ;;
+			*) ac_host=${machine} ;;
+		esac
+		ac_build=$(gcc -dumpmachine) || Error "unable to run 'gcc -dumpmachine'"
+		if [ "${ac_host}" != "${ac_build}" ]; then
+			# cross compiling
+			if [ -f ../nto-config.site ]; then
+				export CONFIG_SITE=${PWD}/../nto-config.site
+			fi
+		else
+			# not actually a cross compile
+			unset ac_host ac_build
+		fi
+		;;
+	win32)
+		if [ "${SYSNAME}" != "${TARGET_SYSNAME}" ]; then
+			# cross compiling
+			ac_host=${machine}
+			ac_build=$(gcc -dumpmachine) || Error "unable to run 'gcc -dumpmachine'"
+			if [ -f ../win32-config.site ]; then
+				export CONFIG_SITE=${PWD}/../win32-config.site
+			fi
+		fi
+		;;
+	darwin)
+		if [ "${SYSNAME}" != "${TARGET_SYSNAME}" ]; then
+			# cross compiling
+			ac_host=${machine}
+			ac_build=$(gcc -dumpmachine) || Error "unable to run 'gcc -dumpmachine'"
+			if [ -f ../darwin-config.site ]; then
+				export CONFIG_SITE=${PWD}/../darwin-config.site
+			fi
+		fi
+		;;
+esac
+
+ac_params=Y
+ac_autotools="AUTOMAKE=: AUTOCONF=: AUTOHEADER=: AUTORECONF=: ACLOCAL=:"
+
+#
+# Load build-hooks
+#
+
+[ -f ../build-hooks ] && . ../build-hooks
+
+# (facilitate debugging under bash/ksh)
+case $- in *v*|*x*) typeset -ft $(typeset +f) ;; esac
+
+#
+# Perform configure
+#
+
+if [ "${ac_autotools}" ]; then
+	export ${ac_autotools}
+fi
+
+if [ ! -f config.status ]; then
+
+	configure_opts="${configure_opts+${configure_opts} }--srcdir=.."
+
+	hook_preconfigure
+
+	hook_configure
+
+	hook_postconfigure
+
+fi
+
+#
+# Perform make
+#
+
+hook_premake
+
+hook_make
+
+hook_postmake
+
+#
+# Handle pinfo and usemsg
+#
+
+hook_pinfo
+
+# Add usage & build identification information.
+if [ "${TARGET_SYSNAME}" = "nto" ]; then
+	cd ${opwd}
+	for pinfo in $(find . -name "*.pinfo"); do
+		dir=${pinfo%/*}
+		exe=$(sed -n -e "/^NAME=/s/NAME=//p" ${pinfo})
+		case ${exe} in
+			*.a) ;; # ignore static libraries
+			*)
+				if ! use -i ${dir}/${exe} >/dev/null 2>&1; then
+					# use message is apparently missing, so add one
+					use=$(sed -n -e "/^USE=/s/USE=//p" ${pinfo})
+					case ${use} in
+						%[12]\>*) printf "%s\n" "${use}" >.use.$$; use=.use.$$ ;;
+					esac
+					${UM_HOST} -iTAGID -iVERSION -f ${pinfo} ${dir}/${exe} ${use} || exit
+				fi
+				;;
+		esac
+	done
+fi	
+
+exit 0

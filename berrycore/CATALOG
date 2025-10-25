@@ -90,6 +90,9 @@ quickjs_web_console_es5|js|QuickJS web console (ES5)
 # Programming Languages
 pforth|lang|Portable ANS Forth interpreter (v28)
 
+# Security & Cryptography
+openssl|security|OpenSSL 3.3.2 - Modern crypto libraries with libssl.so.3
+
 # Calendar & Time
 gcal|time|GNU calendar program
 calcurse|time|Text-based calendar and scheduling
@@ -113,4 +116,7 @@ libtool|build|Generic library support script
 # System Configuration
 sc|calc|Spreadsheet calculator
 task|todo|Command-line todo list manager
+
+# Emulation
+linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 

@@ -1,0 +1,7 @@
+/*!
+ * @copyright
+ * Copyright BlackBerry Limited, 2013-2013
+ * BlackBerry Limited. All rights reserved.
+ */
+
+#include <bb/system/ListSelectionIndicator.hpp>
