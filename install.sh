@@ -78,10 +78,11 @@ fi
    
 D=$INSTALL_DIR
 mkdir -p $D;
-mv berrycore.zip $D
+cp berrycore.zip $D
 cd $D
 touch .nomedia .noindex
 unzip -o berrycore.zip
+# Note: berrycore.zip is kept in both locations (original and installation directory)
 . ./env.sh
 
 # Install packages

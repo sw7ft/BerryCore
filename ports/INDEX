@@ -1,0 +1,14 @@
+# BerryCore Ports Repository Index
+# Format: name|category|version|size|description
+# Lines starting with # are comments
+#
+# Categories: lang, database, dev, net, util, media, sys
+#
+# Example entries:
+# python|lang|3.11|45M|Python programming language with pip
+# nodejs|lang|20.0|35M|JavaScript runtime environment
+# postgresql|database|15.0|25M|Advanced relational database
+# wireshark|net|4.2|18M|Network protocol analyzer
+#
+# Add your ports below:
+

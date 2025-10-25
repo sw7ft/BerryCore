@@ -117,6 +117,12 @@ libtool|build|Generic library support script
 sc|calc|Spreadsheet calculator
 task|todo|Command-line todo list manager
 
+# Package Management
+qpkg|sys|QNX Package Manager - Update BerryCore and install ports
+bclist|sys|List and search installed binaries
+bcinfo|sys|Get detailed information about a binary
+bcmotd|sys|Manage Message of the Day settings
+
 # Emulation
 linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 
