@@ -10,10 +10,16 @@ else
     BASE="/accounts/1000/shared/misc/berrycore"
 fi
 
+BRIDGE="$BASE/bin/qnx-bridge-wget"
 EMULATOR="$BASE/bin/mini-rv32ima-clean"
 IMAGE="$BASE/share/bb10-linux/Image"
 
 # Check if files exist
+if [ ! -f "$BRIDGE" ]; then
+    echo "Error: QNX bridge not found at $BRIDGE"
+    exit 1
+fi
+
 if [ ! -f "$EMULATOR" ]; then
     echo "Error: RISC-V emulator not found at $EMULATOR"
     exit 1
@@ -38,6 +44,15 @@ echo "To exit: Ctrl+C or 'poweroff' command"
 echo "=========================================="
 echo ""
 
-# Launch the emulator
-exec "$EMULATOR" -m 268435456 -f "$IMAGE" -k "console=ttyS0"
+# Start QNX bridge first
+"$BRIDGE" &
+BRIDGE_PID=$!
 
+# Give bridge a moment to initialize
+sleep 1
+
+# Launch the emulator
+"$EMULATOR" -m 268435456 -f "$IMAGE" -k "console=ttyS0"
+
+# Clean up bridge when emulator exits
+kill $BRIDGE_PID 2>/dev/null
