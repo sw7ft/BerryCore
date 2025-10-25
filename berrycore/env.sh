@@ -67,12 +67,13 @@ echo "  qpkg catalog -s     Search for specific tools"
 echo "  qpkg info BINARY    Get info about a binary"
 echo "  qpkg bins           See all installed binaries"
 echo ""
-echo "Quick start: nano, vim, git, nmap, curl, tmux, quickjs"
+echo "Quick start: nano, vim, git, nmap, curl, linux, hydra"
 echo "==========================================================="
 
 # Message of the Day (MOTD) - Enabled by default
 # To disable: export BERRYCORE_MOTD_ENABLED=0 in your .profile
-if [ "$BERRYCORE_MOTD_ENABLED" != "0" ]; then
+# To enable after upgrade: export BERRYCORE_MOTD_ENABLED=1 in your .profile
+if [ "${BERRYCORE_MOTD_ENABLED:-1}" = "1" ]; then
     # Default MOTD URL if not set
     : ${BERRYCORE_MOTD_URL:="https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt"}
     
