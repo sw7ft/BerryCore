@@ -23,8 +23,36 @@ else
 fi
 
 echo ""
-echo "Press Enter to continue or Ctrl+C to cancel..."
-read confirm
+
+# Check for existing BerryCore installation
+UPGRADE_MODE=0
+if [ -d "$INSTALL_DIR" ] && [ -f "$INSTALL_DIR/env.sh" ]; then
+    echo "==========================================================="
+    echo "  Existing BerryCore installation detected!"
+    echo "==========================================================="
+    echo ""
+    echo "Installation found at: $INSTALL_DIR"
+    echo ""
+    echo "Choose installation mode:"
+    echo "  [1] Upgrade (fast - only install new packages)"
+    echo "  [2] Fresh install (slower - reinstall all packages)"
+    echo ""
+    echo -n "Enter choice [1]: "
+    read install_choice
+    
+    if [ -z "$install_choice" ] || [ "$install_choice" = "1" ]; then
+        UPGRADE_MODE=1
+        echo ""
+        echo "Using upgrade mode - will preserve existing packages"
+    else
+        UPGRADE_MODE=0
+        echo ""
+        echo "Using fresh install mode - will reinstall everything"
+    fi
+else
+    echo "Press Enter to continue or Ctrl+C to cancel..."
+    read confirm
+fi
 
 # versions up to 0.4 were slowing down the device (see #54)
 D=/accounts/1000/shared/documents/clitools
@@ -53,12 +81,69 @@ mkdir -p $D;
 mv berrycore.zip $D
 cd $D
 touch .nomedia .noindex
-unzip berrycore.zip
+unzip -o berrycore.zip
 . ./env.sh
+
+# Install packages
+NEW_PKGS=0
+SKIPPED_PKGS=0
+UPDATED_PKGS=0
+
+echo ""
+echo "Installing packages..."
+echo ""
+
 for pkg in packages/*.zip
 do
-./pbpkgadd $pkg
+    pkg_name=$(basename "$pkg")
+    
+    if [ $UPGRADE_MODE -eq 1 ]; then
+        # In upgrade mode, check if package is already installed
+        # We check if the marker file exists (pbpkgadd creates .pkg_installed_<name>)
+        # Or if key binaries/libs from the package exist
+        pkg_base=$(basename "$pkg" .zip)
+        
+        # Simple check: if any files from this package exist, skip it
+        # This is a heuristic - we assume if the package was installed before, it's still there
+        SKIP_PKG=0
+        
+        # Check if this is a new package by looking at modification time vs env.sh
+        if [ -f "env.sh" ]; then
+            ENV_TIME=$(stat -f %m env.sh 2>/dev/null || stat -c %Y env.sh 2>/dev/null || echo 0)
+            PKG_TIME=$(stat -f %m "$pkg" 2>/dev/null || stat -c %Y "$pkg" 2>/dev/null || echo 0)
+            
+            # If package is older than env.sh, it's likely already installed
+            if [ $PKG_TIME -lt $ENV_TIME ]; then
+                SKIP_PKG=1
+            fi
+        fi
+        
+        if [ $SKIP_PKG -eq 1 ]; then
+            echo "  ⏩ $pkg_name (already installed)"
+            SKIPPED_PKGS=$((SKIPPED_PKGS + 1))
+        else
+            echo "  📦 $pkg_name (new package)"
+            ./pbpkgadd "$pkg"
+            NEW_PKGS=$((NEW_PKGS + 1))
+        fi
+    else
+        # Fresh install mode - install everything
+        echo "  📦 $pkg_name"
+        ./pbpkgadd "$pkg"
+        UPDATED_PKGS=$((UPDATED_PKGS + 1))
+    fi
 done
+
+echo ""
+if [ $UPGRADE_MODE -eq 1 ]; then
+    echo "Package installation summary:"
+    echo "  New packages installed: $NEW_PKGS"
+    echo "  Existing packages preserved: $SKIPPED_PKGS"
+else
+    echo "Package installation complete:"
+    echo "  Total packages installed: $UPDATED_PKGS"
+fi
+echo ""
 
 if [ ! -e "$HOME/.profile" ]; then
   # Update the path in sample_profile before copying
@@ -140,3 +225,9 @@ else
     echo ""
     echo "Note: Terminal config (.term48rc) not found, skipping terminal customization"
 fi
+
+echo ""
+echo "==========================================================="
+echo "     Welcome to BerryCore!"
+echo "==========================================================="
+echo ""

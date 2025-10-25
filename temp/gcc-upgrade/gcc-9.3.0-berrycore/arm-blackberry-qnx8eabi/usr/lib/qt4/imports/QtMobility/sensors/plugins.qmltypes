@@ -1,0 +1,689 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "QAccelerometer"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/Accelerometer 1.1",
+            "QtMobility.sensors/Accelerometer 1.2",
+            "QtMobility.sensors/Accelerometer 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        Enum {
+            name: "AxesOrientationMode"
+            values: {
+                "FixedOrientation": 0,
+                "AutomaticOrientation": 1,
+                "UserOrientation": 2
+            }
+        }
+        Enum {
+            name: "AccelerationMode"
+            values: {
+                "Gravity": 0,
+                "User": 1,
+                "Combined": 2
+            }
+        }
+        Property { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        Property { name: "currentOrientation"; type: "int"; isReadonly: true }
+        Property { name: "userOrientation"; type: "int" }
+        Property { name: "accelerationMode"; type: "AccelerationMode" }
+        Signal {
+            name: "accelerationModeChanged"
+            Parameter { name: "accelerationMode"; type: "AccelerationMode" }
+        }
+        Signal {
+            name: "axesOrientationModeChanged"
+            Parameter { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        }
+        Signal {
+            name: "currentOrientationChanged"
+            Parameter { name: "currentOrientation"; type: "int" }
+        }
+        Signal {
+            name: "userOrientationChanged"
+            Parameter { name: "userOrientation"; type: "int" }
+        }
+        Method { name: "setUserAcceleration" }
+        Method { name: "setGravityAcceleration" }
+        Method { name: "setCombinedAcceleration" }
+    }
+    Component {
+        name: "QAccelerometerReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/AccelerometerReading 1.1",
+            "QtMobility.sensors/AccelerometerReading 1.2",
+            "QtMobility.sensors/AccelerometerReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "x"; type: "qreal"; isReadonly: true }
+        Property { name: "y"; type: "qreal"; isReadonly: true }
+        Property { name: "z"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QAltimeter"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/Altimeter 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+    }
+    Component {
+        name: "QAltimeterReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/AltimeterReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "altitude"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QAmbientLightReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/AmbientLightReading 1.1",
+            "QtMobility.sensors/AmbientLightReading 1.2",
+            "QtMobility.sensors/AmbientLightReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "LightLevel"
+            values: {
+                "Undefined": 0,
+                "Dark": 1,
+                "Twilight": 2,
+                "Light": 3,
+                "Bright": 4,
+                "Sunny": 5
+            }
+        }
+        Property { name: "lightLevel"; type: "LightLevel"; isReadonly: true }
+    }
+    Component {
+        name: "QAmbientLightSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/AmbientLightSensor 1.1",
+            "QtMobility.sensors/AmbientLightSensor 1.2",
+            "QtMobility.sensors/AmbientLightSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QAmbientTemperatureReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/AmbientTemperatureReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "temperature"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QAmbientTemperatureSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/AmbientTemperatureSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+    }
+    Component {
+        name: "QCompass"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/Compass 1.1",
+            "QtMobility.sensors/Compass 1.2",
+            "QtMobility.sensors/Compass 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        Enum {
+            name: "AxesOrientationMode"
+            values: {
+                "FixedOrientation": 0,
+                "AutomaticOrientation": 1,
+                "UserOrientation": 2
+            }
+        }
+        Property { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        Property { name: "currentOrientation"; type: "int"; isReadonly: true }
+        Property { name: "userOrientation"; type: "int" }
+        Signal {
+            name: "axesOrientationModeChanged"
+            Parameter { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        }
+        Signal {
+            name: "currentOrientationChanged"
+            Parameter { name: "currentOrientation"; type: "int" }
+        }
+        Signal {
+            name: "userOrientationChanged"
+            Parameter { name: "userOrientation"; type: "int" }
+        }
+    }
+    Component {
+        name: "QCompassReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/CompassReading 1.1",
+            "QtMobility.sensors/CompassReading 1.2",
+            "QtMobility.sensors/CompassReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "azimuth"; type: "qreal"; isReadonly: true }
+        Property { name: "calibrationLevel"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QGyroscope"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/Gyroscope 1.2",
+            "QtMobility.sensors/Gyroscope 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+        Enum {
+            name: "AxesOrientationMode"
+            values: {
+                "FixedOrientation": 0,
+                "AutomaticOrientation": 1,
+                "UserOrientation": 2
+            }
+        }
+        Property { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        Property { name: "currentOrientation"; type: "int"; isReadonly: true }
+        Property { name: "userOrientation"; type: "int" }
+        Signal {
+            name: "axesOrientationModeChanged"
+            Parameter { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        }
+        Signal {
+            name: "currentOrientationChanged"
+            Parameter { name: "currentOrientation"; type: "int" }
+        }
+        Signal {
+            name: "userOrientationChanged"
+            Parameter { name: "userOrientation"; type: "int" }
+        }
+    }
+    Component {
+        name: "QGyroscopeReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/GyroscopeReading 1.2",
+            "QtMobility.sensors/GyroscopeReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "x"; type: "qreal"; isReadonly: true }
+        Property { name: "y"; type: "qreal"; isReadonly: true }
+        Property { name: "z"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QHolsterReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/HolsterReading 1.2",
+            "QtMobility.sensors/HolsterReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "holstered"; type: "bool"; isReadonly: true }
+    }
+    Component {
+        name: "QHolsterSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/HolsterSensor 1.2",
+            "QtMobility.sensors/HolsterSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QIRProximityReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/IRProximityReading 1.1",
+            "QtMobility.sensors/IRProximityReading 1.2",
+            "QtMobility.sensors/IRProximityReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "reflectance"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QIRProximitySensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/IRProximitySensor 1.1",
+            "QtMobility.sensors/IRProximitySensor 1.2",
+            "QtMobility.sensors/IRProximitySensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QLightReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/LightReading 1.2",
+            "QtMobility.sensors/LightReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "lux"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QLightSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/LightSensor 1.2",
+            "QtMobility.sensors/LightSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QMagnetometer"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/Magnetometer 1.1",
+            "QtMobility.sensors/Magnetometer 1.2",
+            "QtMobility.sensors/Magnetometer 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        Enum {
+            name: "AxesOrientationMode"
+            values: {
+                "FixedOrientation": 0,
+                "AutomaticOrientation": 1,
+                "UserOrientation": 2
+            }
+        }
+        Property { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        Property { name: "currentOrientation"; type: "int"; isReadonly: true }
+        Property { name: "userOrientation"; type: "int" }
+        Property { name: "returnGeoValues"; type: "bool" }
+        Signal {
+            name: "axesOrientationModeChanged"
+            Parameter { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        }
+        Signal {
+            name: "currentOrientationChanged"
+            Parameter { name: "currentOrientation"; type: "int" }
+        }
+        Signal {
+            name: "userOrientationChanged"
+            Parameter { name: "userOrientation"; type: "int" }
+        }
+        Signal {
+            name: "returnGeoValuesChanged"
+            Parameter { name: "returnGeoValues"; type: "bool" }
+        }
+    }
+    Component {
+        name: "QMagnetometerReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/MagnetometerReading 1.1",
+            "QtMobility.sensors/MagnetometerReading 1.2",
+            "QtMobility.sensors/MagnetometerReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "x"; type: "qreal"; isReadonly: true }
+        Property { name: "y"; type: "qreal"; isReadonly: true }
+        Property { name: "z"; type: "qreal"; isReadonly: true }
+        Property { name: "calibrationLevel"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QOrientationReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/OrientationReading 1.1",
+            "QtMobility.sensors/OrientationReading 1.2",
+            "QtMobility.sensors/OrientationReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Orientation"
+            values: {
+                "Undefined": 0,
+                "TopUp": 1,
+                "TopDown": 2,
+                "LeftUp": 3,
+                "RightUp": 4,
+                "FaceUp": 5,
+                "FaceDown": 6
+            }
+        }
+        Property { name: "orientation"; type: "Orientation"; isReadonly: true }
+    }
+    Component {
+        name: "QOrientationSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/OrientationSensor 1.1",
+            "QtMobility.sensors/OrientationSensor 1.2",
+            "QtMobility.sensors/OrientationSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QPressureReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/PressureReading 1.2",
+            "QtMobility.sensors/PressureReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "pressure"; type: "qreal"; isReadonly: true }
+        Property { name: "temperature"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QPressureSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/PressureSensor 1.2",
+            "QtMobility.sensors/PressureSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QProximityReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/ProximityReading 1.1",
+            "QtMobility.sensors/ProximityReading 1.2",
+            "QtMobility.sensors/ProximityReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "close"; type: "bool"; isReadonly: true }
+    }
+    Component {
+        name: "QProximitySensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/ProximitySensor 1.1",
+            "QtMobility.sensors/ProximitySensor 1.2",
+            "QtMobility.sensors/ProximitySensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+    }
+    Component {
+        name: "QRotationReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/RotationReading 1.1",
+            "QtMobility.sensors/RotationReading 1.2",
+            "QtMobility.sensors/RotationReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "x"; type: "qreal"; isReadonly: true }
+        Property { name: "y"; type: "qreal"; isReadonly: true }
+        Property { name: "z"; type: "qreal"; isReadonly: true }
+    }
+    Component {
+        name: "QRotationSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/RotationSensor 1.1",
+            "QtMobility.sensors/RotationSensor 1.2",
+            "QtMobility.sensors/RotationSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        Enum {
+            name: "AxesOrientationMode"
+            values: {
+                "FixedOrientation": 0,
+                "AutomaticOrientation": 1,
+                "UserOrientation": 2
+            }
+        }
+        Property { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        Property { name: "currentOrientation"; type: "int"; isReadonly: true }
+        Property { name: "userOrientation"; type: "int" }
+        Signal {
+            name: "axesOrientationModeChanged"
+            Parameter { name: "axesOrientationMode"; type: "AxesOrientationMode" }
+        }
+        Signal {
+            name: "currentOrientationChanged"
+            Parameter { name: "currentOrientation"; type: "int" }
+        }
+        Signal {
+            name: "userOrientationChanged"
+            Parameter { name: "userOrientation"; type: "int" }
+        }
+    }
+    Component {
+        name: "QSensor"
+        prototype: "QObject"
+        exports: [
+            "QtMobility.sensors/Sensor 1.2",
+            "QtMobility.sensors/Sensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "sensorid"; type: "QByteArray" }
+        Property { name: "type"; type: "QByteArray"; isReadonly: true }
+        Property { name: "connectedToBackend"; type: "bool"; isReadonly: true }
+        Property { name: "availableDataRates"; type: "QtMobility::qrangelist"; isReadonly: true }
+        Property { name: "dataRate"; type: "int" }
+        Property { name: "reading"; type: "QSensorReading"; isReadonly: true; isPointer: true }
+        Property { name: "busy"; type: "bool"; isReadonly: true }
+        Property { name: "active"; type: "bool" }
+        Property { name: "outputRanges"; type: "QtMobility::qoutputrangelist"; isReadonly: true }
+        Property { name: "outputRange"; type: "int" }
+        Property { name: "description"; type: "string"; isReadonly: true }
+        Property { name: "error"; type: "int"; isReadonly: true }
+        Property { name: "alwaysOn"; type: "bool" }
+        Property { name: "skipDuplicates"; type: "bool" }
+        Property { name: "maxBufferSize"; type: "int"; isReadonly: true }
+        Property { name: "efficientBufferSize"; type: "int"; isReadonly: true }
+        Property { name: "bufferSize"; type: "int" }
+        Signal { name: "busyChanged" }
+        Signal { name: "activeChanged" }
+        Signal { name: "readingChanged" }
+        Signal {
+            name: "sensorError"
+            Parameter { name: "error"; type: "int" }
+        }
+        Signal { name: "availableSensorsChanged" }
+        Signal { name: "alwaysOnChanged" }
+        Signal {
+            name: "skipDuplicatesChanged"
+            Parameter { name: "skipDuplicates"; type: "bool" }
+        }
+        Signal { name: "dataRateChanged" }
+        Signal {
+            name: "maxBufferSizeChanged"
+            Parameter { name: "maxBufferSize"; type: "int" }
+        }
+        Signal {
+            name: "efficientBufferSizeChanged"
+            Parameter { name: "efficientBufferSize"; type: "int" }
+        }
+        Signal {
+            name: "bufferSizeChanged"
+            Parameter { name: "bufferSize"; type: "int" }
+        }
+        Method { name: "start"; type: "bool" }
+        Method { name: "stop" }
+        Method { name: "connectToBackend"; type: "bool" }
+    }
+    Component {
+        name: "QSensorReading"
+        prototype: "QObject"
+        exports: [
+            "QtMobility.sensors/SensorReading 1.1",
+            "QtMobility.sensors/SensorReading 1.2",
+            "QtMobility.sensors/SensorReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Property { name: "timestamp"; type: "QtMobility::qtimestamp"; isReadonly: true }
+    }
+    Component {
+        name: "QTapReading"
+        prototype: "QSensorReading"
+        exports: [
+            "QtMobility.sensors/TapReading 1.1",
+            "QtMobility.sensors/TapReading 1.2",
+            "QtMobility.sensors/TapReading 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "TapDirection"
+            values: {
+                "Undefined": 0,
+                "X": 1,
+                "Y": 2,
+                "Z": 4,
+                "X_Pos": 17,
+                "Y_Pos": 34,
+                "Z_Pos": 68,
+                "X_Neg": 257,
+                "Y_Neg": 514,
+                "Z_Neg": 1028,
+                "X_Both": 273,
+                "Y_Both": 546,
+                "Z_Both": 1092
+            }
+        }
+        Property { name: "tapDirection"; type: "TapDirection"; isReadonly: true }
+        Property { name: "doubleTap"; type: "bool"; isReadonly: true }
+    }
+    Component {
+        name: "QTapSensor"
+        prototype: "QSensor"
+        exports: [
+            "QtMobility.sensors/TapSensor 1.1",
+            "QtMobility.sensors/TapSensor 1.2",
+            "QtMobility.sensors/TapSensor 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            0,
+            0
+        ]
+    }
+}

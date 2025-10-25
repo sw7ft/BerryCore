@@ -1,0 +1,4 @@
+QMAKE_PRO_INPUT = sensors.pro
+QMAKE_PRL_TARGET = libQtSensors.so.1.2.2
+QMAKE_PRL_CONFIG = lex yacc warn_on uic resources qt warn_on release link_prl qnx cross_compile shared qpa def_files_disabled exceptions no_mocdepend release stl qt_no_framework blackberry nostrip release hide_symbols strict_flags create_prl dll shared moc thread
+QMAKE_PRL_VERSION = 1.2.2

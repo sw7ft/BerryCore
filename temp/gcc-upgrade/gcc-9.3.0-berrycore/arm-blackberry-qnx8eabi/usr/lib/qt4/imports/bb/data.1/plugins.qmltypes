@@ -1,0 +1,111 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::data::DataAccessErrorType"
+        exports: [
+            "bb.data/DataAccessErrorType 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "SourceNotFound": 1,
+                "ConnectionFailure": 2,
+                "OperationFailure": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::data::DataSource"
+        prototype: "QObject"
+        exports: [
+            "bb.data/DataSource 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "source"; type: "QUrl" }
+        Property { name: "query"; type: "string" }
+        Property { name: "type"; type: "bb::data::DataSourceType::Type" }
+        Property { name: "remote"; type: "bool" }
+        Signal {
+            name: "sourceChanged"
+            Parameter { name: "source"; type: "QUrl" }
+        }
+        Signal {
+            name: "queryChanged"
+            Parameter { name: "query"; type: "QUrl" }
+        }
+        Signal {
+            name: "queryChanged"
+            Parameter { name: "query"; type: "string" }
+        }
+        Signal {
+            name: "typeChanged"
+            Parameter { name: "newType"; type: "bb::data::DataSourceType::Type" }
+        }
+        Signal {
+            name: "remoteChanged"
+            Parameter { name: "remote"; type: "bool" }
+        }
+        Signal {
+            name: "dataLoaded"
+            Parameter { name: "data"; type: "QVariant" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "errorType"; type: "bb::data::DataAccessErrorType::Type" }
+            Parameter { name: "errorMessage"; type: "string" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "errorType"; type: "int" }
+            Parameter { name: "errorMessage"; type: "string" }
+        }
+        Method {
+            name: "setSource"
+            Parameter { name: "source"; type: "QUrl" }
+        }
+        Method {
+            name: "setQuery"
+            Parameter { name: "query"; type: "string" }
+        }
+        Method {
+            name: "setType"
+            Parameter { name: "type"; type: "bb::data::DataSourceType::Type" }
+        }
+        Method {
+            name: "setRemote"
+            Parameter { name: "remote"; type: "bool" }
+        }
+        Method { name: "load" }
+        Method { name: "abort" }
+    }
+    Component {
+        name: "bb::data::DataSourceType"
+        exports: [
+            "bb.data/DataSourceType 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Sql": 1,
+                "Json": 2,
+                "Xml": 3
+            }
+        }
+    }
+}

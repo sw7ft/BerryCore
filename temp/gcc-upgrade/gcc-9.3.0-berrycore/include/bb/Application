@@ -1,0 +1,8 @@
+/*!
+ * @copyright
+ * Copyright Research In Motion Limited, 2011-2012
+ * Research In Motion Limited. All rights reserved.
+ */
+
+#include <bb/core/Application.hpp>
+

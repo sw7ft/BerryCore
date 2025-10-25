@@ -1,0 +1,294 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::cascades::DataModel"
+        prototype: "QObject"
+        Signal {
+            name: "itemAdded"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Signal {
+            name: "itemUpdated"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Signal {
+            name: "itemRemoved"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Signal {
+            name: "itemMoved"
+            Parameter { name: "fromIndexPath"; type: "QVariantList" }
+            Parameter { name: "toIndexPath"; type: "QVariantList" }
+        }
+        Signal {
+            name: "itemsChanged"
+            Parameter { name: "eChangeType"; type: "bb::cascades::DataModelChangeType::Type" }
+            Parameter { name: "indexMapper"; type: "QSharedPointer<bb::cascades::DataModel::IndexMapper>" }
+        }
+        Signal {
+            name: "itemsChanged"
+            Parameter { name: "eChangeType"; type: "bb::cascades::DataModelChangeType::Type" }
+        }
+        Signal { name: "itemsChanged" }
+        Method {
+            name: "childCount"
+            type: "int"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "hasChildren"
+            type: "bool"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "itemType"
+            type: "string"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "data"
+            type: "QVariant"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+    }
+    Component {
+        name: "bb::cascades::datamanager::AsyncDataModel"
+        prototype: "bb::cascades::datamanager::QueryDataModel"
+        exports: [
+            "bb.cascades.datamanager/AsyncDataModel 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "cacheSize"; type: "int" }
+        Signal {
+            name: "cacheSizeChanged"
+            Parameter { name: "cacheSize"; type: "int" }
+        }
+        Method {
+            name: "childCount"
+            type: "int"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "hasChildren"
+            type: "bool"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "data"
+            type: "QVariant"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "itemType"
+            type: "string"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method { name: "load" }
+    }
+    Component {
+        name: "bb::cascades::datamanager::AsyncHeaderDataModel"
+        prototype: "bb::cascades::datamanager::AsyncHierarchicalDataModel"
+        exports: [
+            "bb.cascades.datamanager/AsyncHeaderDataModel 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+    }
+    Component {
+        name: "bb::cascades::datamanager::AsyncHierarchicalDataModel"
+        prototype: "bb::cascades::datamanager::AsyncDataModel"
+    }
+    Component {
+        name: "bb::cascades::datamanager::DataModelDecorator"
+        prototype: "bb::cascades::DataModel"
+        exports: [
+            "bb.cascades.datamanager/DataModelDecorator 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "model"; type: "bb::cascades::DataModel"; isPointer: true }
+        Signal { name: "modelChanged" }
+        Method {
+            name: "onItemAdded"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "onItemUpdated"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "onItemRemoved"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "onItemsChanged"
+            Parameter { name: "eChangeType"; type: "bb::cascades::DataModelChangeType::Type" }
+            Parameter { name: "indexMapper"; type: "QSharedPointer<bb::cascades::DataModel::IndexMapper>" }
+        }
+        Method {
+            name: "onItemsChanged"
+            Parameter { name: "eChangeType"; type: "bb::cascades::DataModelChangeType::Type" }
+        }
+        Method { name: "onItemsChanged" }
+        Method {
+            name: "childCount"
+            type: "int"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "hasChildren"
+            type: "bool"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "itemType"
+            type: "string"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "data"
+            type: "QVariant"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+    }
+    Component {
+        name: "bb::cascades::datamanager::DataQuery"
+        prototype: "QObject"
+        exports: [
+            "bb.cascades.datamanager/DataQuery 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Signal {
+            name: "dataChanged"
+            Parameter { name: "revision"; type: "DataRevision" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "code"; type: "int" }
+            Parameter { name: "message"; type: "string" }
+        }
+    }
+    Component {
+        name: "bb::cascades::datamanager::DataQueryDecorator"
+        prototype: "bb::cascades::datamanager::HeaderDataQuery"
+        exports: [
+            "bb.cascades.datamanager/DataQueryDecorator 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "query"; type: "bb::cascades::datamanager::DataQuery"; isPointer: true }
+        Signal {
+            name: "dataChanged"
+            Parameter { name: "revision"; type: "DataRevision" }
+        }
+        Signal { name: "queryChanged" }
+    }
+    Component {
+        name: "bb::cascades::datamanager::HeaderDataQuery"
+        prototype: "bb::cascades::datamanager::DataQuery"
+        exports: [
+            "bb.cascades.datamanager/HeaderDataQuery 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+    }
+    Component {
+        name: "bb::cascades::datamanager::QueryDataModel"
+        prototype: "bb::cascades::DataModel"
+        Property { name: "query"; type: "bb::cascades::datamanager::DataQuery"; isPointer: true }
+        Signal { name: "queryChanged" }
+        Signal { name: "loaded" }
+        Method { name: "load" }
+    }
+    Component {
+        name: "bb::cascades::datamanager::SimpleQueryDataModel"
+        prototype: "bb::cascades::datamanager::QueryDataModel"
+        exports: [
+            "bb.cascades.datamanager/SimpleQueryDataModel 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Method {
+            name: "childCount"
+            type: "int"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "hasChildren"
+            type: "bool"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "itemType"
+            type: "string"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method {
+            name: "data"
+            type: "QVariant"
+            Parameter { name: "indexPath"; type: "QVariantList" }
+        }
+        Method { name: "totalSize"; type: "int" }
+        Method { name: "load" }
+    }
+    Component {
+        name: "bb::cascades::datamanager::SqlDataQuery"
+        prototype: "bb::cascades::datamanager::DataQuery"
+        exports: [
+            "bb.cascades.datamanager/SqlDataQuery 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "source"; type: "QUrl" }
+        Property { name: "query"; type: "string" }
+        Property { name: "keyColumn"; type: "string" }
+        Property { name: "revisionColumn"; type: "string" }
+        Property { name: "countQuery"; type: "string" }
+        Property { name: "revisionQuery"; type: "string" }
+        Property { name: "bindValues"; type: "QVariantMap" }
+        Method {
+            name: "emitDataChanged"
+            Parameter { name: "revision"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::cascades::datamanager::SqlHeaderDataQuery"
+        prototype: "bb::cascades::datamanager::HeaderDataQuery"
+        exports: [
+            "bb.cascades.datamanager/SqlHeaderDataQuery 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "source"; type: "QUrl" }
+        Property { name: "query"; type: "string" }
+        Property { name: "scrollDownQuery"; type: "string" }
+        Property { name: "scrollUpQuery"; type: "string" }
+        Property { name: "headerQuery"; type: "string" }
+        Property { name: "keyColumn"; type: "string" }
+        Property { name: "revisionColumn"; type: "string" }
+        Property { name: "countQuery"; type: "string" }
+        Property { name: "revisionQuery"; type: "string" }
+        Property { name: "bindValues"; type: "QVariantMap" }
+        Method {
+            name: "emitDataChanged"
+            Parameter { name: "revision"; type: "int" }
+        }
+    }
+}

@@ -1,0 +1,217 @@
+========================================================
+  GCC 9.3.0 QNX 8 Toolchain for BerryCore Integration
+========================================================
+
+Original Location: /root/qnx800/
+Target Platform: arm-blackberry-qnx8eabi
+Packaging Date: $(date)
+Packaged By: Autonomous AI Agent
+
+========================================================
+  Why This Upgrade?
+========================================================
+Current BerryCore Toolchain: GCC 4.6.3 (2012)
+New Toolchain: GCC 9.3.0 (2019)
+
+Benefits:
+- C++17 support (vs C++11)
+- Better optimizations and code generation
+- Modern language features
+- Proven compatibility with BB10/QNX 8 devices
+- Successfully compiled: git 2.50, nano 5.9, Dillo browser, 
+  OpenSSL 1.1.1w, FLTK 1.3.9, and many more projects
+
+========================================================
+  Directory Structure
+========================================================
+.
+./arm-blackberry-qnx8eabi
+./arm-blackberry-qnx8eabi/bin
+./arm-blackberry-qnx8eabi/lib
+./arm-blackberry-qnx8eabi/usr
+./bin
+./include
+./include/AL
+./include/EGL
+./include/GLES
+./include/GLES2
+./include/GLES3
+./include/KHR
+./include/OMXAL
+./include/QtLocationSubset
+./include/QtNfcSubset
+./include/alsa
+./include/altq
+./include/aoi
+./include/arm
+./include/arpa
+./include/audio
+./include/bb
+./include/bb1
+./include/bbads
+./include/bbmsp
+./include/bps
+./include/btapi
+./include/camera
+./include/clipboard
+./include/cpp
+./include/curl
+./include/drvr
+./include/dspmgr
+./include/egm
+./include/font
+./include/fontconfig
+./include/freetype2
+./include/gestures
+./include/glview
+./include/hw
+./include/img
+./include/input
+./include/io
+./include/libexif
+./include/libpng14
+./include/libpng16
+./include/libstdc++
+./include/libxml
+./include/libxslt
+./include/lzma
+./include/lzo
+./include/mixer
+./include/mk
+./include/mm
+./include/mmedia
+./include/net
+./include/netinet
+./include/netinet6
+./include/netipsec
+./include/netkey
+./include/nfc
+./include/openssl
+./include/phone
+./include/playready
+./include/ps
+./include/push
+./include/qdb
+./include/qrencoder
+./include/qt4
+./include/rcheck
+./include/sbengine
+./include/screen
+./include/sensor
+./include/smartcard
+./include/smartcard_spi
+./include/sys
+./include/ucl
+./include/unicode
+./include/vpnext
+./include/wifi
+./include/winmgr
+./include/wmm
+./include/x86
+./include/xmp
+./include/zxing
+./share
+./share/gcc-9.3.0
+./share/info
+./share/man
+./x86_64-linux
+./x86_64-linux/arm-blackberry-qnx8eabi
+./x86_64-linux/lib
+
+========================================================
+  GCC Version
+========================================================
+arm-blackberry-qnx8eabi-gcc (GCC) 9.3.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+========================================================
+  Key Compiler Binaries
+========================================================
+-rwxr-xr-x 1 root root  33K Oct 24 22:27 arm-blackberry-qnx8eabi-addr2line
+-rwxr-xr-x 1 root root  70K Oct 24 22:27 arm-blackberry-qnx8eabi-ar
+-rwxr-xr-x 1 root root 840K Oct 24 22:27 arm-blackberry-qnx8eabi-as
+-rwxr-xr-x 1 root root 2.5M Oct 24 22:27 arm-blackberry-qnx8eabi-c++
+-rwxr-xr-x 1 root root  32K Oct 24 22:27 arm-blackberry-qnx8eabi-c++filt
+-rwxr-xr-x 1 root root 2.5M Oct 24 22:27 arm-blackberry-qnx8eabi-cpp
+-rwxr-xr-x 1 root root 7.2M Oct 24 22:27 arm-blackberry-qnx8eabi-dwp
+-rwxr-xr-x 1 root root  40K Oct 24 22:27 arm-blackberry-qnx8eabi-elfedit
+-rwxr-xr-x 1 root root 2.5M Oct 24 22:27 arm-blackberry-qnx8eabi-g++
+-rwxr-xr-x 1 root root 2.5M Oct 24 22:27 arm-blackberry-qnx8eabi-gcc
+-rwxr-xr-x 1 root root 2.5M Oct 24 22:27 arm-blackberry-qnx8eabi-gcc-9.3.0
+-rwxr-xr-x 1 root root  33K Oct 24 22:27 arm-blackberry-qnx8eabi-gcc-ar
+-rwxr-xr-x 1 root root  33K Oct 24 22:27 arm-blackberry-qnx8eabi-gcc-nm
+-rwxr-xr-x 1 root root  33K Oct 24 22:27 arm-blackberry-qnx8eabi-gcc-ranlib
+-rwxr-xr-x 1 root root 2.2M Oct 24 22:27 arm-blackberry-qnx8eabi-gcov
+-rwxr-xr-x 1 root root 762K Oct 24 22:27 arm-blackberry-qnx8eabi-gcov-dump
+-rwxr-xr-x 1 root root 793K Oct 24 22:27 arm-blackberry-qnx8eabi-gcov-tool
+-rwxr-xr-x 1 root root 102K Oct 24 22:27 arm-blackberry-qnx8eabi-gprof
+-rwxr-xr-x 1 root root 468K Oct 24 22:27 arm-blackberry-qnx8eabi-ld
+-rwxr-xr-x 1 root root 468K Oct 24 22:27 arm-blackberry-qnx8eabi-ld.bfd
+-rwxr-xr-x 1 root root  14M Oct 24 22:27 arm-blackberry-qnx8eabi-ld.gold
+-rwxr-xr-x 1 root root  52K Oct 24 22:27 arm-blackberry-qnx8eabi-nm
+-rwxr-xr-x 1 root root 203K Oct 24 22:27 arm-blackberry-qnx8eabi-objcopy
+-rwxr-xr-x 1 root root 447K Oct 24 22:27 arm-blackberry-qnx8eabi-objdump
+-rwxr-xr-x 1 root root  70K Oct 24 22:27 arm-blackberry-qnx8eabi-ranlib
+-rwxr-xr-x 1 root root 730K Oct 24 22:27 arm-blackberry-qnx8eabi-readelf
+-rwxr-xr-x 1 root root  38K Oct 24 22:27 arm-blackberry-qnx8eabi-size
+-rwxr-xr-x 1 root root  33K Oct 24 22:27 arm-blackberry-qnx8eabi-strings
+-rwxr-xr-x 1 root root 203K Oct 24 22:27 arm-blackberry-qnx8eabi-strip
+-rwxr-xr-x 1 root root  391 Oct 24 22:27 blackberry-barchecker
+
+========================================================
+  Package Statistics
+========================================================
+Total size: 698M
+File count: 9406
+Directory count: 397
+
+========================================================
+  Environment Variables (from env.sh)
+========================================================
+export GCC_VER="9.3.0"
+export BBNDK_TARGET="${BBNDK_ROOT}/target_10_3_1_995/qnx6"
+export BBNDK_HOST="${BBNDK_ROOT}/host_10_3_1_12/linux/x86"
+export BBNDK_ABI="arm-unknown-nto-qnx8.0.0eabi"
+export HOST_SYSTEM="${HOST_ARCH}-${HOST_OS}"
+export HOST_CPU_COUNT="4"
+export HOST_LIBNAME  # Fixed to export the variable name, not its value
+export QNX_VERSION="qnx800" # matches builtin gcc/config/nto.h
+export QNX_TARGET="${APP_ROOT}/${QNX_VERSION}"
+export QNX_HOST="${QNX_TARGET}/${HOST_SYSTEM}"
+export QNX_INC="${QNX_TARGET}/include"
+export QNX_ARCH="armle-v7"
+export QNX_ABI="arm-blackberry-qnx8eabi"
+export QNX_BIN="${QNX_TARGET}/bin"
+export QNX_PREBUILT="${QNX_TARGET}/${QNX_ABI}"
+
+========================================================
+  Size Breakdown by Directory
+========================================================
+347M	arm-blackberry-qnx8eabi/
+41M	bin/
+80M	include/
+12M	share/
+221M	x86_64-linux/
+
+========================================================
+  Largest Files (>10MB)
+========================================================
+-rwxr-xr-x 1 root root 11M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/4.6.3/cc1plus
+-rwxr-xr-x 1 root root 11M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/4.8.3/lto1
+-rwxr-xr-x 1 root root 12M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/qt4/lib/libQtCore.so.4.8.6
+-rwxr-xr-x 1 root root 12M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/4.8.3/cc1
+-rwxr-xr-x 1 root root 13M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/4.8.3/cc1plus
+-rwxr-xr-x 1 root root 14M Oct 24 22:27 ./arm-blackberry-qnx8eabi/bin/ld.gold
+-rwxr-xr-x 1 root root 14M Oct 24 22:27 ./bin/arm-blackberry-qnx8eabi-ld.gold
+-rwxr-xr-x 1 root root 16M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/libbbcascades.so.1
+-rwxr-xr-x 1 root root 18M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/qt4/lib/libQtScript.so.4.8.6
+-rwxr-xr-x 1 root root 21M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/qt4/lib/libQtDeclarative.so.4.8.6
+-rwxr-xr-x 1 root root 31M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/qt4/lib/libQtXmlPatterns.so.4.8.6
+-rwxr-xr-x 1 root root 34M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/9.3.0/lto1
+-rwxr-xr-x 1 root root 35M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/libwebkit.so.0.1
+-rwxr-xr-x 1 root root 35M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/9.3.0/cc1
+-rwxr-xr-x 1 root root 37M Oct 24 22:28 ./x86_64-linux/arm-blackberry-qnx8eabi/lib64/gcc/arm-blackberry-qnx8eabi/9.3.0/cc1plus
+-rwxr-xr-x 1 root root 52M Oct 24 22:27 ./arm-blackberry-qnx8eabi/usr/lib/qt4/lib/libQtGui.so.4.8.6

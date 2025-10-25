@@ -1,0 +1,7 @@
+/*!
+ * @copyright
+ * Copyright Research In Motion Limited, 2012-2013
+ * Research In Motion Limited. All rights reserved.
+ */
+
+#include <bb/platform/ExistingPurchasesReply.hpp>

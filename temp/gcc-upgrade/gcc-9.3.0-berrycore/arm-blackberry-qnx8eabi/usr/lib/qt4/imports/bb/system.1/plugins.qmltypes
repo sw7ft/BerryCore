@@ -1,0 +1,1990 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::system::ApplicationStartupMode"
+        exports: [
+            "bb.system/ApplicationStartupMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "LaunchApplication": 0,
+                "InvokeApplication": 1,
+                "InvokeViewer": 2,
+                "InvokeCard": 3,
+                "InvokeHeadless": 4,
+                "LaunchHeadless": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::system::CardEdge"
+        exports: [
+            "bb.system/CardEdge 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unspecified": 0,
+                "Top": 1,
+                "Bottom": 2,
+                "Left": 3,
+                "Right": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::system::CardOrientation"
+        exports: [
+            "bb.system/CardOrientation 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unspecified": 0,
+                "Portrait": 1,
+                "Landscape": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::CardPeek"
+        exports: [
+            "bb.system/CardPeek 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Parent": 0,
+                "Root": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::ContextActivityState"
+        exports: [
+            "bb.system/ContextActivityState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Start": 0,
+                "Pause": 1,
+                "Stop": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::ContextClassification"
+        exports: [
+            "bb.system/ContextClassification 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Public": 0,
+                "Private": 1,
+                "PrivateShort": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::ContextCollector"
+        prototype: "QObject"
+        exports: [
+            "bb.system/ContextCollector 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "applicationName"; type: "string" }
+        Property { name: "applicationVersion"; type: "string" }
+        Signal {
+            name: "applicationNameChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "applicationVersionChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Method {
+            name: "setApplicationName"
+            Parameter { name: "applicationName"; type: "string" }
+        }
+        Method {
+            name: "setApplicationVersion"
+            Parameter { name: "applicationVersion"; type: "string" }
+        }
+        Method { name: "resetApplicationName" }
+        Method { name: "resetApplicationVersion" }
+        Method { name: "isValid"; type: "bool" }
+        Method { name: "isEnabled"; type: "bool" }
+        Method {
+            name: "sendCustomEvent"
+            Parameter { name: "eventName"; type: "string" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendCustomEvent"
+            Parameter { name: "eventName"; type: "string" }
+        }
+        Method {
+            name: "sendApplicationError"
+            Parameter { name: "errorMessage"; type: "string" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendApplicationError"
+            Parameter { name: "errorMessage"; type: "string" }
+        }
+        Method {
+            name: "sendSearchEvent"
+            Parameter { name: "searchString"; type: "string" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendSearchEvent"
+            Parameter { name: "searchString"; type: "string" }
+        }
+        Method {
+            name: "sendActivity"
+            Parameter { name: "activityName"; type: "string" }
+            Parameter { name: "state"; type: "bb::system::ContextActivityState::Type" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendActivity"
+            Parameter { name: "activityName"; type: "string" }
+            Parameter { name: "state"; type: "bb::system::ContextActivityState::Type" }
+        }
+        Method {
+            name: "sendButtonClick"
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method { name: "sendButtonClick" }
+        Method {
+            name: "sendContentView"
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method { name: "sendContentView" }
+        Method {
+            name: "sendAdClick"
+            Parameter { name: "adName"; type: "string" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendAdClick"
+            Parameter { name: "adName"; type: "string" }
+        }
+        Method {
+            name: "sendConversionEvent"
+            Parameter { name: "conversionName"; type: "string" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendConversionEvent"
+            Parameter { name: "conversionName"; type: "string" }
+        }
+        Method {
+            name: "sendCorporateLiableEvent"
+            Parameter { name: "eventName"; type: "string" }
+            Parameter { name: "event"; type: "bb::system::ContextEvent"; isPointer: true }
+        }
+        Method {
+            name: "sendCorporateLiableEvent"
+            Parameter { name: "eventName"; type: "string" }
+        }
+    }
+    Component {
+        name: "bb::system::ContextEvent"
+        prototype: "QObject"
+        exports: [
+            "bb.system/ContextEvent 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Method {
+            name: "insert"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "bool" }
+        }
+        Method {
+            name: "insert"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "int" }
+        }
+        Method {
+            name: "insert"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "double" }
+            Parameter { name: "precision"; type: "int" }
+        }
+        Method {
+            name: "insert"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "string" }
+        }
+        Method {
+            name: "insert"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "value"; type: "string" }
+            Parameter { name: "classification"; type: "bb::system::ContextClassification::Type" }
+        }
+        Method {
+            name: "insertCorporateLiableTimestamp"
+            Parameter { name: "key"; type: "string" }
+            Parameter { name: "timestamp"; type: "QDateTime&" }
+        }
+        Method {
+            name: "remove"
+            Parameter { name: "key"; type: "string" }
+        }
+        Method { name: "clear" }
+    }
+    Component {
+        name: "bb::system::FileTransferMode"
+        exports: [
+            "bb.system/FileTransferMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unspecified": 0,
+                "Preserve": 1,
+                "CopyReadOnly": 2,
+                "CopyReadWrite": 3,
+                "Link": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::system::InvokeAction"
+        exports: [
+            "bb.system/InvokeAction 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "All": 0,
+                "Menu": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::InvokeListCursorDirection"
+        exports: [
+            "bb.system/InvokeListCursorDirection 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Next": 0,
+                "Previous": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::InvokeReplyError"
+        exports: [
+            "bb.system/InvokeReplyError 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "NoTarget": 1,
+                "BadRequest": 2,
+                "Internal": 3,
+                "TargetNotOwned": 4,
+                "InsufficientPrivileges": 5,
+                "Target": 6
+            }
+        }
+    }
+    Component {
+        name: "bb::system::InvokeTarget"
+        exports: [
+            "bb.system/InvokeTarget 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unspecified": 0,
+                "Application": 1,
+                "Card": 2,
+                "Viewer": 4,
+                "Service": 8,
+                "Self": 16,
+                "Headless": 64
+            }
+        }
+    }
+    Component {
+        name: "bb::system::InvokeViewerMessageReplyError"
+        exports: [
+            "bb.system/InvokeViewerMessageReplyError 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "InvalidWindowId": 1,
+                "InvalidMessage": 2,
+                "Internal": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::system::ListSelectionIndicator"
+        exports: [
+            "bb.system/ListSelectionIndicator 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Highlight": 0,
+                "Button": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::ListSelectionMode"
+        exports: [
+            "bb.system/ListSelectionMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Single": 1,
+                "Multiple": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::LocaleHandler"
+        prototype: "QObject"
+        exports: [
+            "bb.system/LocaleHandler 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "forceUpdateOnChange"; type: "string"; isReadonly: true }
+        Property {
+            name: "measurementSystem"
+            type: "bb::system::MeasurementSystem::Type"
+            isReadonly: true
+        }
+        Signal { name: "changed" }
+        Signal {
+            name: "measurementSystemChanged"
+            Parameter { name: "measurementSystem"; type: "bb::system::MeasurementSystem::Type" }
+        }
+        Signal {
+            name: "measurementSystemChanged"
+            Parameter { name: "measurementSystem"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::system::LocaleType"
+        exports: [
+            "bb.system/LocaleType 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Messages": 1,
+                "Region": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::MeasurementSystem"
+        exports: [
+            "bb.system/MeasurementSystem 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Metric": 0,
+                "Imperial": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::MenuManagerError"
+        exports: [
+            "bb.system/MenuManagerError 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "System": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::Screenshot"
+        prototype: "QObject"
+        exports: [
+            "bb.system/Screenshot 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Method { name: "error"; type: "int" }
+        Method { name: "captureDisplay"; type: "string" }
+        Method {
+            name: "captureDisplay"
+            type: "string"
+            Parameter { name: "filePath"; type: "QUrl" }
+        }
+        Method {
+            name: "captureDisplay"
+            type: "string"
+            Parameter { name: "format"; type: "bb::system::ScreenshotFormat::Type" }
+        }
+        Method {
+            name: "captureWindow"
+            type: "string"
+            Parameter { name: "filename"; type: "QUrl" }
+            Parameter { name: "window"; type: "screen_window_t" }
+        }
+    }
+    Component {
+        name: "bb::system::ScreenshotError"
+        exports: [
+            "bb.system/ScreenshotError 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "InternalError": 1,
+                "PermissionDenied": 2,
+                "BadFilePath": 3,
+                "UnsupportedFileType": 4,
+                "UserDeclined": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::system::ScreenshotFormat"
+        exports: [
+            "bb.system/ScreenshotFormat 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Png": 0,
+                "Jpeg": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SecurityPerimeter"
+        exports: [
+            "bb.system/SecurityPerimeter 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Enterprise": 1,
+                "Personal": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemCredentialsPrompt"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemCredentialsPrompt 1.0",
+            "bb.system/SystemCredentialsPrompt 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "validationMessage"; type: "string" }
+        Property { name: "emoticonsEnabled"; type: "bool" }
+        Property { name: "includeShowPassword"; type: "bool" }
+        Property { name: "includeRememberMe"; type: "bool" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "rememberMeChecked"; type: "bool" }
+        Property { name: "rememberMeText"; type: "string" }
+        Property { name: "buttonAreaLimit"; type: "int" }
+        Property { name: "dismissAutomatically"; type: "bool" }
+        Property { name: "activityIndicatorVisible"; revision: 1; type: "bool" }
+        Property { name: "returnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property {
+            name: "usernameField"
+            type: "bb::system::SystemUiInputField"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "passwordField"
+            type: "bb::system::SystemUiInputField"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "confirmButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "customButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "cancelButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "defaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "validationMessageChanged"
+            Parameter { name: "newValidationMessage"; type: "string" }
+        }
+        Signal {
+            name: "emoticonsEnabledChanged"
+            Parameter { name: "newEmoticonsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "includeShowPasswordChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "includeRememberMeChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeCheckedChanged"
+            Parameter { name: "newRememberMeSelected"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeTextChanged"
+            Parameter { name: "newRememberMeText"; type: "string" }
+        }
+        Signal {
+            name: "defaultButtonChanged"
+            Parameter { name: "newDefaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        }
+        Signal {
+            name: "buttonAreaLimitChanged"
+            Parameter { name: "newButtonAreaLimit"; type: "int" }
+        }
+        Signal {
+            name: "dismissAutomaticallyChanged"
+            Parameter { name: "automaticDismissal"; type: "bool" }
+        }
+        Signal {
+            name: "activityIndicatorVisibleChanged"
+            revision: 1
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetTitle" }
+        Method { name: "resetBody" }
+        Method { name: "resetValidationMessage" }
+        Method { name: "resetEmoticonsEnabled" }
+        Method { name: "resetUsernameField" }
+        Method { name: "resetPasswordField" }
+        Method { name: "resetIncludeShowPassword" }
+        Method { name: "resetIncludeRememberMe" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetRememberMeChecked" }
+        Method { name: "resetRememberMeText" }
+        Method { name: "resetConfirmButton" }
+        Method { name: "resetCustomButton" }
+        Method { name: "resetCancelButton" }
+        Method { name: "resetDefaultButton" }
+        Method { name: "resetButtonAreaLimit" }
+        Method { name: "resetDismissAutomatically" }
+        Method { name: "resetActivityIndicatorVisible"; revision: 1 }
+        Method { name: "resetReturnKeyAction" }
+        Method { name: "resetModality" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+        Method { name: "usernameEntry"; type: "string" }
+        Method { name: "passwordEntry"; type: "string" }
+        Method { name: "rememberMeSelection"; type: "bool" }
+    }
+    Component {
+        name: "bb::system::SystemDialog"
+        defaultProperty: "buttons"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemDialog 1.0",
+            "bb.system/SystemDialog 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "emoticonsEnabled"; type: "bool" }
+        Property { name: "includeRememberMe"; type: "bool" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "rememberMeChecked"; type: "bool" }
+        Property { name: "rememberMeText"; type: "string" }
+        Property { name: "buttonAreaLimit"; type: "int" }
+        Property { name: "dismissAutomatically"; type: "bool" }
+        Property { name: "activityIndicatorVisible"; revision: 1; type: "bool" }
+        Property { name: "returnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property {
+            name: "confirmButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "customButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "cancelButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "defaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        Property { name: "buttons"; type: "bb::system::SystemUiButton"; isList: true; isReadonly: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "emoticonsEnabledChanged"
+            Parameter { name: "newEmoticonsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "includeRememberMeChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeCheckedChanged"
+            Parameter { name: "newRememberMeSelected"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeTextChanged"
+            Parameter { name: "newRememberMeText"; type: "string" }
+        }
+        Signal {
+            name: "defaultButtonChanged"
+            Parameter { name: "newDefaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        }
+        Signal {
+            name: "dismissAutomaticallyChanged"
+            Parameter { name: "automaticDismissal"; type: "bool" }
+        }
+        Signal {
+            name: "activityIndicatorVisibleChanged"
+            revision: 1
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "buttonAreaLimitChanged"
+            Parameter { name: "newButtonAreaLimit"; type: "int" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetTitle" }
+        Method { name: "resetBody" }
+        Method { name: "resetEmoticonsEnabled" }
+        Method { name: "resetIncludeRememberMe" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetRememberMeChecked" }
+        Method { name: "resetRememberMeText" }
+        Method { name: "resetConfirmButton" }
+        Method { name: "resetCustomButton" }
+        Method { name: "resetCancelButton" }
+        Method { name: "resetDefaultButton" }
+        Method { name: "resetDismissAutomatically" }
+        Method { name: "resetActivityIndicatorVisible"; revision: 1 }
+        Method { name: "resetReturnKeyAction" }
+        Method { name: "resetModality" }
+        Method { name: "resetButtonAreaLimit" }
+        Method { name: "buttonCount"; type: "int" }
+        Method { name: "clearButtons" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+        Method { name: "rememberMeSelection"; type: "bool" }
+    }
+    Component {
+        name: "bb::system::SystemListDialog"
+        defaultProperty: "buttons"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemListDialog 1.0",
+            "bb.system/SystemListDialog 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "emoticonsEnabled"; type: "bool" }
+        Property { name: "includeRememberMe"; type: "bool" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "rememberMeChecked"; type: "bool" }
+        Property { name: "rememberMeText"; type: "string" }
+        Property { name: "buttonAreaLimit"; type: "int" }
+        Property { name: "dismissAutomatically"; type: "bool" }
+        Property { name: "activityIndicatorVisible"; revision: 1; type: "bool" }
+        Property { name: "returnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property { name: "selectionMode"; type: "bb::system::ListSelectionMode::Type" }
+        Property {
+            name: "confirmButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "customButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "cancelButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "defaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        Property { name: "buttons"; type: "bb::system::SystemUiButton"; isList: true; isReadonly: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Property { name: "selectedIndices"; type: "QVariantList"; isReadonly: true }
+        Property { name: "dismissOnSelection"; revision: 1; type: "bool" }
+        Property {
+            name: "selectionIndicator"
+            revision: 1
+            type: "bb::system::ListSelectionIndicator::Type"
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "selectionModeChanged"
+            Parameter { name: "newSelectionMode"; type: "bb::system::ListSelectionMode::Type" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "emoticonsEnabledChanged"
+            Parameter { name: "newEmoticonsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "includeRememberMeChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeCheckedChanged"
+            Parameter { name: "newRememberMeSelected"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeTextChanged"
+            Parameter { name: "newRememberMeText"; type: "string" }
+        }
+        Signal {
+            name: "defaultButtonChanged"
+            Parameter { name: "newDefaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        }
+        Signal {
+            name: "dismissAutomaticallyChanged"
+            Parameter { name: "automaticDismissal"; type: "bool" }
+        }
+        Signal {
+            name: "activityIndicatorVisibleChanged"
+            revision: 1
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "buttonAreaLimitChanged"
+            Parameter { name: "newButtonAreaLimit"; type: "int" }
+        }
+        Signal {
+            name: "dismissOnSelectionChanged"
+            revision: 1
+            Parameter { name: "newDismissOnSelection"; type: "bool" }
+        }
+        Signal {
+            name: "selectionIndicatorChanged"
+            revision: 1
+            Parameter { name: "newSelectionIndicator"; type: "bb::system::ListSelectionIndicator::Type" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Signal {
+            name: "selectionModeChanged"
+            Parameter { name: "newSelectionMode"; type: "int" }
+        }
+        Signal {
+            name: "selectionIndicatorChanged"
+            revision: 1
+            Parameter { name: "newSelectionIndicator"; type: "int" }
+        }
+        Method { name: "clearList" }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetSelectionMode" }
+        Method { name: "resetTitle" }
+        Method { name: "resetBody" }
+        Method { name: "resetEmoticonsEnabled" }
+        Method { name: "resetIncludeRememberMe" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetRememberMeChecked" }
+        Method { name: "resetRememberMeText" }
+        Method { name: "resetConfirmButton" }
+        Method { name: "resetCustomButton" }
+        Method { name: "resetCancelButton" }
+        Method { name: "resetDefaultButton" }
+        Method { name: "resetDismissAutomatically" }
+        Method { name: "resetActivityIndicatorVisible"; revision: 1 }
+        Method { name: "resetReturnKeyAction" }
+        Method { name: "resetModality" }
+        Method { name: "resetButtonAreaLimit" }
+        Method { name: "resetDismissOnSelection"; revision: 1 }
+        Method { name: "resetSelectionIndicator"; revision: 1 }
+        Method { name: "buttonCount"; type: "int" }
+        Method { name: "clearButtons" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+        Method { name: "rememberMeSelection"; type: "bool" }
+        Method {
+            name: "appendSeparator"
+            Parameter { name: "text"; type: "string" }
+        }
+        Method {
+            name: "appendHeader"
+            Parameter { name: "text"; type: "string" }
+        }
+        Method {
+            name: "appendHeader"
+            Parameter { name: "text"; type: "string" }
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "appendItem"
+            Parameter { name: "text"; type: "string" }
+        }
+        Method {
+            name: "appendItem"
+            Parameter { name: "text"; type: "string" }
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "appendItem"
+            Parameter { name: "text"; type: "string" }
+            Parameter { name: "enabled"; type: "bool" }
+            Parameter { name: "selected"; type: "bool" }
+        }
+        Method {
+            name: "appendItems"
+            Parameter { name: "text"; type: "QStringList" }
+        }
+    }
+    Component {
+        name: "bb::system::SystemProgressDialog"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemProgressDialog 1.0",
+            "bb.system/SystemProgressDialog 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "icon"; type: "QUrl" }
+        Property { name: "emoticonsEnabled"; type: "bool" }
+        Property { name: "includeRememberMe"; type: "bool" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "rememberMeChecked"; type: "bool" }
+        Property { name: "rememberMeText"; type: "string" }
+        Property { name: "buttonAreaLimit"; type: "int" }
+        Property { name: "dismissAutomatically"; type: "bool" }
+        Property { name: "activityIndicatorVisible"; revision: 1; type: "bool" }
+        Property { name: "progress"; type: "int" }
+        Property { name: "statusMessage"; type: "string" }
+        Property { name: "statusDetails"; type: "string" }
+        Property { name: "state"; type: "bb::system::SystemUiProgressState::Type" }
+        Property { name: "returnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property {
+            name: "confirmButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "customButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "cancelButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "defaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "progressChanged"
+            Parameter { name: "newProgress"; type: "int" }
+        }
+        Signal {
+            name: "statusMessageChanged"
+            Parameter { name: "newStatusMessage"; type: "string" }
+        }
+        Signal {
+            name: "statusDetailsChanged"
+            Parameter { name: "newStatusDetails"; type: "string" }
+        }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "newState"; type: "bb::system::SystemUiProgressState::Type" }
+        }
+        Signal {
+            name: "iconChanged"
+            Parameter { name: "value"; type: "QUrl" }
+        }
+        Signal {
+            name: "emoticonsEnabledChanged"
+            Parameter { name: "newEmoticonsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "includeRememberMeChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeCheckedChanged"
+            Parameter { name: "newRememberMeSelected"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeTextChanged"
+            Parameter { name: "newRememberMeText"; type: "string" }
+        }
+        Signal {
+            name: "defaultButtonChanged"
+            Parameter { name: "newDefaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        }
+        Signal {
+            name: "buttonAreaLimitChanged"
+            Parameter { name: "newButtonAreaLimit"; type: "int" }
+        }
+        Signal {
+            name: "dismissAutomaticallyChanged"
+            Parameter { name: "automaticDismissal"; type: "bool" }
+        }
+        Signal {
+            name: "activityIndicatorVisibleChanged"
+            revision: 1
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "newState"; type: "int" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetTitle" }
+        Method { name: "resetBody" }
+        Method { name: "resetProgress" }
+        Method { name: "resetStatusMessage" }
+        Method { name: "resetStatusDetails" }
+        Method { name: "resetState" }
+        Method { name: "resetIcon" }
+        Method { name: "resetEmoticonsEnabled" }
+        Method { name: "resetIncludeRememberMe" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetRememberMeChecked" }
+        Method { name: "resetRememberMeText" }
+        Method { name: "resetConfirmButton" }
+        Method { name: "resetCustomButton" }
+        Method { name: "resetCancelButton" }
+        Method { name: "resetDefaultButton" }
+        Method { name: "resetButtonAreaLimit" }
+        Method { name: "resetDismissAutomatically" }
+        Method { name: "resetActivityIndicatorVisible"; revision: 1 }
+        Method { name: "resetReturnKeyAction" }
+        Method { name: "resetModality" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+        Method { name: "rememberMeSelection"; type: "bool" }
+    }
+    Component {
+        name: "bb::system::SystemProgressToast"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemProgressToast 1.0",
+            "bb.system/SystemProgressToast 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "body"; type: "string" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "progress"; type: "int" }
+        Property { name: "statusMessage"; type: "string" }
+        Property { name: "state"; type: "bb::system::SystemUiProgressState::Type" }
+        Property { name: "position"; type: "bb::system::SystemUiPosition::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property { name: "button"; type: "bb::system::SystemUiButton"; isReadonly: true; isPointer: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "progressChanged"
+            Parameter { name: "newProgress"; type: "int" }
+        }
+        Signal {
+            name: "statusMessageChanged"
+            Parameter { name: "newStatusMessage"; type: "string" }
+        }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "newState"; type: "bb::system::SystemUiProgressState::Type" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "value"; type: "bb::system::SystemUiPosition::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "newState"; type: "int" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetBody" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetProgress" }
+        Method { name: "resetStatusMessage" }
+        Method { name: "resetState" }
+        Method { name: "resetPosition" }
+        Method { name: "resetButton" }
+        Method { name: "resetModality" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+    }
+    Component {
+        name: "bb::system::SystemPrompt"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemPrompt 1.0",
+            "bb.system/SystemPrompt 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "emoticonsEnabled"; type: "bool" }
+        Property { name: "includeRememberMe"; type: "bool" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "rememberMeChecked"; type: "bool" }
+        Property { name: "rememberMeText"; type: "string" }
+        Property { name: "buttonAreaLimit"; type: "int" }
+        Property { name: "dismissAutomatically"; type: "bool" }
+        Property { name: "activityIndicatorVisible"; revision: 1; type: "bool" }
+        Property { name: "returnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property {
+            name: "inputField"
+            type: "bb::system::SystemUiInputField"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "inputOptions"; revision: 1; type: "bb::system::SystemUiInputOption::Types" }
+        Property {
+            name: "confirmButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "customButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property {
+            name: "cancelButton"
+            type: "bb::system::SystemUiButton"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "defaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "emoticonsEnabledChanged"
+            Parameter { name: "newEmoticonsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "includeRememberMeChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeCheckedChanged"
+            Parameter { name: "newRememberMeSelected"; type: "bool" }
+        }
+        Signal {
+            name: "rememberMeTextChanged"
+            Parameter { name: "newRememberMeText"; type: "string" }
+        }
+        Signal {
+            name: "defaultButtonChanged"
+            Parameter { name: "newDefaultButton"; type: "bb::system::SystemUiButton"; isPointer: true }
+        }
+        Signal {
+            name: "buttonAreaLimitChanged"
+            Parameter { name: "newButtonAreaLimit"; type: "int" }
+        }
+        Signal {
+            name: "dismissAutomaticallyChanged"
+            Parameter { name: "automaticDismissal"; type: "bool" }
+        }
+        Signal {
+            name: "activityIndicatorVisibleChanged"
+            revision: 1
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "bb::system::SystemUiReturnKeyAction::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "inputOptionsChanged"
+            revision: 1
+            Parameter { name: "newOptions"; type: "bb::system::SystemUiInputOption::Types" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "returnKeyActionChanged"
+            Parameter { name: "newReturnKeyAction"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Signal {
+            name: "inputOptionsChanged"
+            revision: 1
+            Parameter { name: "newOptions"; type: "int" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetTitle" }
+        Method { name: "resetBody" }
+        Method { name: "resetEmoticonsEnabled" }
+        Method { name: "resetIncludeRememberMe" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetRememberMeChecked" }
+        Method { name: "resetRememberMeText" }
+        Method { name: "resetInputField" }
+        Method { name: "resetInputOptions"; revision: 1 }
+        Method { name: "resetConfirmButton" }
+        Method { name: "resetCustomButton" }
+        Method { name: "resetCancelButton" }
+        Method { name: "resetDefaultButton" }
+        Method { name: "resetButtonAreaLimit" }
+        Method { name: "resetDismissAutomatically" }
+        Method { name: "resetActivityIndicatorVisible"; revision: 1 }
+        Method { name: "resetReturnKeyAction" }
+        Method { name: "resetModality" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+        Method { name: "inputFieldTextEntry"; type: "string" }
+        Method { name: "rememberMeSelection"; type: "bool" }
+    }
+    Component {
+        name: "bb::system::SystemToast"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemToast 1.0",
+            "bb.system/SystemToast 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "body"; type: "string" }
+        Property { name: "autoUpdateEnabled"; revision: 1; type: "bool" }
+        Property { name: "icon"; type: "QUrl" }
+        Property { name: "position"; type: "bb::system::SystemUiPosition::Type" }
+        Property { name: "modality"; type: "bb::system::SystemUiModality::Type" }
+        Property { name: "button"; type: "bb::system::SystemUiButton"; isReadonly: true; isPointer: true }
+        Property { name: "result"; type: "bb::system::SystemUiResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::system::SystemUiError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::system::SystemUiResult::Type" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "autoUpdateEnabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "iconChanged"
+            Parameter { name: "value"; type: "QUrl" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "value"; type: "bb::system::SystemUiPosition::Type" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "bb::system::SystemUiModality::Type" }
+        }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "modalityChanged"
+            Parameter { name: "newModality"; type: "int" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::system::SystemUiResult::Type" }
+        Method { name: "update"; revision: 1 }
+        Method { name: "cancel" }
+        Method { name: "resetBody" }
+        Method { name: "resetAutoUpdateEnabled" }
+        Method { name: "resetIcon" }
+        Method { name: "resetPosition" }
+        Method { name: "resetButton" }
+        Method { name: "resetModality" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+    }
+    Component {
+        name: "bb::system::SystemUiButton"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemUiButton 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "label"; type: "string" }
+        Property { name: "enabled"; type: "bool" }
+        Signal {
+            name: "labelChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "enabledChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Method { name: "resetLabel" }
+        Method { name: "resetEnabled" }
+    }
+    Component {
+        name: "bb::system::SystemUiError"
+        exports: [
+            "bb.system/SystemUiError 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Unknown": 1,
+                "NoButtons": 2,
+                "InvalidState": 3,
+                "ServiceUnavailable": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiInputField"
+        prototype: "QObject"
+        exports: [
+            "bb.system/SystemUiInputField 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "defaultText"; type: "string" }
+        Property { name: "emptyText"; type: "string" }
+        Property { name: "inputMode"; type: "bb::system::SystemUiInputMode::Type" }
+        Property { name: "maximumLength"; type: "int" }
+        Signal {
+            name: "defaultTextChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "emptyTextChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "inputModeChanged"
+            Parameter { name: "value"; type: "bb::system::SystemUiInputMode::Type" }
+        }
+        Signal {
+            name: "maximumLengthChanged"
+            Parameter { name: "newMaximumLength"; type: "int" }
+        }
+        Signal {
+            name: "inputModeChanged"
+            Parameter { name: "value"; type: "int" }
+        }
+        Method { name: "resetDefaultText" }
+        Method { name: "resetEmptyText" }
+        Method { name: "resetInputMode" }
+        Method { name: "resetMaximumLength" }
+    }
+    Component {
+        name: "bb::system::SystemUiInputMode"
+        exports: [
+            "bb.system/SystemUiInputMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Email": 1,
+                "Password": 2,
+                "Phone": 3,
+                "Pin": 4,
+                "Url": 5,
+                "Symbols": 6,
+                "NumericKeypad": 7,
+                "NumbersAndPunctuation": 8
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiInputOption"
+        exports: [
+            "bb.system/SystemUiInputOption 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "AutoCapitalize": 1,
+                "AutoCorrect": 2,
+                "SpellCheck": 4
+            }
+        }
+        Enum {
+            name: "Types"
+            values: {
+                "None": 0,
+                "AutoCapitalize": 1,
+                "AutoCorrect": 2,
+                "SpellCheck": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiModality"
+        exports: [
+            "bb.system/SystemUiModality 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Application": 1,
+                "Global": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiPosition"
+        exports: [
+            "bb.system/SystemUiPosition 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "MiddleCenter": 0,
+                "TopCenter": 1,
+                "BottomCenter": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiProgressState"
+        exports: [
+            "bb.system/SystemUiProgressState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Active": 0,
+                "Inactive": 1,
+                "Error": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiResult"
+        exports: [
+            "bb.system/SystemUiResult 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "ButtonSelection": 1,
+                "ConfirmButtonSelection": 2,
+                "CancelButtonSelection": 3,
+                "TimeOut": 4,
+                "Error": 5,
+                "CustomButtonSelection": 6,
+                "DialogCannotBlock": 7,
+                "ItemSelection": 8
+            }
+        }
+    }
+    Component {
+        name: "bb::system::SystemUiReturnKeyAction"
+        exports: [
+            "bb.system/SystemUiReturnKeyAction 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Go": 1,
+                "Join": 2,
+                "Next": 3,
+                "Search": 4,
+                "Send": 5,
+                "Submit": 6,
+                "Done": 7,
+                "Connect": 8
+            }
+        }
+    }
+    Component {
+        name: "bb::system::phone::CallState"
+        exports: [
+            "bb.system/CallState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Invalid": -1,
+                "Unknown": 0,
+                "Incoming": 1,
+                "Connecting": 2,
+                "RemoteRinging": 3,
+                "Connected": 4,
+                "Disconnected": 5,
+                "Failed": 6,
+                "Held": 7,
+                "MultiPartyMember": 8
+            }
+        }
+    }
+    Component {
+        name: "bb::system::phone::CallType"
+        exports: [
+            "bb.system/CallType 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Invalid": -1,
+                "Incoming": 0,
+                "Outgoing": 1,
+                "MultiParty": 2,
+                "Missed": 3,
+                "Command": 4,
+                "Emergency": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::system::phone::LineType"
+        exports: [
+            "bb.system/LineType 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Invalid": -1,
+                "Cellular": 0,
+                "MVS": 1,
+                "VideoChat": 2,
+                "SecuVOICE": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::system::phone::Phone"
+        prototype: "QObject"
+        exports: [
+            "bb.system/Phone 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Signal {
+            name: "callUpdated"
+            Parameter { name: "call"; type: "bb::system::phone::Call" }
+        }
+        Signal {
+            name: "callCommandResponseReceived"
+            Parameter { name: "commandResponse"; type: "bb::system::phone::CallCommandResponse" }
+        }
+        Signal {
+            name: "lineUpdated"
+            Parameter { name: "line"; type: "bb::system::phone::Line" }
+        }
+        Signal {
+            name: "lineRemoved"
+            Parameter { name: "line"; type: "bb::system::phone::Line" }
+        }
+        Signal {
+            name: "callUpdated"
+            Parameter { name: "call"; type: "QVariant" }
+        }
+        Signal {
+            name: "callCommandResponseReceived"
+            Parameter { name: "commandResponse"; type: "QVariant" }
+        }
+        Signal {
+            name: "lineUpdated"
+            Parameter { name: "line"; type: "QVariant" }
+        }
+        Signal {
+            name: "lineRemoved"
+            Parameter { name: "line"; type: "QVariant" }
+        }
+        Method {
+            name: "requestDialpad"
+            Parameter { name: "address"; type: "string" }
+            Parameter { name: "type"; type: "bb::system::phone::LineType::Type" }
+        }
+        Method {
+            name: "requestDialpad"
+            Parameter { name: "address"; type: "string" }
+        }
+        Method {
+            name: "requestKeypressSpeedDial"
+            Parameter { name: "keycap"; type: "int" }
+        }
+        Method {
+            name: "initiateCellularCall"
+            Parameter { name: "phoneNumber"; type: "string" }
+            Parameter { name: "applySmartDialing"; type: "bool" }
+        }
+        Method {
+            name: "initiateCellularCall"
+            Parameter { name: "phoneNumber"; type: "string" }
+        }
+        Method {
+            name: "initiateCall"
+            Parameter { name: "address"; type: "string" }
+            Parameter { name: "lineType"; type: "bb::system::phone::LineType::Type" }
+        }
+        Method {
+            name: "initiateCall"
+            Parameter { name: "address"; type: "string" }
+        }
+        Method {
+            name: "initiateVideoCall"
+            Parameter { name: "address"; type: "string" }
+            Parameter { name: "lineType"; type: "bb::system::phone::LineType::Type" }
+        }
+        Method {
+            name: "initiateVideoCall"
+            Parameter { name: "address"; type: "string" }
+        }
+        Method {
+            name: "sendDTMFTones"
+            type: "bool"
+            Parameter { name: "tones"; type: "QByteArray" }
+            Parameter { name: "lineType"; type: "bb::system::phone::LineType::Type" }
+        }
+        Method {
+            name: "sendDTMFTones"
+            type: "bool"
+            Parameter { name: "tones"; type: "QByteArray" }
+        }
+        Method {
+            name: "endCall"
+            type: "bool"
+            Parameter { name: "callId"; type: "int" }
+        }
+        Method {
+            name: "holdCall"
+            type: "bool"
+            Parameter { name: "callId"; type: "int" }
+        }
+        Method {
+            name: "resumeCall"
+            type: "bool"
+            Parameter { name: "callId"; type: "int" }
+        }
+        Method {
+            name: "mergeCall"
+            type: "bool"
+            Parameter { name: "callId1"; type: "int" }
+            Parameter { name: "callId2"; type: "int" }
+        }
+        Method {
+            name: "splitCall"
+            type: "bool"
+            Parameter { name: "callId"; type: "int" }
+        }
+    }
+}

@@ -1,0 +1,3 @@
+#!/bin/sh
+LIB=`dirname "$0"`/../x86_64-linux/lib
+java -Xmx512M -Djava.awt.headless=true -cp ${LIB}/EccpressoAll.jar:${LIB}/EccpressoJDK15ECC.jar:${LIB}/TrustpointAll.jar:${LIB}/TrustpointJDK15.jar:${LIB}/TrustpointProviders.jar:${LIB}/BarSigner.jar:${LIB}/KeyTool.jar net.rim.device.codesigning.keytool.KeyTool "$@"

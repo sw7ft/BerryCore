@@ -1,0 +1,733 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::cascades::BaseObject"
+        prototype: "QObject"
+        Property { name: "objectName"; type: "string" }
+        Property { name: "parent"; type: "QObject"; isReadonly: true; isPointer: true }
+        Signal { name: "creationCompleted" }
+        Signal {
+            name: "objectNameChanged"
+            Parameter { name: "objectName"; type: "string" }
+        }
+        Method { name: "toDebugString"; type: "string" }
+    }
+    Component {
+        name: "bb::cascades::Control"
+        prototype: "bb::cascades::VisualNode"
+        Property { name: "horizontalAlignment"; type: "bb::cascades::HorizontalAlignment::Type" }
+        Property { name: "verticalAlignment"; type: "bb::cascades::VerticalAlignment::Type" }
+        Property { name: "preferredWidth"; type: "float" }
+        Property { name: "preferredWidthSet"; type: "bool"; isReadonly: true }
+        Property { name: "preferredHeight"; type: "float" }
+        Property { name: "preferredHeightSet"; type: "bool"; isReadonly: true }
+        Property { name: "leftPadding"; type: "float" }
+        Property { name: "rightPadding"; type: "float" }
+        Property { name: "topPadding"; type: "float" }
+        Property { name: "bottomPadding"; type: "float" }
+        Property { name: "enabled"; type: "bool" }
+        Property {
+            name: "focusRetentionPolicyFlags"
+            type: "bb::cascades::FocusRetentionPolicy::Types"
+        }
+        Property { name: "focused"; type: "bool"; isReadonly: true }
+        Property { name: "focusPolicy"; type: "bb::cascades::FocusPolicy::Type" }
+        Property { name: "focusAutoShow"; type: "bb::cascades::FocusAutoShow::Type" }
+        Property { name: "locallyFocused"; revision: 4; type: "bool" }
+        Property {
+            name: "inputRoute"
+            type: "bb::cascades::InputRouteProperties"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "layoutProperties"; type: "bb::cascades::LayoutProperties"; isPointer: true }
+        Property {
+            name: "margin"
+            revision: 3
+            type: "bb::cascades::Spacings"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "accessibilityMode"; revision: 2; type: "bb::cascades::A11yMode::Type" }
+        Property {
+            name: "accessibility"
+            revision: 2
+            type: "bb::cascades::AbstractA11yObject"
+            isReadonly: true
+            isPointer: true
+        }
+        Property { name: "leftMargin"; type: "float" }
+        Property { name: "leftMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "rightMargin"; type: "float" }
+        Property { name: "rightMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "topMargin"; type: "float" }
+        Property { name: "topMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "bottomMargin"; type: "float" }
+        Property { name: "bottomMarginSet"; type: "bool"; isReadonly: true }
+        Property { name: "minWidth"; type: "float" }
+        Property { name: "maxWidth"; type: "float" }
+        Property { name: "minHeight"; type: "float" }
+        Property { name: "maxHeight"; type: "float" }
+        Property {
+            name: "contextActions"
+            type: "bb::cascades::ActionSet"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "contextMenuHandler"
+            type: "bb::cascades::ContextMenuHandler"
+            isPointer: true
+        }
+        Property { name: "implicitLayoutAnimationsEnabled"; type: "bool" }
+        Property {
+            name: "shortcuts"
+            type: "bb::cascades::AbstractShortcut"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "keyListeners"
+            type: "bb::cascades::KeyListener"
+            isList: true
+            isReadonly: true
+        }
+        Property { name: "builtInShortcutsEnabled"; revision: 2; type: "bool" }
+        Property {
+            name: "navigation"
+            revision: 4
+            type: "bb::cascades::Navigation"
+            isReadonly: true
+            isPointer: true
+        }
+        Signal {
+            name: "horizontalAlignmentChanged"
+            Parameter { name: "newHorizontalAlignment"; type: "bb::cascades::HorizontalAlignment::Type" }
+        }
+        Signal {
+            name: "verticalAlignmentChanged"
+            Parameter { name: "newVerticalAlignment"; type: "bb::cascades::VerticalAlignment::Type" }
+        }
+        Signal {
+            name: "preferredWidthChanged"
+            Parameter { name: "preferredWidth"; type: "float" }
+        }
+        Signal {
+            name: "preferredWidthSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "preferredHeightChanged"
+            Parameter { name: "preferredHeight"; type: "float" }
+        }
+        Signal {
+            name: "preferredHeightSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "leftPaddingChanged"
+            Parameter { name: "leftPadding"; type: "float" }
+        }
+        Signal {
+            name: "rightPaddingChanged"
+            Parameter { name: "rightPadding"; type: "float" }
+        }
+        Signal {
+            name: "topPaddingChanged"
+            Parameter { name: "topPadding"; type: "float" }
+        }
+        Signal {
+            name: "bottomPaddingChanged"
+            Parameter { name: "bottomPadding"; type: "float" }
+        }
+        Signal {
+            name: "enabledChanged"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Signal {
+            name: "focusedChanged"
+            Parameter { name: "focused"; type: "bool" }
+        }
+        Signal {
+            name: "focusPolicyChanged"
+            Parameter { name: "newFocusPolicy"; type: "bb::cascades::FocusPolicy::Type" }
+        }
+        Signal {
+            name: "focusAutoShowChanged"
+            Parameter { name: "newFocusAutoShow"; type: "bb::cascades::FocusAutoShow::Type" }
+        }
+        Signal {
+            name: "locallyFocusedChanged"
+            revision: 4
+            Parameter { name: "newLocallyFocused"; type: "bool" }
+        }
+        Signal {
+            name: "layoutPropertiesChanged"
+            Parameter { name: "layoutProperties"; type: "bb::cascades::LayoutProperties"; isPointer: true }
+        }
+        Signal {
+            name: "leftMarginChanged"
+            Parameter { name: "leftMargin"; type: "float" }
+        }
+        Signal {
+            name: "leftMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "topMarginChanged"
+            Parameter { name: "topMargin"; type: "float" }
+        }
+        Signal {
+            name: "topMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "bottomMarginChanged"
+            Parameter { name: "bottomMargin"; type: "float" }
+        }
+        Signal {
+            name: "bottomMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "rightMarginChanged"
+            Parameter { name: "rightMargin"; type: "float" }
+        }
+        Signal {
+            name: "rightMarginSetChanged"
+            Parameter { name: "isSet"; type: "bool" }
+        }
+        Signal {
+            name: "minWidthChanged"
+            Parameter { name: "minWidth"; type: "float" }
+        }
+        Signal {
+            name: "maxWidthChanged"
+            Parameter { name: "maxWidth"; type: "float" }
+        }
+        Signal {
+            name: "minHeightChanged"
+            Parameter { name: "minHeight"; type: "float" }
+        }
+        Signal {
+            name: "maxHeightChanged"
+            Parameter { name: "maxHeight"; type: "float" }
+        }
+        Signal {
+            name: "actionSetAdded"
+            Parameter { name: "actionSet"; type: "bb::cascades::ActionSet"; isPointer: true }
+        }
+        Signal {
+            name: "actionSetRemoved"
+            Parameter { name: "actionSet"; type: "bb::cascades::ActionSet"; isPointer: true }
+        }
+        Signal {
+            name: "contextMenuHandlerChanged"
+            Parameter {
+                name: "contextMenuHandler"
+                type: "bb::cascades::ContextMenuHandler"
+                isPointer: true
+            }
+        }
+        Signal {
+            name: "focusRetentionPolicyFlagsChanged"
+            Parameter { name: "policy"; type: "bb::cascades::FocusRetentionPolicy::Types" }
+        }
+        Signal {
+            name: "implicitLayoutAnimationsEnabledChanged"
+            Parameter { name: "implicitLayoutAnimationsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "builtInShortcutsEnabledChanged"
+            revision: 2
+            Parameter { name: "builtInShortcutsEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "accessibilityModeChanged"
+            revision: 2
+            Parameter { name: "newAccessibilityMode"; type: "bb::cascades::A11yMode::Type" }
+        }
+        Method {
+            name: "setBuiltInShortcutsEnabled"
+            revision: 2
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "setHorizontalAlignment"
+            Parameter { name: "horizontalAlignment"; type: "bb::cascades::HorizontalAlignment::Type" }
+        }
+        Method { name: "resetHorizontalAlignment" }
+        Method {
+            name: "setVerticalAlignment"
+            Parameter { name: "verticalAlignment"; type: "bb::cascades::VerticalAlignment::Type" }
+        }
+        Method { name: "resetVerticalAlignment" }
+        Method {
+            name: "setPreferredWidth"
+            Parameter { name: "preferredWidth"; type: "float" }
+        }
+        Method { name: "resetPreferredWidth" }
+        Method {
+            name: "setFocusRetentionPolicyFlags"
+            Parameter { name: "policy"; type: "bb::cascades::FocusRetentionPolicy::Types" }
+        }
+        Method { name: "resetFocusRetentionPolicyFlags" }
+        Method {
+            name: "setPreferredHeight"
+            Parameter { name: "preferredHeight"; type: "float" }
+        }
+        Method { name: "resetPreferredHeight" }
+        Method {
+            name: "setPreferredSize"
+            Parameter { name: "preferredWidth"; type: "float" }
+            Parameter { name: "preferredHeight"; type: "float" }
+        }
+        Method { name: "resetPreferredSize" }
+        Method {
+            name: "setLeftPadding"
+            Parameter { name: "leftPadding"; type: "float" }
+        }
+        Method { name: "resetLeftPadding" }
+        Method {
+            name: "setRightPadding"
+            Parameter { name: "rightPadding"; type: "float" }
+        }
+        Method { name: "resetRightPadding" }
+        Method {
+            name: "setTopPadding"
+            Parameter { name: "topPadding"; type: "float" }
+        }
+        Method { name: "resetTopPadding" }
+        Method {
+            name: "setBottomPadding"
+            Parameter { name: "bottomPadding"; type: "float" }
+        }
+        Method { name: "resetBottomPadding" }
+        Method {
+            name: "setFocusPolicy"
+            Parameter { name: "focusPolicy"; type: "bb::cascades::FocusPolicy::Type" }
+        }
+        Method { name: "resetFocusPolicy" }
+        Method {
+            name: "setFocusAutoShow"
+            Parameter { name: "focusAutoShow"; type: "bb::cascades::FocusAutoShow::Type" }
+        }
+        Method { name: "resetFocusAutoShow" }
+        Method {
+            name: "setLocallyFocused"
+            revision: 4
+            Parameter { name: "locallyFocused"; type: "bool" }
+        }
+        Method { name: "resetLocallyFocused"; revision: 4 }
+        Method {
+            name: "setEnabled"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method { name: "resetEnabled" }
+        Method {
+            name: "setLayoutProperties"
+            Parameter { name: "layoutProperties"; type: "bb::cascades::LayoutProperties"; isPointer: true }
+        }
+        Method { name: "resetLayoutProperties" }
+        Method {
+            name: "setLeftMargin"
+            Parameter { name: "leftMargin"; type: "float" }
+        }
+        Method { name: "resetLeftMargin" }
+        Method {
+            name: "setRightMargin"
+            Parameter { name: "rightMargin"; type: "float" }
+        }
+        Method { name: "resetRightMargin" }
+        Method {
+            name: "setTopMargin"
+            Parameter { name: "topMargin"; type: "float" }
+        }
+        Method { name: "resetTopMargin" }
+        Method {
+            name: "setBottomMargin"
+            Parameter { name: "bottomMargin"; type: "float" }
+        }
+        Method { name: "resetBottomMargin" }
+        Method {
+            name: "setMinWidth"
+            Parameter { name: "minWidth"; type: "float" }
+        }
+        Method { name: "resetMinWidth" }
+        Method {
+            name: "setMaxWidth"
+            Parameter { name: "maxWidth"; type: "float" }
+        }
+        Method { name: "resetMaxWidth" }
+        Method {
+            name: "setMinHeight"
+            Parameter { name: "minHeight"; type: "float" }
+        }
+        Method { name: "resetMinHeight" }
+        Method {
+            name: "setMaxHeight"
+            Parameter { name: "maxHeight"; type: "float" }
+        }
+        Method { name: "resetMaxHeight" }
+        Method { name: "requestFocus" }
+        Method { name: "loseFocus" }
+        Method { name: "resetContextMenuHandler" }
+        Method {
+            name: "setImplicitLayoutAnimationsEnabled"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Method { name: "resetImplicitLayoutAnimationsEnabled" }
+        Method {
+            name: "setAccessibilityMode"
+            revision: 2
+            Parameter { name: "accessibilityMode"; type: "bb::cascades::A11yMode::Type" }
+        }
+        Method { name: "resetAccessibilityMode"; revision: 2 }
+        Method {
+            name: "addShortcut"
+            Parameter { name: "shortcut"; type: "bb::cascades::AbstractShortcut"; isPointer: true }
+        }
+        Method {
+            name: "removeShortcut"
+            type: "bool"
+            Parameter { name: "shortcut"; type: "bb::cascades::AbstractShortcut"; isPointer: true }
+        }
+        Method { name: "removeAllShortcuts" }
+        Method { name: "shortcutCount"; type: "int" }
+        Method {
+            name: "shortcutAt"
+            type: "bb::cascades::AbstractShortcut*"
+            Parameter { name: "index"; type: "int" }
+        }
+        Method { name: "enableAllShortcuts" }
+        Method { name: "disableAllShortcuts" }
+        Method { name: "builtInShortcutsEnabled"; revision: 2; type: "bool" }
+        Method { name: "resetBuiltInShortcutsEnabled"; revision: 2 }
+        Method {
+            name: "setBuiltInShortcutEnabled"
+            revision: 2
+            Parameter { name: "type"; type: "bb::cascades::SystemShortcuts::Type" }
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "addKeyListener"
+            Parameter { name: "keyListener"; type: "bb::cascades::KeyListener"; isPointer: true }
+        }
+        Method {
+            name: "removeKeyListener"
+            type: "bool"
+            Parameter { name: "keyListener"; type: "bb::cascades::KeyListener"; isPointer: true }
+        }
+        Method { name: "removeAllKeyListeners" }
+        Method { name: "keyListenerCount"; type: "int" }
+        Method {
+            name: "keyListenerAt"
+            type: "bb::cascades::KeyListener*"
+            Parameter { name: "index"; type: "int" }
+        }
+        Method {
+            name: "setBuiltInShortcutEnabled"
+            revision: 2
+            Parameter { name: "type"; type: "int" }
+            Parameter { name: "enabled"; type: "bool" }
+        }
+    }
+    Component { name: "bb::cascades::CustomControl"; prototype: "bb::cascades::Control" }
+    Component {
+        name: "bb::cascades::UIObject"
+        prototype: "bb::cascades::BaseObject"
+        Property { name: "attachedObjects"; type: "QObject"; isList: true; isReadonly: true }
+        Property {
+            name: "ui"
+            revision: 3
+            type: "bb::cascades::UIConfig"
+            isReadonly: true
+            isPointer: true
+        }
+        Method { name: "ui"; revision: 3; type: "bb::cascades::UIConfig*" }
+    }
+    Component {
+        name: "bb::cascades::VisualNode"
+        prototype: "bb::cascades::UIObject"
+        Property { name: "opacity"; type: "float" }
+        Property { name: "visible"; type: "bool" }
+        Property { name: "translationX"; type: "float" }
+        Property { name: "translationY"; type: "float" }
+        Property { name: "rotationZ"; type: "float" }
+        Property { name: "scaleX"; type: "float" }
+        Property { name: "scaleY"; type: "float" }
+        Property { name: "pivotX"; type: "float" }
+        Property { name: "pivotY"; type: "float" }
+        Property { name: "touchPropagationMode"; type: "bb::cascades::TouchPropagationMode::Type" }
+        Property { name: "overlapTouchPolicy"; type: "bb::cascades::OverlapTouchPolicy::Type" }
+        Property {
+            name: "touchBehaviors"
+            type: "bb::cascades::TouchBehavior"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "gestureHandlers"
+            type: "bb::cascades::GestureHandler"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "animations"
+            type: "bb::cascades::AbstractAnimation"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "eventHandlers"
+            revision: 3
+            type: "bb::cascades::AbstractEventHandler"
+            isList: true
+            isReadonly: true
+        }
+        Property {
+            name: "effects"
+            revision: 4
+            type: "bb::cascades::AbstractEffect"
+            isList: true
+            isReadonly: true
+        }
+        Signal {
+            name: "opacityChanged"
+            Parameter { name: "opacity"; type: "float" }
+        }
+        Signal {
+            name: "opacityChanging"
+            Parameter { name: "opacity"; type: "float" }
+        }
+        Signal {
+            name: "visibleChanged"
+            Parameter { name: "visible"; type: "bool" }
+        }
+        Signal {
+            name: "translationXChanged"
+            Parameter { name: "translationX"; type: "float" }
+        }
+        Signal {
+            name: "translationYChanged"
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Signal {
+            name: "translationXChanging"
+            Parameter { name: "translationX"; type: "float" }
+        }
+        Signal {
+            name: "translationYChanging"
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Signal {
+            name: "rotationZChanging"
+            Parameter { name: "rotationZ"; type: "float" }
+        }
+        Signal {
+            name: "rotationZChanged"
+            Parameter { name: "rotationZ"; type: "float" }
+        }
+        Signal {
+            name: "scaleXChanged"
+            Parameter { name: "scaleX"; type: "float" }
+        }
+        Signal {
+            name: "scaleYChanged"
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Signal {
+            name: "scaleXChanging"
+            Parameter { name: "scaleX"; type: "float" }
+        }
+        Signal {
+            name: "scaleYChanging"
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Signal {
+            name: "pivotXChanged"
+            Parameter { name: "pivotX"; type: "float" }
+        }
+        Signal {
+            name: "pivotYChanged"
+            Parameter { name: "pivotY"; type: "float" }
+        }
+        Signal {
+            name: "touch"
+            Parameter { name: "event"; type: "bb::cascades::TouchEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchCapture"
+            Parameter { name: "event"; type: "bb::cascades::TouchEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchEnter"
+            Parameter { name: "event"; type: "bb::cascades::TouchEnterEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchExit"
+            Parameter { name: "event"; type: "bb::cascades::TouchExitEvent"; isPointer: true }
+        }
+        Signal {
+            name: "touchPropagationModeChanged"
+            Parameter { name: "newTouchPropagationMode"; type: "bb::cascades::TouchPropagationMode::Type" }
+        }
+        Signal {
+            name: "overlapTouchPolicyChanged"
+            Parameter { name: "newOverlapTouchPolicy"; type: "bb::cascades::OverlapTouchPolicy::Type" }
+        }
+        Method {
+            name: "setOpacity"
+            Parameter { name: "opacity"; type: "float" }
+        }
+        Method { name: "resetOpacity" }
+        Method {
+            name: "setVisible"
+            Parameter { name: "visible"; type: "bool" }
+        }
+        Method { name: "resetVisible" }
+        Method {
+            name: "setTranslationX"
+            Parameter { name: "translationX"; type: "float" }
+        }
+        Method { name: "resetTranslationX" }
+        Method {
+            name: "setTranslationY"
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Method { name: "resetTranslationY" }
+        Method {
+            name: "setTranslation"
+            Parameter { name: "translationX"; type: "float" }
+            Parameter { name: "translationY"; type: "float" }
+        }
+        Method { name: "resetTranslation" }
+        Method {
+            name: "setRotationZ"
+            Parameter { name: "rotationZ"; type: "float" }
+        }
+        Method { name: "resetRotationZ" }
+        Method {
+            name: "setScaleX"
+            Parameter { name: "scaleX"; type: "float" }
+        }
+        Method { name: "resetScaleX" }
+        Method {
+            name: "setScaleY"
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Method { name: "resetScaleY" }
+        Method {
+            name: "setScale"
+            Parameter { name: "scaleX"; type: "float" }
+            Parameter { name: "scaleY"; type: "float" }
+        }
+        Method {
+            name: "setScale"
+            Parameter { name: "scaleXY"; type: "float" }
+        }
+        Method { name: "resetScale" }
+        Method {
+            name: "setPivotX"
+            Parameter { name: "pivotX"; type: "float" }
+        }
+        Method { name: "resetPivotX" }
+        Method {
+            name: "setPivotY"
+            Parameter { name: "pivotY"; type: "float" }
+        }
+        Method { name: "resetPivotY" }
+        Method {
+            name: "setPivot"
+            Parameter { name: "pivotX"; type: "float" }
+            Parameter { name: "pivotY"; type: "float" }
+        }
+        Method { name: "resetPivot" }
+        Method {
+            name: "setTouchPropagationMode"
+            Parameter { name: "mode"; type: "bb::cascades::TouchPropagationMode::Type" }
+        }
+        Method { name: "resetTouchPropagationMode" }
+        Method {
+            name: "setOverlapTouchPolicy"
+            Parameter { name: "policy"; type: "bb::cascades::OverlapTouchPolicy::Type" }
+        }
+        Method { name: "resetOverlapTouchPolicy" }
+        Method {
+            name: "addEffect"
+            revision: 4
+            Parameter { name: "effect"; type: "bb::cascades::AbstractEffect"; isPointer: true }
+        }
+        Method {
+            name: "removeEffect"
+            revision: 4
+            Parameter { name: "effect"; type: "bb::cascades::AbstractEffect"; isPointer: true }
+        }
+    }
+    Component {
+        name: "bb::cascades::places::PlacePicker"
+        prototype: "bb::cascades::CustomControl"
+        exports: [
+            "bb.cascades.places/PlacePicker 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Method { name: "show"; type: "bb::cascades::places::SelectedPlace*" }
+    }
+    Component {
+        name: "bb::cascades::places::PlacePickerControl"
+        prototype: "bb::cascades::CustomControl"
+        exports: [
+            "bb.cascades.places/PlacePickerControl 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Signal {
+            name: "selected"
+            Parameter { name: "result"; type: "bb::cascades::places::SelectedPlace"; isPointer: true }
+        }
+    }
+    Component {
+        name: "bb::cascades::places::SelectedPlace"
+        prototype: "QObject"
+        exports: [
+            "bb.cascades.places/SelectedPlace 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "isPhysicalLocation"; type: "bool"; isReadonly: true }
+        Property { name: "placeId"; type: "int"; isReadonly: true }
+        Property { name: "name"; type: "string"; isReadonly: true }
+        Property { name: "alternativeName"; type: "string"; isReadonly: true }
+        Property { name: "description"; type: "string"; isReadonly: true }
+        Property { name: "street"; type: "string"; isReadonly: true }
+        Property { name: "city"; type: "string"; isReadonly: true }
+        Property { name: "region"; type: "string"; isReadonly: true }
+        Property { name: "country"; type: "string"; isReadonly: true }
+        Property { name: "isoAlpha3CountryCode"; type: "string"; isReadonly: true }
+        Property { name: "isoAlpha2CountryCode"; type: "string"; isReadonly: true }
+        Property { name: "postal"; type: "string"; isReadonly: true }
+        Property { name: "addressLabel"; type: "string"; isReadonly: true }
+        Property { name: "phone"; type: "string"; isReadonly: true }
+        Property { name: "secondaryPhone"; type: "string"; isReadonly: true }
+        Property { name: "fax"; type: "string"; isReadonly: true }
+        Property { name: "email"; type: "string"; isReadonly: true }
+        Property { name: "url"; type: "QUrl"; isReadonly: true }
+        Property { name: "rating"; type: "double"; isReadonly: true }
+        Property { name: "mapURL"; type: "QUrl"; isReadonly: true }
+        Property { name: "image"; type: "QVariant"; isReadonly: true }
+        Property { name: "latitude"; type: "double"; isReadonly: true }
+        Property { name: "longitude"; type: "double"; isReadonly: true }
+        Property { name: "altitude"; type: "double"; isReadonly: true }
+        Property { name: "horizontalAccuracy"; type: "double"; isReadonly: true }
+        Property { name: "verticalAccuracy"; type: "double"; isReadonly: true }
+    }
+}

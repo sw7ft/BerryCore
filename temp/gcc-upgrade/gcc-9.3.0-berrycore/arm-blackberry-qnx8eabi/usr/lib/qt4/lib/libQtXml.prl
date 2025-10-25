@@ -1,0 +1,6 @@
+QMAKE_PRO_INPUT = xml.pro
+QMAKE_PRL_TARGET = libQtXml.so.4.8.6
+QMAKE_PRL_DEFINES = QT_SHARED
+QMAKE_PRL_CONFIG = lex yacc warn_on uic resources qt warn_on release link_prl qnx cross_compile shared qpa def_files_disabled exceptions no_mocdepend release stl qt_no_framework blackberry cross_compile slog2 system-sqlite release qpa largefile stl neon dylib create_prl link_prl depend_includepath QTDIR_build nostrip qt_install_headers qt warn_on depend_includepath qmake_cache target_qt hide_symbols create_pc create_libtool explicitlib moc thread dll shared
+QMAKE_PRL_VERSION = 4.8.6
+QMAKE_PRL_LIBS =  -lQtCore -lm -lbps 

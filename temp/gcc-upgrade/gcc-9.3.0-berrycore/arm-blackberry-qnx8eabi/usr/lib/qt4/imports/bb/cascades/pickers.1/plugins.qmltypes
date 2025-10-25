@@ -1,0 +1,224 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::cascades::pickers::FilePicker"
+        prototype: "QObject"
+        exports: [
+            "bb.cascades.pickers/FilePicker 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "mode"; type: "bb::cascades::pickers::FilePickerMode::Type" }
+        Property { name: "type"; type: "bb::cascades::pickers::FileType::Types" }
+        Property { name: "defaultType"; type: "bb::cascades::pickers::FileType::Types" }
+        Property { name: "title"; type: "string" }
+        Property { name: "defaultSaveFileNames"; type: "QStringList" }
+        Property { name: "allowOverwrite"; type: "bool" }
+        Property { name: "directories"; type: "QStringList" }
+        Property { name: "filter"; type: "QStringList" }
+        Property { name: "viewMode"; type: "bb::cascades::pickers::FilePickerViewMode::Type" }
+        Property { name: "sortBy"; type: "bb::cascades::pickers::FilePickerSortFlag::Type" }
+        Property { name: "sortOrder"; type: "bb::cascades::pickers::FilePickerSortOrder::Type" }
+        Property { name: "imageCropEnabled"; type: "bool" }
+        Property { name: "perimeter"; type: "bb::system::SecurityPerimeter::Type" }
+        Property {
+            name: "sourceRestriction"
+            type: "bb::cascades::pickers::FilePickerSourceRestriction::Type"
+        }
+        Signal {
+            name: "fileSelected"
+            Parameter { name: "selectedFiles"; type: "QStringList" }
+        }
+        Signal { name: "canceled" }
+        Signal { name: "pickerOpened" }
+        Signal { name: "pickerClosed" }
+        Signal {
+            name: "modeChanged"
+            Parameter { name: "newMode"; type: "bb::cascades::pickers::FilePickerMode::Type" }
+        }
+        Signal {
+            name: "typeChanged"
+            Parameter { name: "newType"; type: "bb::cascades::pickers::FileType::Types" }
+        }
+        Signal {
+            name: "defaultTypeChanged"
+            Parameter { name: "newDefaultType"; type: "bb::cascades::pickers::FileType::Types" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "newTitle"; type: "string" }
+        }
+        Signal {
+            name: "defaultSaveFileNamesChanged"
+            Parameter { name: "newSaveFileNames"; type: "QStringList" }
+        }
+        Signal {
+            name: "allowOverwriteChanged"
+            Parameter { name: "allowOverwrite"; type: "bool" }
+        }
+        Signal {
+            name: "directoriesChanged"
+            Parameter { name: "newDirectories"; type: "QStringList" }
+        }
+        Signal {
+            name: "filterChanged"
+            Parameter { name: "newFilter"; type: "QStringList" }
+        }
+        Signal {
+            name: "viewModeChanged"
+            Parameter { name: "newViewMode"; type: "bb::cascades::pickers::FilePickerViewMode::Type" }
+        }
+        Signal {
+            name: "sortByChanged"
+            Parameter { name: "newSortBy"; type: "bb::cascades::pickers::FilePickerSortFlag::Type" }
+        }
+        Signal {
+            name: "sortOrderChanged"
+            Parameter { name: "newSortOrder"; type: "bb::cascades::pickers::FilePickerSortOrder::Type" }
+        }
+        Signal {
+            name: "imageCropEnabledChanged"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Signal {
+            name: "perimeterChanged"
+            Parameter { name: "perimeter"; type: "bb::system::SecurityPerimeter::Type" }
+        }
+        Signal {
+            name: "sourceRestrictionChanged"
+            Parameter {
+                name: "newSourceRestriction"
+                type: "bb::cascades::pickers::FilePickerSourceRestriction::Type"
+            }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "error"; type: "bb::cascades::pickers::FilePickerError::Type" }
+        }
+        Signal {
+            name: "perimeterChanged"
+            Parameter { name: "perimeter"; type: "int" }
+        }
+        Method { name: "open" }
+        Method { name: "close" }
+    }
+    Component {
+        name: "bb::cascades::pickers::FilePickerMode"
+        exports: [
+            "bb.cascades.pickers/FilePickerMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Picker": 0,
+                "Saver": 1,
+                "PickerMultiple": 2,
+                "SaverMultiple": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::pickers::FilePickerSortFlag"
+        exports: [
+            "bb.cascades.pickers/FilePickerSortFlag 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Name": 1,
+                "Date": 2,
+                "Suffix": 3,
+                "Size": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::pickers::FilePickerSortOrder"
+        exports: [
+            "bb.cascades.pickers/FilePickerSortOrder 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Ascending": 1,
+                "Descending": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::pickers::FilePickerSourceRestriction"
+        exports: [
+            "bb.cascades.pickers/FilePickerSourceRestriction 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "PathOnly": 1,
+                "LocalOnly": 2,
+                "CloudOnly": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::pickers::FilePickerViewMode"
+        exports: [
+            "bb.cascades.pickers/FilePickerViewMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "ListView": 1,
+                "GridView": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::cascades::pickers::FileType"
+        exports: [
+            "bb.cascades.pickers/FileType 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Types"
+            values: {
+                "Picture": 1,
+                "Document": 2,
+                "Music": 4,
+                "Video": 8,
+                "Other": 16
+            }
+        }
+    }
+}

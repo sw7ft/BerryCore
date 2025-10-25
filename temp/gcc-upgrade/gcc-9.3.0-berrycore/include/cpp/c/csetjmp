@@ -1,0 +1,45 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+// csetjmp standard header
+#ifndef _CSETJMP_
+#define _CSETJMP_
+#include <yvals.h>
+
+#ifdef _STD_USING
+ #undef _STD_USING
+  #include <setjmp.h>
+ #define _STD_USING
+
+_STD_BEGIN
+using ::longjmp;
+  #ifndef setjmp
+using ::setjmp;
+  #endif /* setjmp */
+
+_STD_END
+
+#else /* _STD_USING */
+ #include <setjmp.h>
+
+ #ifdef _GLOBAL_USING
+_STD_BEGIN
+using _CSTD jmp_buf; using _CSTD longjmp;
+  #ifndef setjmp
+using _CSTD setjmp;
+  #endif /* setjmp */
+
+_STD_END
+ #endif /* _GLOBAL_USING */
+
+#endif /* _STD_USING */
+
+ #ifndef setjmp
+  #define setjmp	setjmp
+ #endif /* setjmp */
+
+#endif /* _CSETJMP_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

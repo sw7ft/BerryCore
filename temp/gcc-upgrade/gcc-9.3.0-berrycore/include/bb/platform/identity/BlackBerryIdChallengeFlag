@@ -1,0 +1,6 @@
+/*!
+ * @copyright
+ * Copyright Research In Motion Limited, 2013
+ * Research In Motion Limited. All rights reserved.
+ */
+#include <bb/platform/identity/BlackBerryIdChallengeFlag.hpp>

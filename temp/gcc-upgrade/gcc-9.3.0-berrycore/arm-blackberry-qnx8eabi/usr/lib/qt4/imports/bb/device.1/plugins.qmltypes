@@ -1,0 +1,1641 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::device::BatteryChargingState"
+        exports: [
+            "bb.device/BatteryChargingState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "NotCharging": 1,
+                "Charging": 2,
+                "Discharging": 3,
+                "Full": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::device::BatteryCondition"
+        exports: [
+            "bb.device/BatteryCondition 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "OK": 1,
+                "Bad": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::BatteryInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/BatteryInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "level"; type: "int"; isReadonly: true }
+        Property {
+            name: "chargingState"
+            type: "bb::device::BatteryChargingState::Type"
+            isReadonly: true
+        }
+        Property { name: "present"; type: "bool"; isReadonly: true }
+        Property { name: "condition"; type: "bb::device::BatteryCondition::Type"; isReadonly: true }
+        Property { name: "fullChargeCapacity"; type: "int"; isReadonly: true }
+        Property { name: "cycleCount"; type: "int"; isReadonly: true }
+        Property { name: "temperature"; type: "float"; isReadonly: true }
+        Property { name: "rxid"; type: "string"; isReadonly: true }
+        Signal {
+            name: "levelChanged"
+            Parameter { name: "level"; type: "int" }
+            Parameter { name: "newChargingState"; type: "bb::device::BatteryChargingState::Type" }
+        }
+        Signal {
+            name: "presentChanged"
+            Parameter { name: "present"; type: "bool" }
+        }
+        Signal {
+            name: "conditionChanged"
+            Parameter { name: "condition"; type: "bb::device::BatteryCondition::Type" }
+        }
+        Signal {
+            name: "fullChargeCapacityChanged"
+            Parameter { name: "fullChargeCapacity"; type: "int" }
+        }
+        Signal {
+            name: "cycleCountChanged"
+            Parameter { name: "cycleCount"; type: "int" }
+        }
+        Signal {
+            name: "temperatureChanged"
+            Parameter { name: "temperature"; type: "float" }
+        }
+        Signal {
+            name: "rxidChanged"
+            Parameter { name: "rxid"; type: "string" }
+        }
+        Signal {
+            name: "levelChanged"
+            Parameter { name: "level"; type: "int" }
+            Parameter { name: "newChargingState"; type: "int" }
+        }
+        Signal {
+            name: "conditionChanged"
+            Parameter { name: "condition"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::device::CellularBand"
+        exports: [
+            "bb.device/CellularBand 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Cdma0": 1,
+                "CdmaI": 2,
+                "CdmaXV": 4,
+                "Gsm850": 8,
+                "Gsm900": 16,
+                "Gsm1800": 32,
+                "Gsm1900": 64,
+                "UmtsI": 128,
+                "UmtsII": 256,
+                "UmtsIII": 512,
+                "UmtsIV": 1024,
+                "UmtsV": 2048,
+                "UmtsVI": 4096,
+                "UmtsVII": 8192,
+                "UmtsVIII": 16384,
+                "UmtsIX": 32768,
+                "UmtsX": 65536,
+                "LteII": 131072,
+                "LteIII": 262144,
+                "LteIV": 524288,
+                "LteV": 1048576,
+                "LteVII": 2097152,
+                "LteVIII": 4194304,
+                "LteXIII": 8388608,
+                "LteXVII": 16777216,
+                "LteXX": 33554432
+            }
+        }
+        Enum {
+            name: "Types"
+            values: {
+                "None": 0,
+                "Cdma0": 1,
+                "CdmaI": 2,
+                "CdmaXV": 4,
+                "Gsm850": 8,
+                "Gsm900": 16,
+                "Gsm1800": 32,
+                "Gsm1900": 64,
+                "UmtsI": 128,
+                "UmtsII": 256,
+                "UmtsIII": 512,
+                "UmtsIV": 1024,
+                "UmtsV": 2048,
+                "UmtsVI": 4096,
+                "UmtsVII": 8192,
+                "UmtsVIII": 16384,
+                "UmtsIX": 32768,
+                "UmtsX": 65536,
+                "LteII": 131072,
+                "LteIII": 262144,
+                "LteIV": 524288,
+                "LteV": 1048576,
+                "LteVII": 2097152,
+                "LteVIII": 4194304,
+                "LteXIII": 8388608,
+                "LteXVII": 16777216,
+                "LteXX": 33554432
+            }
+        }
+    }
+    Component {
+        name: "bb::device::CellularConnectionRequestResult"
+        exports: [
+            "bb.device/CellularConnectionRequestResult 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Requested": 0,
+                "InternalError": 1,
+                "InvalidInterface": 2,
+                "PermissionDenied": 3,
+                "NotPossible": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::device::CellularConnectionState"
+        exports: [
+            "bb.device/CellularConnectionState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Disconnected": 0,
+                "PendingConnect": 1,
+                "Connected": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::CellularDataInterface"
+        prototype: "QObject"
+        exports: [
+            "bb.device/CellularDataInterface 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "name"; type: "string" }
+        Property { name: "valid"; type: "bool"; isReadonly: true }
+        Property { name: "alwaysOn"; type: "bool"; isReadonly: true }
+        Property { name: "accessControlled"; type: "bool"; isReadonly: true }
+        Property { name: "networkInterfaceName"; type: "string"; isReadonly: true }
+        Property { name: "accessPointName"; type: "string"; isReadonly: true }
+        Property {
+            name: "connectionState"
+            type: "bb::device::CellularConnectionState::Type"
+            isReadonly: true
+        }
+        Signal {
+            name: "nameChanged"
+            Parameter { name: "name"; type: "string" }
+        }
+        Signal {
+            name: "validChanged"
+            Parameter { name: "valid"; type: "bool" }
+        }
+        Signal {
+            name: "alwaysOnChanged"
+            Parameter { name: "alwaysOn"; type: "bool" }
+        }
+        Signal {
+            name: "accessControlledChanged"
+            Parameter { name: "accessControlled"; type: "bool" }
+        }
+        Signal {
+            name: "networkInterfaceNameChanged"
+            Parameter { name: "networkInterfaceName"; type: "string" }
+        }
+        Signal {
+            name: "accessPointNameChanged"
+            Parameter { name: "accessPointName"; type: "string" }
+        }
+        Signal {
+            name: "connectionStateChanged"
+            Parameter { name: "connectionState"; type: "bb::device::CellularConnectionState::Type" }
+        }
+        Signal {
+            name: "connectionStateChanged"
+            Parameter { name: "connectionState"; type: "int" }
+        }
+        Method { name: "requestConnect"; type: "int" }
+        Method { name: "requestDisconnect"; type: "int" }
+        Method { name: "allNames"; type: "QStringList" }
+    }
+    Component {
+        name: "bb::device::CellularNetworkInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/CellularNetworkInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "index"; type: "int" }
+        Property { name: "technology"; type: "bb::device::CellularTechnology::Type"; isReadonly: true }
+        Property { name: "services"; type: "bb::device::CellularService::Types"; isReadonly: true }
+        Property { name: "name"; type: "string"; isReadonly: true }
+        Property { name: "mobileCountryCode"; type: "string"; isReadonly: true }
+        Property { name: "mobileNetworkCode"; type: "string"; isReadonly: true }
+        Property { name: "signalStrength"; type: "int"; isReadonly: true }
+        Property { name: "roaming"; type: "bool"; isReadonly: true }
+        Property { name: "cellId"; type: "int"; isReadonly: true }
+        Property { name: "locationAreaCode"; type: "int"; isReadonly: true }
+        Property { name: "trackingAreaCode"; type: "int"; isReadonly: true }
+        Property { name: "baseStationId"; type: "int"; isReadonly: true }
+        Property { name: "networkId"; type: "int"; isReadonly: true }
+        Property { name: "systemId"; type: "int"; isReadonly: true }
+        Property { name: "displayName"; type: "string"; isReadonly: true }
+        Signal {
+            name: "indexChanged"
+            Parameter { name: "index"; type: "int" }
+        }
+        Signal {
+            name: "technologyChanged"
+            Parameter { name: "tech"; type: "bb::device::CellularTechnology::Type" }
+        }
+        Signal {
+            name: "servicesChanged"
+            Parameter { name: "services"; type: "bb::device::CellularService::Types" }
+        }
+        Signal {
+            name: "nameChanged"
+            Parameter { name: "name"; type: "string" }
+        }
+        Signal {
+            name: "mobileCountryCodeChanged"
+            Parameter { name: "mcc"; type: "string" }
+        }
+        Signal {
+            name: "mobileNetworkCodeChanged"
+            Parameter { name: "mnc"; type: "string" }
+        }
+        Signal {
+            name: "signalStrengthChanged"
+            Parameter { name: "rssi"; type: "int" }
+        }
+        Signal {
+            name: "roamingChanged"
+            Parameter { name: "roaming"; type: "bool" }
+        }
+        Signal {
+            name: "cellIdChanged"
+            Parameter { name: "cellId"; type: "int" }
+        }
+        Signal {
+            name: "locationAreaCodeChanged"
+            Parameter { name: "lac"; type: "int" }
+        }
+        Signal {
+            name: "trackingAreaCodeChanged"
+            Parameter { name: "tac"; type: "int" }
+        }
+        Signal {
+            name: "baseStationIdChanged"
+            Parameter { name: "bid"; type: "int" }
+        }
+        Signal {
+            name: "networkIdChanged"
+            Parameter { name: "nid"; type: "int" }
+        }
+        Signal {
+            name: "systemIdChanged"
+            Parameter { name: "sid"; type: "int" }
+        }
+        Signal {
+            name: "displayNameChanged"
+            Parameter { name: "name"; type: "string" }
+        }
+        Signal {
+            name: "technologyChanged"
+            Parameter { name: "tech"; type: "int" }
+        }
+        Signal {
+            name: "servicesChanged"
+            Parameter { name: "services"; type: "int" }
+        }
+        Method {
+            name: "setIndex"
+            Parameter { name: "index"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::device::CellularRadioInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/CellularRadioInfo 1.0",
+            "bb.device/CellularRadioInfo 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "poweredOn"; type: "bool"; isReadonly: true }
+        Property {
+            name: "technologies"
+            type: "bb::device::CellularTechnology::Types"
+            isReadonly: true
+        }
+        Property { name: "services"; type: "bb::device::CellularService::Types"; isReadonly: true }
+        Property { name: "bands"; type: "bb::device::CellularBand::Types"; isReadonly: true }
+        Property {
+            name: "enabledTechnologies"
+            type: "bb::device::CellularTechnology::Types"
+            isReadonly: true
+        }
+        Property {
+            name: "activeTechnologies"
+            type: "bb::device::CellularTechnology::Types"
+            isReadonly: true
+        }
+        Property { name: "networkCount"; type: "int"; isReadonly: true }
+        Property { name: "dataEnabled"; revision: 1; type: "bool"; isReadonly: true }
+        Property { name: "dataRoaming"; revision: 1; type: "bool"; isReadonly: true }
+        Signal {
+            name: "poweredOnChanged"
+            Parameter { name: "poweredOn"; type: "bool" }
+        }
+        Signal {
+            name: "enabledTechnologiesChanged"
+            Parameter { name: "technologies"; type: "bb::device::CellularTechnology::Types" }
+        }
+        Signal {
+            name: "activeTechnologiesChanged"
+            Parameter { name: "technologies"; type: "bb::device::CellularTechnology::Types" }
+        }
+        Signal {
+            name: "networkCountChanged"
+            Parameter { name: "networkCount"; type: "int" }
+        }
+        Signal {
+            name: "dataEnabledChanged"
+            revision: 1
+            Parameter { name: "dataEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "dataRoamingChanged"
+            revision: 1
+            Parameter { name: "dataRoaming"; type: "bool" }
+        }
+        Signal {
+            name: "enabledTechnologiesChanged"
+            Parameter { name: "technologies"; type: "int" }
+        }
+        Signal {
+            name: "activeTechnologiesChanged"
+            Parameter { name: "technologies"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::device::CellularService"
+        exports: [
+            "bb.device/CellularService 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Emergency": 1,
+                "Voice": 2,
+                "E911Callback": 4,
+                "Data": 256,
+                "GenericAccessNetwork": 512,
+                "ConcurrentVoiceData": 1024,
+                "DataGprs": 4096,
+                "DataEdge": 8192,
+                "DataUmts": 16384,
+                "DataHspa": 32768,
+                "DataHspaP": 65536,
+                "DataCdma": 131072,
+                "DataEvdo0": 262144,
+                "DataEvdoA": 524288,
+                "DataEhrpd": 1048576,
+                "DataLte": 2097152
+            }
+        }
+        Enum {
+            name: "Types"
+            values: {
+                "None": 0,
+                "Emergency": 1,
+                "Voice": 2,
+                "E911Callback": 4,
+                "Data": 256,
+                "GenericAccessNetwork": 512,
+                "ConcurrentVoiceData": 1024,
+                "DataGprs": 4096,
+                "DataEdge": 8192,
+                "DataUmts": 16384,
+                "DataHspa": 32768,
+                "DataHspaP": 65536,
+                "DataCdma": 131072,
+                "DataEvdo0": 262144,
+                "DataEvdoA": 524288,
+                "DataEhrpd": 1048576,
+                "DataLte": 2097152
+            }
+        }
+    }
+    Component {
+        name: "bb::device::CellularTechnology"
+        exports: [
+            "bb.device/CellularTechnology 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Gsm": 1,
+                "Umts": 2,
+                "Cdma1X": 4,
+                "Evdo": 8,
+                "Lte": 16
+            }
+        }
+        Enum {
+            name: "Types"
+            values: {
+                "None": 0,
+                "Gsm": 1,
+                "Umts": 2,
+                "Cdma1X": 4,
+                "Evdo": 8,
+                "Lte": 16
+            }
+        }
+    }
+    Component {
+        name: "bb::device::DeviceInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/DeviceInfo 1.0",
+            "bb.device/DeviceInfo 1.2",
+            "bb.device/DeviceInfo 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1,
+            2
+        ]
+        Property { name: "orientation"; type: "bb::device::DeviceOrientation::Type"; isReadonly: true }
+        Property {
+            name: "activityState"
+            revision: 1
+            type: "bb::device::UserActivityState::Type"
+            isReadonly: true
+        }
+        Property { name: "orientationValid"; revision: 2; type: "bool"; isReadonly: true }
+        Signal {
+            name: "orientationChanged"
+            Parameter { name: "orientation"; type: "bb::device::DeviceOrientation::Type" }
+        }
+        Signal {
+            name: "activityStateChanged"
+            revision: 1
+            Parameter { name: "activityState"; type: "bb::device::UserActivityState::Type" }
+        }
+        Signal {
+            name: "orientationValidChanged"
+            revision: 2
+            Parameter { name: "isValid"; type: "bool" }
+        }
+        Signal {
+            name: "orientationChanged"
+            Parameter { name: "orientation"; type: "int" }
+        }
+        Signal {
+            name: "activityStateChanged"
+            revision: 1
+            Parameter { name: "activityState"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::device::DeviceOrientation"
+        exports: [
+            "bb.device/DeviceOrientation 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "FaceUp": 0,
+                "FaceDown": 1,
+                "TopUp": 2,
+                "LeftUp": 3,
+                "RightUp": 4,
+                "BottomUp": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::device::DisplayInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/DisplayInfo 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "displayId"; type: "int"; isReadonly: true }
+        Property { name: "displayName"; type: "string"; isReadonly: true }
+        Property { name: "pixelSize"; type: "QSize"; isReadonly: true }
+        Property { name: "physicalSize"; type: "QSizeF"; isReadonly: true }
+        Property { name: "resolution"; type: "QSizeF"; isReadonly: true }
+        Property { name: "aspectType"; type: "bb::device::DisplayAspectType::Type"; isReadonly: true }
+        Property { name: "attached"; type: "bool"; isReadonly: true }
+        Property { name: "detachable"; type: "bool"; isReadonly: true }
+        Property {
+            name: "displayTechnology"
+            revision: 1
+            type: "bb::device::DisplayTechnology::Type"
+            isReadonly: true
+        }
+        Property { name: "wireless"; revision: 2; type: "bool"; isReadonly: true }
+        Signal {
+            name: "attachedChanged"
+            Parameter { name: "attached"; type: "bool" }
+        }
+        Signal {
+            name: "pixelSizeChanged"
+            Parameter { name: "pixelSize"; type: "QSize" }
+        }
+        Signal {
+            name: "pixelSizeChanged"
+            Parameter { name: "pixelSize"; type: "QVariant" }
+        }
+    }
+    Component {
+        name: "bb::device::HardwareInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/HardwareInfo 1.0",
+            "bb.device/HardwareInfo 1.1",
+            "bb.device/HardwareInfo 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1,
+            2
+        ]
+        Property { name: "pin"; type: "string"; isReadonly: true }
+        Property { name: "serialNumber"; type: "string"; isReadonly: true }
+        Property { name: "imei"; type: "string"; isReadonly: true }
+        Property { name: "meid"; type: "string"; isReadonly: true }
+        Property { name: "hardwareId"; type: "string"; isReadonly: true }
+        Property { name: "deviceName"; type: "string"; isReadonly: true }
+        Property { name: "modelName"; type: "string"; isReadonly: true }
+        Property { name: "modelNumber"; type: "string"; isReadonly: true }
+        Property { name: "isPhysicalKeyboardDevice"; type: "bool"; isReadonly: true }
+        Property {
+            name: "hdmiConnector"
+            revision: 1
+            type: "bb::device::HdmiConnector::Type"
+            isReadonly: true
+        }
+        Property { name: "isTrackpadDevice"; revision: 2; type: "bool"; isReadonly: true }
+        Property { name: "hasPhysicalPhoneKeys"; revision: 2; type: "bool"; isReadonly: true }
+        Property { name: "hasPhysicalBackButton"; revision: 2; type: "bool"; isReadonly: true }
+        Property { name: "hasPhysicalMenuButton"; revision: 2; type: "bool"; isReadonly: true }
+    }
+    Component {
+        name: "bb::device::HdmiConnector"
+        exports: [
+            "bb.device/HdmiConnector 1.1"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "None": 1,
+                "Micro": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::Led"
+        prototype: "QObject"
+        exports: [
+            "bb.device/Led 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "color"; type: "bb::device::LedColor::Type" }
+        Property { name: "remainingFlashCount"; type: "int"; isReadonly: true }
+        Property { name: "active"; type: "bool"; isReadonly: true }
+        Signal {
+            name: "colorChanged"
+            Parameter { name: "value"; type: "bb::device::LedColor::Type" }
+        }
+        Signal {
+            name: "remainingFlashCountChanged"
+            Parameter { name: "value"; type: "int" }
+        }
+        Signal {
+            name: "activeChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "colorChanged"
+            Parameter { name: "value"; type: "int" }
+        }
+        Method { name: "flash" }
+        Method {
+            name: "flash"
+            Parameter { name: "count"; type: "int" }
+        }
+        Method { name: "cancel" }
+    }
+    Component {
+        name: "bb::device::LedColor"
+        exports: [
+            "bb.device/LedColor 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Red": 16711680,
+                "Green": 65280,
+                "Blue": 255,
+                "Yellow": 16776960,
+                "Cyan": 65535,
+                "Magenta": 16711935,
+                "White": 16777215
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastConnectionState"
+        exports: [
+            "bb.device/MiracastConnectionState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Connected": 1,
+                "Connecting": 2,
+                "Disconnected": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastDeviceCategory"
+        exports: [
+            "bb.device/MiracastDeviceCategory 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Computer": 1,
+                "Input": 2,
+                "PrinterCopierFaxOrScanner": 3,
+                "Camera": 4,
+                "Storage": 5,
+                "NetworkInfrastructure": 6,
+                "Display": 7,
+                "Multimedia": 8,
+                "Gaming": 9,
+                "Telephone": 10,
+                "Audio": 11,
+                "Other": 12
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastDeviceSubCategory"
+        exports: [
+            "bb.device/MiracastDeviceSubCategory 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Keyboard": 1,
+                "Mouse": 2,
+                "Joystick": 3,
+                "Trackball": 4,
+                "GamingController": 5,
+                "Remote": 6,
+                "Touchscreen": 7,
+                "BiometricReader": 8,
+                "BarcodeReader": 9,
+                "PrinterOrPrintServer": 10,
+                "Scanner": 11,
+                "Fax": 12,
+                "Copier": 13,
+                "AllInOne": 14,
+                "DigitalStillCamera": 15,
+                "VideoCamera": 16,
+                "WebCamera": 17,
+                "SecurityCamera": 18,
+                "NAS": 19,
+                "AP": 20,
+                "Router": 21,
+                "Switch": 22,
+                "Gateway": 23,
+                "Television": 24,
+                "ElectronicPictureFrame": 25,
+                "Projector": 26,
+                "Monitor": 27,
+                "DAR": 28,
+                "PVR": 29,
+                "MCX": 30,
+                "SetTopBox": 31,
+                "MediaServerAdapterOrExtender": 32,
+                "PortableVideoPlayer": 33,
+                "XBox": 34,
+                "XBox360": 35,
+                "PlayStation": 36,
+                "GameConsoleOrConsoleAdapter": 37,
+                "PortableGamingDevice": 38,
+                "WindowsMobile": 39,
+                "PhoneSingleMode": 40,
+                "PhoneDualMode": 41,
+                "SmartphoneSingleMode": 42,
+                "SmartphoneDualMode": 43,
+                "AudioTunerReceiver": 44,
+                "Speakers": 45,
+                "PortableMusicPlayer": 46,
+                "Headset": 47,
+                "Headphones": 48,
+                "Microphone": 49,
+                "PC": 50,
+                "Server": 51,
+                "MediaCenter": 52,
+                "UltraMobilePC": 53,
+                "Notebook": 54,
+                "Desktop": 55,
+                "MobileInternetDevice": 56,
+                "Netbook": 57,
+                "Tablet": 58
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastDisplayState"
+        exports: [
+            "bb.device/MiracastDisplayState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Stopped": 1,
+                "Playing": 2,
+                "Paused": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastManager"
+        prototype: "QObject"
+        exports: [
+            "bb.device/MiracastManager 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "hardwareAddress"; type: "string"; isReadonly: true }
+        Property {
+            name: "connectionState"
+            type: "bb::device::MiracastConnectionState::Type"
+            isReadonly: true
+        }
+        Property { name: "deviceName"; type: "string"; isReadonly: true }
+        Property { name: "devicePixelSize"; type: "QSize"; isReadonly: true }
+        Property {
+            name: "displayState"
+            type: "bb::device::MiracastDisplayState::Type"
+            isReadonly: true
+        }
+        Property {
+            name: "deviceCategory"
+            type: "bb::device::MiracastDeviceCategory::Type"
+            isReadonly: true
+        }
+        Property {
+            name: "deviceSubCategory"
+            type: "bb::device::MiracastDeviceSubCategory::Type"
+            isReadonly: true
+        }
+        Property { name: "sessionId"; type: "string"; isReadonly: true }
+        Property { name: "stopReason"; type: "bb::device::MiracastStopReason::Type"; isReadonly: true }
+        Property { name: "status"; type: "bb::device::MiracastStatus::Type"; isReadonly: true }
+        Property { name: "isSupported"; type: "bool"; isReadonly: true }
+        Signal {
+            name: "deviceDiscovered"
+            Parameter { name: "deviceName"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "category"; type: "bb::device::MiracastDeviceCategory::Type" }
+            Parameter { name: "subCategory"; type: "bb::device::MiracastDeviceSubCategory::Type" }
+        }
+        Signal {
+            name: "deviceConnected"
+            Parameter { name: "deviceName"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "category"; type: "bb::device::MiracastDeviceCategory::Type" }
+            Parameter { name: "subCategory"; type: "bb::device::MiracastDeviceSubCategory::Type" }
+        }
+        Signal { name: "deviceDisconnected" }
+        Signal {
+            name: "scanCompleted"
+            Parameter { name: "result"; type: "bb::device::MiracastResult::Type" }
+        }
+        Signal {
+            name: "connectCompleted"
+            Parameter { name: "result"; type: "bb::device::MiracastResult::Type" }
+        }
+        Signal {
+            name: "pauseCompleted"
+            Parameter { name: "result"; type: "bb::device::MiracastResult::Type" }
+        }
+        Signal {
+            name: "resumeCompleted"
+            Parameter { name: "result"; type: "bb::device::MiracastResult::Type" }
+        }
+        Signal {
+            name: "disconnectCompleted"
+            Parameter { name: "result"; type: "bb::device::MiracastResult::Type" }
+        }
+        Signal {
+            name: "shutdownCompleted"
+            Parameter { name: "result"; type: "bb::device::MiracastResult::Type" }
+        }
+        Signal {
+            name: "connectionStateChanged"
+            Parameter { name: "state"; type: "bb::device::MiracastConnectionState::Type" }
+        }
+        Signal {
+            name: "hardwareAddressChanged"
+            Parameter { name: "hardwareAddress"; type: "string" }
+        }
+        Signal {
+            name: "deviceNameChanged"
+            Parameter { name: "deviceName"; type: "string" }
+        }
+        Signal {
+            name: "devicePixelSizeChanged"
+            Parameter { name: "devicePixelSize"; type: "QSize" }
+        }
+        Signal {
+            name: "stopReasonChanged"
+            Parameter { name: "stopReason"; type: "bb::device::MiracastStopReason::Type" }
+        }
+        Signal {
+            name: "statusChanged"
+            Parameter { name: "status"; type: "bb::device::MiracastStatus::Type" }
+        }
+        Signal {
+            name: "displayStateChanged"
+            Parameter { name: "state"; type: "bb::device::MiracastDisplayState::Type" }
+        }
+        Signal {
+            name: "deviceTypeChanged"
+            Parameter { name: "category"; type: "bb::device::MiracastDeviceCategory::Type" }
+            Parameter { name: "subCategory"; type: "bb::device::MiracastDeviceSubCategory::Type" }
+        }
+        Signal {
+            name: "sessionIdChanged"
+            Parameter { name: "sessionId"; type: "string" }
+        }
+        Signal {
+            name: "deviceTypeChanged"
+            Parameter { name: "category"; type: "int" }
+            Parameter { name: "subCategory"; type: "int" }
+        }
+        Signal {
+            name: "deviceDiscovered"
+            Parameter { name: "deviceName"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "category"; type: "int" }
+            Parameter { name: "subCategory"; type: "int" }
+        }
+        Signal {
+            name: "deviceConnected"
+            Parameter { name: "deviceName"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "category"; type: "int" }
+            Parameter { name: "subCategory"; type: "int" }
+        }
+        Signal {
+            name: "scanCompleted"
+            Parameter { name: "result"; type: "int" }
+        }
+        Signal {
+            name: "connectCompleted"
+            Parameter { name: "result"; type: "int" }
+        }
+        Signal {
+            name: "pauseCompleted"
+            Parameter { name: "result"; type: "int" }
+        }
+        Signal {
+            name: "resumeCompleted"
+            Parameter { name: "result"; type: "int" }
+        }
+        Signal {
+            name: "disconnectCompleted"
+            Parameter { name: "result"; type: "int" }
+        }
+        Signal {
+            name: "connectionStateChanged"
+            Parameter { name: "state"; type: "int" }
+        }
+        Signal {
+            name: "displayStateChanged"
+            Parameter { name: "state"; type: "int" }
+        }
+        Signal {
+            name: "stopReasonChanged"
+            Parameter { name: "stopReason"; type: "int" }
+        }
+        Signal {
+            name: "statusChanged"
+            Parameter { name: "status"; type: "int" }
+        }
+        Signal {
+            name: "shutdownCompleted"
+            Parameter { name: "result"; type: "int" }
+        }
+        Method { name: "requestScan" }
+        Method { name: "requestDisconnect" }
+        Method { name: "requestPause" }
+        Method { name: "requestResume" }
+        Method {
+            name: "requestConnect"
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "pin"; type: "string" }
+        }
+        Method { name: "requestShutdown" }
+        Method { name: "warmup" }
+        Method { name: "isSupported"; type: "bool" }
+    }
+    Component {
+        name: "bb::device::MiracastResult"
+        exports: [
+            "bb.device/MiracastResult 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "InternalError": 0,
+                "Success": 1,
+                "PinRequired": 2,
+                "PinIncorrect": 3,
+                "ConnectionFailed": 4,
+                "InvalidRequest": 5,
+                "RequestCancelled": 6,
+                "WiFiFailure": 7,
+                "DisabledByPolicy": 8,
+                "DeviceNotFound": 9,
+                "MiracastFailure": 10
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastStatus"
+        exports: [
+            "bb.device/MiracastStatus 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Running": 1,
+                "Stopped": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::MiracastStopReason"
+        exports: [
+            "bb.device/MiracastStopReason 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "NotStopped": 1,
+                "Application": 2,
+                "NotSupported": 3,
+                "ItPolicy": 4,
+                "P2PFailure": 5,
+                "Internal": 6
+            }
+        }
+    }
+    Component {
+        name: "bb::device::NetworkDataUsage"
+        prototype: "QObject"
+        exports: [
+            "bb.device/NetworkDataUsage 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "networkInterfaceName"; type: "string" }
+        Property { name: "packetsReceived"; type: "quint64"; isReadonly: true }
+        Property { name: "bytesReceived"; type: "quint64"; isReadonly: true }
+        Property { name: "packetsSent"; type: "quint64"; isReadonly: true }
+        Property { name: "bytesSent"; type: "quint64"; isReadonly: true }
+        Signal {
+            name: "networkInterfaceNameChanged"
+            Parameter { name: "networkInterfaceName"; type: "string" }
+        }
+        Signal {
+            name: "packetsReceivedChanged"
+            Parameter { name: "packetsReceived"; type: "quint64" }
+        }
+        Signal {
+            name: "bytesReceivedChanged"
+            Parameter { name: "bytesReceived"; type: "quint64" }
+        }
+        Signal {
+            name: "packetsSentChanged"
+            Parameter { name: "packetsSent"; type: "quint64" }
+        }
+        Signal {
+            name: "bytesSentChanged"
+            Parameter { name: "bytesSent"; type: "quint64" }
+        }
+        Method { name: "update"; type: "bool" }
+    }
+    Component {
+        name: "bb::device::SdCardActivity"
+        exports: [
+            "bb.device/SdCardActivity 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Idle": 1,
+                "Busy": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::SdCardInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/SdCardInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "state"; type: "bb::device::SdCardState::Type"; isReadonly: true }
+        Property { name: "activity"; type: "bb::device::SdCardActivity::Type"; isReadonly: true }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "newState"; type: "bb::device::SdCardState::Type" }
+        }
+        Signal {
+            name: "activityChanged"
+            Parameter { name: "newActivity"; type: "bb::device::SdCardActivity::Type" }
+        }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "newState"; type: "int" }
+        }
+        Signal {
+            name: "activityChanged"
+            Parameter { name: "newActivity"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::device::SdCardState"
+        exports: [
+            "bb.device/SdCardState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Mounted": 1,
+                "Unmounted": 2,
+                "Busy": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::device::SimCardInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.device/SimCardInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "state"; type: "bb::device::SimCardState::Type"; isReadonly: true }
+        Property { name: "mobileCountryCode"; type: "string"; isReadonly: true }
+        Property { name: "mobileNetworkCode"; type: "string"; isReadonly: true }
+        Property { name: "serialNumber"; type: "string"; isReadonly: true }
+        Property { name: "subscriberIdentifier"; type: "string"; isReadonly: true }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "state"; type: "bb::device::SimCardState::Type" }
+        }
+        Signal {
+            name: "mobileCountryCodeChanged"
+            Parameter { name: "mcc"; type: "string" }
+        }
+        Signal {
+            name: "mobileNetworkCodeChanged"
+            Parameter { name: "mnc"; type: "string" }
+        }
+        Signal {
+            name: "serialNumberChanged"
+            Parameter { name: "serialNumber"; type: "string" }
+        }
+        Signal {
+            name: "subscriberIdentifierChanged"
+            Parameter { name: "subscriberIdentifier"; type: "string" }
+        }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "state"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::device::SimCardState"
+        exports: [
+            "bb.device/SimCardState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "NotDetected": 0,
+                "Incompatible": 1,
+                "NotProvisioned": 2,
+                "ReadError": 3,
+                "PinRequired": 4,
+                "Ready": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::device::UserActivityState"
+        exports: [
+            "bb.device/UserActivityState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Active": 1,
+                "Inactive": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::VibrationController"
+        prototype: "QObject"
+        exports: [
+            "bb.device/VibrationController 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "supported"; type: "bool"; isReadonly: true }
+        Method {
+            name: "start"
+            Parameter { name: "intensity"; type: "uint" }
+        }
+        Method { name: "start" }
+        Method {
+            name: "start"
+            Parameter { name: "intensity"; type: "uint" }
+            Parameter { name: "milliseconds"; type: "uint" }
+        }
+        Method { name: "stop" }
+        Method { name: "isSupported"; type: "bool" }
+    }
+    Component {
+        name: "bb::device::WiFiDirect"
+        prototype: "QObject"
+        exports: [
+            "bb.device/WiFiDirect 1.2",
+            "bb.device/WiFiDirect 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "scanning"; type: "bool"; isReadonly: true }
+        Property { name: "enabled"; type: "bool"; isReadonly: true }
+        Property { name: "supported"; type: "bool"; isReadonly: true }
+        Property { name: "lastUpdate"; type: "QDateTime"; isReadonly: true }
+        Property {
+            name: "connectionState"
+            type: "bb::device::WiFiDirectConnectionState::Type"
+            isReadonly: true
+        }
+        Property { name: "networkInterfaceName"; type: "string"; isReadonly: true }
+        Property { name: "networkRole"; type: "bb::device::WiFiDirectRole::Type"; isReadonly: true }
+        Property { name: "networkSsid"; type: "string"; isReadonly: true }
+        Property { name: "networkOwnerHardwareAddress"; type: "string"; isReadonly: true }
+        Property { name: "networkOwnerIpAddress"; type: "string"; isReadonly: true }
+        Property { name: "networkPassword"; type: "string"; isReadonly: true }
+        Signal {
+            name: "sessionStarted"
+            Parameter { name: "session"; type: "string" }
+        }
+        Signal { name: "sessionStopped" }
+        Signal {
+            name: "deviceDiscovered"
+            revision: 1
+            Parameter { name: "name"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "type"; type: "bb::device::WiFiDirectDeviceType::Type" }
+            Parameter { name: "secondaryTypes"; type: "bb::device::WiFiDirectSecondaryDeviceType::Types" }
+            Parameter { name: "role"; type: "bb::device::WiFiDirectRole::Type" }
+        }
+        Signal {
+            name: "deviceFound"
+            Parameter { name: "name"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "type"; type: "bb::device::WiFiDirectDeviceType::Type" }
+        }
+        Signal {
+            name: "deviceLost"
+            Parameter { name: "hardwareAddress"; type: "string" }
+        }
+        Signal {
+            name: "deviceConnected"
+            Parameter { name: "name"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "type"; type: "bb::device::WiFiDirectDeviceType::Type" }
+            Parameter { name: "ipAddress"; type: "string" }
+            Parameter { name: "intent"; type: "bb::device::WiFiDirectIntent::Type" }
+        }
+        Signal {
+            name: "deviceDisconnected"
+            Parameter { name: "hardwareAddress"; type: "string" }
+        }
+        Signal {
+            name: "scanningChanged"
+            Parameter { name: "scanning"; type: "bool" }
+        }
+        Signal {
+            name: "enabledChanged"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Signal {
+            name: "lastUpdateChanged"
+            Parameter { name: "lastUpdate"; type: "QDateTime" }
+        }
+        Signal {
+            name: "connectionStateChanged"
+            Parameter { name: "connectionState"; type: "bb::device::WiFiDirectConnectionState::Type" }
+        }
+        Signal {
+            name: "networkRoleChanged"
+            Parameter { name: "networkRole"; type: "bb::device::WiFiDirectRole::Type" }
+        }
+        Signal {
+            name: "networkInterfaceNameChanged"
+            Parameter { name: "networkInterfaceName"; type: "string" }
+        }
+        Signal {
+            name: "networkSsidChanged"
+            Parameter { name: "networkSsid"; type: "string" }
+        }
+        Signal {
+            name: "networkOwnerHardwareAddressChanged"
+            Parameter { name: "networkHardwareAddress"; type: "string" }
+        }
+        Signal {
+            name: "networkOwnerIpAddressChanged"
+            Parameter { name: "networkIpAddress"; type: "string" }
+        }
+        Signal {
+            name: "networkPasswordChanged"
+            Parameter { name: "networkPassword"; type: "string" }
+        }
+        Signal { name: "scanCompleted" }
+        Signal {
+            name: "stateChanged"
+            Parameter { name: "state"; type: "int" }
+        }
+        Signal {
+            name: "deviceFound"
+            Parameter { name: "name"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "type"; type: "int" }
+        }
+        Signal {
+            name: "deviceDiscovered"
+            revision: 1
+            Parameter { name: "name"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "type"; type: "int" }
+            Parameter { name: "secondaryTypes"; type: "int" }
+            Parameter { name: "role"; type: "int" }
+        }
+        Signal {
+            name: "deviceConnected"
+            Parameter { name: "name"; type: "string" }
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "type"; type: "int" }
+            Parameter { name: "ipAddress"; type: "string" }
+            Parameter { name: "intent"; type: "int" }
+        }
+        Signal {
+            name: "connectionStateChanged"
+            Parameter { name: "networkState"; type: "int" }
+        }
+        Signal {
+            name: "networkRoleChanged"
+            Parameter { name: "networkRole"; type: "int" }
+        }
+        Method { name: "requestScan"; type: "int" }
+        Method { name: "requestStartSession"; type: "int" }
+        Method {
+            name: "requestStopSession"
+            type: "int"
+            Parameter { name: "session"; type: "string" }
+        }
+        Method {
+            name: "requestConnect"
+            type: "bb::device::WiFiDirectResult::Type"
+            Parameter { name: "hardwareAddress"; type: "string" }
+            Parameter { name: "intent"; type: "bb::device::WiFiDirectIntent::Type" }
+            Parameter { name: "wpsMethod"; type: "bb::device::WiFiDirectWpsMethod::Type" }
+            Parameter { name: "wpsPin"; type: "string" }
+        }
+        Method { name: "cancelConnectRequest"; type: "int" }
+        Method {
+            name: "ipAddress"
+            type: "string"
+            Parameter { name: "hardwareAddress"; type: "string" }
+        }
+        Method {
+            name: "name"
+            type: "string"
+            Parameter { name: "hardwareAddress"; type: "string" }
+        }
+        Method {
+            name: "deviceType"
+            type: "int"
+            Parameter { name: "hardwareAddress"; type: "string" }
+        }
+        Method { name: "connectedDevices"; type: "QStringList" }
+        Method { name: "visibleDevices"; type: "QStringList" }
+    }
+    Component {
+        name: "bb::device::WiFiDirectConnectionState"
+        exports: [
+            "bb.device/WiFiDirectConnectionState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Connecting": 1,
+                "Connected": 2,
+                "Disconnected": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::device::WiFiDirectDeviceType"
+        exports: [
+            "bb.device/WiFiDirectDeviceType 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Computer": 1,
+                "Input": 2,
+                "PrinterCopierFaxOrScanner": 3,
+                "Camera": 4,
+                "Storage": 5,
+                "NetworkInfrastructure": 6,
+                "Display": 7,
+                "Multimedia": 8,
+                "Gaming": 9,
+                "Telephone": 10,
+                "Audio": 11,
+                "Other": 12
+            }
+        }
+    }
+    Component {
+        name: "bb::device::WiFiDirectIntent"
+        exports: [
+            "bb.device/WiFiDirectIntent 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "GroupOwner": 0,
+                "Client": 1,
+                "Any": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::WiFiDirectResult"
+        exports: [
+            "bb.device/WiFiDirectResult 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Success": 0,
+                "InternalError": 1,
+                "Busy": 2,
+                "DeviceNotFound": 3,
+                "NoNetworkConnection": 4,
+                "NoRequestToCancel": 5,
+                "NotSupported": 6,
+                "InvalidSession": 7
+            }
+        }
+    }
+    Component {
+        name: "bb::device::WiFiDirectRole"
+        exports: [
+            "bb.device/WiFiDirectRole 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "GroupOwner": 1,
+                "Client": 2,
+                "NoRole": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::device::WiFiDirectSecondaryDeviceType"
+        exports: [
+            "bb.device/WiFiDirectSecondaryDeviceType 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 1,
+                "Miracast": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::device::WiFiDirectWpsMethod"
+        exports: [
+            "bb.device/WiFiDirectWpsMethod 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "PushButtonConfiguration": 0,
+                "RandomPin": 1,
+                "PresetPin": 2
+            }
+        }
+    }
+}

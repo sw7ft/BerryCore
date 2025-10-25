@@ -1,0 +1,43 @@
+#!/bin/sh
+# BB10 Linux Launcher - RISC-V Linux Emulator
+# Just type 'linux' to launch!
+
+# Detect BerryCore installation
+if [ -n "$NATIVE_TOOLS" ]; then
+    BASE="$NATIVE_TOOLS"
+else
+    # Fallback to default
+    BASE="/accounts/1000/shared/misc/berrycore"
+fi
+
+EMULATOR="$BASE/bin/mini-rv32ima-clean"
+IMAGE="$BASE/share/bb10-linux/Image"
+
+# Check if files exist
+if [ ! -f "$EMULATOR" ]; then
+    echo "Error: RISC-V emulator not found at $EMULATOR"
+    exit 1
+fi
+
+if [ ! -f "$IMAGE" ]; then
+    echo "Error: Linux image not found at $IMAGE"
+    exit 1
+fi
+
+# Launch message
+echo ""
+echo "=========================================="
+echo "  BB10 Linux - RISC-V Emulator"
+echo "=========================================="
+echo "Starting Linux on your BlackBerry..."
+echo ""
+echo "Memory: 256 MB"
+echo "Console: ttyS0"
+echo ""
+echo "To exit: Ctrl+C or 'poweroff' command"
+echo "=========================================="
+echo ""
+
+# Launch the emulator
+exec "$EMULATOR" -m 268435456 -f "$IMAGE" -k "console=ttyS0"
+

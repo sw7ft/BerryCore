@@ -1,0 +1,219 @@
+/* Portions Copyright 2003, QNX Software Systems Ltd. All Rights Reserved */
+
+
+// xlocinfo internal header for gcc Linux
+#ifndef _XLOCINFO_
+#define _XLOCINFO_
+#include <cctype>
+#include <clocale>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <cwchar>
+#include <xlocinfo.h>
+#include <xstring>
+_STD_BEGIN
+
+		// CLASS _Collvec
+struct _Collvec
+	{	// locale-specific collation information (none)
+	char _Pad;
+	};
+
+		// CLASS _Ctypevec
+struct _Ctypevec
+	{	// locale-specific ctype information
+	const short *_Table;
+	int _Delfl;
+	};
+
+		// CLASS _Cvtvec
+struct _Cvtvec
+	{	// locale-specific codecvt information (none)
+	char _Pad;
+	};
+
+		// CLASS _Timevec
+class _Timevec
+	{	// smart pointer to information used by _Strftime
+public:
+	void *_Getptr() const
+		{	// return pointer to time information
+		return (0);
+		}
+	char _Pad;
+	};
+
+		// CLASS _Locinfo
+class _Locinfo
+	{	// summary of all stuff peculiar to a locale used by standard facets
+public:
+	typedef _STD _Collvec _Collvec;
+	typedef _STD _Ctypevec _Ctypevec;
+	typedef _STD _Cvtvec _Cvtvec;
+	typedef _STD _Timevec _Timevec;
+
+	_Locinfo(const char * = "C");	// construct from named locale
+
+	_Locinfo(int, const char *);	// construct from category
+
+	~_Locinfo();	// destroy the object
+
+	_Locinfo& _Addcats(int, const char *);	// add stuff for a category
+
+	string _Getname() const
+		{	// return the new locale name
+		return (_Newlocname);
+		}
+
+	_Collvec _Getcoll() const
+		{	// return collation stuff
+		_Collvec _Vec = {0};
+		return (_Vec);
+		}
+
+	_Ctypevec _Getctype() const
+		{	// return ctype stuff
+		_Ctypevec _Vec = {0};
+		_Vec._Table = _CSTD _Getctyptab();
+		_Vec._Delfl = 1;
+		return (_Vec);
+		}
+
+	_Cvtvec _Getcvt() const
+		{	// return codecvt stuff
+		_Cvtvec _Vec = {0};
+		return (_Vec);
+		}
+
+	const lconv *_Getlconv() const
+		{	// return localeconv stuff
+		return (localeconv());
+		}
+
+	_Timevec _Gettnames() const
+		{	// return names used by _Strftime
+		_Timevec _Vec = {0};
+		return (_Vec);
+		}
+
+	const char *_Getdays() const
+		{	// return names for weekdays
+		return (":Sun:Sunday:Mon:Monday:Tue:Tuesday:Wed:Wednesday"
+			":Thu:Thursday:Fri:Friday:Sat:Saturday");
+		}
+
+	const char *_Getmonths() const
+		{	// return names for months
+		return (":Jan:January:Feb:February:Mar:March"
+			":Apr:April:May:May:Jun:June"
+			":Jul:July:Aug:August:Sep:September"
+			":Oct:October:Nov:November:Dec:December");
+		}
+
+	const char *_Getfalse() const
+		{	// return false name (no C source)
+		return ("false");
+		}
+
+	const char *_Gettrue() const
+		{	// return true name (no C source)
+		return ("true");
+		}
+
+private:
+	_Lockit _Lock;	// thread lock, because global locale is altered
+	string _Oldlocname;	// old locale name to revert to on destruction
+	string _Newlocname;	// new locale name for this object
+	};
+
+		// TEMPLATE FUNCTION _LStrcoll
+template<class _Elem> inline
+	int _LStrcoll(const _Elem *_First1, const _Elem *_Last1,
+		const _Elem *_First2, const _Elem *_Last2, const _Collvec *)
+	{	// perform locale-specific comparison of _Elem sequences
+	for (; _First1 != _Last1 && _First2 != _Last2; ++_First1, ++_First2)
+		if (*_First1 < *_First2)
+			return (-1);	// [_First1, _Last1) < [_First2, _Last2)
+		else if (*_First2 < *_First1)
+			return (+1);	// [_First1, _Last1) > [_First2, _Last2)
+	return (_First2 != _Last2 ? -1 : _First1 != _Last1 ? +1 : 0);
+	}
+
+		// TEMPLATE FUNCTION _LStrxfrm
+template<class _Elem> inline
+	size_t _LStrxfrm(_Elem *_First1, _Elem *_Last1,
+		const _Elem *_First2, const _Elem *_Last2,
+			const _Locinfo::_Collvec *)
+	{	// perform locale-specific transform of _Elems to [_First1, _Last1)
+	size_t _Count = _Last2 - _First2;
+
+	if (_Count <= (size_t)(_Last1 - _First1))
+		_CSTD memcpy(_First1, _First2, _Count * sizeof (_Elem));
+	return (_Count);
+	}
+
+		// FUNCTION _Mbrtowc
+inline int _Mbrtowc(wchar_t *_Wptr, const char *_Ptr, size_t _Count,
+	_Mbstatet *_Pstate, const _Cvtvec *)
+	{	// perform locale-specific mbrtowc
+	return (_CSTD mbrtowc(_Wptr, _Ptr, _Count, (mbstate_t *)_Pstate));
+	}
+
+		// FUNCTION _Strftime
+inline size_t _Strftime(char *_Ptr, size_t _Count, const char *_Format,
+	const struct tm *_Ptime, void *)
+	{	// perform locale-specific strftime
+	return (_CSTD strftime(_Ptr, _Count, _Format, _Ptime));
+	}
+
+		// FUNCTION _Tolower
+inline int _Tolower(int _Byte, const _Ctypevec *)
+	{	// perform locale-specific tolower
+	return (_CSTD tolower(_Byte & 0xff));
+	}
+
+		// FUNCTION _Toupper
+inline int _Toupper(int _Byte, const _Ctypevec *)
+	{	// perform locale-specific toupper
+	return (_CSTD toupper(_Byte & 0xff));
+	}
+
+		// FUNCTION _Wcrtomb
+inline int _Wcrtomb(char *_Ptr, wchar_t _Char,
+	_Mbstatet *_Pstate, const _Cvtvec *)
+	{	// perform locale-specific wcrtomb
+	return (_CSTD wcrtomb(_Ptr, _Char, (mbstate_t *)_Pstate));
+	}
+
+ #if defined(__APPLE__) || defined(__GLIBC__) \
+	&& (__GLIBC__ < 2 || __GLIBC__ == 2 && __GLIBC_MINOR__ < 2)
+		// FUNCTION fgetwc
+inline wint_t fgetwc(_Filet *_File)
+	{	// get a wide character from file
+	int _Ch = fgetc(_File);
+	return (_Ch == EOF ? WEOF : _Ch);
+	}
+
+		// FUNCTION fputwc
+inline wint_t fputwc(wchar_t _Wchar, _Filet *_File)
+	{	// put a wide character to file
+	char _Ch = (unsigned char)_Wchar;
+	return (fputc(_Ch, _File) != _Ch ? WEOF : _Wchar);
+	}
+
+		// FUNCTION ungetwc
+inline wint_t ungetwc(wint_t _Wchar, _Filet *_File)
+	{	// put back a wide character to file
+	char _Ch = (unsigned char)_Wchar;
+	return (ungetc(_Ch, _File) != _Ch ? WEOF : _Wchar);
+	}
+ #endif /* __GLIBC__ < V2.2 */
+
+_STD_END
+#endif /* _XLOCINFO_ */
+
+/*
+ * Copyright (c) 1992-2003 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+V4.02:1296 */

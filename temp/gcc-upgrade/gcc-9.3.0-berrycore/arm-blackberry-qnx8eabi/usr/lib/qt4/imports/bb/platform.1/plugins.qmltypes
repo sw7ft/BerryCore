@@ -1,0 +1,1186 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::platform::CancelSubscriptionReply"
+        prototype: "bb::platform::PaymentReply"
+        exports: [
+            "bb.platform/CancelSubscriptionReply 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "canceled"; type: "bool"; isReadonly: true }
+        Property { name: "purchaseId"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::DeviceLockState"
+        exports: [
+            "bb.platform/DeviceLockState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Unlocked": 1,
+                "ScreenLocked": 2,
+                "PasswordLocked": 3,
+                "PinBlocked": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::DigitalGoodReply"
+        prototype: "bb::platform::PaymentReply"
+        Property { name: "digitalGoodId"; type: "string"; isReadonly: true }
+        Property { name: "digitalGoodSku"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::DigitalGoodState"
+        exports: [
+            "bb.platform/DigitalGoodState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Owned": 0,
+                "NewSubscription": 1,
+                "SubscriptionRefunded": 2,
+                "SubscriptionCanceled": 3,
+                "SubscriptionRenewed": 4,
+                "Unknown": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::ExistingPurchasesReply"
+        prototype: "bb::platform::PaymentReply"
+        exports: [
+            "bb.platform/ExistingPurchasesReply 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "purchases"; type: "QVariantList"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::HandsFreeNavigation"
+        exports: [
+            "bb.platform/HandsFreeNavigation 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Undefined": 0,
+                "Enabled": 1,
+                "Disabled": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::HomeScreen"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/HomeScreen 1.0",
+            "bb.platform/HomeScreen 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "lockState"; type: "bb::platform::DeviceLockState::Type"; isReadonly: true }
+        Property { name: "bedsideModeActive"; type: "bool"; isReadonly: true }
+        Property {
+            name: "wallpaperLockState"
+            revision: 1
+            type: "bb::platform::WallpaperLockState::Type"
+            isReadonly: true
+        }
+        Signal {
+            name: "lockStateChanged"
+            Parameter { name: "newState"; type: "bb::platform::DeviceLockState::Type" }
+        }
+        Signal {
+            name: "wallpaperLockStateChanged"
+            revision: 1
+            Parameter { name: "wallpaperLockState"; type: "bb::platform::WallpaperLockState::Type" }
+        }
+        Signal {
+            name: "wallpaperFinished"
+            Parameter { name: "path"; type: "QUrl" }
+            Parameter { name: "result"; type: "bb::platform::WallpaperResult::Type" }
+        }
+        Signal {
+            name: "bedsideModeActiveChanged"
+            Parameter { name: "newState"; type: "bool" }
+        }
+        Signal {
+            name: "lockStateChanged"
+            Parameter { name: "newState"; type: "int" }
+        }
+        Signal {
+            name: "wallpaperFinished"
+            Parameter { name: "path"; type: "QUrl" }
+            Parameter { name: "result"; type: "int" }
+        }
+        Signal {
+            name: "wallpaperLockStateChanged"
+            revision: 1
+            Parameter { name: "wallpaperLockState"; type: "int" }
+        }
+        Method {
+            name: "setWallpaper"
+            type: "bool"
+            Parameter { name: "wallpaperFile"; type: "QUrl" }
+        }
+        Method {
+            name: "addShortcut"
+            type: "bool"
+            Parameter { name: "iconPath"; type: "QUrl" }
+            Parameter { name: "iconLabel"; type: "string" }
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method { name: "lockState"; type: "bb::platform::DeviceLockState::Type" }
+    }
+    Component {
+        name: "bb::platform::LocationMapInvoker"
+        prototype: "bb::platform::MapInvoker"
+        exports: [
+            "bb.platform/LocationMapInvoker 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "locationLatitude"; type: "double" }
+        Property { name: "locationLongitude"; type: "double" }
+        Property { name: "locationName"; type: "string" }
+        Property { name: "locationDescription"; type: "string" }
+        Property { name: "geocodeLocationEnabled"; type: "bool" }
+        Property { name: "kmlContent"; type: "string" }
+        Signal {
+            name: "locationLatitudeChanged"
+            Parameter { name: "newLocationLatitude"; type: "double" }
+        }
+        Signal {
+            name: "locationLongitudeChanged"
+            Parameter { name: "newLocationLongitude"; type: "double" }
+        }
+        Signal {
+            name: "locationNameChanged"
+            Parameter { name: "newLocationName"; type: "string" }
+        }
+        Signal {
+            name: "locationDescriptionChanged"
+            Parameter { name: "newLocationDescription"; type: "string" }
+        }
+        Signal {
+            name: "geocodeLocationEnabledChanged"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Signal {
+            name: "kmlContentChanged"
+            Parameter { name: "newKmlContent"; type: "string" }
+        }
+        Method {
+            name: "setLocationLatitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetLocationLatitude" }
+        Method {
+            name: "setLocationLongitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetLocationLongitude" }
+        Method {
+            name: "setLocationName"
+            Parameter { name: "name"; type: "string" }
+        }
+        Method { name: "resetLocationName" }
+        Method {
+            name: "setLocationDescription"
+            Parameter { name: "description"; type: "string" }
+        }
+        Method { name: "resetLocationDescription" }
+        Method {
+            name: "setGeocodeLocationEnabled"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Method { name: "resetGeocodeLocationEnabled" }
+        Method {
+            name: "setKmlContent"
+            Parameter { name: "content"; type: "string" }
+        }
+        Method { name: "resetKmlContent" }
+    }
+    Component {
+        name: "bb::platform::MapInvoker"
+        prototype: "QObject"
+        Property { name: "currentLocationEnabled"; type: "bool" }
+        Property { name: "searchLatitude"; type: "double" }
+        Property { name: "searchLongitude"; type: "double" }
+        Property { name: "searchText"; type: "string" }
+        Property { name: "searchMode"; type: "bb::platform::MapSearchMode::Type" }
+        Property { name: "altitude"; type: "int" }
+        Property { name: "heading"; type: "int" }
+        Property { name: "centerLatitude"; type: "double" }
+        Property { name: "centerLongitude"; type: "double" }
+        Signal {
+            name: "currentLocationEnabledChanged"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Signal {
+            name: "searchLatitudeChanged"
+            Parameter { name: "newSearchLatitude"; type: "double" }
+        }
+        Signal {
+            name: "searchLongitudeChanged"
+            Parameter { name: "newSearchLongitude"; type: "double" }
+        }
+        Signal {
+            name: "searchTextChanged"
+            Parameter { name: "newSearchText"; type: "string" }
+        }
+        Signal {
+            name: "searchModeChanged"
+            Parameter { name: "newSearchPattern"; type: "bb::platform::MapSearchMode::Type" }
+        }
+        Signal {
+            name: "altitudeChanged"
+            Parameter { name: "newAltitude"; type: "int" }
+        }
+        Signal {
+            name: "headingChanged"
+            Parameter { name: "newHeading"; type: "int" }
+        }
+        Signal {
+            name: "centerLatitudeChanged"
+            Parameter { name: "newCenterLatitude"; type: "double" }
+        }
+        Signal {
+            name: "centerLongitudeChanged"
+            Parameter { name: "newCenterLongitude"; type: "double" }
+        }
+        Method {
+            name: "setCurrentLocationEnabled"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Method { name: "resetCurrentLocationEnabled" }
+        Method {
+            name: "setSearchLatitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetSearchLatitude" }
+        Method {
+            name: "setSearchLongitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetSearchLongitude" }
+        Method {
+            name: "setSearchText"
+            Parameter { name: "text"; type: "string" }
+        }
+        Method { name: "resetSearchText" }
+        Method {
+            name: "setSearchMode"
+            Parameter { name: "mode"; type: "bb::platform::MapSearchMode::Type" }
+        }
+        Method { name: "resetSearchMode" }
+        Method {
+            name: "setAltitude"
+            Parameter { name: "value"; type: "int" }
+        }
+        Method { name: "resetAltitude" }
+        Method {
+            name: "setHeading"
+            Parameter { name: "value"; type: "int" }
+        }
+        Method { name: "resetHeading" }
+        Method {
+            name: "setCenterLatitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetCenterLatitude" }
+        Method {
+            name: "setCenterLongitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetCenterLongitude" }
+        Method { name: "go" }
+    }
+    Component {
+        name: "bb::platform::MapNavigationMode"
+        exports: [
+            "bb.platform/MapNavigationMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Undefined": 0,
+                "FastestRoute": 1,
+                "ShortestRoute": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::MapTransportationMode"
+        exports: [
+            "bb.platform/MapTransportationMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Undefined": 0,
+                "Car": 1,
+                "Pedestrian": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::Notification"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/Notification 1.0",
+            "bb.platform/Notification 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "key"; type: "string"; isReadonly: true }
+        Property { name: "category"; type: "string" }
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "timestamp"; type: "QDateTime" }
+        Property { name: "soundUrl"; type: "QUrl" }
+        Property { name: "iconUrl"; revision: 1; type: "QUrl" }
+        Property { name: "type"; revision: 1; type: "bb::platform::NotificationType::Type" }
+        Property { name: "error"; type: "bb::platform::NotificationError::Type"; isReadonly: true }
+        Signal {
+            name: "categoryChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "timestampChanged"
+            Parameter { name: "newTimestamp"; type: "QDateTime" }
+        }
+        Signal {
+            name: "soundUrlChanged"
+            Parameter { name: "newSoundUrl"; type: "QUrl" }
+        }
+        Signal {
+            name: "iconUrlChanged"
+            revision: 1
+            Parameter { name: "newIconUrl"; type: "QUrl" }
+        }
+        Signal {
+            name: "typeChanged"
+            revision: 1
+            Parameter { name: "type"; type: "bb::platform::NotificationType::Type&" }
+        }
+        Signal {
+            name: "invokeRequestChanged"
+            Parameter { name: "newInvokeRequest"; type: "bb::system::InvokeRequest" }
+        }
+        Method { name: "notify"; type: "bb::platform::NotificationError::Type" }
+        Method { name: "clearEffects"; type: "bb::platform::NotificationError::Type" }
+        Method { name: "deleteFromInbox"; type: "bb::platform::NotificationError::Type" }
+        Method { name: "clearEffectsForAll"; type: "bb::platform::NotificationError::Type" }
+        Method { name: "deleteAllFromInbox"; type: "bb::platform::NotificationError::Type" }
+        Method {
+            name: "clearEffects"
+            type: "bb::platform::NotificationError::Type"
+            Parameter { name: "key"; type: "string" }
+        }
+        Method {
+            name: "deleteFromInbox"
+            type: "bb::platform::NotificationError::Type"
+            Parameter { name: "key"; type: "string" }
+        }
+        Method {
+            name: "setTimestamp"
+            Parameter { name: "millisecondsTimestamp"; type: "qint64" }
+        }
+        Method { name: "resetTimestamp" }
+    }
+    Component {
+        name: "bb::platform::NotificationApplicationSettings"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/NotificationApplicationSettings 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "alertsEnabled"; type: "bool"; isReadonly: true }
+        Property { name: "sound"; type: "bb::platform::NotificationPolicy::Type"; isReadonly: true }
+        Property { name: "vibrate"; type: "bb::platform::NotificationPolicy::Type"; isReadonly: true }
+        Property { name: "led"; type: "bb::platform::NotificationPolicy::Type"; isReadonly: true }
+        Property {
+            name: "preview"
+            type: "bb::platform::NotificationPriorityPolicy::Type"
+            isReadonly: true
+        }
+        Property { name: "vibrateCount"; type: "int"; isReadonly: true }
+        Property { name: "tonePath"; type: "QUrl"; isReadonly: true }
+        Signal {
+            name: "alertsEnabledChanged"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Signal {
+            name: "soundChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "vibrateChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "ledChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "previewChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPriorityPolicy::Type" }
+        }
+        Signal {
+            name: "vibrateCountChanged"
+            Parameter { name: "count"; type: "int" }
+        }
+        Signal {
+            name: "tonePathChanged"
+            Parameter { name: "tonePath"; type: "QUrl" }
+        }
+        Signal {
+            name: "soundChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "vibrateChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "ledChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "previewChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationDialog"
+        defaultProperty: "buttons"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/NotificationDialog 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "category"; type: "string" }
+        Property { name: "title"; type: "string" }
+        Property { name: "body"; type: "string" }
+        Property { name: "repeat"; type: "bool" }
+        Property { name: "soundUrl"; type: "QUrl" }
+        Property { name: "buttons"; type: "bb::system::SystemUiButton"; isList: true; isReadonly: true }
+        Property { name: "result"; type: "bb::platform::NotificationResult::Type"; isReadonly: true }
+        Property { name: "error"; type: "bb::platform::NotificationError::Type"; isReadonly: true }
+        Signal {
+            name: "finished"
+            Parameter { name: "value"; type: "bb::platform::NotificationResult::Type" }
+        }
+        Signal {
+            name: "categoryChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "titleChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "bodyChanged"
+            Parameter { name: "value"; type: "string" }
+        }
+        Signal {
+            name: "repeatChanged"
+            Parameter { name: "value"; type: "bool" }
+        }
+        Signal {
+            name: "soundUrlChanged"
+            Parameter { name: "newSoundUrl"; type: "QUrl" }
+        }
+        Method { name: "show" }
+        Method { name: "exec"; type: "bb::platform::NotificationResult::Type" }
+        Method { name: "cancel" }
+        Method { name: "buttonSelection"; type: "bb::system::SystemUiButton*" }
+    }
+    Component {
+        name: "bb::platform::NotificationError"
+        exports: [
+            "bb.platform/NotificationError 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Unknown": 1,
+                "InvalidRequest": 2,
+                "NoButtons": 3,
+                "ServiceUnavailable": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationGlobalSettings"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/NotificationGlobalSettings 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "sound"; type: "bb::platform::NotificationPolicy::Type" }
+        Property { name: "vibrate"; type: "bb::platform::NotificationPolicy::Type" }
+        Property { name: "led"; type: "bb::platform::NotificationPolicy::Type" }
+        Property { name: "preview"; type: "bb::platform::NotificationPolicy::Type" }
+        Property { name: "volume"; type: "int" }
+        Property { name: "mode"; type: "bb::platform::NotificationMode::Type" }
+        Signal {
+            name: "soundChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "vibrateChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "ledChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "previewChanged"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Signal {
+            name: "volumeChanged"
+            Parameter { name: "volume"; type: "int" }
+        }
+        Signal {
+            name: "modeChanged"
+            Parameter { name: "mode"; type: "bb::platform::NotificationMode::Type" }
+        }
+        Signal {
+            name: "soundChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "vibrateChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "ledChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "previewChanged"
+            Parameter { name: "policy"; type: "int" }
+        }
+        Signal {
+            name: "modeChanged"
+            Parameter { name: "mode"; type: "int" }
+        }
+        Method {
+            name: "setSound"
+            type: "bb::platform::NotificationSettingsError::Type"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Method {
+            name: "setVibrate"
+            type: "bb::platform::NotificationSettingsError::Type"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Method {
+            name: "setLed"
+            type: "bb::platform::NotificationSettingsError::Type"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Method {
+            name: "setPreview"
+            type: "bb::platform::NotificationSettingsError::Type"
+            Parameter { name: "policy"; type: "bb::platform::NotificationPolicy::Type" }
+        }
+        Method {
+            name: "setVolume"
+            type: "bb::platform::NotificationSettingsError::Type"
+            Parameter { name: "volume"; type: "int" }
+        }
+        Method {
+            name: "setMode"
+            type: "bb::platform::NotificationSettingsError::Type"
+            Parameter { name: "mode"; type: "bb::platform::NotificationMode::Type" }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationMode"
+        exports: [
+            "bb.platform/NotificationMode 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Silent": 1,
+                "Vibrate": 2,
+                "Normal": 3,
+                "PhoneOnly": 4,
+                "AlertsOff": 5
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationPolicy"
+        exports: [
+            "bb.platform/NotificationPolicy 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Allow": 1,
+                "Deny": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationPriorityPolicy"
+        exports: [
+            "bb.platform/NotificationPriorityPolicy 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Allow": 1,
+                "Deny": 2,
+                "NotApplicable": 3,
+                "PriorityOnly": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationResult"
+        exports: [
+            "bb.platform/NotificationResult 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Error": 1,
+                "ButtonSelection": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationSettingsError"
+        exports: [
+            "bb.platform/NotificationSettingsError 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Unknown": 1,
+                "InsufficientPermissions": 2,
+                "Internal": 3,
+                "ServiceUnavailable": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::NotificationType"
+        exports: [
+            "bb.platform/NotificationType 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "PreviewOff": 1,
+                "AllAlertsOff": 2,
+                "HubOff": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::PaymentErrorCode"
+        exports: [
+            "bb.platform/PaymentErrorCode 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Canceled": 1,
+                "Busy": 2,
+                "Failed": 3,
+                "NoNetwork": 8
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::PaymentManager"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/PaymentManager 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "windowGroupId"; type: "string" }
+        Property { name: "applicationName"; type: "string" }
+        Property { name: "applicationIconUrl"; type: "QUrl" }
+        Signal {
+            name: "purchaseFinished"
+            Parameter { name: "reply"; type: "bb::platform::PurchaseReply"; isPointer: true }
+        }
+        Signal {
+            name: "existingPurchasesFinished"
+            Parameter { name: "reply"; type: "bb::platform::ExistingPurchasesReply"; isPointer: true }
+        }
+        Signal {
+            name: "priceFinished"
+            Parameter { name: "reply"; type: "bb::platform::PriceReply"; isPointer: true }
+        }
+        Signal {
+            name: "subscriptionTermsFinished"
+            Parameter { name: "reply"; type: "bb::platform::SubscriptionTermsReply"; isPointer: true }
+        }
+        Signal {
+            name: "subscriptionStatusFinished"
+            Parameter { name: "reply"; type: "bb::platform::SubscriptionStatusReply"; isPointer: true }
+        }
+        Signal {
+            name: "cancelSubscriptionFinished"
+            Parameter { name: "reply"; type: "bb::platform::CancelSubscriptionReply"; isPointer: true }
+        }
+        Method {
+            name: "requestPurchase"
+            type: "bb::platform::PurchaseReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+            Parameter { name: "digitalGoodName"; type: "string" }
+            Parameter { name: "purchaseMetadata"; type: "string" }
+            Parameter { name: "extraParameters"; type: "QVariantMap" }
+        }
+        Method {
+            name: "requestPurchase"
+            type: "bb::platform::PurchaseReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+            Parameter { name: "digitalGoodName"; type: "string" }
+            Parameter { name: "purchaseMetadata"; type: "string" }
+        }
+        Method {
+            name: "requestPurchase"
+            type: "bb::platform::PurchaseReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+            Parameter { name: "digitalGoodName"; type: "string" }
+        }
+        Method {
+            name: "requestPurchase"
+            type: "bb::platform::PurchaseReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+        }
+        Method {
+            name: "requestPurchase"
+            type: "bb::platform::PurchaseReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+        }
+        Method {
+            name: "requestExistingPurchases"
+            type: "bb::platform::ExistingPurchasesReply*"
+            Parameter { name: "forceServerRefresh"; type: "bool" }
+        }
+        Method { name: "requestExistingPurchases"; type: "bb::platform::ExistingPurchasesReply*" }
+        Method {
+            name: "requestPrice"
+            type: "bb::platform::PriceReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+        }
+        Method {
+            name: "requestPrice"
+            type: "bb::platform::PriceReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+        }
+        Method {
+            name: "requestSubscriptionTerms"
+            type: "bb::platform::SubscriptionTermsReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+        }
+        Method {
+            name: "requestSubscriptionTerms"
+            type: "bb::platform::SubscriptionTermsReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+        }
+        Method {
+            name: "requestSubscriptionStatus"
+            type: "bb::platform::SubscriptionStatusReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+            Parameter { name: "digitalGoodSku"; type: "string" }
+        }
+        Method {
+            name: "requestSubscriptionStatus"
+            type: "bb::platform::SubscriptionStatusReply*"
+            Parameter { name: "digitalGoodId"; type: "string" }
+        }
+        Method {
+            name: "requestCancelSubscription"
+            type: "bb::platform::CancelSubscriptionReply*"
+            Parameter { name: "purchaseId"; type: "string" }
+        }
+    }
+    Component {
+        name: "bb::platform::PaymentReply"
+        prototype: "QObject"
+        Property { name: "finished"; type: "bool"; isReadonly: true }
+        Property { name: "errorText"; type: "string"; isReadonly: true }
+        Property { name: "errorCode"; type: "int"; isReadonly: true }
+        Property { name: "errorInfo"; type: "string"; isReadonly: true }
+        Signal { name: "finished" }
+    }
+    Component {
+        name: "bb::platform::PlatformInfo"
+        prototype: "QObject"
+        exports: [
+            "bb.platform/PlatformInfo 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "osVersion"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::PriceReply"
+        prototype: "bb::platform::DigitalGoodReply"
+        exports: [
+            "bb.platform/PriceReply 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "price"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::PurchaseReply"
+        prototype: "bb::platform::DigitalGoodReply"
+        exports: [
+            "bb.platform/PurchaseReply 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "purchaseMetadata"; type: "string"; isReadonly: true }
+        Property { name: "receipt"; type: "QVariantMap"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::RouteMapInvoker"
+        prototype: "bb::platform::MapInvoker"
+        exports: [
+            "bb.platform/RouteMapInvoker 1.0",
+            "bb.platform/RouteMapInvoker 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            1
+        ]
+        Property { name: "startLatitude"; type: "double" }
+        Property { name: "startLongitude"; type: "double" }
+        Property { name: "startName"; type: "string" }
+        Property { name: "startDescription"; type: "string" }
+        Property { name: "startAddress"; type: "string" }
+        Property { name: "endLatitude"; type: "double" }
+        Property { name: "endLongitude"; type: "double" }
+        Property { name: "endName"; type: "string" }
+        Property { name: "endDescription"; type: "string" }
+        Property { name: "endAddress"; type: "string" }
+        Property {
+            name: "handsFreeNavigation"
+            revision: 1
+            type: "bb::platform::HandsFreeNavigation::Type"
+        }
+        Property { name: "navigationMode"; type: "bb::platform::MapNavigationMode::Type" }
+        Property { name: "avoidTollsEnabled"; type: "bool" }
+        Property { name: "avoidHighwaysEnabled"; type: "bool" }
+        Property { name: "transportationMode"; type: "bb::platform::MapTransportationMode::Type" }
+        Signal {
+            name: "startLatitudeChanged"
+            Parameter { name: "newStartLatitude"; type: "double" }
+        }
+        Signal {
+            name: "startLongitudeChanged"
+            Parameter { name: "newStartLongitude"; type: "double" }
+        }
+        Signal {
+            name: "startNameChanged"
+            Parameter { name: "newStartName"; type: "string" }
+        }
+        Signal {
+            name: "startDescriptionChanged"
+            Parameter { name: "newStartDescription"; type: "string" }
+        }
+        Signal {
+            name: "startAddressChanged"
+            Parameter { name: "newStartAddress"; type: "string" }
+        }
+        Signal {
+            name: "endLatitudeChanged"
+            Parameter { name: "newEndLatitude"; type: "double" }
+        }
+        Signal {
+            name: "endLongitudeChanged"
+            Parameter { name: "newEndLongitude"; type: "double" }
+        }
+        Signal {
+            name: "endNameChanged"
+            Parameter { name: "newEndName"; type: "string" }
+        }
+        Signal {
+            name: "endDescriptionChanged"
+            Parameter { name: "newEndDescription"; type: "string" }
+        }
+        Signal {
+            name: "endAddressChanged"
+            Parameter { name: "newEndAddress"; type: "string" }
+        }
+        Signal {
+            name: "handsFreeNavigationChanged"
+            revision: 1
+            Parameter { name: "newValue"; type: "bb::platform::HandsFreeNavigation::Type" }
+        }
+        Signal {
+            name: "navigationModeChanged"
+            Parameter { name: "newMode"; type: "bb::platform::MapNavigationMode::Type" }
+        }
+        Signal {
+            name: "avoidTollsEnabledChanged"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Signal {
+            name: "avoidHighwaysEnabledChanged"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Signal {
+            name: "transportationModeChanged"
+            Parameter { name: "newMode"; type: "bb::platform::MapTransportationMode::Type" }
+        }
+        Method {
+            name: "setStartLatitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetStartLatitude" }
+        Method {
+            name: "setStartLongitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetStartLongitude" }
+        Method {
+            name: "setStartName"
+            Parameter { name: "name"; type: "string" }
+        }
+        Method { name: "resetStartName" }
+        Method {
+            name: "setStartDescription"
+            Parameter { name: "description"; type: "string" }
+        }
+        Method { name: "resetStartDescription" }
+        Method {
+            name: "setStartAddress"
+            Parameter { name: "address"; type: "string" }
+        }
+        Method { name: "resetStartAddress" }
+        Method {
+            name: "setEndLatitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetEndLatitude" }
+        Method {
+            name: "setEndLongitude"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method { name: "resetEndLongitude" }
+        Method {
+            name: "setEndName"
+            Parameter { name: "name"; type: "string" }
+        }
+        Method { name: "resetEndName" }
+        Method {
+            name: "setEndDescription"
+            Parameter { name: "description"; type: "string" }
+        }
+        Method { name: "resetEndDescription" }
+        Method {
+            name: "setEndAddress"
+            Parameter { name: "address"; type: "string" }
+        }
+        Method { name: "resetEndAddress" }
+        Method {
+            name: "setHandsFreeNavigation"
+            revision: 1
+            Parameter { name: "newValue"; type: "bb::platform::HandsFreeNavigation::Type" }
+        }
+        Method { name: "resetHandsFreeNavigation"; revision: 1 }
+        Method {
+            name: "setNavigationMode"
+            Parameter { name: "mode"; type: "bb::platform::MapNavigationMode::Type" }
+        }
+        Method { name: "resetNavigationMode" }
+        Method {
+            name: "setAvoidTollsEnabled"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Method { name: "resetAvoidTollsEnabled" }
+        Method {
+            name: "setAvoidHighwaysEnabled"
+            Parameter { name: "enable"; type: "bool" }
+        }
+        Method { name: "resetAvoidHighwaysEnabled" }
+        Method {
+            name: "setTransportationMode"
+            Parameter { name: "mode"; type: "bb::platform::MapTransportationMode::Type" }
+        }
+        Method { name: "resetTransportationMode" }
+    }
+    Component {
+        name: "bb::platform::SubscriptionStatusReply"
+        prototype: "bb::platform::DigitalGoodReply"
+        exports: [
+            "bb.platform/SubscriptionStatusReply 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "active"; type: "bool"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::SubscriptionTermsReply"
+        prototype: "bb::platform::PriceReply"
+        exports: [
+            "bb.platform/SubscriptionTermsReply 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Property { name: "initialPeriod"; type: "string"; isReadonly: true }
+        Property { name: "renewalPrice"; type: "string"; isReadonly: true }
+        Property { name: "renewalPeriod"; type: "string"; isReadonly: true }
+    }
+    Component {
+        name: "bb::platform::WallpaperLockState"
+        exports: [
+            "bb.platform/WallpaperLockState 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unknown": 0,
+                "Locked": 1,
+                "Unlocked": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::platform::WallpaperResult"
+        exports: [
+            "bb.platform/WallpaperResult 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Changed": 0,
+                "Locked": 1
+            }
+        }
+    }
+}

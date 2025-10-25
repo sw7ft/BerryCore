@@ -1,0 +1,1067 @@
+import QtQuick.tooling 1.1
+
+// This file describes the plugin-supplied types contained in the library.
+// It is used for QML tooling purposes only.
+
+Module {
+    Component {
+        name: "bb::multimedia::AudioChannelConfiguration"
+        exports: [
+            "bb.multimedia/AudioChannelConfiguration 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Default": 0,
+                "Mono": 1,
+                "Stereo": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::AudioOutput"
+        exports: [
+            "bb.multimedia/AudioOutput 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Default": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::AudioRecorder"
+        prototype: "QObject"
+        exports: [
+            "bb.multimedia/AudioRecorder 1.0",
+            "bb.multimedia/AudioRecorder 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            4
+        ]
+        Property {
+            name: "audioChannelConfiguration"
+            revision: 4
+            type: "bb::multimedia::AudioChannelConfiguration::Type"
+        }
+        Property { name: "audioManagerHandle"; type: "QVariant" }
+        Property {
+            name: "deviceMode"
+            revision: 4
+            type: "bb::multimedia::DeviceMode::Type"
+            isReadonly: true
+        }
+        Property { name: "duration"; type: "QVariant"; isReadonly: true }
+        Property { name: "mediaError"; type: "bb::multimedia::MediaError::Type"; isReadonly: true }
+        Property { name: "mediaState"; type: "bb::multimedia::MediaState::Type"; isReadonly: true }
+        Property { name: "outputUrl"; type: "QUrl" }
+        Property { name: "statusInterval"; type: "QVariant" }
+        Signal {
+            name: "audioChannelConfigurationChanged"
+            revision: 4
+            Parameter {
+                name: "audioChannelConfiguration"
+                type: "bb::multimedia::AudioChannelConfiguration::Type"
+            }
+        }
+        Signal {
+            name: "audioManagerHandleChanged"
+            Parameter { name: "audioManagerHandle"; type: "uint" }
+        }
+        Signal {
+            name: "audioManagerHandleChanged"
+            Parameter { name: "audioManagerHandle"; type: "QVariant" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "uint" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "QVariant" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "mediaError"; type: "bb::multimedia::MediaError::Type" }
+            Parameter { name: "position"; type: "uint" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "mediaError"; type: "bb::multimedia::MediaError::Type" }
+            Parameter { name: "position"; type: "QVariant" }
+        }
+        Signal {
+            name: "mediaStateChanged"
+            Parameter { name: "mediaState"; type: "bb::multimedia::MediaState::Type" }
+        }
+        Signal {
+            name: "recordingLevelChanged"
+            Parameter { name: "percentage"; type: "double" }
+        }
+        Signal {
+            name: "statusIntervalChanged"
+            Parameter { name: "statusInterval"; type: "uint" }
+        }
+        Signal {
+            name: "statusIntervalChanged"
+            Parameter { name: "statusInterval"; type: "QVariant" }
+        }
+        Method { name: "pause"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "record"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "prepare"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "reset"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "setAudioChannelConfiguration"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter {
+                name: "audioChannelConfiguration"
+                type: "bb::multimedia::AudioChannelConfiguration::Type"
+            }
+        }
+        Method {
+            name: "setOutputUrl"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "setStatusInterval"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "statusInterval"; type: "uint" }
+        }
+    }
+    Component {
+        name: "bb::multimedia::BufferStatus"
+        exports: [
+            "bb.multimedia/BufferStatus 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Idle": 0,
+                "Buffering": 1,
+                "Playing": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::DeviceMode"
+        exports: [
+            "bb.multimedia/DeviceMode 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Playback": 0,
+                "Capture": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::EqualizerPreset"
+        exports: [
+            "bb.multimedia/EqualizerPreset 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Off": 0,
+                "Airplane": 1,
+                "BassBoost": 2,
+                "TrebleBoost": 3,
+                "VoiceBoost": 4,
+                "BassLower": 5,
+                "TrebleLower": 6,
+                "VoiceLower": 7,
+                "Acoustic": 8,
+                "Dance": 9,
+                "Electronic": 10,
+                "HipHop": 11,
+                "Jazz": 12,
+                "Lounge": 13,
+                "Piano": 14,
+                "RhythmAndBlues": 15,
+                "Rock": 16,
+                "SpokenWord": 17
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::MediaError"
+        exports: [
+            "bb.multimedia/MediaError 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Internal": 1,
+                "InvalidParameter": 2,
+                "InvalidState": 3,
+                "UnsupportedValue": 4,
+                "UnsupportedMediaType": 5,
+                "DrmProtected": 6,
+                "UnsupportedOperation": 7,
+                "Read": 8,
+                "Write": 9,
+                "SourceUnavailable": 10,
+                "ResourceCorrupted": 11,
+                "OutputUnavailable": 12,
+                "OutOfMemory": 13,
+                "ResourceUnavailable": 14,
+                "DrmNoRights": 15,
+                "DrmCorruptedDataStore": 16,
+                "DrmOutputRestricted": 17,
+                "DrmHdmiOutputRestricted": 18,
+                "DrmDisplayPortOutputRestricted": 19,
+                "DrmDviOutputRestricted": 20,
+                "DrmAnalogVideoOutputRestricted": 21,
+                "DrmAnalogAudioOutputRestricted": 22,
+                "DrmToslinkOutputRestricted": 23,
+                "DrmSpdifOutputRestricted": 24,
+                "DrmBluetoothOutputRestricted": 25,
+                "DrmWirelessHdOutputRestricted": 26,
+                "DrmWifiDirectOutputRestricted": 27,
+                "DrmExpiredLicense": 31,
+                "Permission": 32,
+                "CommandFailed": 33
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::MediaKey"
+        exports: [
+            "bb.multimedia/MediaKey 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "FastForward": 1,
+                "Pause": 2,
+                "Play": 3,
+                "PlayPause": 4,
+                "Rewind": 5,
+                "Stop": 6,
+                "VolumeDown": 7,
+                "VolumeUp": 8,
+                "Previous": 9,
+                "Next": 10
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::MediaKeyNotification"
+        exports: [
+            "bb.multimedia/MediaKeyNotification 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Clicked": 0,
+                "Threshold": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::MediaKeyWatcher"
+        prototype: "QObject"
+        Property { name: "key"; type: "bb::multimedia::MediaKey::Type"; isReadonly: true }
+        Property { name: "notification"; type: "bb::multimedia::MediaKeyNotification::Type" }
+        Signal {
+            name: "longPress"
+            Parameter { name: "key"; type: "bb::multimedia::MediaKey::Type" }
+        }
+        Signal {
+            name: "mediumPress"
+            Parameter { name: "key"; type: "bb::multimedia::MediaKey::Type" }
+        }
+        Signal {
+            name: "notificationChanged"
+            Parameter { name: "notification"; type: "bb::multimedia::MediaKeyNotification::Type" }
+        }
+        Signal {
+            name: "shortPress"
+            Parameter { name: "key"; type: "bb::multimedia::MediaKey::Type" }
+        }
+        Method {
+            name: "setNotification"
+            Parameter { name: "notification"; type: "bb::multimedia::MediaKeyNotification::Type" }
+        }
+    }
+    Component {
+        name: "bb::multimedia::MediaPlayer"
+        prototype: "QObject"
+        exports: [
+            "bb.multimedia/MediaPlayer 1.0",
+            "bb.multimedia/MediaPlayer 1.4"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            4
+        ]
+        Property { name: "audioManagerHandle"; type: "QVariant" }
+        Property { name: "audioOutput"; type: "bb::multimedia::AudioOutput::Type" }
+        Property { name: "autoPause"; type: "bool" }
+        Property { name: "bufferStatus"; type: "bb::multimedia::BufferStatus::Type"; isReadonly: true }
+        Property { name: "closedCaptionEnabled"; revision: 4; type: "bool" }
+        Property { name: "closedCaptionIndex"; type: "QVariant" }
+        Property { name: "closedCaptionWindowId"; type: "string" }
+        Property {
+            name: "deviceMode"
+            revision: 4
+            type: "bb::multimedia::DeviceMode::Type"
+            isReadonly: true
+        }
+        Property { name: "duration"; type: "QVariant"; isReadonly: true }
+        Property { name: "equalizerPreset"; revision: 4; type: "bb::multimedia::EqualizerPreset::Type" }
+        Property { name: "mediaError"; type: "bb::multimedia::MediaError::Type"; isReadonly: true }
+        Property { name: "mediaState"; type: "bb::multimedia::MediaState::Type"; isReadonly: true }
+        Property { name: "metaData"; type: "QVariantMap"; isReadonly: true }
+        Property { name: "position"; type: "QVariant"; isReadonly: true }
+        Property { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        Property { name: "seekable"; type: "bool"; isReadonly: true }
+        Property { name: "sourceUrl"; type: "QUrl" }
+        Property { name: "speed"; type: "double" }
+        Property { name: "statusInterval"; type: "QVariant" }
+        Property { name: "track"; type: "QVariant"; isReadonly: true }
+        Property { name: "trackCount"; type: "QVariant"; isReadonly: true }
+        Property { name: "videoDimensions"; type: "QSize"; isReadonly: true }
+        Property { name: "videoOutput"; type: "bb::multimedia::VideoOutput::Type" }
+        Property { name: "volume"; type: "double" }
+        Property { name: "windowGroupId"; type: "string" }
+        Property { name: "windowId"; type: "string" }
+        Signal {
+            name: "audioManagerHandleChanged"
+            Parameter { name: "audioManagerHandle"; type: "uint" }
+        }
+        Signal {
+            name: "audioManagerHandleChanged"
+            Parameter { name: "audioManagerHandle"; type: "QVariant" }
+        }
+        Signal {
+            name: "audioOutputChanged"
+            Parameter { name: "audioOutput"; type: "bb::multimedia::AudioOutput::Type" }
+        }
+        Signal {
+            name: "autoPauseChanged"
+            Parameter { name: "autoPause"; type: "bool" }
+        }
+        Signal {
+            name: "buffering"
+            Parameter { name: "percentage"; type: "double" }
+        }
+        Signal {
+            name: "bufferStatusChanged"
+            Parameter { name: "bufferStatus"; type: "bb::multimedia::BufferStatus::Type" }
+        }
+        Signal {
+            name: "closedCaptionEnabledChanged"
+            revision: 4
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Signal {
+            name: "closedCaptionIndexChanged"
+            Parameter { name: "closedCaptionIndex"; type: "uint" }
+        }
+        Signal {
+            name: "closedCaptionIndexChanged"
+            Parameter { name: "closedCaptionIndex"; type: "QVariant" }
+        }
+        Signal {
+            name: "closedCaptionUrlChanged"
+            Parameter { name: "track"; type: "uint" }
+            Parameter { name: "closedCaptionUrl"; type: "QUrl" }
+        }
+        Signal {
+            name: "closedCaptionUrlChanged"
+            Parameter { name: "track"; type: "QVariant" }
+            Parameter { name: "closedCaptionUrl"; type: "QUrl" }
+        }
+        Signal {
+            name: "closedCaptionWindowIdChanged"
+            Parameter { name: "closedCaptionWindowId"; type: "string" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "uint" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "QVariant" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "mediaError"; type: "bb::multimedia::MediaError::Type" }
+            Parameter { name: "position"; type: "uint" }
+        }
+        Signal {
+            name: "error"
+            Parameter { name: "mediaError"; type: "bb::multimedia::MediaError::Type" }
+            Parameter { name: "position"; type: "QVariant" }
+        }
+        Signal {
+            name: "equalizerPresetChanged"
+            revision: 4
+            Parameter { name: "equalizerPreset"; type: "bb::multimedia::EqualizerPreset::Type" }
+        }
+        Signal {
+            name: "mediaStateChanged"
+            Parameter { name: "mediaState"; type: "bb::multimedia::MediaState::Type" }
+        }
+        Signal {
+            name: "metaDataChanged"
+            Parameter { name: "metaData"; type: "QVariantMap" }
+        }
+        Signal { name: "playbackCompleted" }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "position"; type: "uint" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "position"; type: "QVariant" }
+        }
+        Signal {
+            name: "repeatModeChanged"
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Signal {
+            name: "seekableChanged"
+            Parameter { name: "seekable"; type: "bool" }
+        }
+        Signal {
+            name: "sourceUrlChanged"
+            Parameter { name: "sourceUrl"; type: "QUrl" }
+        }
+        Signal {
+            name: "speedChanged"
+            Parameter { name: "speed"; type: "double" }
+        }
+        Signal {
+            name: "statusIntervalChanged"
+            Parameter { name: "statusInterval"; type: "uint" }
+        }
+        Signal {
+            name: "statusIntervalChanged"
+            Parameter { name: "statusInterval"; type: "QVariant" }
+        }
+        Signal {
+            name: "trackChanged"
+            Parameter { name: "track"; type: "uint" }
+        }
+        Signal {
+            name: "trackChanged"
+            Parameter { name: "track"; type: "QVariant" }
+        }
+        Signal {
+            name: "trackCountChanged"
+            Parameter { name: "trackCount"; type: "uint" }
+        }
+        Signal {
+            name: "trackCountChanged"
+            Parameter { name: "trackCount"; type: "QVariant" }
+        }
+        Signal {
+            name: "videoDimensionsChanged"
+            Parameter { name: "videoDimensions"; type: "QSize" }
+        }
+        Signal {
+            name: "videoOutputChanged"
+            Parameter { name: "videoOutput"; type: "bb::multimedia::VideoOutput::Type" }
+        }
+        Signal {
+            name: "volumeChanged"
+            Parameter { name: "volume"; type: "double" }
+        }
+        Signal {
+            name: "windowGroupIdChanged"
+            Parameter { name: "windowGroupId"; type: "string" }
+        }
+        Signal {
+            name: "windowIdChanged"
+            Parameter { name: "windowId"; type: "string" }
+        }
+        Method { name: "nextTrack"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "pause"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "play"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "prepare"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "previousTrack"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "reset"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "seek"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "track"; type: "uint" }
+            Parameter { name: "position"; type: "uint" }
+        }
+        Method {
+            name: "seekTime"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "position"; type: "uint" }
+        }
+        Method {
+            name: "seekPercent"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "percentage"; type: "double" }
+        }
+        Method {
+            name: "seekTrack"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "track"; type: "uint" }
+        }
+        Method {
+            name: "setAudioOutput"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "audioOutput"; type: "bb::multimedia::AudioOutput::Type" }
+        }
+        Method {
+            name: "setAutoPause"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "autoPause"; type: "bool" }
+        }
+        Method {
+            name: "setClosedCaptionEnabled"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "enabled"; type: "bool" }
+        }
+        Method {
+            name: "setClosedCaptionIndex"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "index"; type: "uint" }
+        }
+        Method {
+            name: "setClosedCaptionUrl"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "track"; type: "uint" }
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "setClosedCaptionWindowId"
+            Parameter { name: "closedCaptionWindowId"; type: "string" }
+        }
+        Method {
+            name: "setEqualizerPreset"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "equalizerPreset"; type: "bb::multimedia::EqualizerPreset::Type" }
+        }
+        Method {
+            name: "setRepeatMode"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Method {
+            name: "setSourceUrl"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "setSpeed"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "speed"; type: "double" }
+        }
+        Method {
+            name: "setStatusInterval"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "statusInterval"; type: "uint" }
+        }
+        Method {
+            name: "setVideoOutput"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "videoOutput"; type: "bb::multimedia::VideoOutput::Type" }
+        }
+        Method {
+            name: "setVideoSourceRect"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "x"; type: "int" }
+            Parameter { name: "y"; type: "int" }
+            Parameter { name: "width"; type: "uint" }
+            Parameter { name: "height"; type: "uint" }
+        }
+        Method {
+            name: "setVolume"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "volume"; type: "double" }
+        }
+        Method {
+            name: "setWindowGroupId"
+            Parameter { name: "windowGroupId"; type: "string" }
+        }
+        Method {
+            name: "setWindowId"
+            Parameter { name: "windowId"; type: "string" }
+        }
+        Method { name: "stop"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "closedCaptionUrl"
+            type: "QUrl"
+            Parameter { name: "track"; type: "uint" }
+        }
+    }
+    Component {
+        name: "bb::multimedia::MediaState"
+        exports: [
+            "bb.multimedia/MediaState 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unprepared": 0,
+                "Prepared": 1,
+                "Started": 2,
+                "Paused": 3,
+                "Stopped": 4
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::NowPlayingConnection"
+        prototype: "QObject"
+        exports: [
+            "bb.multimedia/NowPlayingConnection 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            3
+        ]
+        Property { name: "acquired"; type: "bool"; isReadonly: true }
+        Property { name: "audioManagerHandle"; type: "QVariant" }
+        Property { name: "connectionName"; type: "string"; isReadonly: true }
+        Property { name: "controllerActive"; type: "bool"; isReadonly: true }
+        Property { name: "duration"; type: "QVariant" }
+        Property { name: "iconUrl"; type: "QUrl" }
+        Property { name: "lastRevokingConnectionName"; type: "string"; isReadonly: true }
+        Property { name: "lastRevokingConnectionPid"; type: "QVariant"; isReadonly: true }
+        Property { name: "nextEnabled"; type: "bool" }
+        Property { name: "mediaState"; type: "bb::multimedia::MediaState::Type" }
+        Property { name: "overlayStyle"; type: "bb::multimedia::OverlayStyle::Type" }
+        Property { name: "position"; type: "QVariant" }
+        Property { name: "preemptable"; type: "bool" }
+        Property { name: "preempted"; type: "bool"; isReadonly: true }
+        Property { name: "previousEnabled"; type: "bool" }
+        Property {
+            name: "priorityLevel"
+            type: "bb::multimedia::PriorityLevel::Type"
+            isReadonly: true
+        }
+        Property { name: "deviceMode"; type: "bb::multimedia::DeviceMode::Type"; isReadonly: true }
+        Property { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        Property { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type" }
+        Signal { name: "acquired" }
+        Signal {
+            name: "audioManagerHandleChanged"
+            Parameter { name: "audioManagerHandle"; type: "uint" }
+        }
+        Signal {
+            name: "audioManagerHandleChanged"
+            Parameter { name: "audioManagerHandle"; type: "QVariant" }
+        }
+        Signal {
+            name: "controllerActiveChanged"
+            Parameter { name: "controllerActive"; type: "bool" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "uint" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "QVariant" }
+        }
+        Signal { name: "forward" }
+        Signal {
+            name: "iconUrlChanged"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Signal {
+            name: "mediaStateChanged"
+            Parameter { name: "mediaState"; type: "bb::multimedia::MediaState::Type" }
+        }
+        Signal {
+            name: "metaDataChanged"
+            Parameter { name: "metadata"; type: "QVariantMap" }
+        }
+        Signal { name: "next" }
+        Signal {
+            name: "nextEnabledChanged"
+            Parameter { name: "nextEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "overlayStyleChanged"
+            Parameter { name: "overlayStyle"; type: "bb::multimedia::OverlayStyle::Type" }
+        }
+        Signal { name: "pause" }
+        Signal { name: "play" }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "position"; type: "uint" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "position"; type: "QVariant" }
+        }
+        Signal {
+            name: "preemptableChanged"
+            Parameter { name: "preemptable"; type: "bool" }
+        }
+        Signal { name: "previous" }
+        Signal {
+            name: "previousEnabledChanged"
+            Parameter { name: "previousEnabled"; type: "bool" }
+        }
+        Signal { name: "repeat" }
+        Signal {
+            name: "repeatRequest"
+            revision: 3
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Signal {
+            name: "repeatModeChanged"
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Signal { name: "revoked" }
+        Signal { name: "rewind" }
+        Signal { name: "shuffle" }
+        Signal {
+            name: "shuffleRequest"
+            revision: 3
+            Parameter { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type" }
+        }
+        Signal {
+            name: "shuffleModeChanged"
+            Parameter { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type" }
+        }
+        Signal { name: "stop" }
+        Method { name: "acquire"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "revoke"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "setDuration"
+            Parameter { name: "duration"; type: "uint" }
+        }
+        Method {
+            name: "setIconUrl"
+            Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "setMediaState"
+            Parameter { name: "state"; type: "bb::multimedia::MediaState::Type" }
+        }
+        Method {
+            name: "setMetaData"
+            Parameter { name: "metadata"; type: "QVariantMap" }
+        }
+        Method {
+            name: "setNextEnabled"
+            Parameter { name: "nextEnabled"; type: "bool" }
+        }
+        Method {
+            name: "setOverlayStyle"
+            Parameter { name: "overlayStyle"; type: "bb::multimedia::OverlayStyle::Type" }
+        }
+        Method {
+            name: "setPosition"
+            Parameter { name: "position"; type: "uint" }
+        }
+        Method {
+            name: "setPreemptable"
+            Parameter { name: "preemptable"; type: "bool" }
+        }
+        Method {
+            name: "setPreviousEnabled"
+            Parameter { name: "previousEnabled"; type: "bool" }
+        }
+        Method {
+            name: "setRepeatMode"
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Method {
+            name: "setShuffleMode"
+            Parameter { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type" }
+        }
+        Method { name: "trackChange"; type: "bb::multimedia::MediaError::Type" }
+    }
+    Component {
+        name: "bb::multimedia::NowPlayingController"
+        prototype: "QObject"
+        exports: [
+            "bb.multimedia/NowPlayingController 1.2",
+            "bb.multimedia/NowPlayingController 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            3
+        ]
+        Property { name: "duration"; type: "QVariant"; isReadonly: true }
+        Property { name: "nextEnabled"; type: "bool"; isReadonly: true }
+        Property { name: "previousEnabled"; type: "bool"; isReadonly: true }
+        Property { name: "mediaState"; type: "bb::multimedia::MediaState::Type"; isReadonly: true }
+        Property { name: "metaData"; type: "QVariantMap"; isReadonly: true }
+        Property { name: "position"; type: "QVariant"; isReadonly: true }
+        Property { name: "iconUrl"; type: "QUrl"; isReadonly: true }
+        Property { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type"; isReadonly: true }
+        Property { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type"; isReadonly: true }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "uint" }
+        }
+        Signal {
+            name: "durationChanged"
+            Parameter { name: "duration"; type: "QVariant" }
+        }
+        Signal {
+            name: "iconUrlChanged"
+            Parameter { name: "iconUrl"; type: "QUrl" }
+        }
+        Signal {
+            name: "mediaStateChanged"
+            Parameter { name: "mediaState"; type: "bb::multimedia::MediaState::Type" }
+        }
+        Signal {
+            name: "metaDataChanged"
+            Parameter { name: "metaData"; type: "QVariantMap" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "position"; type: "uint" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "position"; type: "QVariant" }
+        }
+        Signal {
+            name: "nextEnabledChanged"
+            Parameter { name: "nextEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "previousEnabledChanged"
+            Parameter { name: "prevEnabled"; type: "bool" }
+        }
+        Signal {
+            name: "repeatModeChanged"
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Signal { name: "trackChanged" }
+        Signal {
+            name: "shuffleModeChanged"
+            Parameter { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type" }
+        }
+        Method { name: "forward"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "setMute"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "muted"; type: "bool" }
+        }
+        Method { name: "next"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "previous"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "play"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "playPause"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "pause"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "repeat"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "repeat"
+            revision: 3
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "repeatMode"; type: "bb::multimedia::RepeatMode::Type" }
+        }
+        Method { name: "rewind"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "shuffle"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "shuffle"
+            revision: 3
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "shuffleMode"; type: "bb::multimedia::ShuffleMode::Type" }
+        }
+        Method { name: "stop"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "volumeUp"; type: "bb::multimedia::MediaError::Type" }
+        Method { name: "volumeDown"; type: "bb::multimedia::MediaError::Type" }
+        Method {
+            name: "setVolume"
+            type: "bb::multimedia::MediaError::Type"
+            Parameter { name: "value"; type: "double" }
+        }
+    }
+    Component {
+        name: "bb::multimedia::OverlayStyle"
+        exports: [
+            "bb.multimedia/OverlayStyle 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Plain": 0,
+                "Fancy": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::PriorityLevel"
+        exports: [
+            "bb.multimedia/PriorityLevel 1.2"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Low": 0,
+                "High": 1
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::QmlMediaKeyWatcher"
+        prototype: "bb::multimedia::MediaKeyWatcher"
+        exports: [
+            "bb.multimedia/MediaKeyWatcher 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Property { name: "key"; type: "bb::multimedia::MediaKey::Type" }
+    }
+    Component {
+        name: "bb::multimedia::QmlNowPlayingConnection"
+        prototype: "bb::multimedia::NowPlayingConnection"
+        exports: [
+            "bb.multimedia/NowPlayingConnection 1.0",
+            "bb.multimedia/NowPlayingConnection 1.3"
+        ]
+        exportMetaObjectRevisions: [
+            0,
+            3
+        ]
+        Property { name: "connectionName"; type: "string" }
+        Property { name: "priorityLevel"; type: "bb::multimedia::PriorityLevel::Type" }
+        Property { name: "deviceMode"; revision: 4; type: "bb::multimedia::DeviceMode::Type" }
+    }
+    Component {
+        name: "bb::multimedia::RepeatMode"
+        exports: [
+            "bb.multimedia/RepeatMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "Track": 1,
+                "All": 2,
+                "Unsupported": 3
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::ShuffleMode"
+        exports: [
+            "bb.multimedia/ShuffleMode 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "Unsupported": 0,
+                "Off": 1,
+                "All": 2
+            }
+        }
+    }
+    Component {
+        name: "bb::multimedia::SystemSound"
+        prototype: "QObject"
+        exports: [
+            "bb.multimedia/SystemSound 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "BatteryAlarm": 1,
+                "BrowserStartEvent": 2,
+                "CameraShutterEvent": 3,
+                "DeviceLockEvent": 4,
+                "DeviceUnlockEvent": 5,
+                "DeviceTetherEvent": 6,
+                "DeviceUntetherEvent": 7,
+                "GeneralNotification": 8,
+                "InputKeypress": 9,
+                "RecordingStartEvent": 10,
+                "RecordingStopEvent": 11,
+                "SapphireNotification": 12,
+                "SystemMasterVolumeReference": 13,
+                "VideoCallEvent": 14,
+                "VideoCallOutgoingEvent": 15,
+                "CameraBurstEvent": 16
+            }
+        }
+        Property { name: "sound"; type: "bb::multimedia::SystemSound::Type" }
+        Method { name: "play" }
+    }
+    Component {
+        name: "bb::multimedia::VideoOutput"
+        exports: [
+            "bb.multimedia/VideoOutput 1.0"
+        ]
+        exportMetaObjectRevisions: [
+            0
+        ]
+        isCreatable: false
+        Enum {
+            name: "Type"
+            values: {
+                "None": 0,
+                "PrimaryDisplay": 1,
+                "SecondaryDisplay": 2
+            }
+        }
+    }
+}
