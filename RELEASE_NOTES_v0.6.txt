@@ -1,0 +1,38 @@
+BerryCore v0.6 - Linux Emulation & Modern OpenSSL
+
+NEW FEATURES
+------------
+🐧 Linux Emulator (bb10-linux-1.0)
+   - Full RISC-V Linux environment on BB10!
+   - Just type 'linux' to launch
+   - 256 MB RAM, complete Linux kernel
+   - Network bridge support included
+
+🔐 OpenSSL 3.3.2 Upgrade
+   - Modern cryptography libraries (libssl.so.3, libcrypto.so.3)
+   - Enhanced security and compatibility
+   - Hybrid package maintains CLI tool compatibility
+
+IMPROVEMENTS
+------------
+✅ Fixed pforth-28 package structure
+✅ Simplified MOTD system (faster, silent failure when offline)
+✅ Enhanced upgrade mode in installer (faster updates)
+✅ Better package organization and verification
+
+PACKAGE DETAILS
+---------------
+- Total Packages: 73
+- Total Size: 279 MB
+- New Binaries: linux, openssl (upgraded), pforth (fixed)
+- Updated CATALOG with new tools
+
+INSTALLATION
+------------
+Download berrycore.zip and install.sh, then run:
+  cd /accounts/1000/shared/documents
+  sh install.sh
+
+For existing users: Upgrade mode automatically detects and preserves your installation!
+
+Full changelog: https://github.com/sw7ft/berrycore/blob/main/CHANGELOG.md
