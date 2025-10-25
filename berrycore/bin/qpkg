@@ -225,7 +225,42 @@ cmd_update() {
     fi
 }
 
-# Install a port (future implementation)
+# List available ports from repository
+cmd_ports() {
+    print_header "Available Ports"
+    
+    print_info "Fetching ports index from GitHub..."
+    echo ""
+    
+    # Fetch INDEX file from GitHub
+    INDEX_URL="$GITHUB_RAW/ports/INDEX"
+    INDEX_CONTENT=$(curl -s -m 5 "$INDEX_URL" 2>/dev/null)
+    
+    if [ -z "$INDEX_CONTENT" ]; then
+        print_error "Failed to fetch ports index from GitHub"
+        echo ""
+        echo "Check your internet connection or visit:"
+        echo "  https://github.com/$GITHUB_REPO/tree/main/ports"
+        exit 1
+    fi
+    
+    {
+        echo "Available ports to install:"
+        echo "==========================================================="
+        echo ""
+        
+        # Parse and display INDEX
+        echo "$INDEX_CONTENT" | grep -v "^#" | grep -v "^$" | while IFS='|' read -r name cat ver size desc; do
+            printf "  ${GREEN}%-20s${NC} ${BLUE}[%s]${NC} v%-6s %-6s %s\n" "$name" "$cat" "$ver" "$size" "$desc"
+        done
+        
+        echo ""
+        echo "Install with: ${GREEN}qpkg install <port-name>${NC}"
+        echo ""
+    } | paginate
+}
+
+# Install a port
 cmd_install() {
     PORT_NAME="$1"
     
@@ -236,17 +271,104 @@ cmd_install() {
     
     print_header "Installing Port: $PORT_NAME"
     
-    print_info "Feature coming soon!"
+    # Fetch INDEX to find the port
+    print_info "Searching for port: $PORT_NAME"
+    INDEX_URL="$GITHUB_RAW/ports/INDEX"
+    INDEX_CONTENT=$(curl -s -m 5 "$INDEX_URL" 2>/dev/null)
+    
+    if [ -z "$INDEX_CONTENT" ]; then
+        print_error "Failed to fetch ports index from GitHub"
+        exit 1
+    fi
+    
+    # Find port in INDEX
+    PORT_INFO=$(echo "$INDEX_CONTENT" | grep -v "^#" | grep "^$PORT_NAME|")
+    
+    if [ -z "$PORT_INFO" ]; then
+        print_error "Port '$PORT_NAME' not found in repository"
+        echo ""
+        echo "Available ports:"
+        echo "$INDEX_CONTENT" | grep -v "^#" | grep -v "^$" | cut -d'|' -f1 | sed 's/^/  /'
+        echo ""
+        echo "Or run: qpkg ports"
+        exit 1
+    fi
+    
+    # Parse port info
+    CATEGORY=$(echo "$PORT_INFO" | cut -d'|' -f2)
+    VERSION=$(echo "$PORT_INFO" | cut -d'|' -f3)
+    SIZE=$(echo "$PORT_INFO" | cut -d'|' -f4)
+    DESCRIPTION=$(echo "$PORT_INFO" | cut -d'|' -f5)
+    
+    # Construct filename and URL
+    FILENAME="${CATEGORY}-${PORT_NAME}-${VERSION}.zip"
+    DOWNLOAD_URL="$GITHUB_RAW/ports/$FILENAME"
+    
     echo ""
-    echo "This will download and install ports from:"
-    echo "  $GITHUB_RAW/ports/"
+    echo "Port: $PORT_NAME v$VERSION"
+    echo "Category: $CATEGORY"
+    echo "Size: $SIZE"
+    echo "Description: $DESCRIPTION"
     echo ""
-    echo "For now, visit:"
-    echo "  https://github.com/$GITHUB_REPO/tree/main/ports"
+    echo "Download URL: $DOWNLOAD_URL"
     echo ""
-    echo "Manually download and install with:"
-    echo "  cd $NATIVE_TOOLS"
-    echo "  unzip -o /path/to/port-package.zip"
+    echo -n "Install this port? [Y/n]: "
+    read CONFIRM
+    
+    if [ "$CONFIRM" != "" ] && [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+        echo "Installation cancelled."
+        exit 0
+    fi
+    
+    # Create temp directory
+    TEMP_DIR="/tmp/qpkg-$PORT_NAME-$$"
+    mkdir -p "$TEMP_DIR"
+    
+    # Download port
+    echo ""
+    print_info "Downloading $FILENAME..."
+    
+    if ! curl -L -o "$TEMP_DIR/$FILENAME" "$DOWNLOAD_URL" 2>&1 | grep -o '[0-9]*\.[0-9]' | tail -1 | while read pct; do printf "\r  Progress: %.0f%%" "$pct"; done; then
+        printf "\r  Progress: 100%%\n"
+        print_error "Download failed"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    fi
+    printf "\n"
+    
+    # Verify download
+    if [ ! -f "$TEMP_DIR/$FILENAME" ]; then
+        print_error "Downloaded file not found"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    fi
+    
+    print_success "Downloaded $FILENAME"
+    
+    # Install (extract to NATIVE_TOOLS)
+    echo ""
+    print_info "Installing to $NATIVE_TOOLS..."
+    
+    cd "$NATIVE_TOOLS" || exit 1
+    
+    if unzip -o "$TEMP_DIR/$FILENAME" 2>&1 | grep -v "Archive:" | grep -v "inflating:"; then
+        :
+    fi
+    
+    # Set executable permissions on binaries
+    if [ -d "$NATIVE_TOOLS/bin" ]; then
+        chmod +x "$NATIVE_TOOLS/bin"/* 2>/dev/null
+    fi
+    
+    # Clean up
+    rm -rf "$TEMP_DIR"
+    
+    echo ""
+    print_success "Port '$PORT_NAME' installed successfully!"
+    echo ""
+    echo "Binaries installed:"
+    unzip -l "$TEMP_DIR/$FILENAME" 2>/dev/null | grep "bin/" | awk '{print "  " $NF}' || echo "  Check: ls $NATIVE_TOOLS/bin"
+    echo ""
 }
 
 # Search for ports (future implementation)
@@ -521,10 +643,11 @@ ${BOLD}USAGE:${NC}
 
 ${BOLD}COMMANDS:${NC}
   ${GREEN}update${NC}              Check for and install BerryCore updates
+  ${GREEN}ports${NC}               List available ports from repository
+  ${GREEN}install${NC} <package>   Install a port package from repository
   ${GREEN}catalog${NC} [options]   Browse available binaries (replaces bclist)
   ${GREEN}bins${NC}                List all installed binaries (replaces bcbins)
   ${GREEN}info${NC} <binary>       Show binary information (replaces bcinfo)
-  ${YELLOW}install${NC} <package>   Install a port package (coming soon)
   list                List installed packages
   help                Show this help message
 
@@ -539,7 +662,8 @@ ${BOLD}EXAMPLES:${NC}
   qpkg catalog -s compress     # Search for compression tools
   qpkg bins                    # List all installed binaries
   qpkg info nano               # Show info about nano binary
-  qpkg install python          # Install Python port (coming soon)
+  qpkg ports                   # List available ports
+  qpkg install hydra           # Install hydra port from repository
 
 ${BOLD}REPOSITORY:${NC}
   https://github.com/$GITHUB_REPO
@@ -559,6 +683,12 @@ main() {
         update)
             cmd_update "$@"
             ;;
+        ports)
+            cmd_ports "$@"
+            ;;
+        install)
+            cmd_install "$@"
+            ;;
         catalog)
             cmd_catalog "$@"
             ;;
@@ -567,9 +697,6 @@ main() {
             ;;
         info)
             cmd_info "$@"
-            ;;
-        install)
-            cmd_install "$@"
             ;;
         search)
             cmd_search "$@"
