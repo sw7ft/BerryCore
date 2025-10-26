@@ -1,2 +1,2 @@
 berrycore/packages/gcc.zip filter=lfs diff=lfs merge=lfs -text
-toolchain/gcc-9.3.0-qnx8.tar.gz filter=lfs diff=lfs merge=lfs -text
+toolchain/*.tar.gz filter=lfs diff=lfs merge=lfs -text
