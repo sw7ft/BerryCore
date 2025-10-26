@@ -80,6 +80,13 @@ D=$INSTALL_DIR
 mkdir -p $D;
 cp berrycore.zip $D
 cd $D
+
+# Save old env.sh timestamp for upgrade detection
+OLD_ENV_TIME=0
+if [ -f "env.sh" ]; then
+    OLD_ENV_TIME=$(stat -f %m env.sh 2>/dev/null || stat -c %Y env.sh 2>/dev/null || echo 0)
+fi
+
 touch .nomedia .noindex
 unzip -o berrycore.zip
 # Note: berrycore.zip is kept in both locations (original and installation directory)
@@ -108,13 +115,12 @@ do
         # This is a heuristic - we assume if the package was installed before, it's still there
         SKIP_PKG=0
         
-        # Check if this is a new package by looking at modification time vs env.sh
-        if [ -f "env.sh" ]; then
-            ENV_TIME=$(stat -f %m env.sh 2>/dev/null || stat -c %Y env.sh 2>/dev/null || echo 0)
+        # Check if this is a new package by looking at modification time vs old env.sh
+        if [ $OLD_ENV_TIME -gt 0 ]; then
             PKG_TIME=$(stat -f %m "$pkg" 2>/dev/null || stat -c %Y "$pkg" 2>/dev/null || echo 0)
             
-            # If package is older than env.sh, it's likely already installed
-            if [ $PKG_TIME -lt $ENV_TIME ]; then
+            # If package is older than the previous env.sh, it's likely already installed
+            if [ $PKG_TIME -lt $OLD_ENV_TIME ]; then
                 SKIP_PKG=1
             fi
         fi
