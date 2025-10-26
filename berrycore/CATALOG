@@ -8,7 +8,9 @@ automake|dev|Tool for generating Makefile.in files
 bison|dev|Parser generator (yacc replacement)
 cflow|dev|C program call graph analyzer
 flex|dev|Fast lexical analyzer generator
-gcc|dev|GNU Compiler Collection (C/C++)
+gcc|dev|GNU Compiler Collection 4.6.3 (C/C++)
+gcc-arm|dev|GCC 9.3.0 ARM-native compiler (install via qpkg)
+g++|dev|C++ compiler (GCC 9.3.0 - install gcc-arm port)
 gdb|dev|GNU Debugger (if available)
 git|dev|Distributed version control system
 m4|dev|Macro processor
