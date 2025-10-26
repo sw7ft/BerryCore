@@ -9,17 +9,32 @@ Ports are additional software packages that can be installed on top of BerryCore
 ## Installing Ports
 
 ```bash
-# Search for available ports
-qpkg search <keyword>
+# Browse available ports
+qpkg ports
 
 # Install a specific port
 qpkg install <package-name>
 
 # Examples:
-qpkg install python     # Install Python 3.11
-qpkg install nodejs     # Install Node.js 20
-qpkg install postgresql # Install PostgreSQL 15
+qpkg install gcc-arm       # Install GCC 9.3.0 compiler
+qpkg install apache-php    # Install Apache + PHP web stack
+qpkg install hydra         # Install network security tool
 ```
+
+### Post-Installation Steps
+
+Some ports require additional setup after installation:
+
+**Apache + PHP:**
+```bash
+qpkg install apache-php
+apache-setup              # REQUIRED - configures Apache for BB10
+apachectl start           # Start the web server
+# Access at: http://[your-bb10-ip]:8080/
+```
+
+**Other ports:**
+Most ports work immediately after installation. Check `qpkg info <binary>` for details.
 
 ## Available Ports
 

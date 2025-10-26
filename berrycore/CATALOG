@@ -130,9 +130,10 @@ bcmotd|sys|Manage Message of the Day settings
 linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 
 # Web Development
-apache|web|Apache HTTP Server 2.4.58 (install apache-php via qpkg)
-apachectl|web|Apache control script (install apache-php via qpkg)
-httpd|web|Apache HTTP daemon (install apache-php via qpkg)
-php|web|PHP 7.4.33 CLI/CGI interpreter (install apache-php via qpkg)
-php-cgi|web|PHP CGI for web servers (install apache-php via qpkg)
+apache-setup|web|Setup Apache+PHP (run after installing apache-php port)
+apache|web|Apache HTTP Server 2.4.58 (qpkg install apache-php)
+apachectl|web|Apache control - start/stop/restart server
+httpd|web|Apache HTTP daemon binary
+php|web|PHP 7.4.33 CLI/CGI interpreter
+php-cgi|web|PHP CGI for Apache web server
 
