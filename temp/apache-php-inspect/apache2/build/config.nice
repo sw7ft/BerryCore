@@ -1,0 +1,16 @@
+#! /bin/sh
+#
+# Created by configure
+
+CC="arm-blackberry-qnx8eabi-gcc"; export CC
+"./configure" \
+"--host=arm-blackberry-qnx8eabi" \
+"--prefix=/accounts/1000/shared/misc/apache2" \
+"--with-apr=/accounts/1000/shared/misc/apache2" \
+"--with-apr-util=/accounts/1000/shared/misc/apache2" \
+"--with-pcre=/accounts/1000/shared/misc/apache2/bin/pcre2-config" \
+"--with-mpm=prefork" \
+"ap_cv_void_ptr_lt_long=no" \
+"host_alias=arm-blackberry-qnx8eabi" \
+"CC=arm-blackberry-qnx8eabi-gcc" \
+"$@"
