@@ -14,12 +14,29 @@ A complete web server stack for BlackBerry 10! Run a full-featured Apache web se
 # Install via qpkg
 qpkg install apache-php
 
+# Run setup (creates required symlinks)
+apache-setup
+
 # Verify installation
 httpd -v
 # Should show: Server version: Apache/2.4.58 (Unix)
 
 php -v
 # Should show: PHP 7.4.33 (cli)
+```
+
+### Why Setup is Needed
+
+Apache was compiled with hardcoded paths expecting to be installed at:
+- `/accounts/1000/shared/misc/apache2/`
+- `/accounts/1000/shared/misc/php/`
+
+But BerryCore installs to `$NATIVE_TOOLS/share/`. The `apache-setup` command creates symlinks so Apache can find its files.
+
+**Manual Setup (if needed):**
+```bash
+ln -s $NATIVE_TOOLS/share/apache2 /accounts/1000/shared/misc/apache2
+ln -s $NATIVE_TOOLS/share/php /accounts/1000/shared/misc/php
 ```
 
 ## Quick Start
@@ -34,8 +51,10 @@ apachectl start
 apachectl status
 
 # Your server is now running!
-# Access it at: http://[your-bb10-ip]
+# Access it at: http://[your-bb10-ip]:8080/
 ```
+
+**Note**: Apache runs on port **8080** (not 80) because port 80 requires root privileges on QNX/BB10.
 
 ### 2. Test PHP
 
@@ -49,7 +68,7 @@ phpinfo();
 ?>
 EOF
 
-# Access it at: http://[your-bb10-ip]/info.php
+# Access it at: http://[your-bb10-ip]:8080/info.php
 ```
 
 ### 3. Stop Apache
@@ -112,17 +131,27 @@ $NATIVE_TOOLS/share/php/etc/php.ini
 
 ### Change Apache Port
 
-By default, Apache uses port 80. To change it:
+By default, BerryCore's Apache uses port **8080** (configured by `apache-setup`). To change it to a different port:
 
 ```bash
 # Edit httpd.conf
-nano $NATIVE_TOOLS/share/apache2/conf/httpd.conf
+nano /accounts/1000/shared/misc/apache2/conf/httpd.conf
 
 # Find and change:
-# Listen 80
-# To:
 # Listen 8080
+# To:
+# Listen 3000  (or any other port)
+
+# Also update ServerName:
+# ServerName localhost:8080
+# To:
+# ServerName localhost:3000
+
+# Restart Apache
+apachectl restart
 ```
+
+**Note**: Ports below 1024 (like 80) require root privileges on QNX/BB10.
 
 ### Enable PHP in Apache
 
@@ -160,7 +189,7 @@ cat > index.php << 'EOF'
 </html>
 EOF
 
-# View it at http://[your-bb10-ip]/
+# View it at http://[your-bb10-ip]:8080/
 ```
 
 ### View Apache Logs
@@ -257,7 +286,7 @@ echo json_encode($data, JSON_PRETTY_PRINT);
 ?>
 ```
 
-Access at: `http://[your-bb10-ip]/api.php`
+Access at: `http://[your-bb10-ip]:8080/api.php`
 
 ## Apache Control Commands
 
@@ -298,15 +327,22 @@ phpdbg        # PHP debugger
 
 ### Apache won't start
 
+**First, make sure you ran the setup:**
+```bash
+apache-setup
+```
+
 Check logs:
 ```bash
-cat $NATIVE_TOOLS/share/apache2/logs/error_log
+cat /accounts/1000/shared/misc/apache2/logs/error_log
 ```
 
 Common issues:
-- Port 80 already in use (change to 8080 in httpd.conf)
-- Permission issues (ensure logs directory is writable)
-- Config syntax error (run `apachectl configtest`)
+- **Symlinks not created** - Run `apache-setup` to create them
+- **User 'daemon' not found** - Setup script fixes this (uses 'nobody')
+- **Port 80 permission denied** - Setup script changes to port 8080
+- **Log permission issues** - Setup script fixes this automatically
+- **Config syntax error** - Run `apachectl configtest`
 
 ### PHP not working
 

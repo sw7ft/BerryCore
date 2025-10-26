@@ -1,0 +1,92 @@
+#!/bin/sh
+# Apache+PHP Post-Installation Setup for BerryCore
+# Configures Apache to work on QNX/BB10
+
+echo "=========================================="
+echo "  Apache+PHP Setup for BerryCore"
+echo "=========================================="
+echo ""
+
+# Check if NATIVE_TOOLS is set
+if [ -z "$NATIVE_TOOLS" ]; then
+    echo "Error: NATIVE_TOOLS not set. Please source env.sh first."
+    echo "Run: . \$NATIVE_TOOLS/env.sh"
+    exit 1
+fi
+
+echo "Step 1: Creating symlinks..."
+# Create symlinks if they don't exist
+if [ ! -e /accounts/1000/shared/misc/apache2 ]; then
+    ln -s "$NATIVE_TOOLS/share/apache2" /accounts/1000/shared/misc/apache2
+    echo "  ✓ Created apache2 symlink"
+else
+    echo "  ✓ apache2 symlink already exists"
+fi
+
+if [ ! -e /accounts/1000/shared/misc/php ]; then
+    ln -s "$NATIVE_TOOLS/share/php" /accounts/1000/shared/misc/php
+    echo "  ✓ Created php symlink"
+else
+    echo "  ✓ php symlink already exists"
+fi
+
+echo ""
+echo "Step 2: Configuring Apache..."
+
+APACHE_CONF="/accounts/1000/shared/misc/apache2/conf/httpd.conf"
+APACHE_LOGS="/accounts/1000/shared/misc/apache2/logs"
+
+# Backup original config
+if [ ! -f "$APACHE_CONF.original" ]; then
+    cp "$APACHE_CONF" "$APACHE_CONF.original"
+    echo "  ✓ Backed up original config"
+fi
+
+# Fix User/Group (daemon doesn't exist on BB10, use nobody)
+sed -i 's/^User daemon/User nobody/' "$APACHE_CONF"
+sed -i 's/^Group daemon/Group nobody/' "$APACHE_CONF"
+echo "  ✓ Set Apache to run as 'nobody' user"
+
+# Change port to 8080 (port 80 requires root)
+sed -i 's/^Listen 80$/Listen 8080/' "$APACHE_CONF"
+echo "  ✓ Changed port to 8080 (non-privileged)"
+
+# Set ServerName to suppress hostname warning
+if ! grep -q "^ServerName" "$APACHE_CONF"; then
+    echo "ServerName localhost:8080" >> "$APACHE_CONF"
+    echo "  ✓ Set ServerName to localhost:8080"
+fi
+
+echo ""
+echo "Step 3: Fixing log directory permissions..."
+
+# Ensure logs directory exists and is writable
+mkdir -p "$APACHE_LOGS"
+chmod 777 "$APACHE_LOGS"
+touch "$APACHE_LOGS/error_log" "$APACHE_LOGS/access_log" 2>/dev/null
+chmod 666 "$APACHE_LOGS"/*.log 2>/dev/null
+echo "  ✓ Log directory configured"
+
+echo ""
+echo "=========================================="
+echo "  Setup Complete!"
+echo "=========================================="
+echo ""
+echo "Start Apache:"
+echo "  apachectl start"
+echo ""
+echo "Check status:"
+echo "  apachectl status"
+echo ""
+echo "Access your server:"
+echo "  http://[your-bb10-ip]:8080/"
+echo ""
+echo "Test PHP:"
+echo "  http://[your-bb10-ip]:8080/info.php"
+echo ""
+echo "Stop Apache:"
+echo "  apachectl stop"
+echo ""
+echo "View logs:"
+echo "  tail -f $APACHE_LOGS/error_log"
+echo "=========================================="
