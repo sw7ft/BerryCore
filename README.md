@@ -67,12 +67,27 @@ This project is dedicated to you, and to the enduring legacy of the **BlackBerry
 
 ---
 
+## ⚖️ **Legal & Licensing**
+
+BerryCore is an **open-source project** that compiles and packages existing open-source software for QNX/BlackBerry 10 devices.  
+
+**Important Notes:**
+- All included packages respect their original licenses (GPL, MIT, Apache, etc.)
+- This project does **not** distribute proprietary BlackBerry or QNX system files
+- Users must have legitimate access to their own BB10 devices and software
+- Not affiliated with or endorsed by BlackBerry Limited
+- BlackBerry®, BB10®, and QNX® are registered trademarks of BlackBerry Limited
+
+**For developers**: If you're building packages with the toolchain, see `toolchain/README.md` for important licensing information regarding NDK components.
+
+---
+
 ## 🚀 **Moving Forward**
 
 Our mission is simple:  
 To **extend**, **modernize**, and **streamline** the vision of Berry Much OS.  
 
-By uniting QNX’s real-time reliability with modern open-source tooling, we aim to make these devices **usable, hackable, and developer-friendly again** — both as daily drivers and as educational systems for embedded computing.
+By uniting QNX's real-time reliability with modern open-source tooling, we aim to make these devices **usable, hackable, and developer-friendly again** — both as daily drivers and as educational systems for embedded computing.
 
 ## 💖 **Support Development**
 
