@@ -1,4 +1,9 @@
 berrycore.zip
 .DS_Store
 .frolic-session.json
-.frolic-session.json
+
+# Proprietary toolchain files (keep local, don't distribute)
+toolchain/bbndk_target_20251026.tar.gz
+toolchain/bbndk_host_20251026.tar.gz
+toolchain/qnx800_toolchain_20251026.tar.gz
+toolchain/gcc9_build_20251026.tar.gz
