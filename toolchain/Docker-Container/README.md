@@ -1,4 +1,4 @@
-# BB10 NDK Docker Container
+# BB10 GCC 9 Docker Container
 
 🐳 **Development environment for BlackBerry 10 cross-compilation**
 
@@ -6,7 +6,7 @@
 
 ## Docker Hub
 
-**Container**: [`sw7ft/bb10-ndk`](https://hub.docker.com/repository/docker/sw7ft/bb10-ndk/general)
+**Container**: [`sw7ft/bb10-gcc9`](https://hub.docker.com/repository/docker/sw7ft/bb10-gcc9/general)
 
 ---
 
@@ -22,13 +22,13 @@
 
 ```bash
 # Pull container
-docker pull sw7ft/bb10-ndk
+docker pull sw7ft/bb10-gcc9
 
 # Run interactively
-docker run -it sw7ft/bb10-ndk
+docker run -it sw7ft/bb10-gcc9
 
 # With project directory mounted
-docker run -it -v $(pwd):/workspace sw7ft/bb10-ndk
+docker run -it -v $(pwd):/workspace sw7ft/bb10-gcc9
 ```
 
 ---
@@ -47,11 +47,11 @@ arm-blackberry-qnx8eabi-gcc myapp.c -o myapp
 
 ---
 
-## Toolchain Files
+## Toolchain Archive
 
-The GCC 9.3.0 toolchain and related files are located in the parent `toolchain/` directory of this repository.
+The container includes GCC 9.3.0 toolchain components. Toolchain archives are available in the parent `toolchain/` directory for manual setup.
 
-See `../README.md` for toolchain documentation and setup instructions.
+See `../README.md` for documentation and setup instructions.
 
 ---
 
