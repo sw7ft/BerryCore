@@ -74,11 +74,10 @@ BerryCore is an **open-source project** that compiles and packages existing open
 **Important Notes:**
 - All included packages respect their original licenses (GPL, MIT, Apache, etc.)
 - This project does **not** distribute proprietary BlackBerry or QNX system files
-- Users must have legitimate access to their own BB10 devices and software
 - Not affiliated with or endorsed by BlackBerry Limited
 - BlackBerry®, BB10®, and QNX® are registered trademarks of BlackBerry Limited
 
-**For developers**: If you're building packages with the toolchain, see `toolchain/README.md` for important licensing information regarding NDK components.
+**For developers**: A Docker container with pre-configured toolchain access is available. The BB10 NDK is licensed by BlackBerry for registered developers. See `toolchain/` for details.
 
 ---
 
