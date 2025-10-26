@@ -19,9 +19,9 @@
 # This file is generated from envvars-std.in
 #
 if test "x$LD_LIBRARY_PATH" != "x" ; then
-  LD_LIBRARY_PATH="/accounts/1000/shared/misc/apache2/lib:$LD_LIBRARY_PATH"
+  LD_LIBRARY_PATH="/accounts/1000/shared/misc/berrycore/share/apache2/lib:$LD_LIBRARY_PATH"
 else
-  LD_LIBRARY_PATH="/accounts/1000/shared/misc/apache2/lib"
+  LD_LIBRARY_PATH="/accounts/1000/shared/misc/berrycore/share/apache2/lib"
 fi
 export LD_LIBRARY_PATH
 #

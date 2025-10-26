@@ -28,14 +28,14 @@ package apxs;
 #   is the empty string.
 
 my $destdir = "";
-my $ddi = rindex($0, "/accounts/1000/shared/misc/apache2/bin");
+my $ddi = rindex($0, "/accounts/1000/shared/misc/berrycore/share/apache2/bin");
 if ($ddi >= 0) {
   $destdir = substr($0, 0, $ddi);
 }
 
 my %config_vars = ();
 
-my $installbuilddir = "/accounts/1000/shared/misc/apache2/build";
+my $installbuilddir = "/accounts/1000/shared/misc/berrycore/share/apache2/build";
 get_config_vars($destdir . "$installbuilddir/config_vars.mk",\%config_vars);
 
 # read the configuration variables once

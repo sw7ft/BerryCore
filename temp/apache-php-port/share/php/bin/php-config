@@ -1,8 +1,8 @@
 #! /bin/sh
 
 SED="/bin/sed"
-prefix="/accounts/1000/shared/misc/php"
-datarootdir="/accounts/1000/shared/misc/php/php"
+prefix="/accounts/1000/shared/misc/berrycore/share/php"
+datarootdir="/accounts/1000/shared/misc/berrycore/share/php/php"
 exec_prefix="${prefix}"
 version="7.4.33"
 vernum="70433"
@@ -10,17 +10,17 @@ include_dir="${prefix}/include/php"
 includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib"
 ldflags=""
 libs="  -lm  -lz "
-extension_dir='/accounts/1000/shared/misc/php/lib/php/extensions/no-debug-non-zts-20190902'
+extension_dir='/accounts/1000/shared/misc/berrycore/share/php/lib/php/extensions/no-debug-non-zts-20190902'
 man_dir=`eval echo ${datarootdir}/man`
 program_prefix=""
 program_suffix=""
 exe_extension=""
 php_cli_binary=NONE
 php_cgi_binary=NONE
-configure_options=" '--host=arm-blackberry-qnx8eabi' '--prefix=/accounts/1000/shared/misc/php' '--enable-cgi' '--enable-cli' '--disable-all' '--without-libxml' '--without-pear' '--with-zlib' '--without-pcre-jit' 'host_alias=arm-blackberry-qnx8eabi'"
+configure_options=" '--host=arm-blackberry-qnx8eabi' '--prefix=/accounts/1000/shared/misc/berrycore/share/php' '--enable-cgi' '--enable-cli' '--disable-all' '--without-libxml' '--without-pear' '--with-zlib' '--without-pcre-jit' 'host_alias=arm-blackberry-qnx8eabi'"
 php_sapis=" cli phpdbg cgi"
 ini_dir=""
-ini_path="/accounts/1000/shared/misc/php/lib"
+ini_path="/accounts/1000/shared/misc/berrycore/share/php/lib"
 
 # Set php_cli_binary and php_cgi_binary if available
 for sapi in $php_sapis; do

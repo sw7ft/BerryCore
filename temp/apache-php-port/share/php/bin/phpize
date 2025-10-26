@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Variable declaration
-prefix='/accounts/1000/shared/misc/php'
-datarootdir='/accounts/1000/shared/misc/php/php'
+prefix='/accounts/1000/shared/misc/berrycore/share/php'
+datarootdir='/accounts/1000/shared/misc/berrycore/share/php/php'
 exec_prefix="`eval echo ${prefix}`"
 phpdir="`eval echo ${exec_prefix}/lib/php`/build"
 includedir="`eval echo ${prefix}/include`/php"
@@ -151,7 +151,7 @@ phpize_copy_files()
 phpize_replace_prefix()
 {
   $SED \
-  -e "s#/accounts/1000/shared/misc/php#$prefix#" \
+  -e "s#/accounts/1000/shared/misc/berrycore/share/php#$prefix#" \
   < "$phpdir/phpize.m4" > configure.ac
 }
 

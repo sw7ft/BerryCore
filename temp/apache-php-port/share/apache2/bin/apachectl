@@ -42,11 +42,11 @@ ARGV="$@"
 # --------------------                              --------------------
 # 
 # the path to your httpd binary, including options if necessary
-HTTPD='/accounts/1000/shared/misc/apache2/bin/httpd'
+HTTPD='/accounts/1000/shared/misc/berrycore/share/apache2/bin/httpd'
 #
 # pick up any necessary environment variables
-if test -f /accounts/1000/shared/misc/apache2/bin/envvars; then
-  . /accounts/1000/shared/misc/apache2/bin/envvars
+if test -f /accounts/1000/shared/misc/berrycore/share/apache2/bin/envvars; then
+  . /accounts/1000/shared/misc/berrycore/share/apache2/bin/envvars
 fi
 #
 # a command that outputs a formatted text version of the HTML at the
