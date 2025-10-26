@@ -1,0 +1,22 @@
+#!/bin/sh
+# tmux wrapper for QNX
+# Handles library path, locale settings, and socket directory
+
+# Get script directory and set library path
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+export LD_LIBRARY_PATH="$SCRIPT_DIR/../lib:$LD_LIBRARY_PATH"
+
+# Set locale to avoid "invalid LC_ALL, LC_CTYPE or LANG" error
+# QNX has limited locale support, use POSIX/C locale
+export LC_ALL="${LC_ALL:-C}"
+export LANG="${LANG:-C}"
+
+# Set TMUX_TMPDIR to /tmp (QNX doesn't have /dev/shm)
+# tmux uses this directory for socket files
+export TMUX_TMPDIR="${TMUX_TMPDIR:-/tmp}"
+
+# Ensure the tmp directory exists
+mkdir -p "$TMUX_TMPDIR" 2>/dev/null
+
+# Execute the real tmux binary
+exec "$SCRIPT_DIR/tmux.bin" "$@"

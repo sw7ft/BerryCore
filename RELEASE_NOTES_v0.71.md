@@ -243,6 +243,27 @@ qpkg install hydra
 hydra -l admin -P wordlist.txt ssh://target.example.com
 ```
 
+### Terminal Multiplexing
+```bash
+# Upgrade to tmux 3.3a
+qpkg install tmux
+
+# Start a persistent session
+tmux new -s work
+
+# Work in multiple panes
+Ctrl-b %    # Split vertically
+Ctrl-b "    # Split horizontally
+
+# Detach (keeps session running)
+Ctrl-b d
+
+# Later, reattach
+tmux attach -t work
+
+# Perfect for long-running processes over SSH!
+```
+
 ### Stay Updated
 ```bash
 # Check for BerryCore updates
