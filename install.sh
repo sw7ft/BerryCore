@@ -2,7 +2,7 @@
 
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.6 Installation"
+echo "     BerryCore v0.71 Installation"
 echo "==========================================================="
 echo ""
 

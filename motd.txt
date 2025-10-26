@@ -1,1 +1,16 @@
-BerryCore v0.7 Released with Linux 
+🎉 BerryCore v0.71 - Package Manager & Ports Repository! 🚀
+
+NEW: qpkg Package Manager!
+  • qpkg update - Update BerryCore from GitHub
+  • qpkg ports - Browse 3 new installable ports
+  • qpkg install - One-command package installation
+  • qpkg catalog - Enhanced binary discovery
+
+NEW PORTS AVAILABLE:
+  📦 gcc-arm (33M) - GCC 9.3.0 for on-device compilation
+  🌐 apache-php (43M) - Apache 2.4.58 + PHP 7.4.33 web stack  
+  🔐 hydra (165K) - Network password auditing tool
+
+Install with: qpkg install <package>
+
+Full release notes: github.com/sw7ft/BerryCore/releases
