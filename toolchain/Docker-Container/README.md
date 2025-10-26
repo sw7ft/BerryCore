@@ -35,7 +35,20 @@ docker run -it -v $(pwd):/workspace sw7ft/bb10-gcc9
 
 ## Usage
 
-Inside the container:
+**Before compiling**, explore the toolchain archive directory and extract the necessary files:
+
+```bash
+# Navigate to toolchain directory
+cd /root/toolchain-gcc9-archive/toolchain_transfer/
+
+# List available archives
+ls -lh
+
+# Extract toolchain components as needed
+# (see documentation for specific extraction instructions)
+```
+
+Then activate the toolchain and compile:
 
 ```bash
 # Activate toolchain
@@ -49,9 +62,12 @@ arm-blackberry-qnx8eabi-gcc myapp.c -o myapp
 
 ## Toolchain Archive
 
-The container includes GCC 9.3.0 toolchain components. Toolchain archives are available in the parent `toolchain/` directory for manual setup.
+Inside the container, toolchain archives are located at:
+```
+/root/toolchain-gcc9-archive/toolchain_transfer/
+```
 
-See `../README.md` for documentation and setup instructions.
+For manual setup outside the container, see the parent `toolchain/` directory and `../README.md` for documentation.
 
 ---
 
