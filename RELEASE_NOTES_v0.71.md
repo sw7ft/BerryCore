@@ -103,6 +103,25 @@ hydra -l admin -P passwords.txt ssh://192.168.1.1
 
 ---
 
+#### 4️⃣ **tmux 3.3a Terminal Multiplexer** (`tmux` - 2.5 MB)
+**Upgrade from tmux 2.0 to 3.3a!**
+
+- **Multiple windows and split panes** - Work in multiple terminals simultaneously
+- **Session persistence** - Detach and reattach sessions (survives SSH disconnections!)
+- **Bundled libevent 2.1.12** - All dependencies included
+- **Wrapper script** - Handles library paths and locale settings automatically
+- **Extensive configuration** - Customize via `~/.tmux.conf`
+
+```bash
+qpkg install tmux
+tmux new -s work
+# Ctrl-b d to detach, tmux attach -t work to reattach
+```
+
+**Perfect for remote SSH sessions!** Keep your work running even if you disconnect.
+
+---
+
 ## 🎨 NEW FEATURES
 
 ### Enhanced Binary Catalog
