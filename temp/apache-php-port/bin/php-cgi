@@ -1,0 +1,4 @@
+#!/bin/sh
+# PHP CGI wrapper for BerryCore
+exec "$NATIVE_TOOLS/share/php/bin/php-cgi" "$@"
+

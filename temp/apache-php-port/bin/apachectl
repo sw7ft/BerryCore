@@ -1,0 +1,4 @@
+#!/bin/sh
+# Apache Control wrapper for BerryCore
+exec "$NATIVE_TOOLS/share/apache2/bin/apachectl" "$@"
+
