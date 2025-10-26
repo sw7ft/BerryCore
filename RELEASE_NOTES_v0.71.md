@@ -147,8 +147,8 @@ qpkg install gcc-arm          # Install with one command
 - **Cataloged Tools**: 137
 
 ### Ports Repository
-- **Available Ports**: 3
-- **Total Port Size**: 76 MB (compressed)
+- **Available Ports**: 4
+- **Total Port Size**: 78.5 MB (compressed)
 - **Installation**: On-demand via `qpkg install`
 
 ### New Categories in CATALOG

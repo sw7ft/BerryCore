@@ -58,7 +58,7 @@ git|vcs|Distributed version control
 tig|vcs|Text-mode interface for Git
 
 # System Tools
-tmux|sys|Terminal multiplexer
+tmux|sys|Terminal multiplexer v2.0 (upgrade to 3.3a via qpkg install tmux)
 htop|sys|Interactive process viewer
 lsof|sys|List open files
 file|sys|Determine file type
