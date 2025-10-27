@@ -71,6 +71,9 @@ echo "Install additional software:"
 echo "  qpkg ports          Browse available ports"
 echo "  qpkg install NAME   Install a port package"
 echo ""
+echo "Quick navigation shortcuts:"
+echo "  misc, docs, downloads, sdcard, bc"
+echo ""
 echo "Quick start: nano, vim, git, nmap, curl, linux, hydra"
 echo "==========================================================="
 
@@ -89,5 +92,12 @@ if [ "${BERRYCORE_MOTD_ENABLED:-1}" = "1" ]; then
         echo "$MOTD_TEXT"
     fi
 fi
+
+# Quick navigation aliases for common BB10 directories
+alias misc='cd /accounts/1000/shared/misc'
+alias docs='cd /accounts/1000/shared/documents'
+alias downloads='cd /accounts/1000/shared/downloads'
+alias sdcard='cd /accounts/1000/removable/sdcard'
+alias bc='cd $NATIVE_TOOLS'
 
 echo ""
