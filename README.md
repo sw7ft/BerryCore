@@ -22,12 +22,12 @@ New to BerryCore? Watch these step-by-step video guides:
 ### 1️⃣ **Transferring Files to Your Device**
 Learn how to download the release files and transfer them to your BlackBerry 10 device.
 
-👉 **[Watch: How to Transfer BerryCore Files](https://youtube.com/placeholder)**
+👉 **[Watch: How to Transfer BerryCore Files](https://www.youtube.com/shorts/j-kRBxrv4XI)**
 
 ### 2️⃣ **Installing BerryCore**
 Complete installation walkthrough from start to finish.
 
-👉 **[Watch: How to Install BerryCore](https://youtube.com/placeholder)**
+👉 **[Watch: How to Install BerryCore](https://www.youtube.com/shorts/6paUBxsP2yU)**
 
 ---
 
