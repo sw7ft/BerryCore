@@ -15,6 +15,22 @@ BerryCore provides an expanded runtime layer, updated binaries, and streamlined 
 
 ---
 
+## 📺 **How-To Videos**
+
+New to BerryCore? Watch these step-by-step video guides:
+
+### 1️⃣ **Transferring Files to Your Device**
+Learn how to download the release files and transfer them to your BlackBerry 10 device.
+
+👉 **[Watch: How to Transfer BerryCore Files](https://youtube.com/placeholder)**
+
+### 2️⃣ **Installing BerryCore**
+Complete installation walkthrough from start to finish.
+
+👉 **[Watch: How to Install BerryCore](https://youtube.com/placeholder)**
+
+---
+
 ## 🕰️ **Honoring the Legacy**
 
 This project is built as a **continuation and tribute** to the incredible work done by the developers of **Berry Much OS**.  
