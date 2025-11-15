@@ -29,6 +29,12 @@ Complete installation walkthrough from start to finish.
 
 👉 **[Watch: How to Install BerryCore](https://www.youtube.com/shorts/6paUBxsP2yU)**
 
+### 3️⃣ **Setting Up SSH to Your Device**
+Configure SSH access for remote development and file transfers.  
+*View video description for detailed instructions.*
+
+👉 **[Watch: How to Setup SSH to Your Device](https://youtube.com/shorts/pKX2x4o4w1I)**
+
 ---
 
 ## 🕰️ **Honoring the Legacy**
