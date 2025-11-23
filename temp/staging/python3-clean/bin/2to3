@@ -1,7 +1,0 @@
-#!/bin/sh
-# 2to3 wrapper for BerryCore
-SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
-PYTHON_HOME="$SCRIPT_DIR/../lib/python3_ntoarmv7-qnx-static"
-export PYTHONHOME="$PYTHON_HOME"
-exec "$PYTHON_HOME/tools/python3/2to3-3.11" "$@"
-

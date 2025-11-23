@@ -1,5 +1,0 @@
-#!/home/builder/vcpkg/installed/ntoarmv7-qnx-static/tools/python3/bin/python3.11
-
-import pydoc
-if __name__ == '__main__':
-    pydoc.cli()

@@ -1,7 +1,0 @@
-/*!
- * @copyright
- * Copyright BlackBerry Limited, 2014
- * BlackBerry Limited. All rights reserved.
- */
-
-#include <bb/platform/DataLockState.hpp>

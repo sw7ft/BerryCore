@@ -1,6 +1,0 @@
-/*!
- * @copyright
- * Copyright (C) 2013 BlackBerry Limited. All rights reserved.
- */
-
-#include <bb/system/phone/CallCommandResponse.hpp>

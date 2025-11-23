@@ -1,6 +1,0 @@
-Package: python3
-Version: 3.11.10
-Depends: bzip2, expat, libffi, liblzma, openssl, python3:x64-linux-release, readline, sqlite3, vcpkg-get-python:x64-linux-release, zlib
-Architecture: ntoarmv7-qnx-static
-Multi-Arch: same
-Description: The Python programming language
