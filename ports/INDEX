@@ -14,6 +14,7 @@
 apache-php|web|2.4.58|43M|Apache HTTP Server 2.4.58 + PHP 7.4.33 web stack
 berrypy|web|2.1.0|75K|BlackBerry app platform manager with smart app requirements and setup notifications (requires python3)
 berrysnip|util|1.0|24K|Snippet & notes manager with web UI and TUI (requires python3)
+elinks|web|0.17.0|1.1M|Text-based web browser with SSL/TLS, JavaScript (QuickJS), and CSS support
 hydra|net|9.5|165K|Fast network logon cracker - password auditing tool
 python3|lang|3.11.10|25M|Python 3.11 interpreter with pip and full standard library
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
