@@ -1,0 +1,132 @@
+BerryCore v0.74 Release Files
+================================
+
+Release Date: November 23, 2025
+GitHub Tag: v0.74
+
+RELEASE FILES
+-------------
+
+1. berrycore.zip
+   - Size: 176 MB
+   - Description: Main BerryCore package with 73 core packages
+   - SHA256: 680ed075130ae200312663b93b3f2c19d214ba2f397eb3832b38ecf5b5833b3f
+
+2. install.sh
+   - Size: 7.4 KB
+   - Description: Installation script for BerryCore v0.74
+   - SHA256: 63a687217f4c82e035a487465e8444c2c7217ecf60a0e08697e9b454216c247b
+
+INSTALLATION
+------------
+
+On BlackBerry 10 device:
+
+1. Download both files to /accounts/1000/shared/documents/
+2. Run: sh install.sh
+3. Follow prompts
+4. Restart terminal or source env.sh
+
+Or use qpkg update (if already have BerryCore installed)
+
+WHAT'S NEW IN v0.74
+-------------------
+
+🌉 Term49Bridge-API
+- Android runtime bridge for BB10
+- Enables advanced permissions (audio recording, etc.)
+- Located in: bar-files/Term49Bridge-API.apk
+- Size: 79 KB
+
+🌐 ELinks 0.17.0 (New Port)
+- Text-based web browser
+- SSL/TLS with bundled Mozilla CA certificates (225KB)
+- Wildcard certificate support (*.example.com)
+- JavaScript engine (QuickJS ES2020+)
+- CSS rendering
+- Install: qpkg install elinks
+
+📱 BerryPy 2.1.0 (Upgraded)
+- Smart app requirements system
+- Pre-install requirement detection
+- Setup instructions and notifications
+- New apps: Telegram V7, RocketChat V3
+
+📦 Port Count: 7 total
+- apache-php (web, 43 MB)
+- berrypy (web, 75 KB)
+- berrysnip (util, 24 KB)
+- elinks (web, 1.3 MB) ⭐ NEW - with SSL certificates
+- hydra (net, 165 KB)
+- python3 (lang, 25 MB)
+- tmux (sys, 2.5 MB)
+
+PACKAGE CONTENTS
+----------------
+
+Core System:
+- 73 packages (~241 MB compressed)
+- 100+ command-line binaries
+- GCC 4.6.3, Git, Python, Bash, Zsh
+- Nano, Vim, Curl, Wget, Rsync
+- OpenSSL 3.3.2, nmap, sshpass
+- QuickJS, pforth, xeyes
+- And much more!
+
+Version Files:
+- VERSION: 0.74
+- env.sh: Updated welcome message
+- CATALOG: 149 entries (including ELinks)
+
+VERIFICATION
+------------
+
+After installation, verify with:
+
+  cat $NATIVE_TOOLS/VERSION
+  # Should show: 0.74
+
+  qpkg catalog
+  # Should list 100+ binaries
+
+  which elinks
+  # Should show: /accounts/1000/shared/misc/berrycore/bin/elinks
+
+RELEASE NOTES
+-------------
+
+Full release notes available in:
+RELEASE_NOTES_v0.74.md
+
+SUPPORT
+-------
+
+Repository: https://github.com/sw7ft/BerryCore
+Issues: https://github.com/sw7ft/BerryCore/issues
+Releases: https://github.com/sw7ft/BerryCore/releases
+
+CHECKSUMS
+---------
+
+To verify file integrity:
+
+  shasum -a 256 berrycore.zip
+  # Should match: 680ed075130ae200312663b93b3f2c19d214ba2f397eb3832b38ecf5b5833b3f
+
+  shasum -a 256 install.sh
+  # Should match: 63a687217f4c82e035a487465e8444c2c7217ecf60a0e08697e9b454216c247b
+
+LICENSE
+-------
+
+BerryCore is provided as-is for BlackBerry 10 enthusiasts.
+Individual packages retain their original open-source licenses.
+
+Not affiliated with or endorsed by BlackBerry Limited.
+BlackBerry®, BB10®, and QNX® are registered trademarks.
+
+================================
+BerryCore v0.74 - November 2025
+Keeping BlackBerry 10 Alive! 🍇
+================================
+

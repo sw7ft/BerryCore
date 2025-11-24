@@ -61,7 +61,7 @@ BlackBerry 10's native API is limited. Many advanced features require Android pe
 ELinks brings modern web browsing to the terminal with complete HTTPS support, JavaScript execution, and CSS rendering.
 
 **Key Features:**
-- ✅ **SSL/TLS Support** - Browse HTTPS sites securely
+- ✅ **SSL/TLS Support** - Browse HTTPS sites securely with bundled Mozilla CA certificates
 - ✅ **JavaScript Engine** - Powered by QuickJS (ES2020+)
 - ✅ **CSS Rendering** - libcss + libdom for proper styling
 - ✅ **Wildcard SSL Fixed** - Handles *.example.com certificates
@@ -106,12 +106,13 @@ q        - Quit
 ```
 
 **SSL/TLS Configuration:**
-The launcher script automatically configures SSL certificates using BerryCore's cert bundle, ensuring compatibility with modern HTTPS sites.
+The launcher script automatically configures SSL certificates using the bundled Mozilla CA certificate bundle (225KB), ensuring compatibility with modern HTTPS sites including those using wildcard certificates. No additional configuration required!
 
 **Technical Details:**
 - Version: 0.17.0
 - Binary Size: 2.2 MB
-- SSL: OpenSSL 1.0.1i (QNX system) + BerryCore certificates
+- Port Size: 1.3 MB (with SSL certificates)
+- SSL: OpenSSL 1.0.1i (QNX system) + Mozilla CA bundle (225KB, 150+ root certificates)
 - JavaScript: QuickJS (static linked)
 - CSS: libcss 0.9.2
 - DOM: libdom (NetSurf)
@@ -200,13 +201,20 @@ This dramatically improves the user installation experience!
 ### ELinks SSL/TLS Configuration
 
 ELinks uses a launcher script (`elinks_run.sh`) that:
-1. Sets `LD_LIBRARY_PATH` to BerryCore SSL libraries
-2. Configures `CURL_CA_BUNDLE` for certificate validation
-3. Sets `SSL_CERT_FILE` for proper SSL/TLS
-4. Handles app sandbox restrictions
+1. Sets `LD_LIBRARY_PATH` to use BerryCore's OpenSSL 1.0.0 libraries (wildcard SSL support)
+2. Configures `CURL_CA_BUNDLE` to use bundled Mozilla CA certificates (150+ root CAs)
+3. Sets `SSL_CERT_FILE` to the bundled certificate bundle
+4. Handles app sandbox restrictions (HOME in read-only appdata)
 5. Falls back to `/tmp` for config if needed
 
-This ensures wildcard SSL certificates (*.example.com) work correctly.
+**SSL Certificate Bundle:**
+- **Source:** Mozilla CA Certificate Store (latest)
+- **Location:** `$NATIVE_TOOLS/share/elinks/ssl/cacert.pem`
+- **Size:** 225 KB (uncompressed)
+- **Root CAs:** 150+ trusted certificate authorities
+- **Coverage:** Works with all major HTTPS sites including wildcard certificates
+
+This ensures ELinks can securely browse modern HTTPS websites without manual certificate configuration.
 
 ### BerryPy Catalog Format
 

@@ -1,3 +1,23 @@
-BerryCore v0.73 released
+╔══════════════════════════════════════════════════════════════════╗
+║                   🎉 BerryCore v0.74 Released! 🎉                ║
+╚══════════════════════════════════════════════════════════════════╝
 
+🌐 NEW: ELinks 0.17.0 Text Browser
+   • Full HTTPS/SSL support with bundled Mozilla certificates
+   • JavaScript (QuickJS ES2020+) & CSS rendering
+   • Install: qpkg install elinks
+
+🌉 NEW: Term49Bridge-API
+   • Exposes Android runtime with full API access
+   • Enable advanced permissions (background audio, etc.)
+   • Location: bar-files/Term49Bridge-API.apk
+
+📱 UPGRADED: BerryPy 2.1.0
+   • Smart app requirements system
+   • New apps: Telegram V7, RocketChat V3
+   • Pre-install requirement detection
+
+📦 73 Core Packages | 7 Ports | 100+ Binaries
+
+Full release notes: https://github.com/sw7ft/BerryCore/releases
 
