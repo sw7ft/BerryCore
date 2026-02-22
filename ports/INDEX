@@ -17,5 +17,6 @@ berrysnip|util|1.0|24K|Snippet & notes manager with web UI and TUI (requires pyt
 elinks|web|0.17.0|1.3M|Text-based web browser with SSL/TLS, JavaScript (QuickJS), CSS, and bundled Mozilla CA certificates
 hydra|net|9.5|165K|Fast network logon cracker - password auditing tool
 python3|lang|3.11.10|25M|Python 3.11 interpreter with pip and full standard library
+chromium-shell|web|1.0|61M|Chromium Content Shell - lightweight browser engine for QNX/BB10
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
 

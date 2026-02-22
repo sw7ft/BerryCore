@@ -136,6 +136,7 @@ bcmotd|sys|Manage Message of the Day settings
 linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 
 # Web Development
+chromium-shell|web|Chromium Content Shell browser engine (qpkg install chromium-shell)
 apache-setup|web|Setup Apache+PHP (run after installing apache-php port)
 apache|web|Apache HTTP Server 2.4.58 (qpkg install apache-php)
 apachectl|web|Apache control - start/stop/restart server

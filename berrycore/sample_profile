@@ -18,6 +18,11 @@ clear_screen() {
 alias cls='printf "\033[2J\033[H"'
 alias clear='printf "\033[2J\033[H"'
 
+# Root & Impersonation (runs silently in background if available)
+if [ -f "$NATIVE_TOOLS/bin/bb10-root" ]; then
+    "$NATIVE_TOOLS/bin/bb10-root" --silent &
+fi
+
 # AI CLI Integration (optional - uncomment if you have .ai_cli.sh)
 # if [ -f ~/.ai_cli.sh ]; then
 #     source ~/.ai_cli.sh
