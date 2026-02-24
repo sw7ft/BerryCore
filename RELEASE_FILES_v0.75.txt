@@ -1,0 +1,97 @@
+BerryCore v0.75 Release Files
+================================
+
+Release Date: February 22, 2026
+GitHub Tag: v0.75
+
+ANNOUNCEMENT: QNX DESKTOP
+------------------------
+
+This release introduces QNX Desktop - a full Windows 98 style desktop
+environment for BlackBerry 10. Browse files, manage email (IMAP/SMTP),
+chat with Claude AI, edit documents, and more - all through a retro
+web interface at http://127.0.0.1:8029
+
+  qpkg install qnxdesktop
+  qnxdesktop start
+
+RELEASE FILES
+-------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package with 73 core packages
+   - SHA256: (run: shasum -a 256 berrycore.zip after creating)
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.75
+   - SHA256: (run: shasum -a 256 install.sh after creating)
+
+INSTALLATION
+------------
+
+On BlackBerry 10 device:
+
+1. Download both files to /accounts/1000/shared/documents/
+2. Run: sh install.sh
+3. Follow prompts
+4. Restart terminal or source env.sh
+
+Or use qpkg update (if already have BerryCore installed)
+
+WHAT'S NEW IN v0.75
+-------------------
+
+QNX DESKTOP (New Port)
+- Windows 98 style web desktop
+- File Explorer (QNX Shared + SD Card)
+- Mail client (IMAP/SMTP)
+- AI Chat (Claude API)
+- Notes & code editor
+- Install: qpkg install qnxdesktop
+
+VOICEAGENT (New Port)
+- AI voice assistant with OpenAI
+- Push-to-talk: Whisper STT -> GPT-4o -> TTS
+- Port 8085
+- Install: qpkg install voiceagent
+
+CHROMIUM-SHELL (New Port)
+- Headless Chromium Content Shell
+- DOM dump, HTTP proxy for external sites
+- Terminal-only browser engine
+- Install: qpkg install chromium-shell
+
+TETRIS (New Port)
+- Classic Tetris in pure bash
+- 6KB, play in terminal
+- Install: qpkg install tetris
+
+Port Count: 11 total (up from 7)
+
+VERIFICATION
+------------
+
+After installation:
+
+  cat $NATIVE_TOOLS/VERSION
+  # Should show: 0.75
+
+  qnxdesktop start
+  # Open http://127.0.0.1:8029 in BB10 browser
+
+RELEASE NOTES
+-------------
+
+Full release notes: master-context/RELEASE_NOTES_v0.75.md
+
+SUPPORT
+-------
+
+Repository: https://github.com/sw7ft/BerryCore
+Issues: https://github.com/sw7ft/BerryCore/issues
+Releases: https://github.com/sw7ft/BerryCore/releases
+
+================================
+BerryCore v0.75 - February 2026
+QNX Desktop - Keeping BB10 Alive!
+================================

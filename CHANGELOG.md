@@ -5,6 +5,45 @@ All notable changes to BerryCore will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.75] - 2026-02-22
+
+### QNX Desktop Release
+
+**Headline: QNX Desktop** – A full Windows 98 style desktop environment for BlackBerry 10.
+
+### Added
+
+#### New Ports (4)
+- **qnxdesktop** - Windows 98 style web desktop (753 KB)
+  - File Explorer for QNX Shared and SD Card
+  - Mail client (IMAP/SMTP) with folders, send/receive
+  - AI Chat (Claude API integration)
+  - Notes and code editor
+  - System information panel
+  - Auto-installs Flask + requests on first run
+- **voiceagent** - AI voice assistant (23 KB)
+  - Push-to-talk with OpenAI Whisper, GPT-4o, TTS
+  - Web UI on port 8085
+- **chromium-shell** - Headless Chromium Content Shell (21 MB)
+  - DOM dump to stdout, HTTP proxy for external sites
+  - Terminal-only browser engine for QNX
+- **tetris** - Classic Tetris in pure bash (6 KB)
+
+### Changed
+
+- Port count: 11 total (up from 7)
+- VERSION bumped to 0.75
+- env.sh and install.sh welcome messages updated
+- Release notes moved to master-context/ (v0.74 cleanup)
+
+### Statistics
+
+- **Port Count**: 11 installable ports
+- **Core Packages**: 73
+- **Binary Count**: 100+
+
+---
+
 ## [0.6.0] - 2025-10-21
 
 ### 🎉 Major Release - BerryCore Rebranding

@@ -1,0 +1,7 @@
+BerryCore v0.75 Released! (Feb 22, 2026)
+QNX Desktop - Full Windows 98 style desktop for BB10
+  - File Explorer | Mail Client (IMAP/SMTP) | AI Chat (Claude)
+  - qpkg install qnxdesktop && qnxdesktop start
+  - Open http://127.0.0.1:8029 in browser
+New ports: voiceagent, chromium-shell, tetris
+Full notes: github.com/sw7ft/BerryCore

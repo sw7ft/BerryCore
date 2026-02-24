@@ -56,7 +56,7 @@ export LC_CTYPE=en_US.UTF-8
 # Welcome Message
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.74 - QNX Extended Userland"
+echo "     BerryCore v0.75 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"
@@ -76,18 +76,23 @@ echo "Quick start: nano, vim, git, nmap, curl, linux, hydra"
 echo "==========================================================="
 
 # Message of the Day (MOTD) - Enabled by default
-# To disable: export BERRYCORE_MOTD_ENABLED=0 in your .profile
-# To enable after upgrade: export BERRYCORE_MOTD_ENABLED=1 in your .profile
+# To disable: export BERRYCORE_MOTD_ENABLED=0 in your .profile BEFORE sourcing env.sh
 if [ "${BERRYCORE_MOTD_ENABLED:-1}" = "1" ]; then
-    # Default MOTD URL if not set
-    : ${BERRYCORE_MOTD_URL:="https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt"}
+    # Default MOTD URL
+    MOTD_URL="${BERRYCORE_MOTD_URL:-https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt}"
     
-    # Fetch and display MOTD (single request, 2 second timeout)
-    MOTD_TEXT=$(curl -s -m 2 "$BERRYCORE_MOTD_URL" 2>/dev/null)
+    # Try to fetch from internet first (with SSL verification bypass for QNX)
+    MOTD_TEXT=$(curl -k -s -m 5 "$MOTD_URL" 2>/dev/null)
     
     if [ -n "$MOTD_TEXT" ]; then
         echo ""
         echo "$MOTD_TEXT"
+    else
+        # Fallback to local MOTD file if internet fetch fails
+        if [ -f "$NATIVE_TOOLS/motd.txt" ]; then
+            echo ""
+            cat "$NATIVE_TOOLS/motd.txt"
+        fi
     fi
 fi
 
