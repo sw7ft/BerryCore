@@ -32,6 +32,17 @@ Then open `http://127.0.0.1:8029` in the BB10 browser. Login: `qnx-user` / `desk
 
 ---
 
+## Core Package Upgrades
+
+| Package | Previous | New | Notes |
+|---------|----------|-----|-------|
+| **git** | 2.26.0 | **2.47.2** | Modern git with improved HTTPS clone; wrapper sets GIT_EXEC_PATH, CA certs |
+| **curl** | 7.76.0 | **8.12.1** | Includes gcal, tcal; wrapper sets CURL_CA_BUNDLE for HTTPS |
+
+Both use BerryCore's `ssl/cert.pem` (from cacert) when available. Source: bb10-curl-git-openssl builds (OpenSSL 1.1.1w, QNX sysroot).
+
+---
+
 ## New Ports (4)
 
 ### QNX Desktop
