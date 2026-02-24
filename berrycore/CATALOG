@@ -110,6 +110,7 @@ irc|comm|IRC client
 
 # Games
 nbsdgames|game|Collection of BSD games
+tetris|game|Classic Tetris in pure bash (qpkg install tetris)
 
 # Documentation
 man|doc|Display manual pages
