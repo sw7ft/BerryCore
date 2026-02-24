@@ -144,6 +144,7 @@ apachectl|web|Apache control - start/stop/restart server
 httpd|web|Apache HTTP daemon binary
 php|web|PHP 7.4.33 CLI/CGI interpreter
 php-cgi|web|PHP CGI for Apache web server
+voiceagent|web|AI voice assistant with OpenAI GPT-4o, Whisper, and TTS (qpkg install voiceagent)
 berrypy|web|BlackBerry app platform manager with web interface (requires python3: qpkg install berrypy)
 elinks|web|Text-based web browser with SSL/TLS, JavaScript, and CSS support - auto-configured (qpkg install elinks)
 
