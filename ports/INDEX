@@ -19,6 +19,7 @@ hydra|net|9.5|165K|Fast network logon cracker - password auditing tool
 python3|lang|3.11.10|25M|Python 3.11 interpreter with pip and full standard library
 chromium-shell|web|1.0|21M|Chromium Content Shell - headless browser engine with DOM dump and HTTP proxy for QNX/BB10
 tetris|games|1.0|6K|Classic Tetris game in pure bash - play in your terminal
+qnxdesktop|web|1.0|753K|Windows 98 style desktop with file explorer, mail client, and AI chat (requires python3)
 voiceagent|web|1.0|23K|AI voice assistant powered by OpenAI - push-to-talk with GPT-4o, Whisper STT, and TTS (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
 
