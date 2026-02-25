@@ -8,7 +8,8 @@
 
 | Path | Purpose |
 |------|---------|
-| `bin/term49-web` | C binary – WebSocket server + PTY bridge (ELF ARM, ~12KB) |
+| `bin/term49-web` | Wrapper script – cd to install root, exec term49-web.bin |
+| `bin/term49-web.bin` | C binary – WebSocket server + PTY bridge (ELF ARM, ~12KB) |
 | `www/index.html` | Web UI with xterm.js |
 | `www/css/xterm.css` | Terminal styling |
 | `www/js/xterm.js` | xterm.js v3.14.5 (ES5-compatible) |
@@ -20,7 +21,7 @@
 - **Binary**: ARM EABI5, dynamically linked (ldqnx.so.2) – BB10 compatible
 - **Port**: 7681 (configurable via `-p`)
 - **Dependencies**: BerryCore bash, tmux PTY (both in core)
-- **Web root**: Server expects `www/` as sibling of `bin/` – extraction to `$NATIVE_TOOLS` preserves this layout
+- **Web root**: The C binary resolves `./www/` via **current working directory** (cwd). The wrapper ensures `cd $NATIVE_TOOLS` before exec so `./www/` resolves correctly regardless of where the user runs `term49-web`.
 
 ## Security
 
