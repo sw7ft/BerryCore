@@ -22,4 +22,5 @@ tetris|games|1.0|6K|Classic Tetris game in pure bash - play in your terminal
 qnxdesktop|web|1.0|753K|Windows 98 style desktop with file explorer, mail client, and AI chat (requires python3)
 voiceagent|web|1.0|23K|AI voice assistant powered by OpenAI - push-to-talk with GPT-4o, Whisper STT, and TTS (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
+term49-web|web|1.0|54K|Browser-based terminal for QNX/BB10 - xterm.js over WebSocket, access shell from any browser (port 7681)
 
