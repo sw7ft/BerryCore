@@ -5,11 +5,18 @@ All notable changes to BerryCore will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.75] - 2026-02-22
+## [0.76] - 2026-02-22
 
-### QNX Desktop Release
+### Updated git & curl with Modern SSL
 
-**Headline: QNX Desktop** – A full Windows 98 style desktop environment for BlackBerry 10.
+**Headline:** Upgraded **git** (2.26→2.47.2) and **curl** (7.76→8.12.1) to work with modern HTTPS and SSL/TLS.
+
+### Changed
+
+- **git** 2.26.0 → **2.47.2** – Wrapper sets GIT_EXEC_PATH, GIT_TEMPLATE_DIR, CA certs for HTTPS clone
+- **curl** 7.76.0 → **8.12.1** – Wrapper sets CURL_CA_BUNDLE for HTTPS; includes gcal, tcal
+- Both use BerryCore's `ssl/cert.pem` for modern SSL verification
+- VERSION bumped to 0.76
 
 ### Added
 
@@ -29,18 +36,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Terminal-only browser engine for QNX
 - **tetris** - Classic Tetris in pure bash (6 KB)
 
-### Changed
-
-- Port count: 11 total (up from 7)
-- VERSION bumped to 0.75
-- env.sh and install.sh welcome messages updated
-- Release notes moved to master-context/ (v0.74 cleanup)
-
 ### Statistics
 
 - **Port Count**: 11 installable ports
 - **Core Packages**: 73
 - **Binary Count**: 100+
+
+---
+
+## [0.75] - 2026-02-22
+
+### QNX Desktop Release
+
+**Headline: QNX Desktop** – A full Windows 98 style desktop environment for BlackBerry 10.
+
+### Added
+
+#### New Ports (4)
+- **qnxdesktop** - Windows 98 style web desktop (753 KB)
+- **voiceagent** - AI voice assistant (23 KB)
+- **chromium-shell** - Headless Chromium Content Shell (21 MB)
+- **tetris** - Classic Tetris in pure bash (6 KB)
+
+### Changed
+
+- Port count: 11 total (up from 7)
+- VERSION bumped to 0.75
 
 ---
 

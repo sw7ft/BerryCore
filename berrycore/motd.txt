@@ -1,4 +1,4 @@
-BerryCore v0.75 Released! (Feb 22, 2026)
+BerryCore v0.76 Released! (Feb 22, 2026) – Updated git & curl with modern SSL
 QNX Desktop - Full Windows 98 style desktop for BB10
   - File Explorer | Mail Client (IMAP/SMTP) | AI Chat (Claude)
   - qpkg install qnxdesktop && qnxdesktop start

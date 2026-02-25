@@ -1,0 +1,97 @@
+BerryCore v0.76 Release Files
+================================
+
+Release Date: February 22, 2026
+GitHub Tag: v0.76
+
+ANNOUNCEMENT: UPDATED GIT & CURL WITH MODERN SSL
+-------------------------------------------------
+
+This release upgrades git and curl to work reliably with modern HTTPS:
+
+  git: 2.26.0 → 2.47.2
+  curl: 7.76.0 → 8.12.1
+
+Both include wrappers that configure CA certs. git clone https://...
+and curl https://... work with modern SSL verification using
+BerryCore's ssl/cert.pem.
+
+RELEASE FILES
+-------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package with 73 core packages
+   - SHA256: (run: shasum -a 256 berrycore.zip after creating)
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.76
+   - SHA256: (run: shasum -a 256 install.sh after creating)
+
+INSTALLATION
+------------
+
+On BlackBerry 10 device:
+
+1. Download both files to /accounts/1000/shared/documents/
+2. Run: sh install.sh
+3. Follow prompts
+4. Restart terminal or source env.sh
+
+Or use qpkg update (if already have BerryCore installed)
+
+WHAT'S NEW IN v0.76
+-------------------
+
+GIT & CURL UPGRADES (Core)
+- git 2.47.2 - Modern git with HTTPS clone support
+- curl 8.12.1 - Updated curl with gcal, tcal
+- Both work with modern SSL/TLS verification
+
+QNX DESKTOP (Port)
+- Windows 98 style web desktop
+- Install: qpkg install qnxdesktop
+
+VOICEAGENT (Port)
+- AI voice assistant with OpenAI
+- Install: qpkg install voiceagent
+
+CHROMIUM-SHELL (Port)
+- Headless Chromium Content Shell
+- Install: qpkg install chromium-shell
+
+TETRIS (Port)
+- Classic Tetris in pure bash
+- Install: qpkg install tetris
+
+Port Count: 11 total
+
+VERIFICATION
+------------
+
+After installation:
+
+  cat $NATIVE_TOOLS/VERSION
+  # Should show: 0.76
+
+  git --version
+  # Should show: git version 2.47.2
+
+  curl --version
+  # Should show: curl 8.12.1
+
+RELEASE NOTES
+-------------
+
+Full release notes: master-context/RELEASE_NOTES_v0.76.md
+
+SUPPORT
+-------
+
+Repository: https://github.com/sw7ft/BerryCore
+Issues: https://github.com/sw7ft/BerryCore/issues
+Releases: https://github.com/sw7ft/BerryCore/releases
+
+================================
+BerryCore v0.76 - February 2026
+Updated git & curl with Modern SSL
+================================

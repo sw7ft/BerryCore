@@ -1,7 +1,20 @@
-# BerryCore v0.75 Release Notes
+# BerryCore v0.76 Release Notes
 
 **Release Date:** February 22, 2026  
-**Type:** QNX Desktop & New Ports Release
+**Type:** Updated git & curl with Modern SSL
+
+---
+
+## Updated git & curl – Working with Modern SSL
+
+This release upgrades **git** and **curl** to work reliably with modern HTTPS and SSL/TLS:
+
+| Package | Previous | New |
+|---------|----------|-----|
+| **git** | 2.26.0 | **2.47.2** |
+| **curl** | 7.76.0 | **8.12.1** |
+
+Both include wrappers that configure CA certs for HTTPS. `git clone https://...` and `curl https://...` work with modern SSL verification using BerryCore's `ssl/cert.pem`.
 
 ---
 
@@ -29,17 +42,6 @@ Then open `http://127.0.0.1:8029` in the BB10 browser. Login: `qnx-user` / `desk
 - Flask-based web app, port 8029
 - Requires Python 3 (qpkg install python3)
 - Auto-installs Flask + requests on first start if missing
-
----
-
-## Core Package Upgrades
-
-| Package | Previous | New | Notes |
-|---------|----------|-----|-------|
-| **git** | 2.26.0 | **2.47.2** | Modern git with improved HTTPS clone; wrapper sets GIT_EXEC_PATH, CA certs |
-| **curl** | 7.76.0 | **8.12.1** | Includes gcal, tcal; wrapper sets CURL_CA_BUNDLE for HTTPS |
-
-Both use BerryCore's `ssl/cert.pem` (from cacert) when available. Source: bb10-curl-git-openssl builds (OpenSSL 1.1.1w, QNX sysroot).
 
 ---
 
@@ -92,7 +94,7 @@ Both use BerryCore's `ssl/cert.pem` (from cacert) when available. Source: bb10-c
 
 ## Upgrade Instructions
 
-### From v0.74 or earlier:
+### From v0.75 or earlier:
 
 ```bash
 qpkg update
@@ -101,8 +103,8 @@ qpkg update
 Or manual:
 ```bash
 cd /accounts/1000/shared/documents
-curl -L -O https://github.com/sw7ft/BerryCore/releases/download/v0.75/berrycore.zip
-curl -L -O https://github.com/sw7ft/BerryCore/releases/download/v0.75/install.sh
+curl -L -O https://github.com/sw7ft/BerryCore/releases/download/v0.76/berrycore.zip
+curl -L -O https://github.com/sw7ft/BerryCore/releases/download/v0.76/install.sh
 chmod +x install.sh
 ./install.sh
 ```
