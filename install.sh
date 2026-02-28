@@ -89,6 +89,10 @@ fi
 
 touch .nomedia .noindex
 unzip -o berrycore.zip
+# Update env.sh with actual installation path BEFORE sourcing it
+# so pbpkgadd installs packages to the correct directory
+sed -i.bak "s|NATIVE_TOOLS=\"/accounts/1000/shared/misc/berrycore\"|NATIVE_TOOLS=\"$PWD\"|g" env.sh
+rm -f env.sh.bak
 # Note: berrycore.zip is kept in both locations (original and installation directory)
 . ./env.sh
 
@@ -169,10 +173,6 @@ echo "export BERRYCORE_MOTD_URL=\"https://raw.githubusercontent.com/sw7ft/berryc
 echo "export BERRYCORE_MOTD_ENABLED=1" >> "$HOME/.profile"
 
 echo "Created fresh $HOME/.profile"
-
-# Update env.sh with actual installation path
-sed -i.bak "s|NATIVE_TOOLS=\"/accounts/1000/shared/misc/berrycore\"|NATIVE_TOOLS=\"$PWD\"|g" env.sh
-rm -f env.sh.bak
 
 echo ""
 echo "==========================================================="

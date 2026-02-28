@@ -18,17 +18,7 @@ clear_screen() {
 alias cls='printf "\033[2J\033[H"'
 alias clear='printf "\033[2J\033[H"'
 
-# Root & Impersonation (runs silently in background if available)
-if [ -f "$NATIVE_TOOLS/bin/bb10-root" ]; then
-    "$NATIVE_TOOLS/bin/bb10-root" --silent &
-fi
-
 # AI CLI Integration (optional - uncomment if you have .ai_cli.sh)
 # if [ -f ~/.ai_cli.sh ]; then
 #     source ~/.ai_cli.sh
-# fi
-
-# Auto-Start for copyclip (optional - uncomment and adjust path if needed)
-# if [ -f "/accounts/1000/appdata/com.update.Term49.gYABgHeOVx7TI8ajV86LufpS8jM/data/apps/copyclip/app.py" ]; then
-#     python3 "/accounts/1000/appdata/com.update.Term49.gYABgHeOVx7TI8ajV86LufpS8jM/data/apps/copyclip/app.py" &
 # fi
