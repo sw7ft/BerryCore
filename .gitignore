@@ -1,6 +1,7 @@
 berrycore.zip
 .DS_Store
 .frolic-session.json
+.cursor/
 
 # Work-in-progress and testing files
 temp/
