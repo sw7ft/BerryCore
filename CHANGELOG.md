@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Headline:** Upgraded **git** (2.26→2.47.2) and **curl** (7.76→8.12.1) to work with modern HTTPS and SSL/TLS.
 
+### Added
+
+- **pass-1.0** (util-pass) – Password manager (gpg-encrypted store). Requires gpg for full use; git included in BerryCore.
+
 ### Changed
 
 - **git** 2.26.0 → **2.47.2** – Wrapper sets GIT_EXEC_PATH, GIT_TEMPLATE_DIR, CA certs for HTTPS clone

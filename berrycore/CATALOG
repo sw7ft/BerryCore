@@ -100,6 +100,7 @@ pydoc3|lang|Python documentation tool
 
 # Security & Cryptography
 openssl|security|OpenSSL 3.3.2 - Modern crypto libraries with libssl.so.3
+pass|security|Password manager - gpg-encrypted password store (requires gpg for full use)
 
 # Calendar & Time
 gcal|time|GNU calendar program

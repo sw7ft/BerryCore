@@ -89,6 +89,12 @@ This document tracks all packages included in BerryCore.
 | zlib | 1.2.11 | - | Compression library |
 | sqlite | 3.24.0 | - | SQL database engine |
 
+### Security & Cryptography (1)
+
+| Package | Version | Size | Description |
+|---------|---------|------|-------------|
+| pass | 1.0 | 330 KB | Password manager - gpg-encrypted store (requires gpg) |
+
 ### Data Processing & Query Tools (3)
 
 | Package | Version | Size | Description |
