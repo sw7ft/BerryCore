@@ -215,6 +215,36 @@ qpkg install htop
 - Don't replace system libraries
 - Use versioned library names
 
+## Port Dependencies
+
+Some ports require others. Check before installing:
+
+| Port | Requires |
+|------|----------|
+| berrycore-agent | **python3** — install with `qpkg install python3` first |
+| berrypy | python3 |
+| berrysnip | python3 |
+| voiceagent | python3 |
+| qnxdesktop | python3 |
+
+## BB10 Tools Deployment
+
+BerryCore includes a native C HTTP server for the web tools (dashboard, drawing board, QNX Chat, etc.). These are deployed with the base package:
+
+| Path | Contents |
+|------|----------|
+| `misc/bin/tools` | ARM ELF32 HTTP server (port 8765) |
+| `misc/share/tools/` | dashboard, drawing-board, markdown-editor, code-editor, compass, linux-chat, virtual-keyboard |
+
+**Run on device:**
+```sh
+/accounts/1000/shared/misc/bin/tools
+```
+
+Then open: `http://localhost:8765/dashboard/`
+
+The server has no Python dependency. Source tools live in repo `tools/`; the bb10-root deploy uses `bb10-root/include/accounts/1000/shared/misc/share/tools/`.
+
 ## Questions?
 
 - Open an issue: https://github.com/sw7ft/BerryCore/issues

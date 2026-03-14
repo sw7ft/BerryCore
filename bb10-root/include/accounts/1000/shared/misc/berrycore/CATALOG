@@ -1,0 +1,154 @@
+# BerryCore Binary Catalog
+# Format: binary_name|category|description
+# Lines starting with # are comments
+
+# Development Tools
+autoconf|dev|Automatic configure script builder
+automake|dev|Tool for generating Makefile.in files
+bison|dev|Parser generator (yacc replacement)
+cflow|dev|C program call graph analyzer
+flex|dev|Fast lexical analyzer generator
+gcc|dev|GNU Compiler Collection 4.6.3 (C/C++)
+g++|dev|C++ compiler (GCC 4.6.3)
+gdb|dev|GNU Debugger (if available)
+git|dev|Distributed version control system
+m4|dev|Macro processor
+make|dev|Build automation tool
+patch|dev|Apply diff files to originals
+
+# Shells
+bash|shell|Bourne Again Shell
+zsh|shell|Z Shell with advanced features
+
+# Text Editors
+ed|editor|Line-oriented text editor
+nano|editor|Simple, user-friendly text editor
+vim|editor|Vi IMproved text editor
+
+# Core Utilities (from coreutils)
+ls|util|List directory contents
+cat|util|Concatenate and display files
+cp|util|Copy files and directories
+mv|util|Move/rename files
+rm|util|Remove files and directories
+grep|util|Search text using patterns
+find|util|Search for files in directory hierarchy
+sed|util|Stream editor for filtering/transforming text
+awk|util|Pattern scanning and processing language
+tar|util|Archive files (tape archive)
+gzip|util|Compress files
+gunzip|util|Decompress gzip files
+bzip2|util|Compress files with bzip2
+xz|util|Compress files with xz
+
+# Networking Tools
+curl|net|Transfer data from/to servers
+wget|net|Download files from the web
+ssh|net|Secure shell client
+sshpass|net|Non-interactive SSH password provider
+rsync|net|Remote file synchronization
+nmap|net|Network exploration and security scanner
+nc|net|Netcat - network utility
+dropbear|net|Lightweight SSH server/client
+hydra|net|Fast network logon cracker (password auditing)
+
+# Version Control
+git|vcs|Distributed version control
+tig|vcs|Text-mode interface for Git
+
+# System Tools
+tmux|sys|Terminal multiplexer v2.0 (upgrade to 3.3a via qpkg install tmux)
+htop|sys|Interactive process viewer
+lsof|sys|List open files
+file|sys|Determine file type
+which|sys|Locate a command
+
+# Archiving & Compression
+tar|archive|Create/extract tar archives
+gzip|archive|GNU zip compression
+bzip2|archive|High-quality data compressor
+xz|archive|XZ compression utility
+unzip|archive|Extract ZIP archives
+
+# Multimedia
+ffmpeg|media|Audio/video converter and streamer
+youtube-dl|media|Download videos from YouTube and others
+
+# Data Processing
+jq|data|Command-line JSON processor
+sqlite3|data|SQLite database shell
+bc|data|Arbitrary precision calculator
+
+# X11 Applications
+xeyes|x11|Classic X11 demo - eyes follow cursor
+
+# JavaScript Engines
+qjsc|js|QuickJS compiler
+quickjs_simple_console|js|QuickJS simple REPL
+quickjs_shell_console|js|QuickJS shell interface
+quickjs_web_console|js|QuickJS web-based console
+quickjs_web_console_es5|js|QuickJS web console (ES5)
+
+# AI / Development
+agent|dev|BerryCore ACP Agent - AI coding assistant (requires python3: qpkg install python3 first)
+
+# Programming Languages
+pforth|lang|Portable ANS Forth interpreter (v28)
+python3|lang|Python 3.11.10 interpreter (qpkg install python3)
+python3.11|lang|Python 3.11.10 interpreter (same as python3)
+pip|lang|Python package installer (use: python3 -m pip)
+2to3|lang|Python 2 to 3 code converter
+idle3|lang|Python IDE
+pydoc3|lang|Python documentation tool
+
+# Security & Cryptography
+openssl|security|OpenSSL 3.3.2 - Modern crypto libraries with libssl.so.3
+pass|security|Password manager - gpg-encrypted password store (requires gpg for full use)
+
+# Calendar & Time
+gcal|time|GNU calendar program
+calcurse|time|Text-based calendar and scheduling
+
+# IRC & Communication
+irc|comm|IRC client
+
+# Games
+nbsdgames|game|Collection of BSD games
+
+# Documentation
+man|doc|Display manual pages
+groff|doc|GNU troff document formatting system
+
+# Build Tools (additional)
+autoheader|build|Create template header for configure
+autoreconf|build|Update configure scripts
+aclocal|build|Generate aclocal.m4
+libtool|build|Generic library support script
+
+# System Configuration
+sc|calc|Spreadsheet calculator
+task|todo|Command-line todo list manager
+berrysnip|util|Snippet & notes manager with web UI (port 8018) and TUI (qpkg install berrysnip)
+
+# Package Management
+qpkg|sys|QNX Package Manager - Update BerryCore and install ports
+bclist|sys|List and search installed binaries
+bcinfo|sys|Get detailed information about a binary
+bcmotd|sys|Manage Message of the Day settings
+
+# Emulation
+linux|emu|RISC-V Linux emulator - Full Linux on BB10!
+
+# Web Tools (native server, port 8765)
+tools|web|BerryCore dashboard server - Drawing Board, Markdown, Code Editor, Compass, QNX Chat (run: /accounts/1000/shared/misc/bin/tools)
+
+# Web Development
+apache-setup|web|Setup Apache+PHP (run after installing apache-php port)
+apache|web|Apache HTTP Server 2.4.58 (qpkg install apache-php)
+apachectl|web|Apache control - start/stop/restart server
+httpd|web|Apache HTTP daemon binary
+php|web|PHP 7.4.33 CLI/CGI interpreter
+php-cgi|web|PHP CGI for Apache web server
+berrypy|web|BlackBerry app platform manager with web interface (requires python3: qpkg install berrypy)
+elinks|web|Text-based web browser with SSL/TLS, JavaScript, and CSS support - auto-configured (qpkg install elinks)
+
