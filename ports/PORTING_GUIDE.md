@@ -259,10 +259,13 @@ BerryCore includes a native C HTTP server for the web tools (dashboard, drawing 
 
 **Run on device:**
 ```sh
-/accounts/1000/shared/misc/bin/tools
+tools
+# or: /accounts/1000/shared/misc/berrycore/bin/tools
 ```
 
 Then open: `http://localhost:8765/dashboard/`
+
+**Note:** The tools binary expects `/accounts/1000/shared/misc/share/tools`. When installed via `qpkg install bb-tools`, the port includes a wrapper that copies the files to that path on first run.
 
 The server has no Python dependency. Source tools live in repo `tools/`; the bb10-root deploy uses `bb10-root/include/accounts/1000/shared/misc/share/tools/`.
 

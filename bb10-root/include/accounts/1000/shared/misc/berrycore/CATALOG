@@ -90,7 +90,7 @@ quickjs_web_console|js|QuickJS web-based console
 quickjs_web_console_es5|js|QuickJS web console (ES5)
 
 # Web Tools
-tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (port 8765)
+tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (qpkg install bb-tools)
 
 # Programming Languages
 pforth|lang|Portable ANS Forth interpreter (v28)
