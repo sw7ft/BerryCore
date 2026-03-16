@@ -89,11 +89,13 @@ quickjs_shell_console|js|QuickJS shell interface
 quickjs_web_console|js|QuickJS web-based console
 quickjs_web_console_es5|js|QuickJS web console (ES5)
 
-# AI / Development
-agent|dev|BerryCore ACP Agent - AI coding assistant (requires python3: qpkg install python3 first)
+# Web Tools
+tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (port 8765)
 
 # Programming Languages
 pforth|lang|Portable ANS Forth interpreter (v28)
+node|lang|Node.js v22 for Term49 - JavaScript runtime (qpkg install node-term49)
+npm|lang|npm 10.5.1 - Node package manager (with node-term49)
 python3|lang|Python 3.11.10 interpreter (qpkg install python3)
 python3.11|lang|Python 3.11.10 interpreter (same as python3)
 pip|lang|Python package installer (use: python3 -m pip)

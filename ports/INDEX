@@ -23,5 +23,6 @@ qnxdesktop|web|1.0|753K|Windows 98 style desktop with file explorer, mail client
 voiceagent|web|1.0|23K|AI voice assistant powered by OpenAI - push-to-talk with GPT-4o, Whisper STT, and TTS (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
 term49-web|web|1.0|54K|Browser-based terminal for QNX/BB10 - xterm.js over WebSocket, access shell from any browser (port 7681)
-berrycore-agent|dev|1.0.0|60K|AI coding assistant - ACP agent with REPL, OpenAI/Anthropic/OpenRouter (REQUIRES: qpkg install python3 first)
+bb10-tools|web|1.0|44K|BerryCore web tools - dashboard, drawing-board, markdown-editor, code-editor, compass, virtual-keyboard (native HTTP server port 8765)
+node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, npm 10.5.1 included
 

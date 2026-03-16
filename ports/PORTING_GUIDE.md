@@ -76,6 +76,28 @@ zip -r ../util-htop-3.3.zip .
 
 **Important**: Package from WITHIN the directory, not the parent!
 
+### Converting tar/tar.gz to port zip
+
+If you have a `.tar` or `.tar.gz` (e.g. from a pre-built binary):
+
+```bash
+# Extract
+tar xf your-package.tar   # or: tar xzf your-package.tar.gz
+
+# Restructure: remove wrapper dir, use bin/lib/share at root
+cd your-package-dir
+mkdir -p ../port-pkg/bin ../port-pkg/lib ../port-pkg/doc
+cp node node.bin npm *.so* ../port-pkg/bin/   # example
+cp -r lib/node_modules ../port-pkg/bin/lib/   # if paths are relative to bin
+cp README.md ../port-pkg/doc/
+
+# Package
+cd ../port-pkg
+zip -r ../lang-yourname-version.zip .
+```
+
+Ensure wrapper scripts use `$(dirname "$0")` for paths so they work when installed to `berrycore/bin/`.
+
 ## Step 5: Add to INDEX
 
 Add an entry to `ports/INDEX`:
@@ -221,7 +243,6 @@ Some ports require others. Check before installing:
 
 | Port | Requires |
 |------|----------|
-| berrycore-agent | **python3** — install with `qpkg install python3` first |
 | berrypy | python3 |
 | berrysnip | python3 |
 | voiceagent | python3 |
