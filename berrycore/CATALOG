@@ -130,6 +130,7 @@ sc|calc|Spreadsheet calculator
 task|todo|Command-line todo list manager
 berrysnip|util|Snippet & notes manager with web UI (port 8018) and TUI (qpkg install berrysnip)
 wifi-chat|util|P2P chat over WiFi - discover peers, send messages (qpkg install wifi-chat)
+bot|util|Berry Bot - command-line teaching assistant for Linux, QNX, bash (qpkg install berrybot)
 
 # Package Management
 qpkg|sys|QNX Package Manager - Update BerryCore and install ports

@@ -1,0 +1,19 @@
+#!/bin/sh
+# bot - Berry Bot command-line teaching assistant
+# Non-AI help for Linux, QNX, bash, BerryCore. Install: qpkg install berrybot
+
+# Resolve NATIVE_TOOLS from script location (bin/bot -> berrycore/)
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+
+# Bot finds berrybot.sqlite via BERRYBOT_DATA
+export BERRYBOT_DATA="$NATIVE_TOOLS/share/berrybot"
+
+if [ -x "$NATIVE_TOOLS/share/berrybot/bot" ]; then
+    exec "$NATIVE_TOOLS/share/berrybot/bot" "$@"
+else
+    echo "bot: binary not found in $NATIVE_TOOLS/share/berrybot"
+    echo "Run: qpkg install berrybot"
+    exit 1
+fi
