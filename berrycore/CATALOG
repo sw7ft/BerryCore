@@ -91,6 +91,8 @@ quickjs_web_console_es5|js|QuickJS web console (ES5)
 
 # Programming Languages
 pforth|lang|Portable ANS Forth interpreter (v28)
+node|lang|Node.js v22 for Term49 - JavaScript runtime (qpkg install node-term49)
+npm|lang|npm 10.5.1 - Node package manager (with node-term49)
 python3|lang|Python 3.11.10 interpreter (qpkg install python3)
 python3.11|lang|Python 3.11.10 interpreter (same as python3)
 pip|lang|Python package installer (use: python3 -m pip)
@@ -140,6 +142,7 @@ bcmotd|sys|Manage Message of the Day settings
 linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 
 # Web Development
+tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (qpkg install bb-tools)
 content_shell|web|Chromium 120 headless browser for Term49 - DOM dump (qpkg install content-shell-term49)
 apache-setup|web|Setup Apache+PHP (run after installing apache-php port)
 apache|web|Apache HTTP Server 2.4.58 (qpkg install apache-php)
