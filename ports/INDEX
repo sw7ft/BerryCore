@@ -17,12 +17,14 @@ berrysnip|util|1.0|24K|Snippet & notes manager with web UI and TUI (requires pyt
 elinks|web|0.17.0|1.3M|Text-based web browser with SSL/TLS, JavaScript (QuickJS), CSS, and bundled Mozilla CA certificates
 hydra|net|9.5|165K|Fast network logon cracker - password auditing tool
 python3|lang|3.11.10|25M|Python 3.11 interpreter with pip and full standard library
-chromium-shell|web|1.0|21M|Chromium Content Shell - headless browser engine with DOM dump and HTTP proxy for QNX/BB10
 tetris|games|1.0|6K|Classic Tetris game in pure bash - play in your terminal
 qnxdesktop|web|1.0|753K|Windows 98 style desktop with file explorer, mail client, and AI chat (requires python3)
 voiceagent|web|1.0|23K|AI voice assistant powered by OpenAI - push-to-talk with GPT-4o, Whisper STT, and TTS (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
 term49-web|web|1.0|54K|Browser-based terminal for QNX/BB10 - xterm.js over WebSocket, access shell from any browser (port 7681)
 bb-tools|web|1.0|44K|BerryCore web tools - dashboard, drawing-board, markdown-editor, code-editor, compass, virtual-keyboard (native HTTP server port 8765)
+content-shell-term49|web|1.0|62M|Chromium 120 headless browser for Term49/BB10 - DOM dump, HTTPS, run: content_shell http://example.com
 node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, npm 10.5.1 included
+android-apps|util|1.0|89M|RDP, Bridge, Kiwi Browser, Launcher, XServer, SublimeText, term49-dashboard, BB10Terminal, ExFAT - installs to misc/android-apps/
+wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: wifi-chat [name]
 

@@ -91,6 +91,7 @@ quickjs_web_console_es5|js|QuickJS web console (ES5)
 
 # Web Tools
 tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (qpkg install bb-tools)
+content_shell|web|Chromium 120 headless browser for Term49 - DOM dump (qpkg install content-shell-term49)
 
 # Programming Languages
 pforth|lang|Portable ANS Forth interpreter (v28)
@@ -131,18 +132,17 @@ libtool|build|Generic library support script
 sc|calc|Spreadsheet calculator
 task|todo|Command-line todo list manager
 berrysnip|util|Snippet & notes manager with web UI (port 8018) and TUI (qpkg install berrysnip)
+wifi-chat|util|P2P chat over WiFi - discover peers, send messages (qpkg install wifi-chat)
 
 # Package Management
 qpkg|sys|QNX Package Manager - Update BerryCore and install ports
+settings|sys|BerryCore settings - toggle sshd/tools/MOTD in .profile (settings sshd-on, tools-on, motd-on, status)
 bclist|sys|List and search installed binaries
 bcinfo|sys|Get detailed information about a binary
 bcmotd|sys|Manage Message of the Day settings
 
 # Emulation
 linux|emu|RISC-V Linux emulator - Full Linux on BB10!
-
-# Web Tools (native server, port 8765)
-tools|web|BerryCore dashboard server - Drawing Board, Markdown, Code Editor, Compass, QNX Chat (run: /accounts/1000/shared/misc/bin/tools)
 
 # Web Development
 apache-setup|web|Setup Apache+PHP (run after installing apache-php port)

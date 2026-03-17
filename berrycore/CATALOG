@@ -127,6 +127,7 @@ libtool|build|Generic library support script
 sc|calc|Spreadsheet calculator
 task|todo|Command-line todo list manager
 berrysnip|util|Snippet & notes manager with web UI (port 8018) and TUI (qpkg install berrysnip)
+wifi-chat|util|P2P chat over WiFi - discover peers, send messages (qpkg install wifi-chat)
 
 # Package Management
 qpkg|sys|QNX Package Manager - Update BerryCore and install ports
