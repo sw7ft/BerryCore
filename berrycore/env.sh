@@ -56,7 +56,7 @@ export LC_CTYPE=en_US.UTF-8
 # Welcome Message
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.76 - QNX Extended Userland"
+echo "     BerryCore v0.77 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"
@@ -73,6 +73,8 @@ echo "Quick navigation shortcuts:"
 echo "  misc, docs, downloads, sdcard, bc"
 echo ""
 echo "Quick start: nano, vim, git, nmap, curl, linux, hydra, term49-web"
+echo ""
+echo "Auto-start: settings sshd-on, settings tools-on, settings status"
 echo "==========================================================="
 
 # Message of the Day (MOTD) - Enabled by default

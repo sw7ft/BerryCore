@@ -5,6 +5,39 @@ All notable changes to BerryCore will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.77] - 2026-03-17
+
+### New Ports & Catalog Update
+
+**Headline:** Three new ports — content-shell-term49 (Chromium 120 headless), wifi-chat (P2P over WiFi), berrybot (teaching assistant). Full catalog sync.
+
+### Added
+
+#### New Ports (3)
+- **content-shell-term49** — Chromium 120 headless browser for Term49 (62 MB)
+  - DOM dump to stdout, HTTP/HTTPS
+  - Run: `content_shell http://example.com 2>/dev/null`
+  - Replaces chromium-shell
+- **wifi-chat** — P2P chat over WiFi/local network (12 KB)
+  - UDP discovery, TCP messages
+  - Run: `wifi-chat [name]`
+- **berrybot** — Command-line teaching assistant (600 KB)
+  - Non-AI help for Linux, QNX, bash, BerryCore
+  - Run: `bot grep`, `bot lessons`
+
+### Changed
+
+- **CATALOG** — Added all port binaries: tools, node, npm, content_shell, wifi-chat, bot, tetris, qnxdesktop, voiceagent, term49-web
+- VERSION bumped to 0.77
+
+### Statistics
+
+- **Port Count**: 14 installable ports
+- **Core Packages**: 77 (includes berrybot)
+- **Binary Count**: 100+
+
+---
+
 ## [0.76] - 2026-02-22
 
 ### Updated git & curl with Modern SSL

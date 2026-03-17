@@ -1,0 +1,46 @@
+BerryCore v0.77 Release Files
+============================
+
+Release Date: March 17, 2026
+GitHub Tag: v0.77
+
+REQUIRED FILES
+--------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package with 77 core packages
+   - SHA256: (run: shasum -a 256 berrycore.zip after creating)
+   - Size: ~176 MB
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.77
+   - SHA256: (run: shasum -a 256 install.sh)
+
+CREATE PACKAGE
+--------------
+
+./utilities/package.sh
+
+Verifies: berrycore.zip is created at repo root
+
+VERIFY INSTALL
+--------------
+
+  cat $NATIVE_TOOLS/VERSION
+  # Should show: 0.77
+
+WHAT'S NEW IN v0.77
+-------------------
+
+New Ports:
+- content-shell-term49 - Chromium 120 headless browser (62 MB)
+- wifi-chat - P2P chat over WiFi (12 KB)
+- berrybot - Command-line teaching assistant (600 KB)
+
+Catalog: All port binaries now in qpkg catalog
+
+Full release notes: GITHUB_RELEASE_v0.77.md
+Changelog: CHANGELOG.md
+
+---
+BerryCore v0.77 - March 2026

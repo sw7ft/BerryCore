@@ -2,7 +2,7 @@
 
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.76 Installation"
+echo "     BerryCore v0.77 Installation"
 echo "==========================================================="
 echo ""
 
@@ -95,6 +95,13 @@ sed -i.bak "s|NATIVE_TOOLS=\"/accounts/1000/shared/misc/berrycore\"|NATIVE_TOOLS
 rm -f env.sh.bak
 # Note: berrycore.zip is kept in both locations (original and installation directory)
 . ./env.sh
+
+# zsh and other tools have hardcoded /accounts/1000/shared/misc/clitools paths
+# Create symlink so they find the actual install directory
+if [ -d /accounts/1000/shared/misc ] && { [ ! -e /accounts/1000/shared/misc/clitools ] || [ -L /accounts/1000/shared/misc/clitools ]; }; then
+    ln -sf "$PWD" /accounts/1000/shared/misc/clitools
+    echo "Created clitools -> $PWD symlink (for zsh and legacy tools)"
+fi
 
 # Install packages
 NEW_PKGS=0
