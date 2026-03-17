@@ -1,0 +1,43 @@
+#!/bin/sh
+# content_shell - Chromium 120 headless browser for Term49/BB10
+# Renders web pages and dumps DOM to stdout.
+# Install: qpkg install content-shell-term49
+
+# Resolve NATIVE_TOOLS from script location (bin/content_shell -> berrycore/)
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+SHARE="$NATIVE_TOOLS/share/content-shell-term49"
+
+# Handle help
+case "${1:-}" in
+    help|-h|--help)
+        if [ -f "$SHARE/HELP.txt" ]; then
+            cat "$SHARE/HELP.txt"
+        else
+            echo "content_shell - Chromium headless browser for Term49"
+            echo ""
+            echo "Usage: content_shell [URL] [options]"
+            echo "       content_shell help"
+            echo ""
+            echo "Examples:"
+            echo "  content_shell                          # Hello world"
+            echo "  content_shell http://example.com       # Dump DOM"
+            echo "  content_shell https://example.com      # HTTPS"
+            echo ""
+            echo "Install: qpkg install content-shell-term49"
+        fi
+        exit 0
+        ;;
+esac
+
+# Run the real binary
+if [ -x "$SHARE/content_shell" ]; then
+    exec "$SHARE/content_shell" "$@"
+elif [ -x "$SHARE/content-shell" ]; then
+    exec "$SHARE/content-shell" "$@"
+else
+    echo "content_shell: binary not found in $SHARE"
+    echo "Run: qpkg install content-shell-term49"
+    exit 1
+fi

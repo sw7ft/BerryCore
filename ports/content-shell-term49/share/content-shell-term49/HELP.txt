@@ -1,0 +1,33 @@
+Content Shell Term49 - Chromium 120 Headless Browser
+====================================================
+
+Renders web pages and dumps the DOM (after JavaScript) to stdout.
+Works over HTTP and HTTPS on BB10 via Term49.
+
+INSTALL
+-------
+  qpkg install content-shell-term49
+
+QUICK TEST
+----------
+  content_shell                          # Hello world
+  content_shell http://example.com       # HTTP page (redirect stderr: 2>/dev/null)
+  content_shell https://example.com      # HTTPS page
+
+SAVE TO FILE
+------------
+  content_shell http://example.com > page.html 2>/dev/null
+
+JS-HEAVY PAGES (Google, etc.)
+-----------------------------
+  content_shell https://www.google.com --timeout=15000 2>/dev/null
+
+OPTIONS
+-------
+  --timeout=N    Wait up to N ms for page load (default may be short)
+  --dump-dom     Dump DOM to stdout (default behavior)
+  2>/dev/null    Suppress Chromium stderr on BB10 (recommended)
+
+MORE HELP
+---------
+  cat $NATIVE_TOOLS/share/content-shell-term49/README.md

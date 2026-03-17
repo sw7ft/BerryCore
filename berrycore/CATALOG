@@ -130,6 +130,7 @@ berrysnip|util|Snippet & notes manager with web UI (port 8018) and TUI (qpkg ins
 
 # Package Management
 qpkg|sys|QNX Package Manager - Update BerryCore and install ports
+settings|sys|BerryCore settings - toggle sshd/tools/MOTD in .profile (settings sshd-on, tools-on, motd-on, status)
 bclist|sys|List and search installed binaries
 bcinfo|sys|Get detailed information about a binary
 bcmotd|sys|Manage Message of the Day settings
@@ -138,7 +139,7 @@ bcmotd|sys|Manage Message of the Day settings
 linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 
 # Web Development
-chromium-shell|web|Chromium Content Shell browser engine (qpkg install chromium-shell)
+content_shell|web|Chromium 120 headless browser for Term49 - DOM dump (qpkg install content-shell-term49)
 apache-setup|web|Setup Apache+PHP (run after installing apache-php port)
 apache|web|Apache HTTP Server 2.4.58 (qpkg install apache-php)
 apachectl|web|Apache control - start/stop/restart server
