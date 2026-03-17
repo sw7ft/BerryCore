@@ -111,6 +111,10 @@ calcurse|time|Text-based calendar and scheduling
 # IRC & Communication
 irc|comm|IRC client
 
+# Email
+mutt|comm|Terminal email client - IMAP/SMTP over TLS (run mutt-setup first)
+mutt-setup|comm|Interactive Mutt config - sets up ~/.muttrc with IMAP/SMTP
+
 # Games
 nbsdgames|game|Collection of BSD games
 tetris|game|Classic Tetris in pure bash (qpkg install tetris)
