@@ -162,4 +162,5 @@ voiceagent|web|AI voice assistant with OpenAI GPT-4o, Whisper, and TTS (qpkg ins
 berrypy|web|BlackBerry app platform manager with web interface (requires python3: qpkg install berrypy)
 elinks|web|Text-based web browser with SSL/TLS, JavaScript, and CSS support - auto-configured (qpkg install elinks)
 term49-web|web|Browser-based terminal - access QNX shell from any browser via xterm.js (qpkg install term49-web, port 7681)
+rocketchat|web|RocketChat Navigator - private groups, DMs (qpkg install rocketchat, requires python3, port 8026)
 

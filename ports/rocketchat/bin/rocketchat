@@ -1,0 +1,50 @@
+#!/bin/sh
+# rocketchat - RocketChat Navigator for BB10
+# Web app for RocketChat private groups and direct messages. Requires python3.
+# Install: qpkg install rocketchat
+
+# Resolve NATIVE_TOOLS from script location (bin/rocketchat -> berrycore/)
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+SHARE="$NATIVE_TOOLS/share/rocketchat"
+
+# Handle help
+case "${1:-}" in
+    help|-h|--help)
+        if [ -f "$SHARE/HELP.txt" ]; then
+            cat "$SHARE/HELP.txt"
+        else
+            echo "rocketchat - RocketChat Navigator for BB10"
+            echo ""
+            echo "Usage: rocketchat [options]"
+            echo "       rocketchat &          # Run in background"
+            echo ""
+            echo "Starts web server on port 8026. Open http://localhost:8026 in browser."
+            echo "Requires: python3 (qpkg install python3)"
+        fi
+        exit 0
+        ;;
+esac
+
+# Find Python
+PYTHON=""
+for p in python3 python3.11 python3.2; do
+    if command -v $p >/dev/null 2>&1; then
+        PYTHON="$p"
+        break
+    fi
+done
+
+if [ -z "$PYTHON" ]; then
+    echo "rocketchat: python3 not found. Run: qpkg install python3"
+    exit 1
+fi
+
+if [ ! -f "$SHARE/app.py" ]; then
+    echo "rocketchat: app.py not found in $SHARE"
+    echo "Run: qpkg install rocketchat"
+    exit 1
+fi
+
+exec "$PYTHON" "$SHARE/app.py" "$@"

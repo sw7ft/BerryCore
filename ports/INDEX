@@ -28,4 +28,5 @@ node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, n
 android-apps|util|1.0|89M|RDP, Bridge, Kiwi Browser, Launcher, XServer, SublimeText, term49-dashboard, BB10Terminal, ExFAT - installs to misc/android-apps/
 wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: wifi-chat [name]
 berrybot|util|1.0.0|600K|Command-line teaching assistant - Linux, QNX, bash, BerryCore (run: bot grep, bot lessons)
+rocketchat|web|1.0|92K|RocketChat Navigator for BB10 - private groups, DMs (requires python3, port 8026)
 

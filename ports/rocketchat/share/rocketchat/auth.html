@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RocketChat Login</title>
+    
+    <!-- Home Screen Icon Support -->
+    <link rel="icon" href="https://berrystore.sw7ft.com/apps/app-icons/rocketchat.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://berrystore.sw7ft.com/apps/app-icons/rocketchat.png">
+    <link rel="apple-touch-icon-precomposed" href="https://berrystore.sw7ft.com/apps/app-icons/rocketchat.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="RocketChat">
+    <meta name="theme-color" content="#9b59b6">
+    
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #f1f1f1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: 500;
+            color: #f1f1f1;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+        code {
+            background-color: #2a2a2a;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"],
+        input[type="password"] {
+            padding: 12px 15px;
+            border-radius: 18px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #f1f1f1;
+            font-size: 16px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #9b59b6;
+            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.4);
+        }
+        input[type="submit"] {
+            padding: 12px 20px;
+            border-radius: 18px;
+            border: none;
+            background: linear-gradient(135deg, #9b59b6, #7d3c98); /* Purple gradient */
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        input[type="submit"]:hover {
+            background: linear-gradient(135deg, #7d3c98, #5a2a6f); /* Darker purple on hover */
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h2 {
+            margin: 0;
+            color: #f1f1f1;
+            font-weight: 500;
+        }
+        .logo-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: #ff5252;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 85%;
+                padding: 25px 15px;
+            }
+        }
+        label {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 5px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <div class="logo-icon">🚀</div>
+        <h2>RocketChat Navigator</h2>
+    </div>
+    <div class="container">
+        <h1>Login to RocketChat</h1>
+        <p>Enter your RocketChat server details and credentials</p>
+        <form id="loginForm">
+            <label for="server_url">Server URL:</label>
+            <input type="text" id="server_url" name="server_url" placeholder="https://your-rocket-chat.com" required>
+            
+            <label for="username">Username or Email:</label>
+            <input type="text" id="username" name="username" placeholder="your-username" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Your password" required>
+            
+            <input type="submit" value="Login">
+        </form>
+        <div id="error" class="error"></div>
+        <div id="loading" class="loading">Logging in...</div>
+    </div>
+
+    <script>
+    (function() {
+      var loginForm = document.getElementById('loginForm');
+      var errorDiv = document.getElementById('error');
+      var loadingDiv = document.getElementById('loading');
+      
+      loginForm.onsubmit = function(e) {
+        e.preventDefault();
+        
+        errorDiv.style.display = 'none';
+        
+        var serverUrl = document.getElementById('server_url').value.trim();
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value.trim();
+        
+        if (!serverUrl || !username || !password) {
+            errorDiv.textContent = 'Please fill in all fields';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        loadingDiv.style.display = 'block';
+        
+        var submitButton = loginForm.querySelector('input[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.value = 'Logging in...';
+
+        var data = JSON.stringify({ 
+            server_url: serverUrl,
+            username: username,
+            password: password
+        });
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/login', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            loadingDiv.style.display = 'none';
+            
+            submitButton.disabled = false;
+            submitButton.value = 'Login';
+            
+            if (xhr.status === 200) {
+              try {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'error') {
+                    errorDiv.textContent = response.message || 'Login failed';
+                    errorDiv.style.display = 'block';
+                } else {
+                    // Success - redirect
+                    window.location.href = response.next || '/';
+                }
+              } catch (err) {
+                errorDiv.textContent = 'Error processing response: ' + err;
+                errorDiv.style.display = 'block';
+              }
+            } else {
+              try {
+                var response = JSON.parse(xhr.responseText);
+                errorDiv.textContent = response.message || 'Login failed';
+              } catch (err) {
+                errorDiv.textContent = 'Error: Failed to login. Please check your credentials.';
+              }
+              errorDiv.style.display = 'block';
+            }
+          }
+        };
+
+        xhr.send(data);
+      };
+    })();
+    </script>
+</body>
+</html>
+
