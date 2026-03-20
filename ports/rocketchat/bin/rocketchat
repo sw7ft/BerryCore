@@ -9,23 +9,27 @@ NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
 [ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
 SHARE="$NATIVE_TOOLS/share/rocketchat"
 
-# Handle help
-case "${1:-}" in
-    help|-h|--help)
-        if [ -f "$SHARE/HELP.txt" ]; then
-            cat "$SHARE/HELP.txt"
-        else
-            echo "rocketchat - RocketChat Navigator for BB10"
-            echo ""
-            echo "Usage: rocketchat [options]"
-            echo "       rocketchat &          # Run in background"
-            echo ""
-            echo "Starts web server on port 8026. Open http://localhost:8026 in browser."
-            echo "Requires: python3 (qpkg install python3)"
-        fi
-        exit 0
-        ;;
-esac
+# Handle help and --foreground
+FOREGROUND=0
+for arg in "$@"; do
+    case "$arg" in
+        help|-h|--help)
+            if [ -f "$SHARE/HELP.txt" ]; then
+                cat "$SHARE/HELP.txt"
+            else
+                echo "rocketchat - RocketChat Navigator for BB10"
+                echo ""
+                echo "Usage: rocketchat          # Start in background (default)"
+                echo "       rocketchat -f       # Run in foreground"
+                echo ""
+                echo "Starts web server on port 8026. Open http://localhost:8026 in browser."
+                echo "Requires: python3 (qpkg install python3)"
+            fi
+            exit 0
+            ;;
+        -f|--foreground) FOREGROUND=1 ;;
+    esac
+done
 
 # Find Python
 PYTHON=""
@@ -47,4 +51,13 @@ if [ ! -f "$SHARE/app.py" ]; then
     exit 1
 fi
 
-exec "$PYTHON" "$SHARE/app.py" "$@"
+if [ "$FOREGROUND" = 1 ]; then
+    exec "$PYTHON" "$SHARE/app.py"
+fi
+
+# Run in background with nohup
+LOG="$SHARE/rocketchat.log"
+mkdir -p "$SHARE" 2>/dev/null
+echo "rocketchat: starting in background (log: $LOG)"
+echo "Open http://localhost:8026 in browser"
+nohup "$PYTHON" "$SHARE/app.py" >> "$LOG" 2>&1 &

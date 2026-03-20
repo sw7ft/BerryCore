@@ -16,9 +16,9 @@ qpkg install rocketchat
 
 ```bash
 rocketchat
-# Open http://localhost:8026 in BB10 browser
+# Starts in background. Open http://localhost:8026 in BB10 browser
 
-rocketchat &   # Run in background
+rocketchat -f   # Run in foreground (for debugging)
 ```
 
 ## First-time setup
