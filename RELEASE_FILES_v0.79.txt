@@ -1,0 +1,47 @@
+BerryCore v0.79 Release Files
+============================
+
+Release Date: June 5, 2026
+GitHub Tag: v0.79
+
+REQUIRED FILES (attach to GitHub Release)
+-----------------------------------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package (includes wget-1.25.0.zip core package)
+   - Size: 177 MB
+   - SHA256: 9bb3cf16e446a45f917cc45951ca47bf4fb401d4b1fcb25e8a7e1ad453d9844c
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.79
+   - Size: ~8 KB
+   - SHA256: cc1bf28722bb447fd98d252ad0ef76e72690fcfad82cb4442dabcc630f2d51f9
+
+CREATE PACKAGE
+--------------
+
+  ./utilities/package.sh
+
+COPY-PASTE RELEASE NOTES
+------------------------
+
+  GITHUB_RELEASE_v0.79_BODY.md
+
+WHAT'S NEW IN v0.79
+-------------------
+
+Core:
+- wget 1.20.3 -> 1.25.0 (OpenSSL 1.1.1w, modern HTTPS)
+- qpkg: auto-detect NATIVE_TOOLS, QNX-safe port downloads
+
+Ports (qpkg install, not in berrycore.zip):
+- claude-code, rocketchat (from v0.78 line)
+
+VERIFY
+------
+
+  cat $NATIVE_TOOLS/VERSION    # 0.79
+  wget --version               # GNU Wget 1.25.0
+
+---
+BerryCore v0.79 - June 2026
