@@ -5,23 +5,42 @@ All notable changes to BerryCore will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.78] - 2026-06-04
+
+### New Ports: Claude Code, RocketChat, Mutt Setup
+
+**Headline:** Claude Code AI agent for BB10, RocketChat Navigator, and interactive Mutt email setup.
 
 ### Added
 
-#### New Port: claude-code — Claude Code AI Agent for BB10
+#### New Ports (2)
 
 - **claude-code** — Anthropic Claude Code 2.1.91, patched for QNX/Term49 (45 MB installed)
   - Terminal AI coding agent: edit files, run commands, interactive sessions
   - BB10 patches: Node `--jitless`, fetch polyfill (no WASM), Bash-tool freeze fix, BB10 context
   - **Requires:** `node-term49` (`qpkg install node-term49`)
-  - **Setup:** `claude-setup` saves your Anthropic API key to `~/claude.key`
+  - **Setup:** `claude-setup` saves Anthropic API key to `~/claude.key`
   - Run: `claude -p "your prompt"` or `claude` for interactive mode
   - BerryCore help: `claude help` | Claude CLI help: `claude --help`
+- **rocketchat** — RocketChat Navigator for BB10 (92 KB)
+  - Web app for private groups and DMs on port 8026
+  - **Requires:** `python3`
+  - Run: `rocketchat` (background) or `rocketchat -f` (foreground)
 
-#### Catalog
+#### Mutt
 
-- **CATALOG** — Added `claude`, `claude-setup`
+- **mutt-setup** — Interactive wizard for IMAP/SMTP; creates `~/.muttrc`
+
+### Changed
+
+- **rocketchat** — Runs in background with nohup by default
+- **CATALOG** — Added `claude`, `claude-setup`, `rocketchat`
+- VERSION bumped to 0.78
+
+### Statistics
+
+- **Port Count**: 17 installable ports (via `qpkg ports`)
+- **Binary Count**: 100+
 
 ---
 

@@ -1,0 +1,57 @@
+BerryCore v0.78 Release Files
+============================
+
+Release Date: June 4, 2026
+GitHub Tag: v0.78
+
+REQUIRED FILES (attach to GitHub Release)
+-----------------------------------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package
+   - Size: 176 MB
+   - SHA256: 33e7e590c2f4279396a44e26962e3981b9b0cf5690913da7ad944e712508de7a
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.78
+   - Size: ~8 KB
+   - SHA256: 8721a4a6d33a770f3a992d6c13223601cd2bc35f9aad30b9ec58232460bc291e
+
+CREATE PACKAGE
+--------------
+
+  ./utilities/package.sh
+
+Verifies: berrycore.zip is created at repo root
+
+VERIFY INSTALL
+--------------
+
+  cat $NATIVE_TOOLS/VERSION
+  # Should show: 0.78
+
+WHAT'S NEW IN v0.78
+-------------------
+
+New Ports (qpkg install):
+- claude-code   - Claude Code AI agent for BB10 (requires node-term49, run claude-setup)
+- rocketchat    - RocketChat Navigator web app (requires python3, port 8026)
+
+Other updates:
+- mutt-setup    - Interactive Mutt IMAP/SMTP config wizard
+- CATALOG       - claude, claude-setup, rocketchat entries
+
+CLAUDE CODE QUICK START (for release notes)
+-------------------------------------------
+
+  qpkg install node-term49
+  qpkg install claude-code
+  claude-setup
+  claude -p "hello from BB10"
+
+Full Claude docs: GITHUB_RELEASE_ports-claude-code.md
+Full release notes: GITHUB_RELEASE_v0.78.md
+Changelog: CHANGELOG.md
+
+---
+BerryCore v0.78 - June 2026
