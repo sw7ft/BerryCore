@@ -50,6 +50,41 @@ print_warning() {
     echo "${YELLOW}⚠${NC} $1"
 }
 
+# Resolve BerryCore root (bin/qpkg -> ..). Safe if env.sh was not sourced.
+init_native_tools() {
+    if [ -n "$NATIVE_TOOLS" ] && [ -f "$NATIVE_TOOLS/env.sh" ]; then
+        return 0
+    fi
+
+    QPKG_BIN=""
+    if [ -n "$0" ] && [ -f "$0" ]; then
+        QPKG_BIN="$0"
+    elif command -v qpkg >/dev/null 2>&1; then
+        QPKG_BIN=$(command -v qpkg)
+    fi
+
+    if [ -n "$QPKG_BIN" ]; then
+        BIN_DIR=$(CDPATH= cd -- "$(dirname -- "$QPKG_BIN")" && pwd)
+        if [ -f "$BIN_DIR/../env.sh" ]; then
+            NATIVE_TOOLS=$(CDPATH= cd -- "$BIN_DIR/.." && pwd)
+            export NATIVE_TOOLS
+            return 0
+        fi
+    fi
+
+    if [ -f "/accounts/1000/shared/misc/berrycore/env.sh" ]; then
+        NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+        export NATIVE_TOOLS
+        return 0
+    fi
+
+    print_error "BerryCore root not found (NATIVE_TOOLS unset)."
+    echo ""
+    echo "Run:  . /accounts/1000/shared/misc/berrycore/env.sh"
+    echo "  or: export NATIVE_TOOLS=/path/to/berrycore"
+    exit 1
+}
+
 # Get current installed version
 get_current_version() {
     if [ -f "$NATIVE_TOOLS/VERSION" ]; then
@@ -102,38 +137,47 @@ version_greater() {
     fi
 }
 
-# Download file with progress
+# Download file (QNX-safe: no grep -o in progress parsing)
 download_file() {
     URL="$1"
     OUTPUT="$2"
     FILENAME=$(basename "$OUTPUT")
-    
+    OUT_DIR=$(dirname "$OUTPUT")
+
     print_info "Downloading $FILENAME..."
-    
-    # Try curl with progress bar
+
+    if [ -n "$OUT_DIR" ] && [ "$OUT_DIR" != "." ]; then
+        if ! mkdir -p "$OUT_DIR" 2>/dev/null; then
+            print_error "Cannot create directory: $OUT_DIR"
+            return 1
+        fi
+    fi
+
     if command -v curl >/dev/null 2>&1; then
-        curl -k -L -o "$OUTPUT" "$URL" 2>&1 | \
-        while read line; do
-            echo "$line" | grep -o '[0-9]*\.[0-9]' | tail -1 | \
-            while read pct; do
-                printf "\r  Progress: %.0f%%" "$pct"
-            done
-        done
-        printf "\r  Progress: 100%%\n"
+        if ! curl -k -L -f -o "$OUTPUT" "$URL" 2>/dev/null; then
+            if ! curl -k -L -o "$OUTPUT" "$URL" 2>/dev/null; then
+                print_error "Download failed: $FILENAME"
+                return 1
+            fi
+        fi
     elif command -v wget >/dev/null 2>&1; then
-        wget -O "$OUTPUT" "$URL"
+        if ! wget -q -O "$OUTPUT" "$URL" 2>/dev/null; then
+            print_error "Download failed: $FILENAME"
+            return 1
+        fi
     else
         print_error "No download tool available (curl or wget required)"
         return 1
     fi
-    
-    if [ -f "$OUTPUT" ]; then
+
+    if [ -f "$OUTPUT" ] && [ -s "$OUTPUT" ]; then
         print_success "Downloaded $FILENAME"
         return 0
-    else
-        print_error "Download failed: $FILENAME"
-        return 1
     fi
+
+    print_error "Download failed: $FILENAME (missing or empty)"
+    rm -f "$OUTPUT" 2>/dev/null
+    return 1
 }
 
 # Update BerryCore
@@ -192,6 +236,10 @@ cmd_update() {
     INSTALL_URL="https://github.com/$GITHUB_REPO/releases/download/v${LATEST_VERSION}/install.sh"
     
     # Download files
+    if ! mkdir -p "$DOWNLOAD_DIR" 2>/dev/null; then
+        print_error "Cannot create download directory: $DOWNLOAD_DIR"
+        exit 1
+    fi
     cd "$DOWNLOAD_DIR" || exit 1
     
     download_file "$BERRYCORE_URL" "berrycore.zip"
@@ -337,40 +385,49 @@ cmd_install() {
     
     # Create temp directory in NATIVE_TOOLS (QNX /tmp may not be writable)
     TEMP_DIR="$NATIVE_TOOLS/.tmp/qpkg-$PORT_NAME-$$"
-    mkdir -p "$TEMP_DIR"
-    
-    # Download port
-    echo ""
-    print_info "Downloading $FILENAME..."
-    
-    if ! curl -k -L -o "$TEMP_DIR/$FILENAME" "$DOWNLOAD_URL" 2>&1 | grep -o '[0-9]*\.[0-9]' | tail -1 | while read pct; do printf "\r  Progress: %.0f%%" "$pct"; done; then
-        printf "\r  Progress: 100%%\n"
-        print_error "Download failed"
-        rm -rf "$TEMP_DIR"
+    if ! mkdir -p "$TEMP_DIR" 2>/dev/null; then
+        print_error "Cannot create temp directory: $TEMP_DIR"
+        echo ""
+        echo "BerryCore root: $NATIVE_TOOLS"
+        echo "Run:  . $NATIVE_TOOLS/env.sh"
+        echo "  or: check write permission on $NATIVE_TOOLS"
         exit 1
     fi
-    printf "\n"
-    
-    # Verify download
-    if [ ! -f "$TEMP_DIR/$FILENAME" ]; then
-        print_error "Downloaded file not found"
+
+    echo ""
+    if ! download_file "$DOWNLOAD_URL" "$TEMP_DIR/$FILENAME"; then
         rm -rf "$TEMP_DIR"
         exit 1
     fi
     
-    print_success "Downloaded $FILENAME"
+    # Install - most ports extract to NATIVE_TOOLS; some use custom paths
+    INSTALL_DIR="$NATIVE_TOOLS"
+    case "$PORT_NAME" in
+        android-apps)
+            INSTALL_DIR="/accounts/1000/shared/misc"
+            ;;
+    esac
     
-    # Install (extract to NATIVE_TOOLS)
     echo ""
-    print_info "Installing to $NATIVE_TOOLS..."
-    
-    cd "$NATIVE_TOOLS" || exit 1
+    print_info "Installing to $INSTALL_DIR..."
+
+    if [ ! -d "$INSTALL_DIR" ]; then
+        print_error "Install directory not found: $INSTALL_DIR"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    fi
+
+    if ! cd "$INSTALL_DIR" 2>/dev/null; then
+        print_error "Cannot access install directory: $INSTALL_DIR"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    fi
     
     if unzip -o "$TEMP_DIR/$FILENAME" 2>&1 | grep -v "Archive:" | grep -v "inflating:"; then
         :
     fi
     
-    # Set executable permissions on binaries
+    # Set executable permissions on binaries (only in NATIVE_TOOLS)
     if [ -d "$NATIVE_TOOLS/bin" ]; then
         chmod +x "$NATIVE_TOOLS/bin"/* 2>/dev/null
     fi
@@ -384,8 +441,11 @@ cmd_install() {
     print_success "Port '$PORT_NAME' installed successfully!"
     echo ""
     
-    # Show installed binaries (before cleanup)
-    if [ -d "$NATIVE_TOOLS/bin" ]; then
+    # Show installed binaries or apps (before cleanup)
+    if [ "$PORT_NAME" = "android-apps" ] && [ -d "$INSTALL_DIR/android-apps" ]; then
+        echo "Apps installed to $INSTALL_DIR/android-apps/:"
+        ls -1 "$INSTALL_DIR/android-apps" | sed 's/^/  /'
+    elif [ -d "$NATIVE_TOOLS/bin" ]; then
         echo "Binaries installed:"
         ls -1 "$NATIVE_TOOLS/bin" | tail -10 | sed 's/^/  /'
     fi
@@ -701,6 +761,8 @@ EOF
 
 # Main command dispatcher
 main() {
+    init_native_tools
+
     COMMAND="$1"
     shift
     
