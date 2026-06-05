@@ -5,6 +5,26 @@ All notable changes to BerryCore will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+#### New Port: claude-code — Claude Code AI Agent for BB10
+
+- **claude-code** — Anthropic Claude Code 2.1.91, patched for QNX/Term49 (45 MB installed)
+  - Terminal AI coding agent: edit files, run commands, interactive sessions
+  - BB10 patches: Node `--jitless`, fetch polyfill (no WASM), Bash-tool freeze fix, BB10 context
+  - **Requires:** `node-term49` (`qpkg install node-term49`)
+  - **Setup:** `claude-setup` saves your Anthropic API key to `~/claude.key`
+  - Run: `claude -p "your prompt"` or `claude` for interactive mode
+  - BerryCore help: `claude help` | Claude CLI help: `claude --help`
+
+#### Catalog
+
+- **CATALOG** — Added `claude`, `claude-setup`
+
+---
+
 ## [0.77] - 2026-03-17
 
 ### New Ports & Catalog Update
@@ -25,10 +45,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Non-AI help for Linux, QNX, bash, BerryCore
   - Run: `bot grep`, `bot lessons`
 
+#### android-apps (Term49 Dashboard & Bridge)
+
+- **term49-dashboard** — Dashboard for Term49 terminal
+- **term49-bridge** (Bridge) — Bridge app for Term49
+- Also includes: RDP, Kiwi Browser, Launcher, XServer, SublimeText, BB10Terminal, ExFAT
+- Install: `qpkg install android-apps` → `/accounts/1000/shared/misc/android-apps/`
+
 ### Changed
 
 - **CATALOG** — Added all port binaries: tools, node, npm, content_shell, wifi-chat, bot, tetris, qnxdesktop, voiceagent, term49-web
 - VERSION bumped to 0.77
+
+### Available Ports (Node.js, bb-tools, etc.)
+
+- **node-term49** — Node.js v22, npm 10.5.1 (--jitless for QNX)
+- **bb-tools** — Web tools: dashboard, drawing-board, editors, compass, virtual-keyboard (port 8765)
 
 ### Statistics
 

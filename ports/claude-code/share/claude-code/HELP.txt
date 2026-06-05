@@ -1,0 +1,50 @@
+Claude Code for BlackBerry 10
+==============================
+
+Anthropic's Claude Code — AI coding agent in your terminal.
+Patched for QNX/Term49 (Node --jitless, fetch polyfill, BB10 context).
+
+INSTALL
+-------
+  qpkg install node-term49    # required first
+  qpkg install claude-code
+  claude-setup                # save your Anthropic API key
+
+REQUIRES
+--------
+  node-term49 (qpkg install node-term49)
+
+QUICK START
+-----------
+  claude-setup
+  claude help                 # BerryCore install / key docs
+  claude --help               # Claude Code CLI help
+  claude -p "explain this codebase"
+  claude                        # interactive session
+
+API KEY
+-------
+  Stored in ~/claude.key (chmod 600). One line:
+    sk-ant-api03-...
+  Or: ANTHROPIC_API_KEY=sk-ant-...
+  Or: export ANTHROPIC_API_KEY=sk-ant-...
+
+  Override: CLAUDE_KEY_FILE=/path/to/key
+
+ENV OVERRIDES
+-------------
+  CLAUDE_BB10_SKIP_PERMISSION_BYPASS=1   skip --dangerously-skip-permissions
+  CLAUDE_BB10_SKIP_CONTEXT=1             skip BB10 context.md append
+  CLAUDE_BB10_NODE_BIN=/path/node.bin
+  CLAUDE_BB10_CLI=/path/cli.js
+
+NOTES
+-----
+  - Uses BerryCore bash for the Bash tool (not QNX ksh)
+  - Temp files go to ~/tmp (not /tmp)
+  - Personal device: auto-approves tool use by default
+  - Get API key: https://console.anthropic.com/
+
+VERSION
+-------
+  Claude Code 2.1.91 (BB10-patched)

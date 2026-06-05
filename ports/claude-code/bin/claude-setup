@@ -1,0 +1,75 @@
+#!/bin/sh
+# claude-setup — Save Anthropic API key for Claude Code on BB10
+# Run once after: qpkg install claude-code
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+
+if [ -z "$HOME" ] || [ ! -d "$HOME" ]; then
+    HOME="/accounts/1000/shared/misc"
+    export HOME
+fi
+
+KEY_FILE="${CLAUDE_KEY_FILE:-$HOME/claude.key}"
+
+echo ""
+echo "=============================================="
+echo "  Claude Code Setup — BerryCore"
+echo "=============================================="
+echo ""
+echo "Claude Code needs an Anthropic API key."
+echo "Get one at: https://console.anthropic.com/"
+echo ""
+echo "The key is stored in: $KEY_FILE"
+echo "Format: one line — either sk-ant-... or ANTHROPIC_API_KEY=sk-ant-..."
+echo ""
+
+if [ -f "$KEY_FILE" ]; then
+    echo "Existing key file found."
+    printf "Replace it? [y/N]: "
+    read REPLACE
+    case "$REPLACE" in
+        y|Y|yes|YES) ;;
+        *) echo "Keeping existing key."; exit 0 ;;
+    esac
+fi
+
+printf "Paste your Anthropic API key: "
+read KEY
+
+KEY=$(printf '%s' "$KEY" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+if [ -z "$KEY" ]; then
+    echo "No key entered. Setup cancelled."
+    exit 1
+fi
+
+case "$KEY" in
+    sk-ant-*)
+        printf '%s\n' "$KEY" > "$KEY_FILE"
+        ;;
+    ANTHROPIC_API_KEY=*)
+        printf '%s\n' "$KEY" > "$KEY_FILE"
+        ;;
+    *)
+        echo "Warning: key does not look like sk-ant-... — saving anyway."
+        printf '%s\n' "$KEY" > "$KEY_FILE"
+        ;;
+esac
+
+chmod 600 "$KEY_FILE" 2>/dev/null
+
+echo ""
+echo "=============================================="
+echo "  Setup complete!"
+echo "=============================================="
+echo ""
+echo "Key saved to: $KEY_FILE"
+echo ""
+echo "Try:"
+echo "  claude --help"
+echo "  claude -p \"hello from BB10\""
+echo ""
+echo "Override key location: CLAUDE_KEY_FILE=/path/to/key claude ..."
+echo ""

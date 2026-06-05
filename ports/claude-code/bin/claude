@@ -1,0 +1,113 @@
+#!/bin/sh
+# claude - Claude Code for BB10 (Anthropic AI coding agent)
+# Install: qpkg install claude-code
+# Requires: node-term49 (qpkg install node-term49)
+# Setup:    claude-setup  (saves API key to ~/claude.key)
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+SHARE="$NATIVE_TOOLS/share/claude-code"
+BC_DIR="$NATIVE_TOOLS/bin"
+
+# BerryCore port help (install, API key, env vars) — not Claude Code's --help
+if [ "$#" -eq 1 ] && [ "$1" = "help" ]; then
+    if [ -f "$SHARE/HELP.txt" ]; then
+        cat "$SHARE/HELP.txt"
+    else
+        echo "claude - Claude Code for BB10"
+        echo ""
+        echo "Setup:  claude-setup"
+        echo "Usage: claude --help"
+        echo "       claude -p \"your prompt\""
+    fi
+    exit 0
+fi
+
+# Claude CLI --help / --version work without an API key
+SKIP_KEY_CHECK=0
+for arg in "$@"; do
+    case "$arg" in
+        --help|-h|--version|-v) SKIP_KEY_CHECK=1 ;;
+    esac
+done
+
+NODE_BIN="${CLAUDE_BB10_NODE_BIN:-$BC_DIR/node.bin}"
+CLI_JS="${CLAUDE_BB10_CLI:-$SHARE/package/cli.js}"
+POLY="${CLAUDE_BB10_FETCH_POLY:-$SHARE/bb10-fetch-polyfill.cjs}"
+
+export LD_LIBRARY_PATH="$BC_DIR:${LD_LIBRARY_PATH:-}"
+export HOME="${HOME:-/accounts/1000/shared/misc}"
+export PATH="$BC_DIR:${PATH:-}"
+
+mkdir -p "${HOME}/tmp" 2>/dev/null
+TMPDIR="${TMPDIR:-$HOME/tmp}"
+TMP="${TMP:-$TMPDIR}"
+TEMP="${TEMP:-$TMPDIR}"
+TEMPDIR="${TEMPDIR:-$TMPDIR}"
+export TMPDIR TMP TEMP TEMPDIR
+export CLAUDE_CODE_TMPDIR="$TMPDIR"
+
+if [ -n "${CLAUDE_CODE_SHELL:-}" ] && [ -x "$CLAUDE_CODE_SHELL" ]; then
+    export SHELL="$CLAUDE_CODE_SHELL"
+elif [ -x "$BC_DIR/bash" ]; then
+    export CLAUDE_CODE_SHELL="$BC_DIR/bash"
+    export SHELL="$BC_DIR/bash"
+fi
+
+KEY_FILE="${CLAUDE_KEY_FILE:-$HOME/claude.key}"
+if [ -f "$KEY_FILE" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+    line=$(grep -v '^[[:space:]]*#' "$KEY_FILE" | grep -v '^[[:space:]]*$' | head -1 | tr -d '\r\n')
+    case "$line" in
+        export\ *) eval "$line" ;;
+        ANTHROPIC_API_KEY=*) export "$line" ;;
+        "") ;;
+        *) export ANTHROPIC_API_KEY="$line" ;;
+    esac
+fi
+
+if [ ! -x "$NODE_BIN" ]; then
+    echo "claude: node.bin not found. Run: qpkg install node-term49"
+    exit 1
+fi
+
+if [ ! -f "$CLI_JS" ]; then
+    echo "claude: Claude Code not installed in $SHARE"
+    echo "Run: qpkg install claude-code"
+    exit 1
+fi
+
+if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ "$SKIP_KEY_CHECK" != 1 ]; then
+    echo "claude: no API key found."
+    echo ""
+    echo "Run:  claude-setup"
+    echo "  or: echo 'sk-ant-...' > ~/claude.key && chmod 600 ~/claude.key"
+    echo "  or: export ANTHROPIC_API_KEY=sk-ant-..."
+    exit 1
+fi
+
+if [ "${CLAUDE_BB10_SKIP_PERMISSION_BYPASS:-0}" != 1 ]; then
+    if [ "${CLAUDE_BB10_SKIP_CONTEXT:-0}" != 1 ]; then
+        CONTEXT_FILE="${CLAUDE_BB10_CONTEXT_FILE:-$SHARE/context.md}"
+        if [ -f "$CONTEXT_FILE" ]; then
+            set -- --dangerously-skip-permissions --append-system-prompt-file "$CONTEXT_FILE" "$@"
+        else
+            set -- --dangerously-skip-permissions "$@"
+        fi
+    else
+        set -- --dangerously-skip-permissions "$@"
+    fi
+else
+    if [ "${CLAUDE_BB10_SKIP_CONTEXT:-0}" != 1 ]; then
+        CONTEXT_FILE="${CLAUDE_BB10_CONTEXT_FILE:-$SHARE/context.md}"
+        if [ -f "$CONTEXT_FILE" ]; then
+            set -- --append-system-prompt-file "$CONTEXT_FILE" "$@"
+        fi
+    fi
+fi
+
+if [ -f "$POLY" ]; then
+    exec "$NODE_BIN" --jitless --no-experimental-fetch --require "$POLY" "$CLI_JS" "$@"
+fi
+echo "Warning: missing bb10-fetch-polyfill.cjs (expected $POLY)" >&2
+exec "$NODE_BIN" --jitless --no-experimental-fetch "$CLI_JS" "$@"

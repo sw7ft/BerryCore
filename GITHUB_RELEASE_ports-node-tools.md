@@ -20,6 +20,25 @@ npm init
 npm install <package>
 ```
 
+### claude-code — Claude Code AI Agent (requires node-term49)
+
+Anthropic Claude Code in the terminal, patched for QNX/Term49. Bring your own API key.
+
+**Install:**
+```bash
+qpkg install node-term49    # required first
+qpkg install claude-code
+claude-setup
+```
+
+**Use:**
+```bash
+claude -p "explain this script"
+claude                        # interactive
+```
+
+See [GITHUB_RELEASE_ports-claude-code.md](GITHUB_RELEASE_ports-claude-code.md) for full details.
+
 ### bb-tools — BerryCore Web Tools
 
 Dashboard, drawing board, markdown/code editors, compass, virtual keyboard. Native C HTTP server on port 8765.
@@ -29,7 +48,7 @@ Dashboard, drawing board, markdown/code editors, compass, virtual keyboard. Nati
 qpkg install bb-tools
 ```
 
-**Run:**
+**Run:** (starts in background)
 ```bash
 tools
 ```
