@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **wget** 1.20.3 → **1.25.0** — GNU Wget with static OpenSSL 1.1.1w and Mozilla CA bundle (same SSL generation as curl 8.12.1 / git 2.47.2)
   - Wrapper sets `SSL_CERT_FILE` (BerryCore `ssl/cert.pem` or bundled `share/wget/certs/cacert.pem`)
-  - Install: `qpkg install wget` or BerryCore package upgrade
+  - Install: BerryCore upgrade / fresh install (`wget-1.25.0.zip` in core packages)
 - VERSION bumped to 0.79
 
 ### Fixed
