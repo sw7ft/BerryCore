@@ -1,0 +1,32 @@
+GNU Wget 1.25.0 for BlackBerry 10
+==================================
+
+HTTPS file downloader with modern TLS (OpenSSL 1.1.1w, static).
+
+INSTALL
+-------
+  qpkg install wget
+
+  (Also ships in BerryCore core packages on fresh install / upgrade.)
+
+QUICK START
+-----------
+  wget https://example.com/
+  wget -O file.zip https://example.com/file.zip
+  wget -O- https://example.com/ | head
+
+HTTPS
+-----
+  The wget wrapper sets SSL_CERT_FILE to BerryCore ssl/cert.pem
+  or share/wget/certs/cacert.pem. Override:
+
+    export SSL_CERT_FILE=/path/to/cacert.pem
+
+NOTES
+-----
+  Run wget (wrapper), not wget.bin, unless you set SSL_CERT_FILE yourself.
+  Replaces BerryCore wget 1.20.3.
+
+VERSION
+-------
+  GNU Wget 1.25.0 (BB10 / arm-blackberry-qnx8eabi)

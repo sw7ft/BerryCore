@@ -1,0 +1,18 @@
+#!/bin/sh
+# wget - GNU Wget 1.25.0 for BB10 (static OpenSSL 1.1.1w)
+# Install: qpkg install wget  (or included in BerryCore packages)
+# Uses BerryCore ssl/cert.pem when present, else bundled Mozilla CA bundle.
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$DIR/.." && pwd)"
+
+if [ -f "$ROOT/ssl/cert.pem" ]; then
+    export SSL_CERT_FILE="$ROOT/ssl/cert.pem"
+elif [ -f "$ROOT/share/wget/certs/cacert.pem" ]; then
+    export SSL_CERT_FILE="$ROOT/share/wget/certs/cacert.pem"
+elif [ -f "$ROOT/certs/cacert.pem" ]; then
+    export SSL_CERT_FILE="$ROOT/certs/cacert.pem"
+fi
+export SSL_CERT_DIR=
+
+exec "$DIR/wget.bin" "$@"

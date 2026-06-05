@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.79] - 2026-06-05
+
+### Changed
+
+- **wget** 1.20.3 → **1.25.0** — GNU Wget with static OpenSSL 1.1.1w and Mozilla CA bundle (same SSL generation as curl 8.12.1 / git 2.47.2)
+  - Wrapper sets `SSL_CERT_FILE` (BerryCore `ssl/cert.pem` or bundled `share/wget/certs/cacert.pem`)
+  - Install: `qpkg install wget` or BerryCore package upgrade
+- VERSION bumped to 0.79
+
 ### Fixed
 
-- **qpkg** — Auto-detect `NATIVE_TOOLS` from script path when env.sh was not sourced (fixes port install failures / `/.tmp/` permission errors)
-- **qpkg** — QNX-safe downloads (removed `grep -o` progress parsing); clearer errors for temp/install directory failures
+- **qpkg** — Auto-detect `NATIVE_TOOLS` when env.sh was not sourced; QNX-safe port downloads
 
 ---
 

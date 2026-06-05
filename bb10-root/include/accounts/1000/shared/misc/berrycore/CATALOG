@@ -43,7 +43,7 @@ xz|util|Compress files with xz
 
 # Networking Tools
 curl|net|Transfer data from/to servers
-wget|net|Download files from the web
+wget|net|Download files from the web (qpkg install wget for 1.25.0 with modern HTTPS)
 ssh|net|Secure shell client
 sshpass|net|Non-interactive SSH password provider
 rsync|net|Remote file synchronization

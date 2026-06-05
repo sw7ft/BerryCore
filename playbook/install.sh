@@ -35,7 +35,7 @@ fi
 
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.78 Installation (PlayBook Edition)"
+echo "     BerryCore v0.79 Installation (PlayBook Edition)"
 echo "==========================================================="
 echo ""
 

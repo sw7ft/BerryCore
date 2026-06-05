@@ -59,7 +59,7 @@ This document tracks all packages included in BerryCore.
 | openssh | 7.1p2 | - | OpenSSH suite |
 | rsync | 3.1.3 | - | File synchronization |
 | sshpass | 1.06 | - | SSH password provider ✨ **NEW in 0.6** |
-| wget | 1.20.3 | - | File downloader |
+| wget | 1.25.0 | qpkg install wget | File downloader (HTTPS, OpenSSL 1.1.1w) |
 
 ### Compression & Archiving (5)
 
