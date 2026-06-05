@@ -1,0 +1,5 @@
+#!/bin/sh
+# cron-stop — stop dcron scheduler (BerryCore)
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." && pwd)"
+exec sh "$NATIVE_TOOLS/cron/stop-crond.sh"

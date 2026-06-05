@@ -1,0 +1,46 @@
+BerryCore v0.80 Release Files
+============================
+
+Release Date: June 5, 2026
+GitHub Tag: v0.80
+
+REQUIRED FILES (attach to GitHub Release)
+-----------------------------------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package (includes dcron-4.5.zip, wget-1.25.0.zip core packages)
+   - Size: 177 MB
+   - SHA256: 6e37eb99d5553e3322aab0b29585aece43a66048866d297ad55dfa7af1574ca8
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.80
+   - Size: ~8 KB
+   - SHA256: cc1bf28722bb447fd98d252ad0ef76e72690fcfad82cb4442dabcc630f2d51f9
+
+CREATE PACKAGE
+--------------
+
+  ./utilities/package.sh
+
+COPY-PASTE RELEASE NOTES
+------------------------
+
+  GITHUB_RELEASE_v0.80_BODY.md
+
+WHAT'S NEW IN v0.80
+-------------------
+
+Core:
+- dcron 4.5 (crond + crontab, cron-start/cron-stop wrappers)
+- wget 1.25.0 (if not on v0.79 yet)
+- qpkg: auto-detect NATIVE_TOOLS, QNX-safe port downloads
+
+VERIFY
+------
+
+  cat $NATIVE_TOOLS/VERSION    # 0.80
+  cron-start && crontab -l
+  wget --version               # GNU Wget 1.25.0
+
+---
+BerryCore v0.80 - June 2026

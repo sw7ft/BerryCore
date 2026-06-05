@@ -1,0 +1,10 @@
+# Example crontab — BerryCore / dcron 4.5
+#
+# Install: crontab $NATIVE_TOOLS/cron/example.crontab
+# Requires: cron-start (crond running)
+#
+# dcron ignores Vixie-style SHELL=/PATH= header lines in some builds;
+# use full paths or wrap commands in /bin/sh -c '...'
+#
+# Heartbeat every 5 minutes (logs to ~/cron-heartbeat.log):
+# */5 * * * * /bin/sh -c 'echo "$(date)" >> $HOME/cron-heartbeat.log'

@@ -1,0 +1,5 @@
+#!/bin/sh
+# cron-start — start dcron scheduler (BerryCore)
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." && pwd)"
+exec sh "$NATIVE_TOOLS/cron/start-crond.sh"

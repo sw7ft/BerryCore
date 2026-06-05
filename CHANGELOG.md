@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.80] - 2026-06-05
+
+### Added
+
+- **dcron 4.5** — Lightweight cron scheduler for BB10 (crond + crontab)
+  - Core package `dcron-4.5.zip` installs to `$NATIVE_TOOLS` (`bin/`, `sbin/`, `cron/`)
+  - Wrappers: `crontab`, `cron-start`, `cron-stop` (BerryCore paths, `CRON_USER=berrycore`)
+  - Anacron-style `cronstamps` for missed jobs after device sleep
+  - Install: BerryCore upgrade / fresh install (not a qpkg port)
+
+---
+
 ## [0.79] - 2026-06-05
 
 ### Changed

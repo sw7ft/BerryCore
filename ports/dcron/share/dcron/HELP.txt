@@ -1,0 +1,40 @@
+dcron 4.5 for BlackBerry 10
+===========================
+
+Lightweight cron scheduler (crond + crontab). Included in BerryCore core packages.
+
+QUICK START
+-----------
+  cron-start                  # start crond in background
+  export EDITOR=nano
+  export CRON_USER=berrycore   # default; BB10 often has no /etc/passwd entry
+  crontab -e                  # edit your jobs
+  crontab -l                  # list jobs
+  cron-stop                   # stop crond
+
+PATHS (under $NATIVE_TOOLS)
+----------------------------
+  cron/crontabs/     per-user crontab files
+  cron/cronstamps/   anacron-style missed-job stamps
+  cron/cron.d/       system drop-in jobs
+  cron/crond.log     daemon log
+
+EXAMPLE
+-------
+  crontab $NATIVE_TOOLS/cron/example.crontab
+
+NOTES
+-----
+  - dcron does not load ~/.profile — use full paths in job commands
+  - Jobs need crond running (cron-start); BB10 may miss ticks while asleep
+  - cronstamps help catch up after wake (anacron-style)
+  - Jobs run via /bin/sh -c — BerryCore bash is in PATH via env.sh
+
+STOP / START
+------------
+  cron-stop
+  cron-start
+
+VERSION
+-------
+  dcron 4.5 (Dillon's cron)

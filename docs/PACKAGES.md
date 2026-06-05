@@ -60,6 +60,7 @@ This document tracks all packages included in BerryCore.
 | rsync | 3.1.3 | - | File synchronization |
 | sshpass | 1.06 | - | SSH password provider ✨ **NEW in 0.6** |
 | wget | 1.25.0 | core package | File downloader (HTTPS, OpenSSL 1.1.1w) |
+| dcron | 4.5 | core package | Cron scheduler (crond + crontab, anacron-style stamps) |
 
 ### Compression & Archiving (5)
 
