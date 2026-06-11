@@ -10,12 +10,12 @@ REQUIRED FILES (attach to GitHub Release)
 1. berrycore.zip
    - Description: Main BerryCore package (includes ncdu, chafa, dcron, wget core packages)
    - Size: 178 MB
-   - SHA256: d6a62dd47ac232c5e89d629cfb11729aaef83fe343acf00b5a523d7a224f65c6
+   - SHA256: 40f04fd05506841700084e974c6d9b0686d0d2c657c4e118d997f7c18bfdb2a4
 
 2. install.sh
    - Description: Installation script for BerryCore v0.81
    - Size: ~8 KB
-   - SHA256: cc1bf28722bb447fd98d252ad0ef76e72690fcfad82cb4442dabcc630f2d51f9
+   - SHA256: 50fac8490a5642bab1d10ed0116335fc419c8ec7093d341a60f40c25bfea0663
 
 CREATE PACKAGE
 --------------

@@ -63,7 +63,9 @@ wget -O- https://example.com/ | head
 ## Upgrade
 
 ```bash
-sh install.sh --upgrade
+qpkg update
+# or manually:
+sh install.sh --upgrade -y --dir $NATIVE_TOOLS
 . $NATIVE_TOOLS/env.sh
 ```
 
@@ -75,6 +77,14 @@ ncdu --version
 chafa --version
 cron-start && crontab -l
 ```
+
+---
+
+## qpkg update fix
+
+- **`qpkg update`** now runs a non-interactive upgrade into your existing `$NATIVE_TOOLS` tree
+- **`install.sh --upgrade -y --dir $NATIVE_TOOLS`** for manual upgrades
+- Per-package install stamps (`.berrycore_pkg_stamps/`) so new core packages (ncdu, chafa, dcron) install correctly on upgrade
 
 ---
 

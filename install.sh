@@ -1,63 +1,121 @@
 #!/bin/sh
 
+# Parse options (used by qpkg update: install.sh --upgrade -y --dir "$NATIVE_TOOLS")
+UPGRADE_MODE=0
+YES_MODE=0
+FORCE_CLITOOLS=0
+INSTALL_DIR=""
+custom_name=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --upgrade|-u)
+            UPGRADE_MODE=1
+            shift
+            ;;
+        --fresh)
+            UPGRADE_MODE=0
+            shift
+            ;;
+        -y|--yes)
+            YES_MODE=1
+            shift
+            ;;
+        -f)
+            FORCE_CLITOOLS=1
+            shift
+            ;;
+        --dir)
+            INSTALL_DIR="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$INSTALL_DIR" ] && [ -n "$BERRYCORE_INSTALL_DIR" ]; then
+    INSTALL_DIR="$BERRYCORE_INSTALL_DIR"
+fi
+if [ -z "$INSTALL_DIR" ] && [ -n "$NATIVE_TOOLS" ] && [ "$UPGRADE_MODE" -eq 1 ]; then
+    INSTALL_DIR="$NATIVE_TOOLS"
+fi
+
+BC_VERSION=$(unzip -p berrycore.zip VERSION 2>/dev/null || echo "unknown")
+
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.79 Installation"
+echo "     BerryCore v${BC_VERSION} Installation"
 echo "==========================================================="
 echo ""
 
-# Prompt for installation directory
-echo "Installation directory: /accounts/1000/shared/misc/berrycore"
-echo ""
-echo "Press Enter to use default, or type a custom name:"
-echo -n "Directory name [berrycore]: "
-read custom_name
+if [ -z "$INSTALL_DIR" ]; then
+    echo "Installation directory: /accounts/1000/shared/misc/berrycore"
+    echo ""
+    if [ "$YES_MODE" -eq 1 ]; then
+        custom_name="berrycore"
+        INSTALL_DIR="/accounts/1000/shared/misc/berrycore"
+        echo "Using default: $INSTALL_DIR"
+    else
+        echo "Press Enter to use default, or type a custom name:"
+        echo -n "Directory name [berrycore]: "
+        read custom_name
 
-if [ -z "$custom_name" ]; then
-    custom_name="berrycore"
-    INSTALL_DIR="/accounts/1000/shared/misc/berrycore"
-    echo "Using default: $INSTALL_DIR"
+        if [ -z "$custom_name" ]; then
+            custom_name="berrycore"
+            INSTALL_DIR="/accounts/1000/shared/misc/berrycore"
+            echo "Using default: $INSTALL_DIR"
+        else
+            INSTALL_DIR="/accounts/1000/shared/misc/$custom_name"
+            echo "Installing to: $INSTALL_DIR"
+        fi
+    fi
 else
-    INSTALL_DIR="/accounts/1000/shared/misc/$custom_name"
-    echo "Installing to: $INSTALL_DIR"
+    echo "Installation directory: $INSTALL_DIR"
 fi
 
 echo ""
 
 # Check for existing BerryCore installation
-UPGRADE_MODE=0
 if [ -d "$INSTALL_DIR" ] && [ -f "$INSTALL_DIR/env.sh" ]; then
-    echo "==========================================================="
-    echo "  Existing BerryCore installation detected!"
-    echo "==========================================================="
-    echo ""
-    echo "Installation found at: $INSTALL_DIR"
-    echo ""
-    echo "Choose installation mode:"
-    echo "  [1] Upgrade (fast - only install new packages)"
-    echo "  [2] Fresh install (slower - reinstall all packages)"
-    echo ""
-    echo -n "Enter choice [1]: "
-    read install_choice
-    
-    if [ -z "$install_choice" ] || [ "$install_choice" = "1" ]; then
-        UPGRADE_MODE=1
+    if [ "$UPGRADE_MODE" -eq 0 ] && [ "$YES_MODE" -eq 0 ]; then
+        echo "==========================================================="
+        echo "  Existing BerryCore installation detected!"
+        echo "==========================================================="
         echo ""
-        echo "Using upgrade mode - will preserve existing packages"
-    else
-        UPGRADE_MODE=0
+        echo "Installation found at: $INSTALL_DIR"
         echo ""
-        echo "Using fresh install mode - will reinstall everything"
+        echo "Choose installation mode:"
+        echo "  [1] Upgrade (fast - only install new/changed packages)"
+        echo "  [2] Fresh install (slower - reinstall all packages)"
+        echo ""
+        echo -n "Enter choice [1]: "
+        read install_choice
+
+        if [ -z "$install_choice" ] || [ "$install_choice" = "1" ]; then
+            UPGRADE_MODE=1
+            echo ""
+            echo "Using upgrade mode - will preserve existing packages"
+        else
+            UPGRADE_MODE=0
+            echo ""
+            echo "Using fresh install mode - will reinstall everything"
+        fi
+    elif [ "$UPGRADE_MODE" -eq 1 ]; then
+        echo "Upgrade mode — updating $INSTALL_DIR"
     fi
 else
-    echo "Press Enter to continue or Ctrl+C to cancel..."
-    read confirm
+    if [ "$YES_MODE" -eq 0 ]; then
+        echo "Press Enter to continue or Ctrl+C to cancel..."
+        read confirm
+    fi
 fi
 
 # versions up to 0.4 were slowing down the device (see #54)
 D=/accounts/1000/shared/documents/clitools
 if [ -d $D ]; then
- if [ "x$1" == "x-f" ]; then
+ if [ "$FORCE_CLITOOLS" -eq 1 ]; then
     echo 
     echo "skipping check of previous BerryCore/Berrymuch version (<0.6)"
     echo 
@@ -69,7 +127,7 @@ if [ -d $D ]; then
     echo "  rm -rf /accounts/1000/shared/documents/clitools"
     echo "  $0"
     echo 
-    echo "if you want to bypass this check, use install -f"
+    echo "if you want to bypass this check, use install.sh -f"
     echo 
     echo
     exit 0
@@ -81,11 +139,49 @@ mkdir -p $D;
 cp berrycore.zip $D
 cd $D
 
-# Save old env.sh timestamp for upgrade detection
+# Save old env.sh timestamp for upgrade detection (fallback)
 OLD_ENV_TIME=0
 if [ -f "env.sh" ]; then
     OLD_ENV_TIME=$(stat -f %m env.sh 2>/dev/null || stat -c %Y env.sh 2>/dev/null || echo 0)
 fi
+
+STAMP_DIR=".berrycore_pkg_stamps"
+mkdir -p "$STAMP_DIR" 2>/dev/null
+
+package_mtime() {
+    _pkg="$1"
+    _mtime=$(stat -f %m "$_pkg" 2>/dev/null || stat -c %Y "$_pkg" 2>/dev/null || echo 0)
+    if [ "$_mtime" = "0" ] && command -v python3 >/dev/null 2>&1; then
+        _mtime=$(python3 -c "import os; print(int(os.path.getmtime('$_pkg')))" 2>/dev/null || echo 0)
+    fi
+    echo "$_mtime"
+}
+
+should_skip_package() {
+    _pkg="$1"
+    _base="$2"
+    _stamp="$STAMP_DIR/$_base"
+
+    if [ ! -f "$_stamp" ]; then
+        return 1
+    fi
+
+    _installed=$(cat "$_stamp" 2>/dev/null)
+    _pkgtime=$(package_mtime "$_pkg")
+
+    if [ -n "$_installed" ] && [ -n "$_pkgtime" ] && [ "$_pkgtime" -le "$_installed" ]; then
+        return 0
+    fi
+
+    if [ -n "$_installed" ] && [ "$_pkgtime" = "0" ] && [ $OLD_ENV_TIME -gt 0 ]; then
+        if [ $OLD_ENV_TIME -gt "$_installed" ]; then
+            return 1
+        fi
+        return 0
+    fi
+
+    return 1
+}
 
 touch .nomedia .noindex
 unzip -o berrycore.zip
@@ -117,30 +213,18 @@ do
     pkg_name=$(basename "$pkg")
     
     if [ $UPGRADE_MODE -eq 1 ]; then
-        # In upgrade mode, check if package is already installed
-        # We check if the marker file exists (pbpkgadd creates .pkg_installed_<name>)
-        # Or if key binaries/libs from the package exist
         pkg_base=$(basename "$pkg" .zip)
-        
-        # Simple check: if any files from this package exist, skip it
-        # This is a heuristic - we assume if the package was installed before, it's still there
         SKIP_PKG=0
-        
-        # Check if this is a new package by looking at modification time vs old env.sh
-        if [ $OLD_ENV_TIME -gt 0 ]; then
-            PKG_TIME=$(stat -f %m "$pkg" 2>/dev/null || stat -c %Y "$pkg" 2>/dev/null || echo 0)
-            
-            # If package is older than the previous env.sh, it's likely already installed
-            if [ $PKG_TIME -lt $OLD_ENV_TIME ]; then
-                SKIP_PKG=1
-            fi
+
+        if should_skip_package "$pkg" "$pkg_base"; then
+            SKIP_PKG=1
         fi
-        
+
         if [ $SKIP_PKG -eq 1 ]; then
             echo "  ⏩ $pkg_name (already installed)"
             SKIPPED_PKGS=$((SKIPPED_PKGS + 1))
         else
-            echo "  📦 $pkg_name (new package)"
+            echo "  📦 $pkg_name (new or updated)"
             ./pbpkgadd "$pkg"
             NEW_PKGS=$((NEW_PKGS + 1))
         fi

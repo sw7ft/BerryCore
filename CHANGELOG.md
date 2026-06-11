@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Core package `chafa-1.14.4.zip` — `chafa`, `chafa-show`, bundled `libchafa.so.9`
   - Wrapper sets `LD_LIBRARY_PATH` and `TERM` for BerryCore layout
 
+### Fixed
+
+- **qpkg update** — Runs `install.sh --upgrade -y` into `$NATIVE_TOOLS` (no manual prompts)
+- **install.sh** — Adds `--upgrade`, `-y`, `--dir` flags; package stamps via `.berrycore_pkg_stamps/`
+- **pbpkgadd** — Writes per-package install stamps for reliable upgrade detection
+
 ---
 
 ## [0.80] - 2026-06-05

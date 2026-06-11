@@ -117,24 +117,35 @@ check_for_updates() {
     echo "$LATEST_VERSION"
 }
 
-# Compare versions (simple string comparison)
+# Compare versions (x.y.z when python3 available, else major.minor)
 version_greater() {
-    # $1 = new version, $2 = old version
-    # Returns 0 if $1 > $2
-    
-    # Simple comparison - works for x.y format
+    # $1 = new version, $2 = old version — returns 0 if $1 > $2
+    if command -v python3 >/dev/null 2>&1; then
+        python3 -c "
+def parts(v):
+    return [int(x) for x in v.split('.') if x.isdigit()]
+a, b = parts('$1'), parts('$2')
+# pad to same length
+n = max(len(a), len(b))
+a += [0] * (n - len(a))
+b += [0] * (n - len(b))
+import sys
+sys.exit(0 if a > b else 1)
+" 2>/dev/null && return 0
+        return 1
+    fi
+
     NEW_MAJOR=$(echo "$1" | cut -d. -f1)
     NEW_MINOR=$(echo "$1" | cut -d. -f2)
     OLD_MAJOR=$(echo "$2" | cut -d. -f1)
     OLD_MINOR=$(echo "$2" | cut -d. -f2)
-    
+
     if [ "$NEW_MAJOR" -gt "$OLD_MAJOR" ]; then
         return 0
     elif [ "$NEW_MAJOR" -eq "$OLD_MAJOR" ] && [ "$NEW_MINOR" -gt "$OLD_MINOR" ]; then
         return 0
-    else
-        return 1
     fi
+    return 1
 }
 
 # Download file (QNX-safe: no grep -o in progress parsing)
@@ -259,18 +270,16 @@ cmd_update() {
     echo ""
     print_header "Installing BerryCore v${LATEST_VERSION}"
     
-    # Run installer
-    sh ./install.sh
-    
-    if [ $? -eq 0 ]; then
-        echo ""
-        print_success "BerryCore updated to v${LATEST_VERSION}!"
-        echo ""
-        echo "Restart your shell or run: source $NATIVE_TOOLS/env.sh"
-    else
+    # Non-interactive upgrade into the current BerryCore tree
+    if ! BERRYCORE_INSTALL_DIR="$NATIVE_TOOLS" sh ./install.sh --upgrade -y --dir "$NATIVE_TOOLS"; then
         print_error "Installation failed. Check errors above."
         exit 1
     fi
+
+    echo ""
+    print_success "BerryCore updated to v${LATEST_VERSION}!"
+    echo ""
+    echo "Restart your shell or run: source $NATIVE_TOOLS/env.sh"
 }
 
 # List available ports from repository

@@ -24,12 +24,23 @@ if not pkgpath:
 # cd to the toolsdir 
 print('Unpacking ' + pkgpath + ' into ' + toolsdir)
 os.chdir(toolsdir)
-subprocess.call(['unzip', '-uo', pkgpath])
-print('Done')
-    
-#url = sys.argv[1]
-#fname = url.split('/')[-1]
-#f = open(fname, 'wb')
-#f.write(urlopen(url).read())
-#f.close()
+rc = subprocess.call(['unzip', '-uo', pkgpath])
+if rc != 0:
+    sys.exit(rc)
 
+# Record install stamp for upgrade mode (install.sh reads .berrycore_pkg_stamps/)
+try:
+    stamp_dir = os.path.join(toolsdir, '.berrycore_pkg_stamps')
+    if not os.path.isdir(stamp_dir):
+        os.makedirs(stamp_dir)
+    pkg_base = os.path.basename(pkgpath)
+    if pkg_base.endswith('.zip'):
+        pkg_base = pkg_base[:-4]
+    mtime = int(os.path.getmtime(pkgpath))
+    stamp_path = os.path.join(stamp_dir, pkg_base)
+    with open(stamp_path, 'w') as f:
+        f.write(str(mtime))
+except (OSError, IOError):
+    pass
+
+print('Done')
