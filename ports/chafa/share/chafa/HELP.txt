@@ -1,0 +1,33 @@
+chafa 1.14.4 for BlackBerry 10
+==============================
+
+Terminal image viewer (JPEG, PNG, GIF, QOI, XWD). Core BerryCore package.
+
+QUICK START
+-----------
+  chafa --version
+  chafa-show photo.jpg
+  chafa-show -w 48 ~/Pictures/image.png
+
+  chafa -s 40 image.jpg              # low-level CLI
+  cat photo.jpg | chafa-show --cat
+
+FORMATS
+-------
+  chafa-show -f symbols   # default, works in Term49
+  chafa-show -f sixels    # if terminal supports sixel
+
+NOTES
+-----
+  - TERM defaults to xterm-256color
+  - libchafa.so.9 is in $NATIVE_TOOLS/lib
+  - System libs: libjpeg, freetype, libpng16, zlib
+  - SD card photos: /accounts/1000/removable/sdcard/...
+
+EXAMPLE
+-------
+  chafa-show -w 48 "/accounts/1000/removable/sdcard/photos/IMG_0014.jpg"
+
+VERSION
+-------
+  chafa 1.14.4 (LGPL-2.1+)

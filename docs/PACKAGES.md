@@ -61,6 +61,8 @@ This document tracks all packages included in BerryCore.
 | sshpass | 1.06 | - | SSH password provider ✨ **NEW in 0.6** |
 | wget | 1.25.0 | core package | File downloader (HTTPS, OpenSSL 1.1.1w) |
 | dcron | 4.5 | core package | Cron scheduler (crond + crontab, anacron-style stamps) |
+| ncdu | 1.22 | core package | Interactive disk usage analyzer (ncurses TUI) |
+| chafa | 1.14.4 | core package | Terminal image viewer (JPEG/PNG/GIF) |
 
 ### Compression & Archiving (5)
 

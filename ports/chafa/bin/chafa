@@ -1,0 +1,7 @@
+#!/bin/sh
+# BerryCore: chafa 1.14.4 wrapper — LD_LIBRARY_PATH + TERM
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." && pwd)"
+export LD_LIBRARY_PATH="$NATIVE_TOOLS/lib:${LD_LIBRARY_PATH:-}"
+export TERM="${TERM:-xterm-256color}"
+exec "$BIN_DIR/chafa.bin" "$@"

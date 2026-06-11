@@ -1,0 +1,47 @@
+BerryCore v0.81 Release Files
+============================
+
+Release Date: June 11, 2026
+GitHub Tag: v0.81
+
+REQUIRED FILES (attach to GitHub Release)
+-----------------------------------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package (includes ncdu, chafa, dcron, wget core packages)
+   - Size: 178 MB
+   - SHA256: d6a62dd47ac232c5e89d629cfb11729aaef83fe343acf00b5a523d7a224f65c6
+
+2. install.sh
+   - Description: Installation script for BerryCore v0.81
+   - Size: ~8 KB
+   - SHA256: cc1bf28722bb447fd98d252ad0ef76e72690fcfad82cb4442dabcc630f2d51f9
+
+CREATE PACKAGE
+--------------
+
+  ./utilities/package.sh
+
+COPY-PASTE RELEASE NOTES
+------------------------
+
+  GITHUB_RELEASE_v0.81_BODY.md
+
+WHAT'S NEW IN v0.81
+-------------------
+
+Core packages (auto-install with upgrade):
+- ncdu 1.22 — disk usage TUI
+- chafa 1.14.4 — terminal image viewer
+- dcron 4.5 (from v0.80)
+- wget 1.25.0 (from v0.79)
+
+VERIFY
+------
+
+  cat $NATIVE_TOOLS/VERSION    # 0.81
+  ncdu --version
+  chafa --version
+
+---
+BerryCore v0.81 - June 2026

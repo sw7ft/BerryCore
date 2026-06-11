@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.81] - 2026-06-11
+
+### Added
+
+- **ncdu 1.22** — Interactive disk usage analyzer (ncurses TUI)
+  - Core package `ncdu-1.22.zip` — wrapper sets `TERM=xterm-256color`
+  - Use Term49 or `ssh -t` for interactive UI; export scans to `/var/tmp`
+- **chafa 1.14.4** — Terminal image viewer (JPEG, PNG, GIF, QOI, XWD)
+  - Core package `chafa-1.14.4.zip` — `chafa`, `chafa-show`, bundled `libchafa.so.9`
+  - Wrapper sets `LD_LIBRARY_PATH` and `TERM` for BerryCore layout
+
+---
+
 ## [0.80] - 2026-06-05
 
 ### Added

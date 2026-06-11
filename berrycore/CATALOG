@@ -57,7 +57,9 @@ git|vcs|Distributed version control
 tig|vcs|Text-mode interface for Git
 
 # System Tools
-crontab|sys|Edit/list cron jobs (dcron 4.5)
+ncdu|sys|Interactive disk usage analyzer (ncurses TUI)
+chafa|media|Terminal image viewer (JPEG/PNG/GIF)
+chafa-show|media|Easy terminal photo viewer
 cron-start|sys|Start dcron scheduler daemon
 cron-stop|sys|Stop dcron scheduler daemon
 tmux|sys|Terminal multiplexer v2.0 (upgrade to 3.3a via qpkg install tmux)

@@ -1,0 +1,84 @@
+#!/bin/sh
+# chafa-show — display images in the terminal (BerryCore / BB10)
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." && pwd)"
+CHAFA_BIN="${NATIVE_TOOLS}/bin/chafa.bin"
+
+export LD_LIBRARY_PATH="${NATIVE_TOOLS}/lib:${LD_LIBRARY_PATH:-}"
+export TERM="${TERM:-xterm-256color}"
+
+WIDTH=50
+FORMAT=symbols
+COLORS=256
+FIT_WIDTH=1
+
+usage() {
+  cat <<EOF
+chafa-show — terminal image viewer for BB10
+
+Usage:
+  chafa-show IMAGE.jpg
+  chafa-show -w 40 photo.png
+  chafa-show -w 60 -f symbols ~/Pictures/*.jpg
+  chafa-show --cat
+
+Options:
+  -w, --width NUM     Max width in columns (default: 50)
+  -f, --format FMT    symbols | sixels | kitty | iterm (default: symbols)
+  -c, --colors NUM    2 | 8 | 16 | 256 | full (default: 256)
+  --stretch           Stretch to fill (ignore aspect)
+  --clear             Clear screen before each image
+  --cat               Read image from stdin
+  -h, --help          This help
+
+Examples:
+  chafa-show -w 48 "/accounts/1000/removable/sdcard/photos/IMG_0014.jpg"
+  cat photo.jpg | chafa-show --cat
+EOF
+}
+
+die() { echo "chafa-show: $*" >&2; exit 1; }
+
+[ -x "$CHAFA_BIN" ] || die "chafa not installed"
+
+CAT=0
+CLEAR=""
+STRETCH=""
+FILES=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    -w|--width)  WIDTH="$2"; shift 2 ;;
+    -f|--format) FORMAT="$2"; shift 2 ;;
+    -c|--colors) COLORS="$2"; shift 2 ;;
+    --fit)       FIT_WIDTH=1; shift ;;
+    --stretch)   STRETCH="--stretch"; shift ;;
+    --clear)     CLEAR="--clear"; shift ;;
+    --cat)       CAT=1; shift ;;
+    -*)          die "unknown option: $1 (try --help)" ;;
+    *)           FILES="$FILES $1"; shift ;;
+  esac
+done
+
+set -- "$CHAFA_BIN"
+[ -n "$CLEAR" ]   && set -- "$@" $CLEAR
+[ -n "$STRETCH" ] && set -- "$@" $STRETCH
+[ "$FIT_WIDTH" = 1 ] && set -- "$@" --fit-width
+set -- "$@" -f "$FORMAT" -c "$COLORS" -s "${WIDTH}"
+
+if [ "$CAT" = 1 ]; then
+  exec "$@" -
+fi
+
+if [ -z "$FILES" ]; then
+  usage >&2
+  die "no image file given"
+fi
+
+for img in $FILES; do
+  [ -f "$img" ] || die "not found: $img"
+  [ -r "$img" ] || die "not readable: $img"
+done
+
+exec "$@" $FILES

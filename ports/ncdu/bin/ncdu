@@ -1,0 +1,5 @@
+#!/bin/sh
+# BerryCore: ncdu 1.22 wrapper — ensure TERM for ncurses TUI
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+export TERM="${TERM:-xterm-256color}"
+exec "$BIN_DIR/ncdu.bin" "$@"

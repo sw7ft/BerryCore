@@ -1,0 +1,35 @@
+ncdu 1.22 for BlackBerry 10
+============================
+
+Interactive disk usage analyzer (ncurses TUI). Core BerryCore package.
+
+QUICK START
+-----------
+  ncdu /accounts/1000/shared/misc
+  ncdu /accounts/1000/r                    # SD card (if mounted)
+
+Use Term49 or: ssh -t passport ncdu ~
+
+KEYS
+----
+  ↑↓     Move
+  Enter  Enter directory
+  d      Delete highlighted item
+  n/s/C  Sort by name / size / item count
+  g      Show percent graph
+  q      Quit
+
+NON-INTERACTIVE EXPORT
+----------------------
+  ncdu -o /var/tmp/scan.json /path/to/scan
+  ncdu -f /var/tmp/scan.json               # browse saved scan (needs TTY)
+
+NOTES
+-----
+  - Needs a real TTY (Term49 or ssh -t)
+  - Use /var/tmp for exports, not /tmp
+  - Requires system libncursesw.so.1
+
+VERSION
+-------
+  ncdu 1.22 (C LTS branch)
