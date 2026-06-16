@@ -1,4 +1,5 @@
-BerryCore v0.77 Released! (Mar 2026) – content-shell-term49, wifi-chat, berrybot ports
+BerryCore v0.81.1 — bcllm on-device LLM (qpkg install bcllm), BerryCore Helper APK
+Also: ncdu, chafa, dcron, wget core packages | qpkg update fixed
 QNX Desktop - Full Windows 98 style desktop for BB10
   - File Explorer | Mail Client (IMAP/SMTP) | AI Chat (Claude)
   - qpkg install qnxdesktop && qnxdesktop start

@@ -1,0 +1,56 @@
+BerryCore v0.81.1 Release Files
+================================
+
+Release Date: June 2026
+GitHub Tag: v0.81.1
+
+REQUIRED FILES (attach to GitHub Release)
+-----------------------------------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package (includes bcllm qpkg handler, ncdu, chafa, dcron, wget)
+   - Size: ~178 MB
+   - SHA256: de55fcb59cd86f7e490565cf1fcfadb303084bb70de1facad4697213b0dfecb1
+
+2. install.sh
+   - Description: Installation script
+   - SHA256: 50fac8490a5642bab1d10ed0116335fc419c8ec7093d341a60f40c25bfea0663
+
+3. berrycore-helper.apk
+   - Description: Android sideload helper — bundles BerryCore installer for BB10
+   - Size: ~178 MB
+   - Source: ~/Desktop/berrycore-helper.apk
+
+CREATE PACKAGE
+--------------
+
+  ./utilities/package.sh
+
+COPY-PASTE RELEASE NOTES
+------------------------
+
+  GITHUB_RELEASE_v0.81.1_BODY.md
+
+WHAT'S NEW IN v0.81.1
+---------------------
+
+Ports:
+- bcllm 1.2.1 — on-device LLM (qpkg install bcllm)
+
+New asset:
+- berrycore-helper.apk — sideload BerryCore via Android runtime
+
+Also (from v0.81):
+- ncdu, chafa, dcron, wget core packages
+- qpkg update non-interactive upgrade fix
+
+VERIFY
+------
+
+  cat $NATIVE_TOOLS/VERSION    # 0.81.1
+  grep bcllm $NATIVE_TOOLS/bin/qpkg
+  qpkg install bcllm
+  ai download smollm2_135m
+
+---
+BerryCore v0.81.1

@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.81.1] - 2026-06-15
+
+### Added
+
+- **bcllm 1.2.1** — On-device LLM assistant port (`qpkg install bcllm`)
+  - llama.cpp binaries, interactive `ai` CLI, agent mode, web UI
+  - Installs to `/accounts/1000/shared/misc/bcllm/` with PATH symlinks
+  - Requires **wget** for model downloads; models not bundled
+- **BerryCore Helper APK** — Android sideload app bundling BerryCore installer for BB10
+
+### Changed
+
+- **qpkg** — `bcllm` port install handler (misc/bcllm layout, ai symlinks)
+
+---
+
 ## [0.81] - 2026-06-11
 
 ### Added
