@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.82] - 2026-06-16
+
+### Added
+
+- **ai-bcllm 1.2.1** — On-device LLM bundled as core package (`berrycore/packages/ai-bcllm-1.2.1.zip`)
+  - BerryCore AI (llama.cpp) installs to `/accounts/1000/shared/misc/bcllm/`
+  - `install.sh` relocates bundled bcllm out of the berrycore tree after install
+  - PATH symlinks: `ai`, `AI`, `bcllm` in `$NATIVE_TOOLS/bin`
+- **BerryCore Helper APK** — Rebuilt with BerryCore v0.82 assets for sideload install
+
+### Changed
+
+- **bcllm qpkg port** — Renamed zip to `ports/ai-bcllm-1.2.1.zip` (category `ai`)
+- **motd.txt** — Highlights on-device AI
+- **VERSION** → 0.82
+
+---
+
 ## [0.81.1] - 2026-06-15
 
 ### Added

@@ -247,6 +247,37 @@ else
 fi
 echo ""
 
+# Move bundled bcllm from berrycore tree to misc/bcllm (same layout as qpkg install)
+relocate_bcllm() {
+    MISC_ROOT="/accounts/1000/shared/misc"
+    MISC_BCLLM="$MISC_ROOT/bcllm"
+    NT="$PWD"
+
+    if [ -d "$NT/bcllm" ] && [ "$NT/bcllm" != "$MISC_BCLLM" ]; then
+        mkdir -p "$MISC_ROOT"
+        rm -rf "$MISC_BCLLM"
+        mv "$NT/bcllm" "$MISC_BCLLM"
+        echo "BerryCore AI moved to $MISC_BCLLM"
+    fi
+
+    if [ ! -d "$MISC_BCLLM/bin" ]; then
+        return 0
+    fi
+
+    chmod +x "$MISC_BCLLM/bin/"* 2>/dev/null
+    mkdir -p "$MISC_BCLLM/models" "$MISC_BCLLM/var" 2>/dev/null
+    ln -sf bcllm-ai "$MISC_BCLLM/bin/ai" 2>/dev/null
+    ln -sf bcllm-ai "$MISC_BCLLM/bin/AI" 2>/dev/null
+
+    mkdir -p "$NT/bin"
+    ln -sf "$MISC_BCLLM/bin/bcllm-ai" "$NT/bin/ai" 2>/dev/null
+    ln -sf "$MISC_BCLLM/bin/bcllm-ai" "$NT/bin/AI" 2>/dev/null
+    ln -sf "$MISC_BCLLM/bin/bcllm" "$NT/bin/bcllm" 2>/dev/null
+    echo "Linked ai, AI, bcllm into $NT/bin"
+}
+
+relocate_bcllm
+
 # Backup existing .profile if it exists
 if [ -e "$HOME/.profile" ]; then
   BACKUP_NAME="$HOME/.profile.backup.$(date +%Y%m%d_%H%M%S)"

@@ -1,0 +1,52 @@
+BerryCore v0.82 Release Files
+================================
+
+Release Date: June 2026
+GitHub Tag: v0.82
+
+BUILD
+-----
+
+  ./release/build-berrycore-0.82.sh
+
+Output: release/berrycore-0.82/
+
+REQUIRED FILES (attach to GitHub Release)
+-----------------------------------------
+
+1. berrycore.zip
+   - Size: ~197 MB
+   - SHA256: 7a93d9c8ab222e7c629fc67d1d3a4d6bb9c5377cbb0b4cf722cdf5ff5f7ebb7e
+
+2. install.sh
+   - SHA256: 89d2f39c7e36ae57b465dc49eb57dbb8567bfe70965f1a6c5cd14d7f230bcd6c
+
+3. berrycore-helper.apk
+   - Size: ~197 MB
+   - SHA256: 44590cf21b28248e35cd999d9a7e7e1d9c955365464e50ebdc22288fb2ef1ae1
+4. bcllm-passport-1.2.1.tar.gz — standalone AI tarball (optional)
+5. ports/ai-bcllm-1.2.1.zip — qpkg port (optional, also on GitHub raw)
+
+COPY-PASTE RELEASE NOTES
+------------------------
+
+  GITHUB_RELEASE_v0.82_BODY.md
+
+WHAT'S NEW IN v0.82
+-------------------
+
+- ai-bcllm 1.2.1 bundled as core package
+- install.sh moves bcllm to /accounts/1000/shared/misc/bcllm/
+- BerryCore Helper APK rebuilt with v0.82 assets
+- qpkg port: ai-bcllm-1.2.1.zip (category ai)
+
+VERIFY
+------
+
+  cat $NATIVE_TOOLS/VERSION    # 0.82
+  which ai
+  ai download smollm2_135m
+  ai
+
+---
+BerryCore v0.82

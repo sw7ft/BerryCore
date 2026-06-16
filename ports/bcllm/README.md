@@ -39,7 +39,7 @@ cd ports/bcllm
 ./build-port.sh ../../bcllm-passport-1.2.1.tar.gz
 ```
 
-Output: `ports/util-bcllm-1.2.1.zip`
+Output: `ports/ai-bcllm-1.2.1.zip` and `berrycore/packages/ai-bcllm-1.2.1.zip`
 
 ## Models
 

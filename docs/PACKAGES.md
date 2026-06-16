@@ -62,7 +62,7 @@ This document tracks all packages included in BerryCore.
 | wget | 1.25.0 | core package | File downloader (HTTPS, OpenSSL 1.1.1w) |
 | dcron | 4.5 | core package | Cron scheduler (crond + crontab, anacron-style stamps) |
 | ncdu | 1.22 | core package | Interactive disk usage analyzer (ncurses TUI) |
-| bcllm | 1.2.1 | qpkg port | On-device LLM (llama.cpp, requires wget for models) |
+| bcllm | 1.2.1 | core package + qpkg port | On-device LLM (misc/bcllm/, requires wget for models) |
 
 ### Compression & Archiving (5)
 
