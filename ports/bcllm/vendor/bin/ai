@@ -1,0 +1,1066 @@
+#!/bin/sh
+# BerryCore AI — on-device LLM assistant for BB10 / Passport
+# Usage:  ai          interactive menu
+#         ai "prompt"  quick ask (uses saved settings)
+#         ai -p "..." -n 32 -m smollm2_135m
+
+AI_VERSION="1.2.1"
+AI_HOME=$(cd "$(dirname "$0")/.." && pwd)
+export LD_LIBRARY_PATH="${AI_HOME}/lib:${LD_LIBRARY_PATH}"
+
+BIN="${AI_HOME}/bin/llama-completion"
+SERVER="${AI_HOME}/bin/llama-server"
+BENCH="${AI_HOME}/bin/llama-bench"
+WEB_PIDFILE="${AI_HOME}/var/web.pid"
+WEB_DIR="${AI_HOME}/web"
+MODELS="${AI_HOME}/models"
+CONF="${AI_HOME}/etc/ai.conf"
+CATALOG="${AI_HOME}/etc/models.conf"
+AGENT_CONF="${AI_HOME}/etc/agent.conf"
+
+DEFAULT_SYS="You are a helpful assistant."
+
+# --- catalog helpers (models.conf) ---
+. "$CATALOG"
+
+model_get() {
+	_id="$1"
+	_key="$2"
+	eval "echo \"\${model_${_id}_${_key}}\""
+}
+
+model_path() {
+	echo "${MODELS}/$(model_get "$1" file)"
+}
+
+model_installed() {
+	[ -f "$(model_path "$1")" ]
+}
+
+# --- config ---
+cfg_load() {
+	_model=""
+	_n=""
+	_sys=""
+	_temp=""
+	_threads=""
+	_ctx=""
+	_batch=""
+	_web_host=""
+	_web_port=""
+	if [ -f "$CONF" ]; then
+		_model=$(grep '^default_model=' "$CONF" | head -1 | cut -d= -f2-)
+		_n=$(grep '^n_predict=' "$CONF" | head -1 | cut -d= -f2-)
+		_sys=$(grep '^system_prompt=' "$CONF" | head -1 | cut -d= -f2-)
+		_temp=$(grep '^temp=' "$CONF" | head -1 | cut -d= -f2-)
+		_threads=$(grep '^threads=' "$CONF" | head -1 | cut -d= -f2-)
+		_ctx=$(grep '^context=' "$CONF" | head -1 | cut -d= -f2-)
+		_batch=$(grep '^batch=' "$CONF" | head -1 | cut -d= -f2-)
+		_web_host=$(grep '^web_host=' "$CONF" | head -1 | cut -d= -f2-)
+		_web_port=$(grep '^web_port=' "$CONF" | head -1 | cut -d= -f2-)
+	fi
+	CFG_MODEL=${_model:-smollm2_135m}
+	CFG_N=${_n:-64}
+	CFG_SYS=${_sys:-$DEFAULT_SYS}
+	CFG_TEMP=${_temp:-0.3}
+	CFG_THREADS=${_threads:-3}
+	CFG_CTX=${_ctx:-512}
+	CFG_BATCH=${_batch:-64}
+	CFG_WEB_HOST=${_web_host:-127.0.0.1}
+	CFG_WEB_PORT=${_web_port:-8080}
+}
+
+cfg_save() {
+	mkdir -p "$(dirname "$CONF")"
+	cat >"$CONF" <<EOF
+# BerryCore AI user settings
+default_model=${CFG_MODEL}
+n_predict=${CFG_N}
+system_prompt=${CFG_SYS}
+temp=${CFG_TEMP}
+threads=${CFG_THREADS}
+context=${CFG_CTX}
+batch=${CFG_BATCH}
+web_host=${CFG_WEB_HOST}
+web_port=${CFG_WEB_PORT}
+EOF
+}
+
+# --- agent mode ---
+agent_load() {
+	AGENT_MAX_TURNS=5
+	AGENT_N=32
+	AGENT_TEMP=0
+	AGENT_AUTO=0
+	AGENT_CTX=512
+	AGENT_SYS="You are a shell agent on QNX. Reply with ONE line only. To run a command write: RUN: then the command. Example: RUN: df -h When done, answer without RUN:."
+	if [ -f "$AGENT_CONF" ]; then
+		. "$AGENT_CONF"
+		[ -n "$max_turns" ] && AGENT_MAX_TURNS="$max_turns"
+		[ -n "$agent_n" ] && AGENT_N="$agent_n"
+		[ -n "$agent_temp" ] && AGENT_TEMP="$agent_temp"
+		[ -n "$auto_confirm" ] && AGENT_AUTO="$auto_confirm"
+		[ -n "$agent_system_prompt" ] && AGENT_SYS="$agent_system_prompt"
+		[ -n "$agent_ctx" ] && AGENT_CTX="$agent_ctx"
+	fi
+}
+
+agent_truncate_history() {
+	_h="$1"
+	_len=$(printf '%s' "$_h" | wc -c | tr -d ' ')
+	if [ "$_len" -gt 900 ]; then
+		printf '%s' "$_h" | tail -c 900
+	else
+		printf '%s' "$_h"
+	fi
+}
+
+agent_is_blocked() {
+	_c="$1"
+	case "$_c" in
+		*"rm -"*|*"rm -rf"*|*slay*|*"dd if="*|*mkfs*|*">/dev/"*|*" >/dev/"*)
+			return 0 ;;
+	esac
+	return 1
+}
+
+agent_clean_reply() {
+	_reply=$(printf '%s' "$1" | sed 's/ \[end of text\]//g')
+	printf '%s\n' "$_reply" | grep -v '^[ 	]*$' | grep -v 'Reply with ONE' | grep -v '^Example:' | grep -v '^Task: show disk' | grep -v '^Reply: RUN:' | head -5 | tr '\n' ' ' | sed 's/^[ 	]*//;s/[ 	]*$//'
+}
+
+agent_valid_cmd() {
+	_c="$1"
+	[ -z "$_c" ] && return 1
+	case "$_c" in
+		*" OR"*|*"Reply"*|*"Task:"*|*"command"*|*"final answer"*|*"ONE line"*)
+			return 1 ;;
+	esac
+	case "$_c" in
+		df|df*|ls|ls*|pwd|cat*|ps|ps*|date|date*|uname*|echo*|head*|tail*|wc*|id|whoami|hostname*|du*|find*|grep*|lsusb|mount|df\ *)
+			return 0 ;;
+	esac
+	return 1
+}
+
+agent_extract_cmd() {
+	_reply="$1"
+	_cmd=$(printf '%s\n' "$_reply" | grep -i 'RUN:' | tail -1 | sed 's/^.*[Rr][Uu][Nn]:[ ]*//;s/^[ 	]*//;s/[ 	]*$//')
+	if agent_valid_cmd "$_cmd"; then
+		printf '%s' "$_cmd"
+		return 0
+	fi
+	_line=$(printf '%s\n' "$_reply" | grep -v '^[ 	]*$' | grep -v 'Reply' | grep -v '^Task:' | tail -1)
+	if agent_valid_cmd "$_line"; then
+		printf '%s' "$_line"
+	fi
+}
+
+agent_summarize() {
+	_cmd="$1"
+	_out="$2"
+	case "$_cmd" in
+		df|df*)
+			_line=$(printf '%s\n' "$_out" | awk '$NF=="/"{printf "Root disk: %s free of %s (%s used)\n", $4, $2, $5; exit}')
+			[ -n "$_line" ] && printf '%s' "$_line" && return 0
+			;;
+		pwd|pwd*)
+			printf '%s' "$_out" | head -1
+			return 0
+			;;
+		date|date*)
+			printf '%s' "$_out" | head -1
+			return 0
+			;;
+		ls|ls*)
+			printf '%s\n' "$_out" | head -10
+			return 0
+			;;
+	esac
+	return 1
+}
+
+run_agent_infer() {
+	_mid="$1"
+	_prompt="$2"
+	_mfile=$(model_path "$_mid")
+	"$BIN" -m "$_mfile" -t "$CFG_THREADS" -c "$AGENT_CTX" -b "$CFG_BATCH" \
+		-fa off --no-warmup --simple-io -st -no-cnv --reasoning off --temp "$AGENT_TEMP" \
+		-n "$AGENT_N" --no-display-prompt \
+		-p "$_prompt" 2>&1 | extract_reply
+}
+
+run_agent() {
+	_task="$1"
+	_yes="$2"
+	agent_load
+
+	if ! model_installed "$CFG_MODEL"; then
+		printf '\n  Model not installed.\n'
+		return 1
+	fi
+
+	_history="${AGENT_SYS}
+
+Task: $_task"
+
+	_turn=1
+	_hint=""
+
+	printf '\n  Agent mode (max %s turns, -n %s)\n' "$AGENT_MAX_TURNS" "$AGENT_N"
+	printf '  Task: %s\n' "$_task"
+	printf '  (each step reloads the model — ~15s per step on Passport)\n\n'
+
+	while [ "$_turn" -le "$AGENT_MAX_TURNS" ]; do
+		printf '  --- step %s ---\n' "$_turn"
+		_prompt=$(agent_truncate_history "$_history")
+		if [ "$_turn" -eq 1 ]; then
+			_hint=""
+			case "$_task" in
+				*disk*|*space*|*storage*|*df*)
+					_hint="df -h" ;;
+				*file*|*list*|*home*|*directory*)
+					_hint='ls -la $HOME' ;;
+				*date*|*time*)
+					_hint="date" ;;
+				*where*|*pwd*)
+					_hint="pwd" ;;
+			esac
+			_prompt="${_prompt}
+
+One line. To run a command write: RUN: then the command."
+			[ -n "$_hint" ] && _prompt="${_prompt}
+Suggested: RUN: $_hint"
+		else
+			_prompt="${_prompt}
+
+Summarize for the user in 1-2 sentences. No RUN: unless another command is needed."
+		fi
+
+		printf '  thinking...'
+		_reply=$(run_agent_infer "$CFG_MODEL" "$_prompt")
+		_reply=$(agent_clean_reply "$_reply")
+		printf '\n  > %s\n\n' "$_reply"
+
+		_cmd=$(agent_extract_cmd "$_reply")
+		if [ -z "$_cmd" ] && [ "$_turn" -eq 1 ] && [ -n "$_hint" ] && agent_valid_cmd "$_hint"; then
+			printf '  (using suggested command)\n'
+			_cmd="$_hint"
+		fi
+		if [ -z "$_cmd" ]; then
+			if [ "$_turn" -eq 1 ]; then
+				printf '  (no valid command — try rephrasing the task)\n'
+			else
+				printf '  (final answer)\n'
+			fi
+			break
+		fi
+
+		if agent_is_blocked "$_cmd"; then
+			printf '  [blocked: %s]\n\n' "$_cmd"
+			_history="Task: $_task
+
+Your command was blocked as unsafe. Use a read-only command or answer directly.
+Your reply: $_reply"
+			_turn=$((_turn + 1))
+			continue
+		fi
+
+		if [ "$_yes" != "1" ] && [ "$AGENT_AUTO" != "1" ]; then
+			printf '  Run? [%s] (y/N) ' "$_cmd"
+			read _ans
+			case $_ans in
+				y|Y|yes|YES) ;;
+				*)
+					printf '  skipped.\n\n'
+					_history="Task: $_task
+
+User skipped: RUN: $_cmd
+Try another command or answer directly.
+Your reply: $_reply"
+					_turn=$((_turn + 1))
+					continue
+					;;
+			esac
+		fi
+
+		printf '  $ %s\n' "$_cmd"
+		_out=$(sh -c "$_cmd" 2>&1)
+		_out=$(printf '%s\n' "$_out" | head -20)
+		printf '%s\n\n' "$_out"
+
+		if agent_summarize "$_cmd" "$_out"; then
+			printf '\n  --- agent done ---\n\n'
+			return 0
+		fi
+
+		_history="Task: $_task
+
+Ran: $_cmd
+Output:
+$_out
+
+Summarize this for the user in 1-2 short sentences. No RUN: unless another command is truly needed."
+		_turn=$((_turn + 1))
+	done
+
+	printf '  --- agent done ---\n\n'
+}
+
+menu_agent() {
+	banner
+	status_line
+	hr
+	if ! model_installed "$CFG_MODEL"; then
+		printf '\n  Model not downloaded yet.\n'
+		pause
+		return
+	fi
+	printf '\n  Agent mode — the model can run shell commands for you.\n'
+	printf '  Example: "how much free disk space?" or "list files in home"\n\n'
+	printf '  Enter task (empty = cancel):\n  > '
+	read _task
+	[ -z "$_task" ] && return
+	run_agent "$_task" 0
+	pause
+}
+
+# --- display ---
+hr() {
+	printf '%s\n' "----------------------------------------"
+}
+
+banner() {
+	clear 2>/dev/null || true
+	printf '\n'
+	printf '  ================================\n'
+	printf '       BerryCore AI  v%s\n' "$AI_VERSION"
+	printf '    On-device LLM for Passport\n'
+	printf '  ================================\n'
+	printf '\n'
+}
+
+pause() {
+	printf '\n[Enter to continue] '
+	read _dummy
+}
+
+status_line() {
+	_l=$(model_get "$CFG_MODEL" label)
+	if model_installed "$CFG_MODEL"; then
+		_st="ready"
+	else
+		_st="NOT downloaded"
+	fi
+	printf '  Model : %s\n' "$_l"
+	printf '  Status: %s\n' "$_st"
+	printf '  Tokens: -n %s   Temp: %s   Threads: %s\n' "$CFG_N" "$CFG_TEMP" "$CFG_THREADS"
+	printf '  System: %s\n' "$CFG_SYS"
+}
+
+# --- inference ---
+extract_reply() {
+	awk '/generate: n_ctx/{f=1;next} /common_perf_print/{f=0} f && !/^0\./ {print}'
+}
+
+run_prompt() {
+	_mid="$1"
+	_prompt="$2"
+	_n="$3"
+	_sys="$4"
+	_temp="$5"
+	_threads="$6"
+	_ctx="$7"
+	_batch="$8"
+
+	if ! model_installed "$_mid"; then
+		printf '\n  Model not installed. Use Download Models from the menu.\n'
+		return 1
+	fi
+
+	_mfile=$(model_path "$_mid")
+	_chat=$(model_get "$_mid" chat)
+
+	printf '\n  Thinking...\n\n  ---\n'
+
+	if [ "$_chat" = "1" ]; then
+		"$BIN" -m "$_mfile" -t "$_threads" -c "$_ctx" -b "$_batch" \
+			-fa off --no-warmup --simple-io -st --reasoning off --temp "$_temp" \
+			-n "$_n" --no-display-prompt \
+			-sys "$_sys" -p "$_prompt" 2>&1 | extract_reply
+	else
+		"$BIN" -m "$_mfile" -t "$_threads" -c "$_ctx" -b "$_batch" \
+			-fa off --no-warmup --simple-io -st -no-cnv --reasoning off --temp "$_temp" \
+			-n "$_n" --no-display-prompt \
+			-p "$_prompt" 2>&1 | extract_reply
+	fi
+
+	printf '\n  ---\n\n'
+}
+
+# --- download ---
+human_size() {
+	if [ -f "$1" ]; then
+		_s=$(ls -l "$1" 2>/dev/null | awk '{print $5}')
+		if [ -n "$_s" ]; then
+			printf '%s MB' $(($_s / 1048576))
+			return
+		fi
+	fi
+	model_get "$2" size
+}
+
+download_model() {
+	_mid="$1"
+	_file=$(model_get "$_mid" file)
+	_url=$(model_get "$_mid" url)
+	_dest="${MODELS}/${_file}"
+	_label=$(model_get "$_mid" label)
+
+	if [ -z "$_url" ]; then
+		printf '\n  No download URL for this model (side-load only).\n'
+		return 1
+	fi
+
+	mkdir -p "$MODELS"
+
+	if [ -f "$_dest" ]; then
+		printf '\n  Already installed: %s\n' "$_file"
+		printf '  Re-download? [y/N] '
+		read _ans
+		case $_ans in
+			y|Y|yes|YES) ;;
+			*) return 0 ;;
+		esac
+	fi
+
+	if ! command -v wget >/dev/null 2>&1; then
+		printf '\n  wget not found. Install wget or copy the .gguf manually to:\n'
+		printf '  %s\n' "$MODELS"
+		return 1
+	fi
+
+	printf '\n  Downloading: %s\n' "$_label"
+	printf '  Size: %s\n' "$(model_get "$_mid" size)"
+	printf '  URL : %s\n\n' "$_url"
+
+	wget -c -O "${_dest}.part" "$_url" || {
+		printf '\n  Download failed.\n'
+		rm -f "${_dest}.part"
+		return 1
+	}
+
+	mv "${_dest}.part" "$_dest"
+	printf '\n  Saved: %s (%s)\n' "$_dest" "$(human_size "$_dest" "$_mid")"
+	return 0
+}
+
+# --- menus ---
+menu_models() {
+	while true; do
+		banner
+		printf '  Select Model\n'
+		hr
+		_i=1
+		for _id in $model_ids; do
+			_lab=$(model_get "$_id" label)
+			_sz=$(model_get "$_id" size)
+			if model_installed "$_id"; then
+				_mark="*"
+			else
+				_mark=" "
+			fi
+			if [ "$_id" = "$CFG_MODEL" ]; then
+				_sel=">"
+			else
+				_sel=" "
+			fi
+			printf '  %s %2s) [%s] %s (%s)\n' "$_sel" "$_i" "$_mark" "$_lab" "$_sz"
+			_i=$((_i + 1))
+		done
+		hr
+		printf '  0) Back\n'
+		printf '\n  Choice: '
+		read _choice
+
+		case $_choice in
+			0|"") return ;;
+		esac
+
+		_i=1
+		_pick=""
+		for _id in $model_ids; do
+			if [ "$_i" = "$_choice" ]; then
+				_pick="$_id"
+				break
+			fi
+			_i=$((_i + 1))
+		done
+
+		if [ -n "$_pick" ]; then
+			CFG_MODEL="$_pick"
+			cfg_save
+			printf '\n  Selected: %s\n' "$(model_get "$_pick" label)"
+			pause
+		else
+			printf '\n  Invalid choice.\n'
+			pause
+		fi
+	done
+}
+
+menu_settings() {
+	while true; do
+		banner
+		printf '  Settings\n'
+		hr
+		printf '  1) Max tokens (-n)     : %s\n' "$CFG_N"
+		printf '  2) Temperature         : %s\n' "$CFG_TEMP"
+		printf '  3) System prompt       : %s\n' "$CFG_SYS"
+		printf '  4) Context size (-c)   : %s\n' "$CFG_CTX"
+		printf '  5) Threads (-t)        : %s\n' "$CFG_THREADS"
+		printf '  6) Reset to defaults\n'
+		hr
+		printf '  0) Back\n'
+		printf '\n  Choice: '
+		read _choice
+
+		case $_choice in
+			0|"") return ;;
+			1)
+				printf '  Max tokens to generate [-n] (%s): ' "$CFG_N"
+				read _v
+				[ -n "$_v" ] && CFG_N="$_v"
+				cfg_save
+				;;
+			2)
+				printf '  Temperature (0=exact, 1=creative) (%s): ' "$CFG_TEMP"
+				read _v
+				[ -n "$_v" ] && CFG_TEMP="$_v"
+				cfg_save
+				;;
+			3)
+				printf '  System prompt (Enter=keep):\n  [%s]\n  New: ' "$CFG_SYS"
+				read _v
+				[ -n "$_v" ] && CFG_SYS="$_v"
+				cfg_save
+				;;
+			4)
+				printf '  Context size (%s): ' "$CFG_CTX"
+				read _v
+				[ -n "$_v" ] && CFG_CTX="$_v"
+				cfg_save
+				;;
+			5)
+				printf '  Threads (%s): ' "$CFG_THREADS"
+				read _v
+				[ -n "$_v" ] && CFG_THREADS="$_v"
+				cfg_save
+				;;
+			6)
+				CFG_MODEL=smollm2_135m
+				CFG_N=64
+				CFG_SYS="$DEFAULT_SYS"
+				CFG_TEMP=0.3
+				CFG_THREADS=3
+				CFG_CTX=512
+				CFG_BATCH=64
+				CFG_WEB_HOST=127.0.0.1
+				CFG_WEB_PORT=8080
+				cfg_save
+				printf '\n  Defaults restored.\n'
+				pause
+				;;
+			*)
+				printf '\n  Invalid choice.\n'
+				pause
+				;;
+		esac
+	done
+}
+
+menu_download() {
+	while true; do
+		banner
+		printf '  Download Models (wget)\n'
+		hr
+		_i=1
+		for _id in $model_ids; do
+			_lab=$(model_get "$_id" label)
+			_sz=$(model_get "$_id" size)
+			_url=$(model_get "$_id" url)
+			if model_installed "$_id"; then
+				_st="installed"
+			else
+				_st="missing"
+			fi
+			if [ -z "$_url" ]; then
+				_st="manual only"
+			fi
+			printf '  %2s) %s\n      %s — %s\n' "$_i" "$_lab" "$_sz" "$_st"
+			_i=$((_i + 1))
+		done
+		hr
+		printf '  a) Download ALL missing\n'
+		printf '  0) Back\n'
+		printf '\n  Choice: '
+		read _choice
+
+		case $_choice in
+			0|"") return ;;
+			a|A)
+				for _id in $model_ids; do
+					if ! model_installed "$_id"; then
+						download_model "$_id"
+					fi
+				done
+				pause
+				;;
+			*)
+				_i=1
+				_pick=""
+				for _id in $model_ids; do
+					if [ "$_i" = "$_choice" ]; then
+						_pick="$_id"
+						break
+					fi
+					_i=$((_i + 1))
+				done
+				if [ -n "$_pick" ]; then
+					download_model "$_pick"
+					pause
+				else
+					printf '\n  Invalid choice.\n'
+					pause
+				fi
+				;;
+		esac
+	done
+}
+
+menu_chat() {
+	banner
+	status_line
+	hr
+	if ! model_installed "$CFG_MODEL"; then
+		printf '\n  Model not downloaded yet.\n'
+		printf '  Go to Download Models (menu option 3) first.\n'
+		pause
+		return
+	fi
+	printf '\n  Enter your prompt (empty = cancel):\n'
+	printf '  > '
+	read _prompt
+	[ -z "$_prompt" ] && return
+	run_prompt "$CFG_MODEL" "$_prompt" "$CFG_N" "$CFG_SYS" "$CFG_TEMP" "$CFG_THREADS" "$CFG_CTX" "$CFG_BATCH"
+	pause
+}
+
+menu_bench() {
+	if ! model_installed "$CFG_MODEL"; then
+		printf '\n  Model not installed.\n'
+		pause
+		return
+	fi
+	_mfile=$(model_path "$CFG_MODEL")
+	printf '\n  Running quick benchmark (may take a few minutes)...\n\n'
+	"$BENCH" -m "$_mfile" -t "$CFG_THREADS" -p 16 -n 8 -b 16 -fa off --no-warmup --progress 2>&1 | tail -6
+	pause
+}
+
+web_url() {
+	printf 'http://%s:%s/' "$CFG_WEB_HOST" "$CFG_WEB_PORT"
+}
+
+web_running() {
+	if [ ! -f "$WEB_PIDFILE" ]; then
+		return 1
+	fi
+	_pid=$(cat "$WEB_PIDFILE" 2>/dev/null)
+	[ -n "$_pid" ] && kill -0 "$_pid" 2>/dev/null
+}
+
+web_stop() {
+	if web_running; then
+		_pid=$(cat "$WEB_PIDFILE")
+		kill "$_pid" 2>/dev/null
+		rm -f "$WEB_PIDFILE"
+		printf 'Web server stopped (PID %s).\n' "$_pid"
+		return 0
+	fi
+	slay llama-server 2>/dev/null
+	rm -f "$WEB_PIDFILE"
+	printf 'No web server running.\n'
+	return 1
+}
+
+web_kill_stale() {
+	slay llama-server 2>/dev/null
+	rm -f "$WEB_PIDFILE"
+}
+
+web_model_ready() {
+	_code=0
+	if command -v curl >/dev/null 2>&1; then
+		_out=$(curl -s -m 3 "http://${CFG_WEB_HOST}:${CFG_WEB_PORT}/health" 2>/dev/null)
+		case "$_out" in
+			*'"ok"'*|*'"status":"ok"'*) return 0 ;;
+		esac
+		return 1
+	fi
+	if command -v wget >/dev/null 2>&1; then
+		_out=$(wget -qO- -T 3 "http://${CFG_WEB_HOST}:${CFG_WEB_PORT}/health" 2>/dev/null)
+		case "$_out" in
+			*'"ok"'*|*'"status":"ok"'*) return 0 ;;
+		esac
+		return 1
+	fi
+	return 1
+}
+
+web_wait_for_model() {
+	_i=0
+	printf '  Loading model'
+	while [ "$_i" -lt 180 ]; do
+		if web_model_ready; then
+			printf '\n  Model ready — open Browser now: %s\n' "$(web_url)"
+			return 0
+		fi
+		if ! kill -0 "$_pid" 2>/dev/null; then
+			printf '\n  Server exited during model load. Check %s/var/web.log\n' "$AI_HOME"
+			rm -f "$WEB_PIDFILE"
+			return 1
+		fi
+		printf '.'
+		sleep 1
+		_i=$((_i + 1))
+	done
+	printf '\n  Model load timed out after 3 minutes. Check %s/var/web.log\n' "$AI_HOME"
+	return 1
+}
+
+run_web_server() {
+	_mid="$1"
+	_bg="$2"
+
+	if ! model_installed "$_mid"; then
+		printf '\n  Model not installed. Use Download Models first.\n'
+		return 1
+	fi
+	if [ ! -x "$SERVER" ]; then
+		printf '\n  llama-server not found at %s\n' "$SERVER"
+		return 1
+	fi
+	if web_running; then
+		printf '\n  Web server already running (PID %s)\n' "$(cat "$WEB_PIDFILE")"
+		printf '  Open: %s\n' "$(web_url)"
+		printf '  Stop with: ai web stop\n'
+		return 0
+	fi
+
+	_mfile=$(model_path "$_mid")
+	_url=$(web_url)
+	if [ ! -f "${WEB_DIR}/index.html" ]; then
+		printf '\n  Web UI not found at %s\n' "$WEB_DIR"
+		return 1
+	fi
+	printf '\n  Starting web chat server...\n'
+	printf '  Model : %s\n' "$(model_get "$_mid" label)"
+	printf '  URL   : %s\n' "$_url"
+	printf '\n  The model loads first (~20-60 s on Passport).\n'
+	printf '  Browser may show "The model is loading" — that is normal.\n'
+	printf '  It auto-refreshes; the chat page appears when load finishes.\n'
+	printf '  Do NOT open Browser until this terminal says "model loaded".\n'
+	if [ "$_bg" = "1" ]; then
+		printf '  Running in background. Stop with: ai web stop\n\n'
+	else
+		printf '  Press Ctrl+C to stop the server.\n\n'
+	fi
+
+	web_kill_stale
+
+	if [ "$_bg" = "1" ]; then
+		mkdir -p "$(dirname "$WEB_PIDFILE")" "${AI_HOME}/var"
+		"$SERVER" -m "$_mfile" -t "$CFG_THREADS" -c "$CFG_CTX" -b "$CFG_BATCH" \
+			--host "$CFG_WEB_HOST" --port "$CFG_WEB_PORT" \
+			--path "$WEB_DIR" -np 1 \
+			-fa off --no-warmup --reasoning off --temp "$CFG_TEMP" \
+			>"${AI_HOME}/var/web.log" 2>&1 &
+		_pid=$!
+		printf '%s' "$_pid" >"$WEB_PIDFILE"
+		sleep 1
+		if ! kill -0 "$_pid" 2>/dev/null; then
+			rm -f "$WEB_PIDFILE"
+			printf '  Server failed to start. Check %s/var/web.log\n' "$AI_HOME"
+			tail -5 "${AI_HOME}/var/web.log" 2>/dev/null
+			return 1
+		fi
+		printf '  Server PID %s — waiting for model' "$_pid"
+		web_wait_for_model
+		return $?
+	fi
+
+	"$SERVER" -m "$_mfile" -t "$CFG_THREADS" -c "$CFG_CTX" -b "$CFG_BATCH" \
+		--host "$CFG_WEB_HOST" --port "$CFG_WEB_PORT" \
+		--path "$WEB_DIR" -np 1 \
+		-fa off --no-warmup --reasoning off --temp "$CFG_TEMP"
+}
+
+menu_web() {
+	banner
+	status_line
+	hr
+	if ! model_installed "$CFG_MODEL"; then
+		printf '\n  Model not downloaded yet.\n'
+		printf '  Go to Download Models (menu option 3) first.\n'
+		pause
+		return
+	fi
+	if [ ! -x "$SERVER" ]; then
+		printf '\n  llama-server is not installed in this package.\n'
+		pause
+		return
+	fi
+	printf '\n  Web chat — local browser UI for the current model.\n'
+	printf '  URL will be %s (loopback only).\n\n' "$(web_url)"
+	printf '  1) Start web server (foreground)\n'
+	printf '  2) Start in background\n'
+	if web_running; then
+		printf '  3) Stop background server\n'
+	fi
+	printf '  0) Back\n'
+	printf '\n  Choice: '
+	read _choice
+	case $_choice in
+		1) run_web_server "$CFG_MODEL" 0 ;;
+		2) run_web_server "$CFG_MODEL" 1; pause ;;
+		3)
+			if web_running; then
+				web_stop
+			fi
+			pause
+			;;
+		0|"") return ;;
+		*) printf '\n  Invalid choice.\n'; pause ;;
+	esac
+}
+
+menu_main() {
+	cfg_load
+	while true; do
+		banner
+		status_line
+		hr
+		printf '  1) Ask AI\n'
+		printf '  2) Change model\n'
+		printf '  3) Download models\n'
+		printf '  4) Settings (-n, system prompt, temp)\n'
+		printf '  5) Benchmark current model\n'
+		printf '  6) Agent mode (run commands)\n'
+		printf '  7) Web chat (Browser UI)\n'
+		printf '  8) One-line help\n'
+		printf '  0) Exit\n'
+		hr
+		printf '\n  Choice: '
+		read _choice
+
+		case $_choice in
+			1) menu_chat ;;
+			2) menu_models ;;
+			3) menu_download ;;
+			4) menu_settings ;;
+			5) menu_bench ;;
+			6) menu_agent ;;
+			7) menu_web ;;
+			8)
+				banner
+				printf '  Quick usage:\n'
+				hr
+				printf '  ai                  Open this menu\n'
+				printf '  ai "your question"  Quick ask\n'
+				printf '  ai web              Start web chat in Browser\n'
+				printf '  ai web -b           Start web server in background\n'
+				printf '  ai web stop         Stop background web server\n'
+				printf '  ai agent "task"     Agent runs shell commands\n'
+				printf '  ai agent -y "task"  Auto-run commands (careful)\n'
+				printf '  ai -n 32 "question" Set max tokens\n'
+				printf '  ai -m smollm2_360m  Pick model\n'
+				printf '  ai download         Download missing models\n'
+				printf '\n  Models install to:\n  %s\n' "$MODELS"
+				printf '\n  Web chat URL: %s\n' "$(web_url)"
+				printf '  Agent uses RUN: lines from the model, with y/N confirm.\n'
+				pause
+				;;
+			0|q|Q|exit) printf '\n  Goodbye.\n\n'; exit 0 ;;
+			*) printf '\n  Invalid choice.\n'; pause ;;
+		esac
+	done
+}
+
+# --- CLI ---
+cli_help() {
+	printf 'BerryCore AI v%s\n\n' "$AI_VERSION"
+	printf 'Usage:\n'
+	printf '  ai                     Interactive menu\n'
+	printf '  ai "question"          Quick ask with saved settings\n'
+	printf '  ai -p "question"       Same\n'
+	printf '  ai -n 32 "question"    Limit output tokens\n'
+	printf '  ai -m smollm2_135m     Select model\n'
+	printf '  ai -sys "You are..."   Override system prompt\n'
+	printf '  ai download [model_id] Download model(s)\n'
+	printf '  ai models              List models\n'
+	printf '  ai web                 Start web chat (Browser UI)\n'
+	printf '  ai web -b              Start web server in background\n'
+	printf '  ai web stop            Stop background web server\n'
+	printf '  ai agent "task"        Agent mode (confirm each command)\n'
+	printf '  ai agent -y "task"     Agent mode (auto-run safe commands)\n'
+	printf '\nWeb chat URL: %s\n' "$(web_url)"
+	printf 'Model ids: %s\n' "$model_ids"
+}
+
+cli_models() {
+	for _id in $model_ids; do
+		if model_installed "$_id"; then
+			_st="[installed]"
+		else
+			_st="[missing]"
+		fi
+		printf '%s %s %s (%s)\n' "$_st" "$_id" "$(model_get "$_id" label)" "$(model_get "$_id" size)"
+	done
+}
+
+cli_download() {
+	_target="$1"
+	if [ -z "$_target" ]; then
+		for _id in $model_ids; do
+			if ! model_installed "$_id"; then
+				download_model "$_id"
+			fi
+		done
+	else
+		_found=""
+		for _id in $model_ids; do
+			if [ "$_id" = "$_target" ]; then
+				_found=1
+				download_model "$_id"
+				break
+			fi
+		done
+		if [ -z "$_found" ]; then
+			printf 'Unknown model: %s\n' "$_target"
+			return 1
+		fi
+	fi
+}
+
+# parse CLI
+cfg_load
+
+# web subcommand
+if [ "$1" = "web" ]; then
+	shift
+	WEB_BG=0
+	WEB_STOP=0
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			-b|--background) WEB_BG=1; shift ;;
+			stop) WEB_STOP=1; shift ;;
+			-m) shift; CFG_MODEL="$1"; shift ;;
+			--port) shift; CFG_WEB_PORT="$1"; shift ;;
+			--host) shift; CFG_WEB_HOST="$1"; shift ;;
+			-h|--help)
+				printf 'Usage: ai web [-b] [-m model_id] [--port N]\n'
+				printf '       ai web stop\n'
+				exit 0
+				;;
+			-*)
+				printf 'Unknown option: %s\n' "$1"
+				exit 1
+				;;
+			*)
+				printf 'Unknown argument: %s\n' "$1"
+				exit 1
+				;;
+		esac
+	done
+	if [ "$WEB_STOP" = "1" ]; then
+		web_stop
+		exit $?
+	fi
+	run_web_server "$CFG_MODEL" "$WEB_BG"
+	exit $?
+fi
+
+# agent subcommand
+if [ "$1" = "agent" ]; then
+	shift
+	AGENT_YES=0
+	AGENT_TASK=""
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			-y|--yes) AGENT_YES=1; shift ;;
+			-m) shift; CFG_MODEL="$1"; shift ;;
+			-h|--help)
+				printf 'Usage: ai agent [-y] "task description"\n'
+				exit 0
+				;;
+			-*)
+				printf 'Unknown option: %s\n' "$1"
+				exit 1
+				;;
+			*)
+				if [ -z "$AGENT_TASK" ]; then
+					AGENT_TASK="$1"
+				else
+					AGENT_TASK="$AGENT_TASK $1"
+				fi
+				shift
+				;;
+		esac
+	done
+	if [ -n "$AGENT_TASK" ]; then
+		run_agent "$AGENT_TASK" "$AGENT_YES"
+		exit $?
+	fi
+	printf 'Usage: ai agent "task description"\n'
+	exit 1
+fi
+
+CLI_MODEL=""
+CLI_N=""
+CLI_SYS=""
+CLI_TEMP=""
+CLI_PROMPT=""
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-h|--help|help) cli_help; exit 0 ;;
+		models) cli_models; exit 0 ;;
+		download) shift; cli_download "$1"; exit $? ;;
+		-m) shift; CLI_MODEL="$1"; shift ;;
+		-n) shift; CLI_N="$1"; shift ;;
+		-sys) shift; CLI_SYS="$1"; shift ;;
+		-p) shift; CLI_PROMPT="$1"; shift ;;
+		-*) printf 'Unknown option: %s\n' "$1"; exit 1 ;;
+		*)
+			if [ -z "$CLI_PROMPT" ]; then
+				CLI_PROMPT="$1"
+			else
+				CLI_PROMPT="$CLI_PROMPT $1"
+			fi
+			shift
+			;;
+	esac
+done
+
+[ -n "$CLI_MODEL" ] && CFG_MODEL="$CLI_MODEL"
+[ -n "$CLI_N" ] && CFG_N="$CLI_N"
+[ -n "$CLI_SYS" ] && CFG_SYS="$CLI_SYS"
+[ -n "$CLI_TEMP" ] && CFG_TEMP="$CLI_TEMP"
+
+if [ -n "$CLI_PROMPT" ]; then
+	run_prompt "$CFG_MODEL" "$CLI_PROMPT" "$CFG_N" "$CFG_SYS" "$CFG_TEMP" "$CFG_THREADS" "$CFG_CTX" "$CFG_BATCH"
+	exit $?
+fi
+
+menu_main

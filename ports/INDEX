@@ -30,4 +30,5 @@ wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: 
 berrybot|util|1.0.0|600K|Command-line teaching assistant - Linux, QNX, bash, BerryCore (run: bot grep, bot lessons)
 rocketchat|web|1.0|92K|RocketChat Navigator for BB10 - private groups, DMs (requires python3, port 8026)
 claude-code|dev|2.1.91|45M|Claude Code AI agent for BB10 - terminal coding assistant (requires node-term49, run claude-setup)
+bcllm|util|1.2.1|19M|On-device LLM assistant - SmolLM/Gemma/Qwen via llama.cpp (requires wget, ai download model)
 

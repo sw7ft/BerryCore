@@ -56,6 +56,11 @@ hydra|net|Fast network logon cracker (password auditing)
 git|vcs|Distributed version control
 tig|vcs|Text-mode interface for Git
 
+# AI / LLM
+ai|util|On-device LLM assistant (BerryCore AI / bcllm port)
+AI|util|Alias for ai (BerryCore AI)
+bcllm|util|BerryCore AI launcher (legacy wrapper to ai)
+
 # System Tools
 ncdu|sys|Interactive disk usage analyzer (ncurses TUI)
 chafa|media|Terminal image viewer (JPEG/PNG/GIF)

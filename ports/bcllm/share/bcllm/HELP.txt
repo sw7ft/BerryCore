@@ -1,0 +1,50 @@
+BerryCore AI (bcllm) 1.2.1
+==========================
+
+On-device LLM assistant for BB10 — llama.cpp, SmolLM / Gemma / Qwen models.
+
+INSTALL
+-------
+  qpkg install bcllm
+  sh /accounts/1000/shared/misc/bcllm/setup-ai.sh
+
+After qpkg install, `ai` is also linked into $NATIVE_TOOLS/bin.
+
+QUICK START
+-----------
+  ai                              # interactive menu
+  ai download smollm2_135m        # download smallest model (~101 MB)
+  ai "What is the capital of France?"
+  ai web                          # Browser UI at http://127.0.0.1:8080/
+
+AGENT MODE
+----------
+  ai agent "how much free disk space do I have?"
+  ai agent -y "show current date and pwd"
+
+REQUIRES
+--------
+  wget (BerryCore core package — for model downloads)
+  Wi-Fi for first model download
+  Models stored in: /accounts/1000/shared/misc/bcllm/models/
+
+WEB CHAT
+--------
+  1. ai web
+  2. Wait for "model loaded" in terminal
+  3. Browser app → http://127.0.0.1:8080/
+
+FILES
+-----
+  Install root: /accounts/1000/shared/misc/bcllm/
+  Settings:     etc/ai.conf, etc/models.conf, etc/agent.conf
+  Docs:         share/bcllm/USAGE.md (after install: docs/USAGE.md)
+
+STOP SERVER
+-----------
+  ai web stop
+  slay -f llama-server
+
+VERSION
+-------
+  bcllm 1.2.1 (llama.cpp rev in docs/LLAMA_CPP_REV.txt)

@@ -1,0 +1,32 @@
+#!/bin/sh
+# Add BerryCore AI to PATH (alternative to setup-ai.sh)
+AI_HOME="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+AI_BIN="${AI_HOME}/bin"
+MARK="# BerryCore AI"
+
+PROFILE="${HOME}/.profile"
+[ -f "$HOME/.bash_profile" ] && PROFILE="$HOME/.bash_profile"
+
+if [ ! -x "$AI_BIN/bcllm-ai" ] && [ ! -x "$AI_BIN/ai" ]; then
+	printf 'ERROR: ai not found at %s/bcllm-ai\n' "$AI_BIN"
+	exit 1
+fi
+[ -x "$AI_BIN/bcllm-ai" ] && ln -sf bcllm-ai "$AI_BIN/ai" 2>/dev/null
+
+if grep -q "$MARK" "$PROFILE" 2>/dev/null; then
+	printf 'BerryCore AI already in %s\n' "$PROFILE"
+else
+	printf '\n%s\n' "$MARK" >> "$PROFILE"
+	printf 'export PATH=%s:$PATH\n' "$AI_BIN" >> "$PROFILE"
+	printf 'Added to %s\n' "$PROFILE"
+fi
+
+if ! grep -q "alias AI=" "$PROFILE" 2>/dev/null; then
+	printf "alias AI='ai'\n" >> "$PROFILE"
+fi
+
+ln -sf "$AI_BIN/ai" "$AI_BIN/AI" 2>/dev/null || true
+mkdir -p "$AI_HOME/models" "$AI_HOME/var" 2>/dev/null
+
+printf '\nOpen a new shell, then type:\n\n  ai\n\n'
+printf 'Or run now:\n\n  export PATH=%s:$PATH\n  ai\n\n' "$AI_BIN"
