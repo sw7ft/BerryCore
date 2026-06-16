@@ -8,13 +8,14 @@ INSTALL
   qpkg install bcllm
   sh /accounts/1000/shared/misc/bcllm/setup-ai.sh
 
-After qpkg install, `ai` is also linked into $NATIVE_TOOLS/bin.
+After qpkg install, run `. ~/.profile` then:
 
 QUICK START
 -----------
   ai                              # interactive menu
   ai download smollm2_135m        # download smallest model (~101 MB)
   ai "What is the capital of France?"
+  ai -p "quick question"           # same as above
   ai web                          # Browser UI at http://127.0.0.1:8080/
 
 AGENT MODE

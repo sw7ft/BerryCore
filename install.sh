@@ -269,11 +269,19 @@ relocate_bcllm() {
     ln -sf bcllm-ai "$MISC_BCLLM/bin/ai" 2>/dev/null
     ln -sf bcllm-ai "$MISC_BCLLM/bin/AI" 2>/dev/null
 
-    mkdir -p "$NT/bin"
-    ln -sf "$MISC_BCLLM/bin/bcllm-ai" "$NT/bin/ai" 2>/dev/null
-    ln -sf "$MISC_BCLLM/bin/bcllm-ai" "$NT/bin/AI" 2>/dev/null
-    ln -sf "$MISC_BCLLM/bin/bcllm" "$NT/bin/bcllm" 2>/dev/null
-    echo "Linked ai, AI, bcllm into $NT/bin"
+    if [ -x "$MISC_BCLLM/setup-ai.sh" ]; then
+        export NATIVE_TOOLS="$NT"
+        sh "$MISC_BCLLM/setup-ai.sh"
+    else
+        mkdir -p "$NT/bin"
+        if [ -f "$MISC_BCLLM/bin/berrycore-ai" ]; then
+            cp "$MISC_BCLLM/bin/berrycore-ai" "$NT/bin/ai"
+            chmod +x "$NT/bin/ai"
+            ln -sf ai "$NT/bin/AI" 2>/dev/null
+            ln -sf "$MISC_BCLLM/bin/bcllm" "$NT/bin/bcllm" 2>/dev/null
+        fi
+        echo "Linked ai into $NT/bin (run setup-ai.sh for .profile PATH)"
+    fi
 }
 
 relocate_bcllm

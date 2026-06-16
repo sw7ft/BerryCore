@@ -460,19 +460,18 @@ cmd_install() {
     elif [ "$PORT_NAME" = "bcllm" ] && [ -d "$INSTALL_DIR/bcllm/bin" ]; then
         chmod +x "$INSTALL_DIR/bcllm/bin/"* 2>/dev/null
         mkdir -p "$INSTALL_DIR/bcllm/models" "$INSTALL_DIR/bcllm/var" 2>/dev/null
-        ln -sf bcllm-ai "$INSTALL_DIR/bcllm/bin/ai" 2>/dev/null
-        ln -sf bcllm-ai "$INSTALL_DIR/bcllm/bin/AI" 2>/dev/null
-        ln -sf "$INSTALL_DIR/bcllm/bin/bcllm-ai" "$NATIVE_TOOLS/bin/ai" 2>/dev/null
-        ln -sf "$INSTALL_DIR/bcllm/bin/bcllm-ai" "$NATIVE_TOOLS/bin/AI" 2>/dev/null
-        ln -sf "$INSTALL_DIR/bcllm/bin/bcllm" "$NATIVE_TOOLS/bin/bcllm" 2>/dev/null
+        if [ -x "$INSTALL_DIR/bcllm/setup-ai.sh" ]; then
+            export NATIVE_TOOLS
+            sh "$INSTALL_DIR/bcllm/setup-ai.sh"
+        fi
         echo "BerryCore AI installed to $INSTALL_DIR/bcllm/"
         echo ""
         echo "Next steps:"
-        echo "  ai download smollm2_135m    # download model (~101 MB, needs wget + Wi-Fi)"
-        echo "  ai                          # interactive menu"
-        echo "  ai web                      # browser chat at http://127.0.0.1:8080/"
+        echo "  . ~/.profile"
+        echo "  ai download smollm2_135m"
+        echo '  ai "your question here"'
+        echo "  ai web"
         echo ""
-        echo "Optional: sh $INSTALL_DIR/bcllm/setup-ai.sh  (add to ~/.profile)"
         echo "Help: $INSTALL_DIR/bcllm/share/bcllm/HELP.txt"
     elif [ -d "$NATIVE_TOOLS/bin" ]; then
         echo "Binaries installed:"

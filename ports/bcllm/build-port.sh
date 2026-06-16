@@ -36,6 +36,7 @@ fi
 
 cp "$SCRIPT_DIR/setup-ai.sh" "$PKG_ROOT/setup-ai.sh"
 cp "$SCRIPT_DIR/bin/ai-install" "$PKG_ROOT/bin/ai-install"
+cp "$SCRIPT_DIR/bin/berrycore-ai" "$PKG_ROOT/bin/berrycore-ai"
 cp "$SCRIPT_DIR/share/bcllm/HELP.txt" "$PKG_ROOT/share/bcllm/" 2>/dev/null || {
     mkdir -p "$PKG_ROOT/share/bcllm"
     cp "$SCRIPT_DIR/share/bcllm/HELP.txt" "$PKG_ROOT/share/bcllm/"

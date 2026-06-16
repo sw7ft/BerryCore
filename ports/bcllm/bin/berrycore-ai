@@ -1,0 +1,22 @@
+#!/bin/sh
+# ai — BerryCore on-device LLM (qpkg install bcllm)
+# Always exec the real script so ai "prompt" works from any PATH entry.
+
+BCLLM_HOME="/accounts/1000/shared/misc/bcllm"
+AI_BIN="$BCLLM_HOME/bin/bcllm-ai"
+
+if [ ! -x "$AI_BIN" ]; then
+	BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+	NT="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+	if [ -x "$NT/bcllm/bin/bcllm-ai" ]; then
+		AI_BIN="$NT/bcllm/bin/bcllm-ai"
+	fi
+fi
+
+if [ ! -x "$AI_BIN" ]; then
+	echo "ai: BerryCore AI not installed at $BCLLM_HOME" >&2
+	echo "Run: qpkg install bcllm" >&2
+	exit 1
+fi
+
+exec "$AI_BIN" "$@"

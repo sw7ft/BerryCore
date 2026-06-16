@@ -5,7 +5,18 @@
 #         ai -p "..." -n 32 -m smollm2_135m
 
 AI_VERSION="1.2.1"
-AI_HOME=$(cd "$(dirname "$0")/.." && pwd)
+
+# Resolve install root even when invoked via symlink (e.g. berrycore/bin/ai)
+_ai_script="$0"
+if [ -L "$0" ]; then
+	_link=$(readlink "$0" 2>/dev/null)
+	case "$_link" in
+		/*) _ai_script="$_link" ;;
+		"") _ai_script="$0" ;;
+		*) _ai_script="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/$_link" ;;
+	esac
+fi
+AI_HOME=$(CDPATH= cd -- "$(dirname -- "$_ai_script")/.." && pwd)
 export LD_LIBRARY_PATH="${AI_HOME}/lib:${LD_LIBRARY_PATH}"
 
 BIN="${AI_HOME}/bin/llama-completion"
