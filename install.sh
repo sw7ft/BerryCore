@@ -266,8 +266,6 @@ relocate_bcllm() {
 
     chmod +x "$MISC_BCLLM/bin/"* 2>/dev/null
     mkdir -p "$MISC_BCLLM/models" "$MISC_BCLLM/var" 2>/dev/null
-    ln -sf bcllm-ai "$MISC_BCLLM/bin/ai" 2>/dev/null
-    ln -sf bcllm-ai "$MISC_BCLLM/bin/AI" 2>/dev/null
 
     if [ -x "$MISC_BCLLM/setup-ai.sh" ]; then
         export NATIVE_TOOLS="$NT"

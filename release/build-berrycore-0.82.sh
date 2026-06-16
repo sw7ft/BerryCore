@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build BerryCore v0.82 release artifacts
+# Build BerryCore v0.82.1 release artifacts
 # Usage: ./release/build-berrycore-0.82.sh
 #
 # Outputs in release/berrycore-0.82/:
@@ -17,7 +17,7 @@ if [ ! -f "$HELPER_APK_IN" ] && [ -f "$HOME/Desktop/berrycore-helper.apk" ]; the
 fi
 
 echo "==========================================================="
-echo "     BerryCore v0.82 Release Build"
+echo "     BerryCore v0.82.1 Release Build"
 echo "==========================================================="
 echo ""
 
@@ -42,7 +42,7 @@ if [ -f "$HELPER_APK_IN" ]; then
     unzip -q "$HELPER_APK_IN" -d "$APK_WORK"
     cp "$REPO_ROOT/berrycore.zip" "$APK_WORK/assets/berrycore.zip"
     cp "$REPO_ROOT/install.sh" "$APK_WORK/assets/install.sh"
-    echo "0.82" > "$APK_WORK/assets/VERSION"
+    echo "0.82.1" > "$APK_WORK/assets/VERSION"
     rm -rf "$APK_WORK/META-INF"
     (cd "$APK_WORK" && zip -qr -0 "$HELPER_APK_OUT" .)
     echo "Helper APK written (unsigned — re-sign before sideload if required): $HELPER_APK_OUT"

@@ -1,3 +1,3 @@
-BerryCore v0.82 — On-device AI (bcllm) bundled! ai download smollm2_135m then: ai
+BerryCore v0.82.1 — Fix ai command after qpkg install bcllm (wrapper script, not symlink)
 Also: ncdu, chafa, dcron, wget | BerryCore Helper APK for sideload install
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.82
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.82.1

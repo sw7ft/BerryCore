@@ -458,21 +458,53 @@ cmd_install() {
         echo "Apps installed to $INSTALL_DIR/android-apps/:"
         ls -1 "$INSTALL_DIR/android-apps" | sed 's/^/  /'
     elif [ "$PORT_NAME" = "bcllm" ] && [ -d "$INSTALL_DIR/bcllm/bin" ]; then
-        chmod +x "$INSTALL_DIR/bcllm/bin/"* 2>/dev/null
-        mkdir -p "$INSTALL_DIR/bcllm/models" "$INSTALL_DIR/bcllm/var" 2>/dev/null
-        if [ -x "$INSTALL_DIR/bcllm/setup-ai.sh" ]; then
-            export NATIVE_TOOLS
-            sh "$INSTALL_DIR/bcllm/setup-ai.sh"
+        BCLLM="$INSTALL_DIR/bcllm"
+        chmod +x "$BCLLM/bin/"* 2>/dev/null
+        mkdir -p "$BCLLM/models" "$BCLLM/var" 2>/dev/null
+
+        # misc/bcllm/bin/ai must be the wrapper script (never symlink to bcllm-ai)
+        if [ -f "$BCLLM/bin/berrycore-ai" ]; then
+            cp "$BCLLM/bin/berrycore-ai" "$BCLLM/bin/ai"
+            chmod +x "$BCLLM/bin/ai" 2>/dev/null
+        elif [ -L "$BCLLM/bin/ai" ] || [ ! -f "$BCLLM/bin/ai" ]; then
+            cat > "$BCLLM/bin/ai" << 'BCLLM_WRAP'
+#!/bin/sh
+exec /accounts/1000/shared/misc/bcllm/bin/bcllm-ai "$@"
+BCLLM_WRAP
+            chmod +x "$BCLLM/bin/ai" 2>/dev/null
         fi
-        echo "BerryCore AI installed to $INSTALL_DIR/bcllm/"
+
+        # ai in $NATIVE_TOOLS/bin — works immediately when env.sh is loaded
+        mkdir -p "$NATIVE_TOOLS/bin"
+        rm -f "$NATIVE_TOOLS/bin/ai" "$NATIVE_TOOLS/bin/AI" "$NATIVE_TOOLS/bin/bcllm"
+        if [ -f "$BCLLM/bin/ai" ] && [ ! -L "$BCLLM/bin/ai" ]; then
+            cp "$BCLLM/bin/ai" "$NATIVE_TOOLS/bin/ai"
+        elif [ -f "$BCLLM/bin/berrycore-ai" ]; then
+            cp "$BCLLM/bin/berrycore-ai" "$NATIVE_TOOLS/bin/ai"
+        else
+            cat > "$NATIVE_TOOLS/bin/ai" << 'BCLLM_EOF'
+#!/bin/sh
+exec /accounts/1000/shared/misc/bcllm/bin/bcllm-ai "$@"
+BCLLM_EOF
+        fi
+        chmod +x "$NATIVE_TOOLS/bin/ai"
+        ln -sf ai "$NATIVE_TOOLS/bin/AI" 2>/dev/null
+        [ -x "$BCLLM/bin/bcllm" ] && ln -sf "$BCLLM/bin/bcllm" "$NATIVE_TOOLS/bin/bcllm" 2>/dev/null
+
+        if [ -x "$BCLLM/setup-ai.sh" ]; then
+            export NATIVE_TOOLS
+            sh "$BCLLM/setup-ai.sh"
+        fi
+
+        echo "BerryCore AI installed to $BCLLM/"
+        echo "  ai command: $NATIVE_TOOLS/bin/ai"
         echo ""
-        echo "Next steps:"
-        echo "  . ~/.profile"
+        echo "Try now:"
+        echo '  ai "What is the capital of France?"'
         echo "  ai download smollm2_135m"
-        echo '  ai "your question here"'
         echo "  ai web"
         echo ""
-        echo "Help: $INSTALL_DIR/bcllm/share/bcllm/HELP.txt"
+        echo "Help: $BCLLM/share/bcllm/HELP.txt"
     elif [ -d "$NATIVE_TOOLS/bin" ]; then
         echo "Binaries installed:"
         ls -1 "$NATIVE_TOOLS/bin" | tail -10 | sed 's/^/  /'

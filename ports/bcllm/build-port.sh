@@ -57,8 +57,10 @@ fi
 rm -f "$PKG_ROOT/bin/ai" "$PKG_ROOT/bin/AI" "$PKG_ROOT/bin/bcllm-ai"
 cat "$SCRIPT_DIR/vendor/bin/ai" > "$PKG_ROOT/bin/bcllm-ai"
 chmod +x "$PKG_ROOT/bin/bcllm-ai"
-ln -sf bcllm-ai "$PKG_ROOT/bin/ai"
-ln -sf bcllm-ai "$PKG_ROOT/bin/AI"
+# bin/ai = wrapper script only (never symlink; never AI — macOS HFS+ merges ai/AI in zip)
+cp "$SCRIPT_DIR/bin/berrycore-ai" "$PKG_ROOT/bin/ai"
+chmod +x "$PKG_ROOT/bin/ai"
+# Do not create bin/AI here (case-insensitive build hosts collapse ai+AI). setup-ai.sh adds AI on device.
 
 cd "$STAGING"
 if [ ! -f "bcllm/bin/bcllm-ai" ]; then
