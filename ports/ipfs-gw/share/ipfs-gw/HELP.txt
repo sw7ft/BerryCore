@@ -1,0 +1,33 @@
+IPFS Gateway Client (ipfs-gw) 0.1.0
+====================================
+
+Fetch IPFS content over HTTPS from public gateways on BB10 / Passport.
+
+Install
+-------
+  qpkg install ipfs-gw
+
+Commands
+--------
+  ipfs-gw cat CID [OPTIONS]     Fetch CID to stdout (pipe to file)
+  ipfs-gw verify FILE CID       Check local file matches CIDv0
+  ipfs-gw --help                Full usage
+
+Options (cat)
+-------------
+  --gateway HOST    Gateway host (default: ipfs.io)
+                    URL: https://HOST/ipfs/CID
+
+Examples
+--------
+  ipfs-gw cat QmYwAPJzv5CZsnA625s3Xf2nemtYgPUp66jiT1MV8b2w3
+  ipfs-gw cat bafybeig... --gateway dweb.link > photo.jpg
+  ipfs-gw verify myfile.bin Qm...
+
+Notes
+-----
+- Read-only client — uses HTTPS gateways, no local IPFS node required
+- Works in Term49 / BerryCore shell over Wi-Fi
+- Built for QNX ARM (Passport)
+
+Docs: $NATIVE_TOOLS/share/ipfs-gw/HELP.txt
