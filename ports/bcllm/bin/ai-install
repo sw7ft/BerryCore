@@ -12,18 +12,16 @@ if [ ! -x "$AI_BIN/bcllm-ai" ]; then
 	exit 1
 fi
 
-# Ensure bin/ai is the wrapper script
-if [ -L "$AI_BIN/ai" ] || [ ! -f "$AI_BIN/ai" ]; then
-	if [ -f "$AI_BIN/berrycore-ai" ]; then
-		cp "$AI_BIN/berrycore-ai" "$AI_BIN/ai"
-	else
-		cat > "$AI_BIN/ai" << 'EOF'
+# Ensure bin/ai is the wrapper script (always refresh)
+if [ -f "$AI_BIN/berrycore-ai" ]; then
+	cp "$AI_BIN/berrycore-ai" "$AI_BIN/ai"
+else
+	cat > "$AI_BIN/ai" << 'EOF'
 #!/bin/sh
 exec /accounts/1000/shared/misc/bcllm/bin/bcllm-ai "$@"
 EOF
-	fi
-	chmod +x "$AI_BIN/ai"
 fi
+chmod +x "$AI_BIN/ai"
 
 mkdir -p "$NT/bin"
 rm -f "$NT/bin/ai" "$NT/bin/AI"

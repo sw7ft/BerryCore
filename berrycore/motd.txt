@@ -1,3 +1,3 @@
-BerryCore v0.82.1 — Fix ai command after qpkg install bcllm (wrapper script, not symlink)
+BerryCore v0.82.2 — qpkg install bcllm always installs ai wrapper (no symlink)
 Also: ncdu, chafa, dcron, wget | BerryCore Helper APK for sideload install
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.82.1
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.82.2
