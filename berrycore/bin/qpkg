@@ -88,63 +88,70 @@ init_native_tools() {
 # Get current installed version
 get_current_version() {
     if [ -f "$NATIVE_TOOLS/VERSION" ]; then
-        cat "$NATIVE_TOOLS/VERSION"
+        tr -d '\r' < "$NATIVE_TOOLS/VERSION" | head -1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
     else
         echo "unknown"
     fi
 }
 
-# Check for updates via GitHub API
+# Check for updates via GitHub API — version only on stdout (for $(...))
 check_for_updates() {
-    print_info "Checking for updates..."
-    
-    # Fetch latest release info
-    RELEASE_JSON=$(curl -s -k -m 10 "$GITHUB_API/releases/latest" 2>/dev/null)
-    
+    print_info "Checking for updates..." >&2
+
+    RELEASE_JSON=$(curl -s -k -m 15 "$GITHUB_API/releases/latest" 2>/dev/null)
+
     if [ -z "$RELEASE_JSON" ]; then
-        print_error "Failed to connect to GitHub. Check your internet connection."
+        print_error "Failed to connect to GitHub. Check your internet connection." >&2
         return 1
     fi
-    
-    # Parse version tag (remove 'v' prefix)
+
     LATEST_VERSION=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/' | head -1)
-    
+
     if [ -z "$LATEST_VERSION" ]; then
-        print_error "Could not determine latest version."
+        print_error "Could not determine latest version." >&2
         return 1
     fi
-    
+
     echo "$LATEST_VERSION"
 }
 
-# Compare versions (x.y.z when python3 available, else major.minor)
+# Compare versions — returns 0 if $1 > $2 (handles x.y.z without python3)
 version_greater() {
-    # $1 = new version, $2 = old version — returns 0 if $1 > $2
+    _new="$1"
+    _old="$2"
+
     if command -v python3 >/dev/null 2>&1; then
-        python3 -c "
+        if python3 -c "
 def parts(v):
     return [int(x) for x in v.split('.') if x.isdigit()]
-a, b = parts('$1'), parts('$2')
-# pad to same length
+a, b = parts('$_new'), parts('$_old')
 n = max(len(a), len(b))
 a += [0] * (n - len(a))
 b += [0] * (n - len(b))
 import sys
 sys.exit(0 if a > b else 1)
-" 2>/dev/null && return 0
-        return 1
+" 2>/dev/null; then
+            return 0
+        fi
     fi
 
-    NEW_MAJOR=$(echo "$1" | cut -d. -f1)
-    NEW_MINOR=$(echo "$1" | cut -d. -f2)
-    OLD_MAJOR=$(echo "$2" | cut -d. -f1)
-    OLD_MINOR=$(echo "$2" | cut -d. -f2)
-
-    if [ "$NEW_MAJOR" -gt "$OLD_MAJOR" ]; then
-        return 0
-    elif [ "$NEW_MAJOR" -eq "$OLD_MAJOR" ] && [ "$NEW_MINOR" -gt "$OLD_MINOR" ]; then
-        return 0
-    fi
+    _i=1
+    while [ "$_i" -le 10 ]; do
+        _va=$(echo "$_new" | cut -d. -s -f"$_i")
+        _vb=$(echo "$_old" | cut -d. -s -f"$_i")
+        if [ -z "$_va" ] && [ -z "$_vb" ]; then
+            return 1
+        fi
+        if [ -z "$_va" ]; then _va=0; fi
+        if [ -z "$_vb" ]; then _vb=0; fi
+        _va=$(echo "$_va" | sed 's/[^0-9].*//')
+        _vb=$(echo "$_vb" | sed 's/[^0-9].*//')
+        [ -z "$_va" ] && _va=0
+        [ -z "$_vb" ] && _vb=0
+        if [ "$_va" -gt "$_vb" ]; then return 0; fi
+        if [ "$_va" -lt "$_vb" ]; then return 1; fi
+        _i=$((_i + 1))
+    done
     return 1
 }
 
@@ -193,35 +200,51 @@ download_file() {
 
 # Update BerryCore
 cmd_update() {
+    FORCE=0
+    YES=0
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -f|--force) FORCE=1; shift ;;
+            -y|--yes) YES=1; shift ;;
+            *) shift ;;
+        esac
+    done
+
     print_header "BerryCore Update Manager"
-    
+
     CURRENT_VERSION=$(get_current_version)
     echo "Current version: ${BOLD}v${CURRENT_VERSION}${NC}"
     echo ""
-    
+
     LATEST_VERSION=$(check_for_updates)
     if [ $? -ne 0 ]; then
         exit 1
     fi
-    
+
     echo "Latest version:  ${BOLD}v${LATEST_VERSION}${NC}"
     echo ""
-    
-    # Compare versions
-    if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
-        print_success "You're already on the latest version!"
-        exit 0
+
+    if [ "$FORCE" -eq 0 ]; then
+        if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
+            print_success "You're already on the latest version!"
+            echo ""
+            echo "To reinstall anyway: ${GREEN}qpkg update --force${NC}"
+            exit 0
+        fi
+
+        if ! version_greater "$LATEST_VERSION" "$CURRENT_VERSION"; then
+            print_info "Your version ($CURRENT_VERSION) is newer than the release ($LATEST_VERSION)"
+            exit 0
+        fi
+    else
+        print_warning "Force reinstall — downloading v${LATEST_VERSION} over v${CURRENT_VERSION}"
+        echo ""
     fi
-    
-    if ! version_greater "$LATEST_VERSION" "$CURRENT_VERSION"; then
-        print_info "Your version ($CURRENT_VERSION) is newer than the release ($LATEST_VERSION)"
-        exit 0
-    fi
-    
+
     # New version available
     print_success "New version available: v${LATEST_VERSION}"
     echo ""
-    
+
     # Fetch release notes
     RELEASE_BODY=$(curl -s -k "$GITHUB_API/releases/latest" | grep -A 50 '"body"' | sed '1d' | sed 's/^[[:space:]]*"//' | head -20)
     if [ -n "$RELEASE_BODY" ]; then
@@ -229,11 +252,15 @@ cmd_update() {
         echo "$RELEASE_BODY" | head -10
         echo ""
     fi
-    
+
     # Confirm update
-    echo -n "Download and install v${LATEST_VERSION}? [Y/n]: "
-    read CONFIRM
-    
+    if [ "$YES" -eq 1 ]; then
+        CONFIRM="y"
+    else
+        echo -n "Download and install v${LATEST_VERSION}? [Y/n]: "
+        read CONFIRM
+    fi
+
     if [ "$CONFIRM" != "" ] && [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
         echo "Update cancelled."
         exit 0
@@ -798,6 +825,7 @@ ${BOLD}USAGE:${NC}
 
 ${BOLD}COMMANDS:${NC}
   ${GREEN}update${NC}              Check for and install BerryCore updates
+  ${GREEN}update --force${NC}      Reinstall latest release even if VERSION matches
   ${GREEN}ports${NC}               List available ports from repository
   ${GREEN}install${NC} <package>   Install a port package from repository
   ${GREEN}catalog${NC} [options]   Browse available binaries (replaces bclist)
