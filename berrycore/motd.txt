@@ -1,3 +1,2 @@
-BerryCore v0.82.3 — Fix qpkg update skipping patch releases (0.82 → 0.82.2)
-Also: ncdu, chafa, dcron, wget | BerryCore Helper APK for sideload install
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.82.3
+BerryCore v0.83 — ffmpeg 6.1, tcpdump, ping, nixtla-audio, tig 2.6.1
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.83.0

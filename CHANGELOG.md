@@ -9,7 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.82] - 2026-06-16
+## [0.83.0] - 2026-06-17
+
+### Added
+
+- **util-ping 1.0.0** — ICMP ping for network reachability tests
+- **util-tcpdump 4.99.5** — Network packet capture and analysis
+- **util-nixtla-audio 1.0.0** — BB10 audio playback/recording (`play-audio`, `demoPlayWav`, `demoCaptureEco`)
+
+### Changed
+
+- **ffmpeg 4.2.2 → 6.1.2** — Major upgrade; adds `ffprobe`, better codec support for `play-audio`
+- **tig 2.5.0 → 2.6.1** — Git TUI upgrade with bundled `etc/tigrc` (`TIGRC` set in env.sh)
+- **VERSION** → 0.83.0
+
+---
 
 ### Added
 

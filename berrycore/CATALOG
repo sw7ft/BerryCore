@@ -50,11 +50,12 @@ rsync|net|Remote file synchronization
 nmap|net|Network exploration and security scanner
 nc|net|Netcat - network utility
 dropbear|net|Lightweight SSH server/client
-hydra|net|Fast network logon cracker (password auditing)
+ping|net|ICMP echo — test network reachability
+tcpdump|net|Capture and analyze network packets (v4.99.5)
 
 # Version Control
 git|vcs|Distributed version control
-tig|vcs|Text-mode interface for Git
+tig|vcs|Text-mode interface for Git (v2.6.1)
 
 # AI / LLM
 ai|util|On-device LLM assistant (BerryCore AI / bcllm port)
@@ -81,7 +82,11 @@ xz|archive|XZ compression utility
 unzip|archive|Extract ZIP archives
 
 # Multimedia
-ffmpeg|media|Audio/video converter and streamer
+ffmpeg|media|Audio/video converter and streamer (v6.1.2)
+ffprobe|media|Media stream analyzer (part of ffmpeg 6.1.2)
+play-audio|media|Play audio on BB10 — WAV/MP3 via nixtla + ffmpeg
+demoPlayWav|media|Play WAV via OpenAL speaker (nixtla-audio)
+demoCaptureEco|media|Record microphone audio (nixtla-audio)
 youtube-dl|media|Download videos from YouTube and others
 
 # Data Processing

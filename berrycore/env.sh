@@ -6,6 +6,7 @@ PATH="$NATIVE_TOOLS/bin:$NATIVE_TOOLS/sbin:$PATH"
 # Put BerryCore libs AFTER system libs to avoid conflicts with system binaries
 LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$QNX_TARGET/armle-v7/usr/lib:$NATIVE_TOOLS/lib"
 export PATH LD_LIBRARY_PATH
+export TIGRC="$NATIVE_TOOLS/etc/tigrc"
 
 #MAKEFLAGS="-I$NATIVE_TOOLS/include"
 MAKEFLAGS="-I$QNX_TARGET/usr/include"
@@ -56,7 +57,7 @@ export LC_CTYPE=en_US.UTF-8
 # Welcome Message
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.82 - QNX Extended Userland"
+echo "     BerryCore v0.83 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"
