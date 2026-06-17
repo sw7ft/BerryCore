@@ -53,6 +53,7 @@ dropbear|net|Lightweight SSH server/client
 ping|net|ICMP echo — test network reachability
 tcpdump|net|Capture and analyze network packets (v4.99.5)
 ipfs-gw|net|IPFS gateway client - fetch by CID over HTTPS (qpkg install ipfs-gw)
+bdk-cli|crypto|Bitcoin wallet CLI via Electrum TLS - testnet only (qpkg install bdk-cli)
 
 # Version Control
 git|vcs|Distributed version control

@@ -1,0 +1,30 @@
+#!/bin/sh
+# bdk-cli — BerryCore wrapper (sets DATADIR + SSL certs for Electrum TLS)
+BDK_HOME="/accounts/1000/shared/misc/bdk-cli"
+NT="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
+REAL_BIN="$BDK_HOME/bin/bdk-cli"
+
+if [ ! -x "$REAL_BIN" ]; then
+	BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+	NT="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+	if [ -x "$NT/../bdk-cli/bin/bdk-cli" ]; then
+		BDK_HOME="$(cd "$NT/../bdk-cli" && pwd)"
+		REAL_BIN="$BDK_HOME/bin/bdk-cli"
+	fi
+fi
+
+if [ ! -x "$REAL_BIN" ]; then
+	echo "bdk-cli: not installed at $BDK_HOME" >&2
+	echo "Run: qpkg install bdk-cli" >&2
+	exit 1
+fi
+
+export DATADIR="${DATADIR:-$BDK_HOME/data}"
+if [ -f "$NT/certs/cacert.pem" ]; then
+	export SSL_CERT_FILE="${SSL_CERT_FILE:-$NT/certs/cacert.pem}"
+elif [ -f "$NT/packages/cacert.pem" ]; then
+	export SSL_CERT_FILE="${SSL_CERT_FILE:-$NT/packages/cacert.pem}"
+fi
+
+mkdir -p "$DATADIR"
+exec "$REAL_BIN" "$@"

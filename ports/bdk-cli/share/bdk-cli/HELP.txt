@@ -1,0 +1,43 @@
+BDK CLI 2.0.0 — Bitcoin wallet for BB10
+=======================================
+
+Bitcoin Dev Kit command-line wallet. Syncs via Electrum over TLS.
+Experimental — use testnet only.
+
+Install
+-------
+  qpkg install bdk-cli
+
+Environment (setup-bdk-cli.sh adds these to ~/.profile)
+-------------------------------------------------------
+  DATADIR=/accounts/1000/shared/misc/bdk-cli/data
+  SSL_CERT_FILE=$NATIVE_TOOLS/certs/cacert.pem
+
+The bdk-cli wrapper in berrycore/bin sets these automatically.
+
+Quick start (testnet)
+---------------------
+  bdk-cli key generate
+
+  bdk-cli -n testnet key derive --xprv 'tprv...' --path "m/84'/1'/0'"
+
+  bdk-cli -n testnet wallet -w mywallet \
+    -e "wpkh([fp/84'/1'/0']tpub.../*)" \
+    --client-type electrum --database-type sqlite \
+    --url "ssl://electrum.blockstream.info:60002" sync
+
+  bdk-cli -n testnet wallet -w mywallet \
+    -e "wpkh([fp/84'/1'/0']tpub.../*)" \
+    --client-type electrum --database-type sqlite \
+    --url "ssl://electrum.blockstream.info:60002" new_address
+
+Requires
+--------
+  Wi-Fi / network
+  BerryCore cacert bundle (bundled in berrycore/certs/cacert.pem)
+
+Install path
+------------
+  /accounts/1000/shared/misc/bdk-cli/
+
+Docs: $NATIVE_TOOLS/share/bdk-cli/HELP.txt

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **ipfs-gw 0.1.0** — IPFS gateway port (`qpkg install ipfs-gw`) — fetch CIDs via HTTPS
+- **bdk-cli 2.0.0** — BDK Bitcoin wallet port (`qpkg install bdk-cli`) — Electrum sync, testnet
 
 ---
 

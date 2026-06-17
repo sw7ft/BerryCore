@@ -406,6 +406,54 @@ BCLLM_WRAP
     return 0
 }
 
+# Install BDK CLI — misc/bdk-cli + berrycore/bin wrapper
+install_bdk_cli() {
+    BDK="$1"
+    if [ ! -d "$BDK/bin" ]; then
+        print_error "bdk-cli not found at $BDK"
+        return 1
+    fi
+    if [ ! -x "$BDK/bin/bdk-cli" ]; then
+        print_error "bdk-cli binary missing at $BDK/bin/bdk-cli"
+        return 1
+    fi
+
+    chmod +x "$BDK/bin/"* 2>/dev/null
+    mkdir -p "$BDK/data" "$NATIVE_TOOLS/bin" 2>/dev/null
+
+    if [ -x "$BDK/setup-bdk-cli.sh" ]; then
+        export NATIVE_TOOLS
+        sh "$BDK/setup-bdk-cli.sh"
+    else
+        mkdir -p "$NATIVE_TOOLS/bin" "$BDK/data"
+        cp "$BDK/bin/berrycore-bdk-cli" "$NATIVE_TOOLS/bin/bdk-cli" 2>/dev/null || \
+        cat > "$NATIVE_TOOLS/bin/bdk-cli" << 'BDK_WRAP'
+#!/bin/sh
+BDK_HOME="/accounts/1000/shared/misc/bdk-cli"
+NT="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
+export DATADIR="${DATADIR:-$BDK_HOME/data}"
+export SSL_CERT_FILE="${SSL_CERT_FILE:-$NT/certs/cacert.pem}"
+mkdir -p "$DATADIR"
+exec "$BDK_HOME/bin/bdk-cli" "$@"
+BDK_WRAP
+        chmod +x "$NATIVE_TOOLS/bin/bdk-cli"
+    fi
+
+    export PATH="$NATIVE_TOOLS/bin:$PATH"
+
+    echo "BDK CLI installed to $BDK/"
+    echo "  bdk-cli command: $NATIVE_TOOLS/bin/bdk-cli"
+    echo ""
+    echo "Try (testnet only):"
+    echo "  bdk-cli key generate"
+    echo '  bdk-cli -n testnet wallet -w mywallet -e "wpkh(tpub.../*)" \'
+    echo '    --client-type electrum --database-type sqlite \'
+    echo '    --url "ssl://electrum.blockstream.info:60002" sync'
+    echo ""
+    echo "Help: $BDK/share/bdk-cli/HELP.txt"
+    return 0
+}
+
 # Install a port
 cmd_install() {
     PORT_NAME="$1"
@@ -501,6 +549,9 @@ cmd_install() {
         bcllm)
             INSTALL_DIR="/accounts/1000/shared/misc"
             ;;
+        bdk-cli)
+            INSTALL_DIR="/accounts/1000/shared/misc"
+            ;;
     esac
     
     echo ""
@@ -542,6 +593,8 @@ cmd_install() {
         ls -1 "$INSTALL_DIR/android-apps" | sed 's/^/  /'
     elif [ "$PORT_NAME" = "bcllm" ]; then
         install_bcllm_ai "$INSTALL_DIR/bcllm" || print_warning "Run: sh /accounts/1000/shared/misc/bcllm/setup-ai.sh"
+    elif [ "$PORT_NAME" = "bdk-cli" ]; then
+        install_bdk_cli "$INSTALL_DIR/bdk-cli" || print_warning "Run: sh /accounts/1000/shared/misc/bdk-cli/setup-bdk-cli.sh"
     elif [ -d "$NATIVE_TOOLS/bin" ]; then
         echo "Binaries installed:"
         ls -1 "$NATIVE_TOOLS/bin" | tail -10 | sed 's/^/  /'
