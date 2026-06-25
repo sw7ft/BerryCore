@@ -7,10 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.84.0] - 2026-06-24
+
 ### Added
 
-- **ipfs-gw 0.1.0** — IPFS gateway port (`qpkg install ipfs-gw`) — fetch CIDs via HTTPS
-- **bdk-cli 2.0.0** — BDK Bitcoin wallet port (`qpkg install bdk-cli`) — Electrum sync, testnet
+- **berrybridge-agent 0.1.0** — Bundled core package for Berry Bridge desktop app
+  - Installs to `/accounts/1000/shared/misc/berrybridge-agent/`
+  - Watches `documents/berrybridge/inbox/` for JSON jobs (install BerryCore, SSH keys, ping)
+  - `install.sh` relocates agent and runs post-install (inbox setup, watcher, sshd helpers)
+  - Commands in `$NATIVE_TOOLS/bin/`: `berrybridge-run-job`, `berrybridge-ensure-sshd`, `berrybridge-agent`
+
+### Changed
+
+- **VERSION** → 0.84.0
 
 ---
 
@@ -29,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **VERSION** → 0.83.0
 
 ---
+
+## [0.82.0] - 2026-06-XX
 
 ### Added
 

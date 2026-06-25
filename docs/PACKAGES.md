@@ -63,6 +63,7 @@ This document tracks all packages included in BerryCore.
 | dcron | 4.5 | core package | Cron scheduler (crond + crontab, anacron-style stamps) |
 | ncdu | 1.22 | core package | Interactive disk usage analyzer (ncurses TUI) |
 | bcllm | 1.2.1 | core package + qpkg port | On-device LLM (misc/bcllm/, requires wget for models) |
+| berrybridge-agent | 0.1.0 | core package (bundled) | Berry Bridge job executor (misc/berrybridge-agent/, SMB inbox) |
 
 ### Compression & Archiving (5)
 

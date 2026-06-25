@@ -57,7 +57,7 @@ export LC_CTYPE=en_US.UTF-8
 # Welcome Message
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.83 - QNX Extended Userland"
+echo "     BerryCore v0.84 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"

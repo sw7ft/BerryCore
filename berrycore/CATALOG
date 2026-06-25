@@ -156,6 +156,9 @@ bot|util|Berry Bot - command-line teaching assistant for Linux, QNX, bash (qpkg 
 # Package Management
 qpkg|sys|QNX Package Manager - Update BerryCore and install ports
 settings|sys|BerryCore settings - toggle sshd/tools/MOTD in .profile (settings sshd-on, tools-on, motd-on, status)
+berrybridge-agent|sys|Berry Bridge inbox watcher (background job processor for desktop app)
+berrybridge-run-job|sys|Run Berry Bridge jobs once or from inbox JSON
+berrybridge-ensure-sshd|sys|Start BerryCore sshd on port 2022 for Bridge SSH
 bclist|sys|List and search installed binaries
 bcinfo|sys|Get detailed information about a binary
 bcmotd|sys|Manage Message of the Day settings

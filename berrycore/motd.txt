@@ -1,2 +1,2 @@
-BerryCore v0.83 — ffmpeg 6.1, tcpdump, ping, nixtla-audio, tig 2.6.1
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.83.0
+BerryCore v0.84 — Berry Bridge agent bundled (SMB inbox jobs, SSH bootstrap)
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.84.0

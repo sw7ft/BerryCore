@@ -1,0 +1,39 @@
+BerryCore v0.84.0 Release Files
+================================
+
+Release Date: June 25, 2026
+GitHub Tag: v0.84.0
+
+REQUIRED FILES
+--------------
+
+1. berrycore.zip
+   - Description: Main BerryCore package (includes berrybridge-agent-0.1.0.zip)
+   - SHA256: 6de55706dcdb2cfb020a1ca3f70f8704c35d2046cc7c308b87aac51d536d990d
+   - Size: ~204 MB
+
+2. install.sh
+   - Description: Installation script (relocate berrybridge-agent → misc/)
+   - SHA256: 0d1c7139d9892f74c8ecc55bdf12b586de1ac7ca0a22b500a9539dfc94b9886b
+
+CREATE PACKAGE
+--------------
+
+./ports/berrybridge-agent/build-port.sh berrybridge-agent-bb10-0.1.0.tgz
+./utilities/package.sh
+
+VERIFY INSTALL
+--------------
+
+  cat $NATIVE_TOOLS/VERSION
+  # Should show: 0.84.0
+
+  ls /accounts/1000/shared/misc/berrybridge-agent/bin/
+  berrybridge-run-job ping
+
+WHAT'S NEW IN v0.84.0
+---------------------
+
+- berrybridge-agent 0.1.0 bundled as core package
+- install.sh relocates to misc/berrybridge-agent/ and runs post-install
+- CATALOG: berrybridge-agent, berrybridge-run-job, berrybridge-ensure-sshd

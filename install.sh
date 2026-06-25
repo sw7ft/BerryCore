@@ -284,6 +284,34 @@ relocate_bcllm() {
 
 relocate_bcllm
 
+# Move bundled berrybridge-agent to misc/berrybridge-agent and run post-install
+relocate_berrybridge_agent() {
+    MISC_ROOT="/accounts/1000/shared/misc"
+    MISC_AGENT="$MISC_ROOT/berrybridge-agent"
+    NT="$PWD"
+
+    if [ -d "$NT/berrybridge-agent" ] && [ "$NT/berrybridge-agent" != "$MISC_AGENT" ]; then
+        mkdir -p "$MISC_ROOT"
+        rm -rf "$MISC_AGENT"
+        mv "$NT/berrybridge-agent" "$MISC_AGENT"
+        echo "Berry Bridge agent moved to $MISC_AGENT"
+    fi
+
+    if [ ! -x "$MISC_AGENT/bin/berrybridge-run-job" ]; then
+        return 0
+    fi
+
+    if [ -x "$MISC_AGENT/berrybridge-postinstall.sh" ]; then
+        export NATIVE_TOOLS="$NT"
+        sh "$MISC_AGENT/berrybridge-postinstall.sh" "$NT"
+    elif [ -x "$MISC_AGENT/setup-berrybridge.sh" ]; then
+        export NATIVE_TOOLS="$NT"
+        sh "$MISC_AGENT/setup-berrybridge.sh"
+    fi
+}
+
+relocate_berrybridge_agent
+
 # Backup existing .profile if it exists
 if [ -e "$HOME/.profile" ]; then
   BACKUP_NAME="$HOME/.profile.backup.$(date +%Y%m%d_%H%M%S)"
