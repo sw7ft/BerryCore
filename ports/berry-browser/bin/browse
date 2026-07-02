@@ -1,0 +1,3 @@
+#!/bin/sh
+# browse — alias for berry-browser CLI
+exec "$(dirname "$0")/berry-browser" "$@"

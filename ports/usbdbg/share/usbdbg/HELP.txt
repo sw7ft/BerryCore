@@ -1,0 +1,15 @@
+usbdbg — generic USB serial debugger
+
+Install:  qpkg install usbdbg
+Binary:   /accounts/1000/shared/misc/bin/usbdbg
+Docs:     share/doc/usbdbg/MANUAL.md
+
+Quick use:
+  usbdbg ports
+  usbdbg -p /dev/serusb1 probe
+  usbdbg -p /dev/serusb1 sniff -d 30 -a
+
+For OpenPort + CAN/UDS use:  openport  (qpkg install openport)
+
+Default port: /dev/serusb1  (try serusb2 if needed)
+Default baud: 115200

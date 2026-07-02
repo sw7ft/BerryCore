@@ -1,0 +1,13 @@
+Telnet 0.17 — classic TELNET client (netkit)
+
+Install:  qpkg install telnet
+Binary:    /accounts/1000/shared/misc/bin/telnet
+Docs:      share/doc/telnet/MANUAL.md
+
+Quick use:
+  telnet 192.168.1.179
+  telnet 192.168.1.179 8080
+
+Escape to command mode:  Ctrl+]  then  quit
+
+Note: client only, not encrypted — prefer SSH when available.

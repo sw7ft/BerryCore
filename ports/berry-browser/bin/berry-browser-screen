@@ -1,0 +1,33 @@
+#!/bin/sh
+# berry-browser-screen — full-screen Chromium (native QNX display only, NOT Term49)
+# Install: qpkg install berry-browser
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+ROOT="$NATIVE_TOOLS/share/berry-browser"
+LAUNCHER="$ROOT/bin/berry-browser-screen"
+
+case "${1:-}" in
+    help|-h|--help)
+        cat <<EOF
+berry-browser-screen — full-screen browser (native QNX / libscreen)
+
+Requires native QNX terminal with display — does NOT work in Term49.
+
+  berry-browser-screen [URL]
+  killall content_shell
+
+For Term49 / SSH use:  berry-browser URL
+EOF
+        exit 0
+        ;;
+esac
+
+if [ ! -x "$LAUNCHER" ]; then
+    echo "berry-browser-screen: not installed (qpkg install berry-browser)" >&2
+    exit 1
+fi
+
+export LD_LIBRARY_PATH="$ROOT/lib:${LD_LIBRARY_PATH:-}"
+exec "$LAUNCHER" "$@"

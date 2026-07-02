@@ -454,9 +454,56 @@ BDK_WRAP
     return 0
 }
 
+# Install OpenPort — misc/bin + berrycore/bin symlinks
+install_openport() {
+    MISC_BIN="/accounts/1000/shared/misc/bin"
+    if [ ! -x "$MISC_BIN/openport" ]; then
+        print_error "openport not found at $MISC_BIN/openport"
+        return 1
+    fi
+    chmod +x "$MISC_BIN/openport" "$MISC_BIN/openport-canlog" 2>/dev/null || true
+    mkdir -p "$NATIVE_TOOLS/bin" 2>/dev/null
+    ln -sf "$MISC_BIN/openport" "$NATIVE_TOOLS/bin/openport" 2>/dev/null || \
+        cp "$MISC_BIN/openport" "$NATIVE_TOOLS/bin/openport"
+    ln -sf "$MISC_BIN/openport-canlog" "$NATIVE_TOOLS/bin/openport-canlog" 2>/dev/null || \
+        cp "$MISC_BIN/openport-canlog" "$NATIVE_TOOLS/bin/openport-canlog" 2>/dev/null || true
+    chmod +x "$NATIVE_TOOLS/bin/openport" 2>/dev/null || true
+    echo "OpenPort installed to $MISC_BIN/"
+    echo "  openport command: $NATIVE_TOOLS/bin/openport"
+    echo ""
+    echo "Try:"
+    echo "  openport identify"
+    echo "  openport -p /dev/serusb1 voltage"
+    echo ""
+    echo "Manual: /accounts/1000/shared/misc/share/doc/openport/MANUAL.md"
+    return 0
+}
+
+# Symlink misc/bin tools into berrycore/bin
+install_misc_bin() {
+    MISC_BIN="/accounts/1000/shared/misc/bin"
+    mkdir -p "$NATIVE_TOOLS/bin" 2>/dev/null
+    for bin in "$@"; do
+        if [ ! -x "$MISC_BIN/$bin" ] && [ ! -L "$MISC_BIN/$bin" ]; then
+            print_error "$bin not found at $MISC_BIN/$bin"
+            return 1
+        fi
+        chmod +x "$MISC_BIN/$bin" 2>/dev/null || true
+        ln -sf "$MISC_BIN/$bin" "$NATIVE_TOOLS/bin/$bin" 2>/dev/null || \
+            cp "$MISC_BIN/$bin" "$NATIVE_TOOLS/bin/$bin"
+        chmod +x "$NATIVE_TOOLS/bin/$bin" 2>/dev/null || true
+    done
+    return 0
+}
+
 # Install a port
 cmd_install() {
     PORT_NAME="$1"
+
+    # Legacy port name → berry-browser
+    case "$PORT_NAME" in
+        content-shell-term49) PORT_NAME="berry-browser" ;;
+    esac
     
     if [ -z "$PORT_NAME" ]; then
         print_error "Usage: qpkg install <package-name>"
@@ -552,6 +599,12 @@ cmd_install() {
         bdk-cli)
             INSTALL_DIR="/accounts/1000/shared/misc"
             ;;
+        openport)
+            INSTALL_DIR="/accounts/1000/shared/misc"
+            ;;
+        telnet|usbdbg|dropbear)
+            INSTALL_DIR="/accounts/1000/shared/misc"
+            ;;
     esac
     
     echo ""
@@ -595,6 +648,61 @@ cmd_install() {
         install_bcllm_ai "$INSTALL_DIR/bcllm" || print_warning "Run: sh /accounts/1000/shared/misc/bcllm/setup-ai.sh"
     elif [ "$PORT_NAME" = "bdk-cli" ]; then
         install_bdk_cli "$INSTALL_DIR/bdk-cli" || print_warning "Run: sh /accounts/1000/shared/misc/bdk-cli/setup-bdk-cli.sh"
+    elif [ "$PORT_NAME" = "openport" ]; then
+        install_openport || print_warning "Check /accounts/1000/shared/misc/bin/openport"
+    elif [ "$PORT_NAME" = "telnet" ]; then
+        install_misc_bin telnet && {
+            echo "Telnet installed (netkit 0.17)"
+            echo "  telnet 192.168.1.179"
+            echo "  telnet host 8080"
+            echo "Manual: /accounts/1000/shared/misc/share/doc/telnet/MANUAL.md"
+        }
+    elif [ "$PORT_NAME" = "usbdbg" ]; then
+        install_misc_bin usbdbg && {
+            echo "usbdbg installed"
+            echo "  usbdbg ports"
+            echo "  usbdbg -p /dev/serusb1 probe"
+            echo "Manual: /accounts/1000/shared/misc/share/doc/usbdbg/MANUAL.md"
+        }
+    elif [ "$PORT_NAME" = "dropbear" ]; then
+        mkdir -p "/accounts/1000/shared/misc/etc/dropbear" 2>/dev/null || true
+        install_misc_bin dbclient dropbear dropbearkey ssh && {
+            echo "Dropbear SSH installed (2026.91)"
+            echo "  ssh mp@192.168.1.179"
+            echo "  dropbearkey -t ed25519 -f /accounts/1000/shared/misc/etc/dropbear/id_ed25519"
+            echo "Manual: /accounts/1000/shared/misc/share/doc/dropbear/MANUAL.md"
+        }
+    elif [ "$PORT_NAME" = "maps" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/maps" 2>/dev/null || true
+        echo "Maps installed (OpenStreetMap + directions, port 8090)"
+        echo "  python3 -m pip install requests   # if not installed"
+        echo "  maps"
+        echo "  Open http://localhost:8090"
+    elif [ "$PORT_NAME" = "youtube" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/youtube" 2>/dev/null || true
+        echo "YouTube installed (search + streaming, port 8070)"
+        echo "  python3 -m pip install pytube youtube-search-python"
+        echo "  youtube"
+        echo "  Open http://localhost:8070"
+    elif [ "$PORT_NAME" = "telegram" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/telegram" 2>/dev/null || true
+        echo "Telegram installed (port 8010)"
+        echo "  python3 -m pip install telethon requests"
+        echo "  telegram"
+        echo "  Open http://localhost:8010"
+    elif [ "$PORT_NAME" = "berry-browser" ]; then
+        if [ -d "$NATIVE_TOOLS/share/berry-browser/bin" ]; then
+            chmod +x "$NATIVE_TOOLS/share/berry-browser/bin/"* 2>/dev/null || true
+            chmod +x "$NATIVE_TOOLS/bin/berry-browser" "$NATIVE_TOOLS/bin/browse" \
+                "$NATIVE_TOOLS/bin/content_shell" "$NATIVE_TOOLS/bin/berry-browser-screen" 2>/dev/null || true
+            chmod +x "$NATIVE_TOOLS/share/berry-browser/lib/"*.sh 2>/dev/null || true
+            echo "BerryBrowser installed (build 27)"
+            echo "  berry-browser URL      — CLI browser (Term49 / SSH)"
+            echo "  berry-browser -l URL   — list links"
+            echo "  berry-browser          — interactive mode"
+            echo "  berry-browser-screen   — full-screen (native QNX only)"
+            [ -f "$NATIVE_TOOLS/share/berry-browser/VERSION" ] && cat "$NATIVE_TOOLS/share/berry-browser/VERSION"
+        fi
     elif [ -d "$NATIVE_TOOLS/bin" ]; then
         echo "Binaries installed:"
         ls -1 "$NATIVE_TOOLS/bin" | tail -10 | sed 's/^/  /'

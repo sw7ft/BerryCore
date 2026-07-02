@@ -23,7 +23,8 @@ zsh|shell|Z Shell with advanced features
 # Text Editors
 ed|editor|Line-oriented text editor
 nano|editor|Simple, user-friendly text editor
-vim|editor|Vi IMproved text editor
+vim|editor|Vi IMproved 9.1 text editor (huge, terminal + ncursesw)
+openport|util|OpenPort 2.0 OBD diagnostic CLI (qpkg install openport; misc/bin/)
 
 # Core Utilities (from coreutils)
 ls|util|List directory contents
@@ -44,12 +45,18 @@ xz|util|Compress files with xz
 # Networking Tools
 curl|net|Transfer data from/to servers
 wget|net|Download files from the web (HTTPS, GNU Wget 1.25.0)
-ssh|net|Secure shell client
+ftp|net|Classic FTP client (netkit) — interactive file transfer (qpkg install ftp via util-ftp core)
+bftpd|net|Lightweight FTP server — share files from Passport on LAN
+telnet|net|Classic TELNET client — netkit 0.17 (qpkg install telnet)
+usbdbg|util|Generic USB serial debugger — sniff/probe /dev/serusb* (qpkg install usbdbg)
+ssh|net|Secure shell client (Dropbear dbclient — qpkg install dropbear)
 sshpass|net|Non-interactive SSH password provider
 rsync|net|Remote file synchronization
 nmap|net|Network exploration and security scanner
 nc|net|Netcat - network utility
-dropbear|net|Lightweight SSH server/client
+dropbear|net|Dropbear SSH client/server — dbclient, dropbear, dropbearkey (qpkg install dropbear)
+dropbearkey|net|Dropbear key generator (qpkg install dropbear)
+dbclient|net|Dropbear SSH client alias (qpkg install dropbear)
 ping|net|ICMP echo — test network reachability
 tcpdump|net|Capture and analyze network packets (v4.99.5)
 ipfs-gw|net|IPFS gateway client - fetch by CID over HTTPS (qpkg install ipfs-gw)
@@ -168,7 +175,10 @@ linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 
 # Web Development
 tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (qpkg install bb-tools)
-content_shell|web|Chromium 120 headless browser for Term49 - DOM dump (qpkg install content-shell-term49)
+browse|web|Alias for berry-browser CLI (qpkg install berry-browser)
+berry-browser|web|CLI browser via content_shell — JS pages as readable text (Term49/SSH)
+berry-browser-screen|web|Full-screen Chromium — native QNX only (qpkg install berry-browser)
+content_shell|web|Chromium headless engine — prefer berry-browser URL (qpkg install berry-browser)
 apache-setup|web|Setup Apache+PHP (run after installing apache-php port)
 apache|web|Apache HTTP Server 2.4.58 (qpkg install apache-php)
 apachectl|web|Apache control - start/stop/restart server
@@ -181,6 +191,9 @@ berrypy|web|BlackBerry app platform manager with web interface (requires python3
 elinks|web|Text-based web browser with SSL/TLS, JavaScript, and CSS support - auto-configured (qpkg install elinks)
 term49-web|web|Browser-based terminal - access QNX shell from any browser via xterm.js (qpkg install term49-web, port 7681)
 rocketchat|web|RocketChat Navigator - private groups, DMs (qpkg install rocketchat, requires python3, port 8026)
+maps|web|OpenStreetMap navigation - search & directions (qpkg install maps, requires python3 + requests, port 8090)
+youtube|web|YouTube search and streaming (qpkg install youtube, requires python3 + pytube, port 8070)
+telegram|web|Telegram Messenger client (qpkg install telegram, requires python3 + telethon, port 8010)
 claude|dev|Claude Code AI coding agent for BB10 (qpkg install claude-code, requires node-term49, run claude-setup)
 claude-setup|dev|Interactive Anthropic API key setup for Claude Code
 

@@ -1,0 +1,11 @@
+--- a/dirlist.c
++++ b/dirlist.c
+@@ -274,7 +274,7 @@ void dirlist()
+                  which cannot be opened like normal files
+                  without hanging the server. -- Jesse
+               */
+-#ifndef __minix
++#if !defined(__minix) && !defined(__QNXNTO__)
+               if (dir_entry->d_type != DT_FIFO)
+               {
+ #endif

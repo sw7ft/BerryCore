@@ -1,0 +1,6 @@
+/* QNX / BlackBerry Passport — Dropbear localoptions.h */
+#define DROPBEAR_SVR_DROP_PRIVS 0
+#define DROPBEAR_SVR_MULTIUSER 0
+#define DROPBEAR_SVR_PAM_AUTH 0
+#define DROPBEAR_SVR_LOCALSTREAMFWD 0
+#define DROPBEAR_SVR_REMOTESTREAMFWD 0

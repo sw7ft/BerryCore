@@ -45,7 +45,8 @@ This document tracks all packages included in BerryCore.
 |---------|---------|------|-------------|
 | ed | 1.15 | 64 KB | Line-oriented text editor |
 | nano | 4.0 | 731 KB | Simple text editor ✨ **NEW in 0.6** |
-| vim | 8.0 | - | Vi IMproved text editor |
+| vim | 9.1.2148 | core package | Vi IMproved (huge, terminal + ncursesw; was 8.0) |
+| openport | 1.0.0 | qpkg port | OpenPort 2.0 OBD diagnostic CLI (misc/bin/) |
 | groff | 1.22.3 | 5.8 MB | Document formatting system |
 
 ### Networking & Transfer (8)
@@ -60,6 +61,7 @@ This document tracks all packages included in BerryCore.
 | rsync | 3.1.3 | - | File synchronization |
 | sshpass | 1.06 | - | SSH password provider ✨ **NEW in 0.6** |
 | wget | 1.25.0 | core package | File downloader (HTTPS, OpenSSL 1.1.1w) |
+| util-ftp | 1.0.0 | core package | FTP client (netkit) + bftpd server |
 | dcron | 4.5 | core package | Cron scheduler (crond + crontab, anacron-style stamps) |
 | ncdu | 1.22 | core package | Interactive disk usage analyzer (ncurses TUI) |
 | bcllm | 1.2.1 | core package + qpkg port | On-device LLM (misc/bcllm/, requires wget for models) |

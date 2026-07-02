@@ -1,0 +1,26 @@
+BerryBrowser — CLI browser via Chromium content_shell (build 27)
+================================================================
+
+Primary command (Term49, SSH, native shell):
+
+  berry-browser URL              Readable text (JS rendered)
+  berry-browser                  Interactive REPL
+  berry-browser -l URL           Links list
+  berry-browser -t URL           Title only
+  berry-browser -r URL           Raw HTML
+  berry-browser -o out.html URL  Save + print
+
+Aliases:  browse URL  →  same as berry-browser URL
+
+Full-screen (native QNX display — NOT Term49):
+  berry-browser-screen [URL]
+
+Engine:   content_shell URL 2>/dev/null
+
+Tips:
+  First fetch may take ~30–90s (Chromium startup)
+  berry-browser -T 90000 slow-site.com   Long timeout
+  berry-browser -w 100 URL               Wider wrap
+  qpkg install elinks                    Classic TUI fallback
+
+Install:  qpkg install berry-browser

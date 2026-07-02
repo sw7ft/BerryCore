@@ -1,0 +1,36 @@
+YouTube Viewer for BB10
+========================
+
+Search and stream YouTube videos in the BB10 browser.
+Runs on port 8070.
+
+INSTALL
+-------
+  qpkg install youtube
+
+REQUIRES
+--------
+  python3 (qpkg install python3)
+  pytube (+ optional youtube-search-python):
+    python3 -m ensurepip
+    python3 -m pip install pytube youtube-search-python
+
+QUICK START
+-----------
+  youtube
+  # Starts in background. Open http://localhost:8070 in BB10 browser
+
+  youtube -f   # Run in foreground (for debugging)
+
+FEATURES
+--------
+- YouTube search with thumbnails
+- In-app streaming (pytube)
+- ES5-compatible UI for BB10 browser
+- QNX SSL fallbacks built in
+
+NOTES
+-----
+- Requires network for search and playback
+- Some videos may be region-restricted
+- Search works without youtube-search-python (HTTP fallback)

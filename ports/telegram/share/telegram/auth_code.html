@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Login - Step 2</title>
+    
+    <!-- Home Screen Icon Support -->
+    <link rel="icon" href="https://berrystore.sw7ft.com/apps/app-icons/telegram.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://berrystore.sw7ft.com/apps/app-icons/telegram.png">
+    <link rel="apple-touch-icon-precomposed" href="https://berrystore.sw7ft.com/apps/app-icons/telegram.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Telegram">
+    <meta name="theme-color" content="#0088cc">
+    
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #f1f1f1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: 500;
+            color: #f1f1f1;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"] {
+            padding: 12px 15px;
+            border-radius: 18px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #f1f1f1;
+            font-size: 16px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #666;
+            box-shadow: 0 0 0 2px rgba(79, 173, 255, 0.4);
+        }
+        input[type="submit"] {
+            padding: 12px 20px;
+            border-radius: 18px;
+            border: none;
+            background-color: #0b57d0;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0c62e6;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h2 {
+            margin: 0;
+            color: #f1f1f1;
+            font-weight: 500;
+        }
+        .error {
+            color: #ff5252;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 85%;
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <h2>Telegram App for BerryPy</h2>
+    </div>
+    <div class="container">
+        <h1>Verification Code</h1>
+        <p>Enter the code sent to your Telegram app</p>
+        <form id="codeForm">
+            <label for="code">Code:</label>
+            <input type="text" id="code" name="code" required autocomplete="off">
+            <input type="submit" value="Verify Code">
+        </form>
+        <div id="error" class="error"></div>
+        <div id="loading" class="loading">Verifying code...</div>
+    </div>
+
+    <script>
+    (function() {
+      var codeForm = document.getElementById('codeForm');
+      var errorDiv = document.getElementById('error');
+      var loadingDiv = document.getElementById('loading');
+      
+      codeForm.onsubmit = function(e) {
+        e.preventDefault();
+        
+        // Hide any previous errors
+        errorDiv.style.display = 'none';
+        
+        var code = document.getElementById('code').value.trim();
+        if (!code) {
+            errorDiv.textContent = 'Please enter the verification code';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        // Show loading indicator
+        loadingDiv.style.display = 'block';
+        
+        // Disable the submit button while processing
+        var submitButton = codeForm.querySelector('input[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.value = 'Verifying...';
+
+        // Prepare data to send
+        var data = JSON.stringify({ code: code });
+
+        // Create and open an XHR request
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/validate_code', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        xhr.onreadystatechange = function() {
+          // Only run if the request is complete
+          if (xhr.readyState === 4) {
+            // Hide loading indicator
+            loadingDiv.style.display = 'none';
+            
+            // Re-enable the button
+            submitButton.disabled = false;
+            submitButton.value = 'Verify Code';
+            
+            if (xhr.status === 200) {
+              try {
+                var response = JSON.parse(xhr.responseText);
+                window.location.href = response.next;
+              } catch (err) {
+                errorDiv.textContent = 'Error processing response: ' + err;
+                errorDiv.style.display = 'block';
+              }
+            } else {
+              errorDiv.textContent = 'Invalid code. Please try again.';
+              errorDiv.style.display = 'block';
+            }
+          }
+        };
+
+        // Send the request
+        xhr.send(data);
+      };
+    })();
+    </script>
+</body>
+</html>

@@ -116,6 +116,21 @@ Fields:
 - **size**: Approximate size (K/M/G)
 - **description**: One-line description
 
+## Custom Install Paths
+
+Most ports extract to `berrycore/` (NATIVE_TOOLS). For ports that need a different location, add a case in qpkg's `cmd_install`:
+
+```bash
+# Example: android-apps installs to misc/android-apps/
+case "$PORT_NAME" in
+    android-apps)
+        INSTALL_DIR="/accounts/1000/shared/misc"
+        ;;
+esac
+```
+
+The zip should have the target directory at root (e.g. `android-apps/`) so extraction produces the correct path.
+
 ## Step 6: Update CATALOG (Optional)
 
 If your port includes major binaries, add them to `berrycore/CATALOG`:
@@ -247,6 +262,10 @@ Some ports require others. Check before installing:
 | berrysnip | python3 |
 | voiceagent | python3 |
 | qnxdesktop | python3 |
+| rocketchat | python3 |
+| maps | python3, `requests` (`python3 -m pip install requests`) |
+| youtube | python3, `pytube` (`python3 -m pip install pytube`; optional: `youtube-search-python`) |
+| telegram | python3, `telethon`, `requests` (`python3 -m pip install telethon requests`) |
 
 ## BB10 Tools Deployment
 
@@ -257,7 +276,7 @@ BerryCore includes a native C HTTP server for the web tools (dashboard, drawing 
 | `misc/bin/tools` | ARM ELF32 HTTP server (port 8765) |
 | `misc/share/tools/` | dashboard, drawing-board, markdown-editor, code-editor, compass, linux-chat, virtual-keyboard |
 
-**Run on device:**
+**Run on device:** (starts in background)
 ```sh
 tools
 # or: /accounts/1000/shared/misc/berrycore/bin/tools

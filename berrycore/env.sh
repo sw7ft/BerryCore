@@ -7,6 +7,7 @@ PATH="$NATIVE_TOOLS/bin:$NATIVE_TOOLS/sbin:$PATH"
 LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$QNX_TARGET/armle-v7/usr/lib:$NATIVE_TOOLS/lib"
 export PATH LD_LIBRARY_PATH
 export TIGRC="$NATIVE_TOOLS/etc/tigrc"
+export VIMRUNTIME="$NATIVE_TOOLS/share/vim/vim91"
 
 #MAKEFLAGS="-I$NATIVE_TOOLS/include"
 MAKEFLAGS="-I$QNX_TARGET/usr/include"
@@ -57,7 +58,7 @@ export LC_CTYPE=en_US.UTF-8
 # Welcome Message
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.84 - QNX Extended Userland"
+echo "     BerryCore v0.85 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"

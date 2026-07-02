@@ -1,0 +1,41 @@
+#!/bin/sh
+# content_shell — Chromium headless engine (DOM dump)
+# Prefer: berry-browser URL  (readable CLI output)
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+ROOT="$NATIVE_TOOLS/share/berry-browser"
+
+case "${1:-}" in
+    help|-h|--help)
+        cat <<EOF
+content_shell — Chromium headless engine (BerryBrowser build)
+
+Prefer the CLI wrapper:
+  berry-browser URL              Readable text (recommended)
+  berry-browser -l URL           Links
+  berry-browser -r URL           Raw HTML (same as this tool)
+
+Direct (runs from engine dir with --dump-dom):
+  content_shell URL 2>/dev/null
+  content_shell URL --timeout=45000 2>/dev/null
+
+Install: qpkg install berry-browser
+EOF
+        exit 0
+        ;;
+esac
+
+if [ ! -x "$ROOT/bin/content_shell" ]; then
+    echo "content_shell: not installed (qpkg install berry-browser)" >&2
+    exit 1
+fi
+
+export LD_LIBRARY_PATH="$ROOT/lib:${LD_LIBRARY_PATH:-}"
+cd "$ROOT/bin" || exit 1
+
+exec ./content_shell \
+    --no-sandbox --no-first-run --single-process --disable-gpu \
+    --disable-logging --dump-dom \
+    "$@"

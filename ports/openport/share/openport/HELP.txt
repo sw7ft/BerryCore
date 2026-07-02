@@ -1,0 +1,20 @@
+OpenPort 1.0.0 — OBD diagnostic CLI for OpenPort 2.0 USB cable
+
+Install:  qpkg install openport
+Binary:   /accounts/1000/shared/misc/bin/openport
+Docs:     share/doc/openport/MANUAL.md
+
+USB serial (try both):
+  /dev/serusb1   (Passport — usually command port)
+  /dev/serusb2
+
+Quick test:
+  openport identify
+  openport -p /dev/serusb1 voltage
+
+Vehicle CAN default: 500000 baud, PCM TX 7E0 / RX 7E8
+
+Commands:
+  identify  ports  voltage  probe  scan  log  help
+
+Hardware: OpenPort 2.0 (0403:cc4d) via USB OTG. Key ON for vehicle diagnostics.

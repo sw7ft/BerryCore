@@ -1,0 +1,38 @@
+BerryCore v0.85.0 Release Files
+================================
+
+Core install:
+  berrycore.zip
+  install.sh
+  berrycore-helper.apk (optional sideload)
+
+New/updated qpkg ports (also on GitHub main/ports/):
+  ports/util-openport-1.0.0.zip
+  ports/web-berry-browser-1.0.27.zip
+  ports/net-telnet-0.17.zip
+  ports/util-usbdbg-1.0.0.zip
+  ports/net-dropbear-2026.91.zip
+  ports/web-maps-1.0.zip
+  ports/web-youtube-1.0.zip
+  ports/web-telegram-1.0.zip
+  ports/INDEX
+
+Bundled in berrycore.zip packages/:
+  vim-9.1.2148.zip (replaces vim-8.0)
+  util-ftp-1.0.0.zip
+
+Upgrade:
+  qpkg update
+  # or copy berrycore.zip + install.sh to device:
+  sh install.sh --upgrade
+f61d839a57d042daea08ced68db3abfc7eb09e21b7aaddf20c758c748c5ead60  berrycore.zip
+0d1c7139d9892f74c8ecc55bdf12b586de1ac7ca0a22b500a9539dfc94b9886b  install.sh
+e05781a1cefb7376ae471094fecd31196d952c907eccfc8eba59f67bb1f9c946  berrycore-helper.apk
+943bc3d0cc8be0954de5b02959c2e729482959d093858e9c680e6a6fc9bd50c9  ports/util-openport-1.0.0.zip
+890f8fbb2c44b8f3112b74f68a6721c56740309417f3111c6a130c92a8d05dd5  ports/web-berry-browser-1.0.27.zip
+1c93b01870375774cade9be950283eb0917ab3de220d4e33c918283461e953d3  ports/net-telnet-0.17.zip
+0579d2c29499ce09fc8b4e9e48c8a0392489b13c64d3d51a7b0f8450a31532e6  ports/util-usbdbg-1.0.0.zip
+ec7d369c22d227d4b6f7915231cd0d0d44dcdb2c32852f44e9875b8e3ecd4746  ports/net-dropbear-2026.91.zip
+7b2f4c15ddf776f4acbab588ea865476c6b134618ace445114082f5432fa442e  ports/web-maps-1.0.zip
+d2db8a3ca44588453cdbb3fab5c4066d21691aa327c8323f3d1d6b4aa05c92a1  ports/web-youtube-1.0.zip
+bbb8ef0e4125d7c6582b1285ce111708d5853b3e15e729492b551e122d77bcb0  ports/web-telegram-1.0.zip

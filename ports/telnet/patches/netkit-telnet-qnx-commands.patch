@@ -1,0 +1,30 @@
+--- a/telnet/commands.cc
++++ b/telnet/commands.cc
+@@ -88,7 +88,7 @@
+ 
+ #ifndef       MAXHOSTNAMELEN
+ #define       MAXHOSTNAMELEN 64
+-#endif        MAXHOSTNAMELEN
++#endif /* MAXHOSTNAMELEN */
+ 
+ #if	defined(HAS_IPPROTO_IP) && defined(IP_TOS)
+ int tos = -1;
+@@ -479,8 +479,7 @@ static int send_wontcmd(const char *name, const char *) {
+ }
+ 
+ int send_tncmd(int (*func)(int, int), const char *cmd, const char *name) {
+-    char **cpp;
+-    extern char *telopts[];
++    const char **cpp;
+ 
+     if (isprefix(name, "help") || isprefix(name, "?")) {
+ 	register int col, len;
+@@ -501,7 +500,7 @@ int send_tncmd(int (*func)(int, int), const char *cmd, const char *name) {
+ 	printf("\n");
+ 	return 0;
+     }
+-    cpp = genget(name, telopts, sizeof(char *));
++    cpp = (const char **)genget(name, (char **)telopts, sizeof(char *));
+     if (cpp == AMBIGUOUS) {
+ 	fprintf(stderr,"'%s': ambiguous argument ('send %s ?' for help).\n",
+ 					name, cmd);

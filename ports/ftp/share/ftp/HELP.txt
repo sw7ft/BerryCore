@@ -1,0 +1,11 @@
+FTP 1.0.0 — netkit ftp client + bftpd server (BerryCore bundled)
+
+Client:  ftp hostname
+Server:  cp $NATIVE_TOOLS/etc/bftpd.conf.example $NATIVE_TOOLS/etc/bftpd.conf
+         bftpd -c $NATIVE_TOOLS/etc/bftpd.conf -D   (default port 8021)
+         Note: bftpd may need root/privileged user to bind on BB10 — client works fine.
+Share:   $NATIVE_TOOLS/ftp-root/
+Logs:    $NATIVE_TOOLS/var/log/bftpd.log
+Docs:    $NATIVE_TOOLS/share/doc/ftp/MANUAL.md
+
+Security: plain FTP — home LAN only. Prefer SSH/SFTP for sensitive files.

@@ -1,0 +1,35 @@
+Maps & Navigation for BB10
+==========================
+
+OpenStreetMap viewer with search and driving directions (OSRM).
+Runs on port 8090.
+
+INSTALL
+-------
+  qpkg install maps
+
+REQUIRES
+--------
+  python3 (qpkg install python3)
+  requests:
+    python3 -m ensurepip
+    python3 -m pip install requests
+
+QUICK START
+-----------
+  maps
+  # Starts in background. Open http://localhost:8090 in BB10 browser
+
+  maps -f   # Run in foreground (for debugging)
+
+FEATURES
+--------
+- Interactive Leaflet map
+- Search places (Nominatim / OpenStreetMap)
+- Driving directions (OSRM)
+- Touch-optimized BB10 UI
+
+NOTES
+-----
+- Requires network for map tiles and geocoding
+- Uses public OSM / OSRM APIs (no API key needed)

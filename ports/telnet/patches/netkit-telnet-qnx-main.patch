@@ -1,0 +1,11 @@
+--- a/telnet/main.cc
++++ b/telnet/main.cc
+@@ -45,6 +45,8 @@ char main_rcsid[] =
+ 
+ #include <sys/types.h>
+ #include <getopt.h>
++#include <stdio.h>
++#include <stdlib.h>
+ #include <string.h>
+ 
+ #include "ring.h"

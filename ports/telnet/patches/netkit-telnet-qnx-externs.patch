@@ -1,0 +1,28 @@
+--- a/telnet/externs.h
++++ b/telnet/externs.h
+@@ -38,12 +38,16 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <setjmp.h>
+ #include <sys/ioctl.h>
++#if defined(__GLIBC__)
+ #include <features.h>
++#endif
++#if defined(__linux__) || defined(__QNXNTO__)
++#include <unistd.h>
++#endif
+ #include <termios.h>
+ 
+ #if defined(NO_CC_T)
+ typedef unsigned char cc_t;
+ #endif
+ 
+-#ifdef __linux__
+-#include <unistd.h>   /* get _POSIX_VDISABLE */
+-#endif
+-
+ #ifndef	_POSIX_VDISABLE
+ #error "Please fix externs.h to define _POSIX_VDISABLE"
+ #endif

@@ -1,0 +1,27 @@
+# bftpd.conf — BerryCore / Passport (edit paths as needed)
+# Install: /accounts/1000/shared/misc/etc/bftpd.conf
+
+USER="ftp"
+GROUP="ftp"
+
+# Root directory for anonymous / chroot users
+# CHANGE THIS to your share folder:
+PATH="/accounts/1000/shared/misc/ftp-root"
+
+# Listen port
+PORT="21"
+
+# Passive mode port range (open on firewall if needed)
+# PASSIVE_PORTS="49152 65534"
+
+# Allow anonymous read-only (set NO for password-only)
+ALLOW_ANONYMOUS="YES"
+
+# Log file
+LOGFILE="/accounts/1000/shared/misc/var/log/bftpd.log"
+
+# Run standalone (not inetd)
+# Start with: bftpd -c /accounts/1000/shared/misc/etc/bftpd.conf -D
+
+# Authentication: without PAM on QNX, use simple password file or anonymous.
+# See MANUAL.md for setup.

@@ -1,0 +1,20 @@
+#!/bin/sh
+# BerryBrowser — CLI web browser via content_shell (Term49 / SSH safe)
+# Chromium renders JavaScript; we print clean readable text.
+# Install: qpkg install berry-browser
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+ROOT="$NATIVE_TOOLS/share/berry-browser"
+LIB="$ROOT/lib/berry-browser-cli.sh"
+
+if [ -f "$LIB" ]; then
+    # shellcheck source=/dev/null
+    . "$LIB"
+else
+    echo "berry-browser: missing $LIB (reinstall: qpkg install berry-browser)" >&2
+    exit 1
+fi
+
+bb_main "$@"

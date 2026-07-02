@@ -9,6 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.85.0] - 2026-07-01
+
+### Added
+
+- **openport 1.0.0** — OpenPort 2.0 OBD diagnostic CLI port (`qpkg install openport`)
+  - Built on Passport (armle-v7 / QNX 8) via bb10-kitchen-sink
+  - Installs to `misc/bin/`; symlinks in `$NATIVE_TOOLS/bin/`
+- **util-ftp 1.0.0** — Bundled FTP client (`ftp`) + server (`bftpd`) for Passport
+  - netkit-ftp 0.17 client, bftpd 5.4 server with QNX patches
+  - Sample config: `$NATIVE_TOOLS/etc/bftpd.conf.example`, share dir `ftp-root/`
+- **berry-browser 1.0.27** — Full Chromium browser for Passport (replaces content-shell-term49)
+  - **`berry-browser`** — primary CLI browser via content_shell (Term49/SSH): readable text, links, title, interactive REPL
+  - **`browse`** — alias for berry-browser
+  - **`berry-browser-screen`** — full-screen on native QNX only (upstream launcher renamed)
+  - **`content_shell`** — low-level headless engine
+  - Port: `web-berry-browser-1.0.27.zip`; legacy `qpkg install content-shell-term49` aliases to berry-browser
+- **telnet 0.17** — Classic netkit TELNET client (`qpkg install telnet`)
+- **usbdbg 1.0.0** — Generic USB serial debugger (`qpkg install usbdbg`)
+- **dropbear 2026.91** — Lightweight SSH client (`dbclient`/`ssh`) and server (`qpkg install dropbear`)
+- **maps 1.0** — OpenStreetMap navigation from BerryPy/BerryStore (`qpkg install maps`, port 8090)
+- **youtube 1.0** — YouTube search and streaming from BerryPy/BerryStore (`qpkg install youtube`, port 8070)
+- **telegram 1.0** — Telegram Messenger from BerryPy/BerryStore (`qpkg install telegram`, port 8010)
+
+### Changed
+
+- **vim 8.0 → 9.1.2148** — Major upgrade (huge features, terminal + ncursesw, QNX os_qnx fix)
+  - Replaces `vim-8.0.zip` with `vim-9.1.2148.zip` in core bundle
+  - `VIMRUNTIME` set in `env.sh` → `share/vim/vim91`
+- **VERSION** → 0.85.0
+
+---
+
 ## [0.84.0] - 2026-06-24
 
 ### Added

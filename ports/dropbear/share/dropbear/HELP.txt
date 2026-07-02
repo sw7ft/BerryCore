@@ -1,0 +1,16 @@
+Dropbear 2026.91 — lightweight SSH client and server
+
+Install:  qpkg install dropbear
+Binaries: dbclient, ssh, dropbear, dropbearkey
+          /accounts/1000/shared/misc/bin/
+Docs:     share/doc/dropbear/MANUAL.md
+
+Client:
+  ssh mp@192.168.1.179
+  dbclient -L 8080:127.0.0.1:3000 mp@192.168.1.179
+
+Server (test):
+  dropbearkey -t ed25519 -f /accounts/1000/shared/misc/etc/dropbear/dropbear_ed25519_host_key
+  dropbear -F -E -p 2222 -r /accounts/1000/shared/misc/etc/dropbear/dropbear_ed25519_host_key
+
+Keys dir: /accounts/1000/shared/misc/etc/dropbear/

@@ -1,0 +1,11 @@
+--- a/commands.c
++++ b/commands.c
+@@ -1962,7 +1962,7 @@ int run_script(char *script, char *path)
+    pid_t process_id;
+    char *command_args[] = { script, path, NULL } ;
+    /* sighandler_t save_quit, save_int, save_chld; */
+-   sig_t save_quit, save_int, save_chld;
++   void (*save_quit)(int), (*save_int)(int), (*save_chld)(int);
+ 
+    /* save original signal handler values */
+    save_quit = signal(SIGQUIT, SIG_IGN);

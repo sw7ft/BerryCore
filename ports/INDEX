@@ -23,14 +23,22 @@ voiceagent|web|1.0|23K|AI voice assistant powered by OpenAI - push-to-talk with 
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
 term49-web|web|1.0|54K|Browser-based terminal for QNX/BB10 - xterm.js over WebSocket, access shell from any browser (port 7681)
 bb-tools|web|1.0|44K|BerryCore web tools - dashboard, drawing-board, markdown-editor, code-editor, compass, virtual-keyboard (native HTTP server port 8765)
-content-shell-term49|web|1.0|62M|Chromium 120 headless browser for Term49/BB10 - DOM dump, HTTPS, run: content_shell http://example.com
+content-shell-term49|web|1.0|62M|DEPRECATED — use berry-browser (qpkg install berry-browser)
+berry-browser|web|1.0.27|111M|CLI browser via content_shell — berry-browser URL (Term49/SSH), berry-browser-screen (native UI)
 node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, npm 10.5.1 included
 android-apps|util|1.0|89M|RDP, Bridge, Kiwi Browser, Launcher, XServer, SublimeText, term49-dashboard, BB10Terminal, ExFAT - installs to misc/android-apps/
 wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: wifi-chat [name]
 berrybot|util|1.0.0|600K|Command-line teaching assistant - Linux, QNX, bash, BerryCore (run: bot grep, bot lessons)
 rocketchat|web|1.0|92K|RocketChat Navigator for BB10 - private groups, DMs (requires python3, port 8026)
+maps|web|1.0|36K|OpenStreetMap navigation - search, directions (requires python3, requests, port 8090)
+youtube|web|1.0|58K|YouTube search and streaming for BB10 (requires python3, pytube, port 8070)
+telegram|web|1.0|32K|Telegram Messenger client for BB10 (requires python3, telethon, requests, port 8010)
 claude-code|dev|2.1.91|45M|Claude Code AI agent for BB10 - terminal coding assistant (requires node-term49, run claude-setup)
 bcllm|ai|1.2.1|19M|On-device LLM assistant - SmolLM/Gemma/Qwen via llama.cpp (requires wget, ai download model)
 ipfs-gw|util|0.1.0|608K|IPFS gateway client - fetch CIDs via HTTPS gateways (cat, verify; default ipfs.io)
 bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI - Electrum sync over TLS (testnet only, requires cacert)
+openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI - identify, voltage, probe, scan, CAN log (Passport USB)
+telnet|net|0.17|39K|Classic netkit telnet client - interactive TELNET to LAN hosts (qpkg install telnet)
+usbdbg|util|1.0.0|9K|Generic USB serial debugger - sniff, probe, send on /dev/serusb* (qpkg install usbdbg)
+dropbear|net|2026.91|853K|Dropbear SSH client (dbclient/ssh) and server for Passport (qpkg install dropbear)
 

@@ -1,5 +1,8 @@
 # Content Shell Term49 Port
 
+> **Superseded by [berry-browser](../berry-browser/)** (build 27) — full on-screen browser + headless `content_shell`.
+> Use `qpkg install berry-browser`. Legacy `qpkg install content-shell-term49` still works (alias).
+
 Chromium 120 headless browser for BB10 via Term49. Renders web pages and dumps the DOM (after JavaScript) to stdout. Works over HTTP and HTTPS.
 
 ## Install

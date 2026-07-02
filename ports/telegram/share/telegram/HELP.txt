@@ -1,0 +1,45 @@
+Telegram Messenger for BB10
+============================
+
+Telegram web client via Telethon. Chats, media, notifications.
+Runs on port 8010.
+
+INSTALL
+-------
+  qpkg install telegram
+
+REQUIRES
+--------
+  python3 (qpkg install python3)
+  telethon + requests:
+    python3 -m ensurepip
+    python3 -m pip install telethon requests
+
+QUICK START
+-----------
+  telegram
+  # Starts in background. Open http://localhost:8010 in BB10 browser
+
+  telegram -f   # Run in foreground (for debugging)
+
+FIRST-TIME SETUP
+----------------
+1. Run telegram
+2. Open http://localhost:8010
+3. Enter phone number with country code (e.g. +12345678900)
+4. Enter verification code from Telegram app/SMS
+5. Session saved in share/telegram/session_name.session
+
+FEATURES
+--------
+- Send/receive messages
+- Photo and document attachments
+- Chat search
+- BB10 PPS notifications
+- Downloads: /accounts/1000/shared/downloads/
+
+NOTES
+-----
+- Default API credentials bundled (fetched from BerryStore)
+- Requires network
+- Free Telegram account required

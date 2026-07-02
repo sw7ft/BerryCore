@@ -1,2 +1,2 @@
-BerryCore v0.84 — Berry Bridge agent bundled (SMB inbox jobs, SSH bootstrap)
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.84.0
+BerryCore v0.85 — Vim 9.1, FTP, BerryBrowser, OpenPort
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.85.0
