@@ -31,6 +31,10 @@ Full **qpkg catalog** (~115 packages), **82 XPS utility ports**, messenger app u
 | **youtube** 2.0 | `qpkg install youtube` | v2 player |
 | **82 XPS utilities** | `qpkg search <name>` | less, cabextract, iperf3, minicom, etc. |
 
+### Catalog page
+
+Download **`berrycore.html`** — a self-contained dark-themed catalog with all 116+ ports, copy-pastable install commands, and qpkg reference. Open in any browser (works on BB10).
+
 ### Fresh install
 
 ```sh
@@ -62,4 +66,9 @@ openport identify            # after: qpkg install openport
 
 ### Assets
 
-See `RELEASE_FILES_v0.86.txt` for SHA256 checksums.
+- `berrycore.zip` — core install bundle
+- `install.sh` — installer script
+- `berrycore.html` — interactive catalog & install guide
+- `RELEASE_FILES_v0.86.txt` — SHA256 checksums
+
+~~`berrycore-helper.apk`~~ removed — use `berrycore.html` + `install.sh` instead.

@@ -4,7 +4,7 @@ BerryCore v0.86.0 Release Files
 Core install:
   berrycore.zip
   install.sh
-  berrycore-helper.apk (optional sideload)
+  berrycore.html (catalog & install guide — open in any browser)
 
 Phase 2 / updated qpkg ports (also on GitHub main/ports/):
   ports/util-openport-1.0.0.zip
@@ -14,7 +14,7 @@ Phase 2 / updated qpkg ports (also on GitHub main/ports/):
   ports/PACKAGES
   ports/FEATURED
 
-Catalog: ~115 packages in ports/PACKAGES, ~22 featured in ports/FEATURED
+Catalog: ~116 packages in ports/PACKAGES, ~21 featured in ports/FEATURED
 
 Fresh install:
   sh install.sh --fresh -y
@@ -25,7 +25,7 @@ Upgrade:
 
 94f4f31f558c0aa79e0ae019f6a136666768460bb5cd8e7e0b62440277b3f71b  berrycore.zip
 0d1c7139d9892f74c8ecc55bdf12b586de1ac7ca0a22b500a9539dfc94b9886b  install.sh
-e05781a1cefb7376ae471094fecd31196d952c907eccfc8eba59f67bb1f9c946  berrycore-helper.apk
+d136d5f11a49ac4ba91a820ec4780814c48fa956c469bf9acc792dd64eefde11  berrycore.html
 973c536e525657d85ad87a7a7c286b1536961b01787600228417f68a322eec13  ports/util-openport-1.0.0.zip
 0d05c86f5037d1c240fe3bf09cad644f0c57e2dd99eda0e980e91ac34d15ca1c  ports/util-ftp-1.0.0.zip
 4263248dbd4d7e9fcd1cf642829dd3319399d28f5f32e5a8759aafeb1e0897fc  ports/util-ping-1.0.0.zip

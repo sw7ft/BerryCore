@@ -2,7 +2,7 @@
 
 ### **BerryCore – QNX Extended Userland**
 
-For installation instructions please visit the wiki page and download the code on the releases section.
+For installation instructions please visit the [releases section](https://github.com/sw7ft/BerryCore/releases) — download `berrycore.zip`, `install.sh`, and the **`berrycore.html`** catalog guide.
 
 ---
 
