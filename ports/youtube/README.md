@@ -1,14 +1,11 @@
 # YouTube Port
 
-YouTube search and streaming for BB10 — same app as **youtube** in BerryPy / BerryStore.
+YouTube Navigator **v2** for BB10 — search and embed playback with bundled static UI.
 
 ## Install
 
 ```bash
 qpkg install python3
-python3 -m ensurepip
-python3 -m pip install pytube youtube-search-python
-
 qpkg install youtube
 ```
 
@@ -23,17 +20,12 @@ youtube -f   # foreground / debug
 
 ## Requires
 
-- **python3** — `qpkg install python3`
-- **pytube** — `python3 -m pip install pytube` (required for streaming)
-- **youtube-search-python** — optional; app falls back to direct HTTP search
+- **python3** — `qpkg install python3` (BerryCore bundled python preferred)
+- **pytube** — optional; embed playback works without it
 
 ## Port
 
 **8070** (matches BerryPy / BerryStore catalog)
-
-## Source
-
-BerryStore: `http://berrystore.sw7ft.com/apps/youtube.zip`
 
 ## Rebuild
 

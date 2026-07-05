@@ -1,37 +1,55 @@
 #!/bin/sh
-# rocketchat - RocketChat Navigator for BB10
-# Web app for RocketChat private groups and direct messages. Requires python3.
-# Install: qpkg install rocketchat
+# rocketchat - RocketChat Navigator v3 for BB10
+# Web app for Rocket.Chat channels, private groups, and DMs.
 
-# Resolve NATIVE_TOOLS from script location (bin/rocketchat -> berrycore/)
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
 [ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
 SHARE="$NATIVE_TOOLS/share/rocketchat"
+BC_PY="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+BC_HOME="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static"
 
-# Handle help and --foreground
 FOREGROUND=0
 for arg in "$@"; do
     case "$arg" in
         help|-h|--help)
-            if [ -f "$SHARE/HELP.txt" ]; then
-                cat "$SHARE/HELP.txt"
-            else
-                echo "rocketchat - RocketChat Navigator for BB10"
-                echo ""
-                echo "Usage: rocketchat          # Start in background (default)"
-                echo "       rocketchat -f       # Run in foreground"
-                echo ""
-                echo "Starts web server on port 8026. Open http://localhost:8026 in browser."
-                echo "Requires: python3 (qpkg install python3)"
-            fi
+            cat <<'EOF'
+rocketchat - RocketChat Navigator v3 for BB10
+
+Usage:
+  rocketchat          Start in background (port 8026)
+  rocketchat -f       Run in foreground
+  rocketchat --help   This help
+
+Open http://localhost:8026 in the BB10 browser.
+EOF
             exit 0
             ;;
         -f|--foreground) FOREGROUND=1 ;;
     esac
 done
 
-# Find Python
+if [ ! -f "$SHARE/app.py" ]; then
+    echo "rocketchat: app.py not found in $SHARE"
+    exit 1
+fi
+
+if [ -x "$BC_PY" ]; then
+    if ! env PYTHONHOME="$BC_HOME" PYTHONPATH= "$BC_PY" -c "import encodings" 2>/dev/null; then
+        echo "rocketchat: berrycore python check failed (PYTHONHOME=$BC_HOME)"
+        exit 1
+    fi
+    if [ "$FOREGROUND" = 1 ]; then
+        exec env PYTHONHOME="$BC_HOME" PYTHONPATH= "$BC_PY" "$SHARE/app.py"
+    fi
+    LOG="$SHARE/rocketchat.log"
+    mkdir -p "$SHARE" 2>/dev/null
+    echo "rocketchat v3: starting (log: $LOG)"
+    echo "Open http://localhost:8026"
+    nohup env PYTHONHOME="$BC_HOME" PYTHONPATH= "$BC_PY" "$SHARE/app.py" >> "$LOG" 2>&1 &
+    exit 0
+fi
+
 PYTHON=""
 for p in python3 python3.11 python3.2; do
     if command -v $p >/dev/null 2>&1; then
@@ -41,13 +59,7 @@ for p in python3 python3.11 python3.2; do
 done
 
 if [ -z "$PYTHON" ]; then
-    echo "rocketchat: python3 not found. Run: qpkg install python3"
-    exit 1
-fi
-
-if [ ! -f "$SHARE/app.py" ]; then
-    echo "rocketchat: app.py not found in $SHARE"
-    echo "Run: qpkg install rocketchat"
+    echo "rocketchat: python3 not found"
     exit 1
 fi
 
@@ -55,9 +67,8 @@ if [ "$FOREGROUND" = 1 ]; then
     exec "$PYTHON" "$SHARE/app.py"
 fi
 
-# Run in background with nohup
 LOG="$SHARE/rocketchat.log"
 mkdir -p "$SHARE" 2>/dev/null
-echo "rocketchat: starting in background (log: $LOG)"
-echo "Open http://localhost:8026 in browser"
+echo "rocketchat v3: starting (log: $LOG)"
+echo "Open http://localhost:8026"
 nohup "$PYTHON" "$SHARE/app.py" >> "$LOG" 2>&1 &

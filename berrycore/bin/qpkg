@@ -602,7 +602,7 @@ cmd_install() {
         openport)
             INSTALL_DIR="/accounts/1000/shared/misc"
             ;;
-        telnet|usbdbg|dropbear)
+        telnet|usbdbg|dropbear|bbm)
             INSTALL_DIR="/accounts/1000/shared/misc"
             ;;
     esac
@@ -672,6 +672,15 @@ cmd_install() {
             echo "  dropbearkey -t ed25519 -f /accounts/1000/shared/misc/etc/dropbear/id_ed25519"
             echo "Manual: /accounts/1000/shared/misc/share/doc/dropbear/MANUAL.md"
         }
+    elif [ "$PORT_NAME" = "bbm" ]; then
+        install_misc_bin bbm berrymsg && {
+            echo "BBM installed (Berry Bridge Messenger)"
+            echo "  export BERRYRELAY_KEY=\"<relay key>\""
+            echo "  bbm who"
+            echo "  bbm send @all \"online\""
+            echo "  bbm poll"
+            echo "Manual: /accounts/1000/shared/misc/share/doc/bbm/MANUAL.md"
+        }
     elif [ "$PORT_NAME" = "maps" ]; then
         chmod +x "$NATIVE_TOOLS/bin/maps" 2>/dev/null || true
         echo "Maps installed (OpenStreetMap + directions, port 8090)"
@@ -680,16 +689,20 @@ cmd_install() {
         echo "  Open http://localhost:8090"
     elif [ "$PORT_NAME" = "youtube" ]; then
         chmod +x "$NATIVE_TOOLS/bin/youtube" 2>/dev/null || true
-        echo "YouTube installed (search + streaming, port 8070)"
-        echo "  python3 -m pip install pytube youtube-search-python"
+        echo "YouTube v2 installed (search + embed playback, port 8070)"
         echo "  youtube"
         echo "  Open http://localhost:8070"
     elif [ "$PORT_NAME" = "telegram" ]; then
         chmod +x "$NATIVE_TOOLS/bin/telegram" 2>/dev/null || true
-        echo "Telegram installed (port 8010)"
-        echo "  python3 -m pip install telethon requests"
+        echo "Telegram v2.1 installed (port 8010)"
+        echo "  python3 -m pip install telethon requests   # if not installed"
         echo "  telegram"
         echo "  Open http://localhost:8010"
+    elif [ "$PORT_NAME" = "rocketchat" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/rocketchat" 2>/dev/null || true
+        echo "RocketChat v3 installed (port 8026)"
+        echo "  rocketchat"
+        echo "  Open http://localhost:8026"
     elif [ "$PORT_NAME" = "berry-browser" ]; then
         if [ -d "$NATIVE_TOOLS/share/berry-browser/bin" ]; then
             chmod +x "$NATIVE_TOOLS/share/berry-browser/bin/"* 2>/dev/null || true

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **bbm 1.0.0** — Berry Bridge Messenger native relay client (`qpkg install bbm`)
+  - TCP client for berrycore.sw7ft.com BerryRelay (port 37193)
+  - Commands: `bbm who`, `bbm send`, `bbm poll`, `bbm group`
+  - Installs `bbm` + `berrymsg` symlink to `misc/bin/`
+
+### Changed
+
+- **rocketchat 3.0** — RocketChat Navigator v3 from Passport upgrade (static assets, BerryCore python)
+- **telegram 2.1** — Telegram v2.1 with enhanced UI (`static/tg-enhance.*`, media cache support)
+- **youtube 2.0** — YouTube Navigator v2 with bundled static UI and embed playback
+
 ---
 
 ## [0.85.0] - 2026-07-01

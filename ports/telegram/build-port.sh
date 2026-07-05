@@ -5,12 +5,12 @@
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-PORT_ZIP="$REPO_ROOT/ports/web-telegram-1.0.zip"
+PORT_ZIP="$REPO_ROOT/ports/web-telegram-2.1.zip"
 BUILD_DIR="$SCRIPT_DIR/.build"
 PKG_ROOT="$BUILD_DIR/pkg"
 SRC="$SCRIPT_DIR/share/telegram"
 
-echo "Building telegram 1.0 port..."
+echo "Building telegram 2.1 port..."
 echo "  Output: $PORT_ZIP"
 
 if [ ! -f "$SRC/app.py" ] || [ ! -f "$SRC/index.html" ]; then

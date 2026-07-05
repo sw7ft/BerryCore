@@ -90,6 +90,8 @@ phone_code_hash = None
 notification_thread_started = False
 
 PORT = 8010
+VERSION = '2.2'
+DISMISSED_ALERTS_PATH = os.path.join(BASE_DIR, '.dismissed_alerts')
 
 # Caching system (similar to RocketChat)
 CACHE_DURATION = 30  # 30 seconds cache for rooms
@@ -100,8 +102,89 @@ cache = {
     'rooms': None,
     'rooms_time': 0,
     'messages': {},  # chat_id -> {messages, time, oldest_id}
-    'last_message_ids': {}  # chat_id -> last_message_id (for notification tracking)
+    'last_message_ids': {},  # chat_id -> last_message_id (for notification tracking)
+    'unread_counts': {},
+    'active_room_id': '',
+    'last_in_app_alert': None,
+    'dismissed_alert_ids': set(),
+    'my_user_id': None,
 }
+
+
+def load_dismissed_alerts():
+    ids = set()
+    if os.path.exists(DISMISSED_ALERTS_PATH):
+        try:
+            with open(DISMISSED_ALERTS_PATH, 'r') as f:
+                for line in f:
+                    key = line.strip()
+                    if key:
+                        ids.add(key)
+        except Exception as e:
+            print('[ALERT] load dismissed error: %s' % e)
+    cache['dismissed_alert_ids'] = ids
+
+
+def save_dismissed_alert(alert_id):
+    if not alert_id:
+        return
+    cache['dismissed_alert_ids'].add(alert_id)
+    try:
+        with open(DISMISSED_ALERTS_PATH, 'a') as f:
+            f.write('%s\n' % alert_id)
+    except Exception as e:
+        print('[ALERT] save dismissed error: %s' % e)
+
+
+def alert_is_dismissed(alert):
+    if not alert:
+        return True
+    aid = alert.get('id', '')
+    return bool(aid and aid in cache.get('dismissed_alert_ids', set()))
+
+
+def dismiss_alert(alert_id=None, room_id=None):
+    alert = cache.get('last_in_app_alert')
+    if alert_id:
+        save_dismissed_alert(alert_id)
+    elif alert and alert.get('id'):
+        save_dismissed_alert(alert['id'])
+    elif room_id and alert and str(alert.get('room_id')) == str(room_id):
+        save_dismissed_alert(alert.get('id', '%s:%s' % (room_id, alert.get('time', ''))))
+    if alert and (not room_id or str(alert.get('room_id')) == str(room_id) or alert_id == alert.get('id')):
+        cache['last_in_app_alert'] = None
+
+
+def record_message_seen(chat_id, message_id):
+    if not chat_id:
+        return
+    if message_id:
+        cache['last_message_ids'][chat_id] = message_id
+    cache['unread_counts'][chat_id] = 0
+
+
+def bump_unread(chat_id):
+    cache['unread_counts'][chat_id] = cache['unread_counts'].get(chat_id, 0) + 1
+
+
+def unread_total():
+    total = 0
+    for count in cache['unread_counts'].values():
+        if count and count > 0:
+            total += count
+    return total
+
+
+def attach_unread_to_rooms(rooms):
+    if not isinstance(rooms, list):
+        return rooms
+    for room in rooms:
+        rid = room.get('id')
+        room['unread'] = cache['unread_counts'].get(rid, 0)
+    return rooms
+
+
+load_dismissed_alerts()
 
 import time
 
@@ -184,7 +267,12 @@ def start_notification_thread():
     global notification_thread_started
     if not notification_thread_started:
         notification_thread_started = True
-        threading.Thread(target=notification_checker_thread, daemon=True).start()
+        t = threading.Thread(target=notification_checker_thread)
+        try:
+            t.daemon = True
+        except Exception:
+            pass
+        t.start()
         print("[NOTIFY] Notification thread started")
 
 def notification_checker_thread():
@@ -199,7 +287,7 @@ def notification_checker_thread():
     
     # Create a separate Telegram client for this thread (thread-safe approach)
     notify_client = TelegramClient(
-        SQLiteSession(SESSION_FILE),
+        SQLiteSession(SESSION_FILE_PATH),
         API_ID,
         API_HASH
     )
@@ -229,6 +317,9 @@ def notification_checker_thread():
             # Get my user ID
             me = loop.run_until_complete(notify_client.get_me())
             my_id = me.id if me else None
+            if my_id:
+                cache['my_user_id'] = my_id
+            active_room = cache.get('active_room_id', '')
             
             async def check_dialogs():
                 async for dialog in notify_client.iter_dialogs(limit=20):
@@ -248,16 +339,13 @@ def notification_checker_thread():
                             # Check if this is a new message
                             last_known_id = cache['last_message_ids'].get(chat_id)
                             if last_known_id != message_id and message_id:
-                                # New message detected!
-                                
-                                # Only send notifications AFTER initialization is complete
                                 if initialization_complete and last_known_id is not None:
-                                    # This is a truly NEW message - update ID and notify
                                     cache['last_message_ids'][chat_id] = message_id
-                                    
-                                    # Don't notify for our own messages
-                                    if sender_id != my_id:
-                                        # Get sender name
+                                    is_mine = (sender_id == my_id) or getattr(latest_message, 'out', False)
+                                    if is_mine:
+                                        record_message_seen(chat_id, message_id)
+                                    else:
+                                        bump_unread(chat_id)
                                         sender_name = "Unknown"
                                         try:
                                             sender_entity = await notify_client.get_entity(sender_id)
@@ -265,18 +353,24 @@ def notification_checker_thread():
                                                 getattr(sender_entity, 'username', None) or
                                                 getattr(sender_entity, 'first_name', 'Unknown')
                                             )
-                                        except:
+                                        except Exception:
                                             pass
-                                        
-                                        # Send notification
-                                        title = f"📱 {chat_name}"
-                                        subtitle = f"{sender_name}: {message_text[:100]}{'...' if len(message_text) > 100 else ''}"
-                                        itemid = f"Telegram-{chat_id}"
-                                        
-                                        execute_shell_command(title, subtitle, itemid)
-                                        print(f"[NOTIFY] New message notification sent for {chat_name}")
+                                        short = message_text[:100] + ('...' if len(message_text) > 100 else '')
+                                        cache['last_in_app_alert'] = {
+                                            'id': '%s:%s' % (chat_id, message_id),
+                                            'room_id': chat_id,
+                                            'room': chat_name,
+                                            'from': sender_name,
+                                            'text': short,
+                                            'time': int(time.time()),
+                                        }
+                                        if str(chat_id) != str(active_room):
+                                            title = '📱 %s' % chat_name
+                                            execute_shell_command(title, '%s: %s' % (sender_name, short), 'Telegram-%s' % chat_id)
+                                            print('[NOTIFY] New message notification sent for %s' % chat_name)
+                                        else:
+                                            record_message_seen(chat_id, message_id)
                                 else:
-                                    # During initialization or first run - just store the ID
                                     cache['last_message_ids'][chat_id] = message_id
                     except Exception as e:
                         print(f"[NOTIFY] Error checking chat {chat_name}: {e}")
@@ -302,7 +396,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         is_authorized = loop.run_until_complete(self._is_user_authorized())
 
         # If not authorized and not hitting the auth flow endpoints, redirect to /start_auth
-        auth_endpoints = ['/start_auth', '/enter_code', '/auth.html', '/auth_code.html', '/favicon.ico']
+        auth_endpoints = ['/start_auth', '/enter_code', '/auth.html', '/auth_code.html', '/favicon.ico', '/static/tg-enhance.css', '/static/tg-enhance.js']
         if not is_authorized and parsed_path.path not in auth_endpoints:
             self.send_response(302)
             self.send_header('Location', '/start_auth')
@@ -328,19 +422,62 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             
             # Use cached rooms if fresh
             if cache['rooms'] and (now - cache['rooms_time']) < CACHE_DURATION:
+                rooms_out = attach_unread_to_rooms(list(cache['rooms']))
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                self.wfile.write(json.dumps(cache['rooms']).encode('utf-8'))
+                self.wfile.write(json.dumps(rooms_out).encode('utf-8'))
             else:
                 loop = asyncio.get_event_loop()
                 response = loop.run_until_complete(self.get_rooms())
                 cache['rooms'] = response
                 cache['rooms_time'] = now
+                rooms_out = attach_unread_to_rooms(response)
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                self.wfile.write(json.dumps(response).encode('utf-8'))
+                self.wfile.write(json.dumps(rooms_out).encode('utf-8'))
+
+        elif parsed_path.path == '/api/status':
+            loop = asyncio.get_event_loop()
+            ok = loop.run_until_complete(self._is_user_authorized())
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                'status': 'success' if ok else 'error',
+                'connected': ok,
+                'version': VERSION,
+                'unread_total': unread_total(),
+            }).encode('utf-8'))
+
+        elif parsed_path.path == '/api/unread':
+            alert = cache.get('last_in_app_alert')
+            if alert_is_dismissed(alert):
+                alert = None
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                'status': 'success',
+                'unread_total': unread_total(),
+                'unread': dict(cache.get('unread_counts', {})),
+                'alert': alert,
+            }).encode('utf-8'))
+
+        elif parsed_path.path.startswith('/static/'):
+            rel = parsed_path.path.lstrip('/')
+            full = os.path.join(BASE_DIR, rel)
+            ctype = 'text/css' if rel.endswith('.css') else 'application/javascript'
+            if os.path.isfile(full):
+                with open(full, 'rb') as f:
+                    data = f.read()
+                self.send_response(200)
+                self.send_header('Content-type', ctype)
+                self.end_headers()
+                self.wfile.write(data)
+            else:
+                self.send_error(404)
 
         elif parsed_path.path == '/get_messages':
             query = urllib.parse.parse_qs(parsed_path.query)
@@ -372,6 +509,8 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                         'data': response,
                         'time': now
                     }
+                    if response:
+                        record_message_seen(int(chat_id), response[0].get('id'))
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
                     self.end_headers()
@@ -523,6 +662,8 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             cache_key = f"msg_{chat_id}"
             if cache_key in cache['messages']:
                 del cache['messages'][cache_key]
+            if response.get('status') == 'Message sent' and response.get('message_id'):
+                record_message_seen(int(chat_id), response['message_id'])
             
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -597,6 +738,8 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 cache_key = f"msg_{chat_id}"
                 if cache_key in cache['messages']:
                     del cache['messages'][cache_key]
+                if response.get('status') == 'File sent successfully' and response.get('message_id'):
+                    record_message_seen(int(chat_id), response['message_id'])
                 
                 # Send success response
                 self.send_response(200)
@@ -607,6 +750,56 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 print(f"[ERROR] Attachment upload error: {e}")
                 self.send_error(500, f"Upload failed: {str(e)}")
+
+        elif parsed_path.path == '/api/dismiss_alert':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length) if content_length else b'{}'
+            try:
+                data = json.loads(post_data.decode('utf-8'))
+            except Exception:
+                data = {}
+            dismiss_alert(alert_id=data.get('alert_id', ''), room_id=data.get('room_id', ''))
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'status': 'success'}).encode('utf-8'))
+
+        elif parsed_path.path == '/api/mark_read':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length) if content_length else b'{}'
+            try:
+                data = json.loads(post_data.decode('utf-8'))
+            except Exception:
+                data = {}
+            chat_id = data.get('chat_id', '')
+            if chat_id:
+                cache['active_room_id'] = str(chat_id)
+                dismiss_alert(room_id=chat_id)
+                if data.get('message_id'):
+                    record_message_seen(chat_id, data.get('message_id'))
+                else:
+                    cache['unread_counts'][chat_id] = 0
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'status': 'success'}).encode('utf-8'))
+
+        elif parsed_path.path == '/api/active_room':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length) if content_length else b'{}'
+            try:
+                data = json.loads(post_data.decode('utf-8'))
+            except Exception:
+                data = {}
+            chat_id = data.get('chat_id', '')
+            cache['active_room_id'] = str(chat_id) if chat_id else ''
+            if chat_id:
+                dismiss_alert(room_id=chat_id)
+                cache['unread_counts'][chat_id] = 0
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'status': 'success'}).encode('utf-8'))
 
         else:
             self.send_error(404, "Unsupported POST endpoint")
@@ -668,13 +861,29 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             return {'status': 'error', 'error': str(e)}
 
     async def get_rooms(self):
-        """Get a list of the user's chats."""
+        """Get a list of the user's chats with unread counts."""
         try:
             if not client.is_connected():
                 await client.connect()
             dialogs = []
             async for dialog in client.iter_dialogs():
-                dialogs.append({'name': dialog.name, 'id': dialog.id})
+                rid = dialog.id
+                tg_unread = getattr(dialog, 'unread_count', 0) or 0
+                cached = cache['unread_counts'].get(rid, 0)
+                unread = max(tg_unread, cached)
+                if unread > 0:
+                    cache['unread_counts'][rid] = unread
+                preview = ''
+                if dialog.message:
+                    preview = dialog.message.message or '[Media]'
+                    if len(preview) > 60:
+                        preview = preview[:57] + '...'
+                dialogs.append({
+                    'name': dialog.name,
+                    'id': rid,
+                    'unread': unread,
+                    'preview': preview,
+                })
             return dialogs
         except Exception as e:
             print(f"[ERROR] Failed to get rooms: {e}")
@@ -801,8 +1010,11 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         try:
             if not client.is_connected():
                 await client.connect()
-            await client.send_message(chat_id, message)
-            return {'status': 'Message sent'}
+            sent = await client.send_message(chat_id, message)
+            mid = getattr(sent, 'id', None)
+            if mid:
+                record_message_seen(chat_id, mid)
+            return {'status': 'Message sent', 'message_id': mid}
         except Exception as e:
             print(f"[ERROR] Failed to send message to {chat_id}: {e}")
             return {'status': 'error', 'message': str(e)}
@@ -814,15 +1026,18 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 await client.connect()
             
             # Telethon's send_file method handles all file types automatically
-            await client.send_file(
+            sent = await client.send_file(
                 chat_id,
                 file_path,
                 caption=caption,
                 force_document=False  # Auto-detect if photo/video or document
             )
+            mid = getattr(sent, 'id', None)
+            if mid:
+                record_message_seen(chat_id, mid)
             
             print(f"[ATTACHMENT] Sent file to chat {chat_id}: {os.path.basename(file_path)}")
-            return {'status': 'File sent successfully'}
+            return {'status': 'File sent successfully', 'message_id': mid}
         except Exception as e:
             print(f"[ERROR] Failed to send file to {chat_id}: {e}")
             return {'status': 'error', 'message': str(e)}
@@ -936,6 +1151,11 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[INFO] Could not check authorization at startup: {e}")
     
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"Serving on port {PORT}")
+    httpd = socketserver.TCPServer(("", PORT), Handler)
+    try:
+        print('Telegram BB10 v%s on port %s' % (VERSION, PORT))
         httpd.serve_forever()
+    except KeyboardInterrupt:
+        print('Shutting down')
+    finally:
+        httpd.server_close()

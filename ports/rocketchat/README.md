@@ -1,6 +1,6 @@
 # RocketChat Port
 
-RocketChat Navigator for BB10 — web app for RocketChat private groups and direct messages.
+RocketChat Navigator **v3** for BB10 — web app for RocketChat channels, private groups, and direct messages.
 
 ## Install
 
@@ -10,7 +10,7 @@ qpkg install rocketchat
 
 ## Requires
 
-- **python3** — `qpkg install python3`
+- **python3** — `qpkg install python3` (BerryCore bundled python preferred)
 
 ## Quick start
 
@@ -31,11 +31,10 @@ rocketchat -f   # Run in foreground (for debugging)
 
 ## Features
 
-- Private groups and direct messages
-- Room search
-- Send messages
-- Real-time message refresh
-- BB10 notifications (when configured)
+- Channels, private groups, and direct messages
+- Room search and real-time refresh
+- Static assets bundled (`static/app.js`, `static/style.css`)
+- BerryCore python integration (`PYTHONHOME`)
 
 ## Port
 
@@ -44,3 +43,9 @@ Default: **8026**
 ## Config
 
 Stored in `$NATIVE_TOOLS/share/rocketchat/.env` (RCSERVER, RCTOKEN, RCID)
+
+## Rebuild
+
+```bash
+./ports/rocketchat/build-port.sh
+```

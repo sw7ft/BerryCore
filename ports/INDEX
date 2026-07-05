@@ -29,10 +29,10 @@ node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, n
 android-apps|util|1.0|89M|RDP, Bridge, Kiwi Browser, Launcher, XServer, SublimeText, term49-dashboard, BB10Terminal, ExFAT - installs to misc/android-apps/
 wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: wifi-chat [name]
 berrybot|util|1.0.0|600K|Command-line teaching assistant - Linux, QNX, bash, BerryCore (run: bot grep, bot lessons)
-rocketchat|web|1.0|92K|RocketChat Navigator for BB10 - private groups, DMs (requires python3, port 8026)
+rocketchat|web|3.0|30K|RocketChat Navigator v3 for BB10 - channels, groups, DMs (requires python3, port 8026)
 maps|web|1.0|36K|OpenStreetMap navigation - search, directions (requires python3, requests, port 8090)
-youtube|web|1.0|58K|YouTube search and streaming for BB10 (requires python3, pytube, port 8070)
-telegram|web|1.0|32K|Telegram Messenger client for BB10 (requires python3, telethon, requests, port 8010)
+youtube|web|2.0|21K|YouTube Navigator v2 - search and embed playback (requires python3, port 8070)
+telegram|web|2.1|40K|Telegram Messenger v2.1 for BB10 (requires python3, telethon, requests, port 8010)
 claude-code|dev|2.1.91|45M|Claude Code AI agent for BB10 - terminal coding assistant (requires node-term49, run claude-setup)
 bcllm|ai|1.2.1|19M|On-device LLM assistant - SmolLM/Gemma/Qwen via llama.cpp (requires wget, ai download model)
 ipfs-gw|util|0.1.0|608K|IPFS gateway client - fetch CIDs via HTTPS gateways (cat, verify; default ipfs.io)
@@ -41,4 +41,5 @@ openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI - identify, voltage, pro
 telnet|net|0.17|39K|Classic netkit telnet client - interactive TELNET to LAN hosts (qpkg install telnet)
 usbdbg|util|1.0.0|9K|Generic USB serial debugger - sniff, probe, send on /dev/serusb* (qpkg install usbdbg)
 dropbear|net|2026.91|853K|Dropbear SSH client (dbclient/ssh) and server for Passport (qpkg install dropbear)
+bbm|net|1.0.0|12K|Berry Bridge Messenger — native relay client for berrycore.sw7ft.com (bbm who/send/poll)
 

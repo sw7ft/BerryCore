@@ -1,0 +1,17 @@
+bbm — Berry Bridge Messenger (BerryCore device relay)
+
+Install:  qpkg install bbm
+Binary:   /accounts/1000/shared/misc/bin/bbm
+Symlink:  berrymsg -> bbm
+Docs:     share/doc/bbm/MANUAL.md
+
+Setup (add to berrycore/env.sh):
+  export BERRYRELAY_HOST="berrycore.sw7ft.com"
+  export BERRYRELAY_PORT="37193"
+  export BERRYRELAY_KEY="<relay key>"
+
+Quick use:
+  bbm who
+  bbm send @all "online"
+  bbm poll
+  bbm group 20

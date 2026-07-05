@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>YouTube</title>
+<link rel="icon" href="https://berrystore.sw7ft.com/apps/app-icons/youtube.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="stylesheet" href="/static/style.css?v=2.3.3">
+</head>
+<body>
+  <div class="header">
+    <div class="logo">YouTube</div>
+    <form id="searchForm" class="search-container" action="#" method="get">
+      <input type="text" id="searchInput" class="search-box" placeholder="Search or paste YouTube URL...">
+      <button id="searchButton" class="search-btn" type="submit">Search</button>
+    </form>
+  </div>
+
+  <div id="recentSection" class="recent-section" style="display:none;">
+    <div class="recent-label">Recent searches</div>
+    <div id="recentList" class="recent-list"></div>
+  </div>
+
+  <div class="container">
+    <div id="status" class="status" style="display:none;"></div>
+
+    <div id="playerSection" class="player-section">
+      <div id="streamBadge" class="stream-badge" style="display:none;"></div>
+      <div id="videoPlayerContainer" class="video-player">
+        <img id="playerPoster" class="player-poster" src="" alt="" style="display:none;">
+        <video id="videoPlayer" controls>Your browser does not support video.</video>
+      </div>
+      <div class="player-info">
+        <div id="playerTitle" class="player-title"></div>
+        <div id="playerMeta" class="player-meta"></div>
+        <div id="playerDescription" class="player-description"></div>
+      </div>
+      <div class="player-controls">
+        <button class="btn btn-secondary" type="button" id="closePlayerBtn">Close</button>
+        <button class="btn btn-secondary" type="button" id="fullscreenBtn">Fullscreen</button>
+        <button class="btn btn-warn" type="button" id="openBrowserBtn" style="display:none;">Open in Browser</button>
+        <button class="btn btn-secondary" type="button" id="retryStreamBtn" style="display:none;">Retry</button>
+        <select id="qualitySelect" class="quality-select">
+          <option value="360p" selected>360p</option>
+          <option value="480p">480p</option>
+          <option value="720p">720p</option>
+          <option value="best">Best</option>
+          <option value="audio">Audio</option>
+        </select>
+      </div>
+    </div>
+    <div id="stickySpacer" class="sticky-spacer" style="display:none;"></div>
+
+    <div id="resultsHeader" class="results-header" style="display:none;"></div>
+    <div id="results" class="video-grid"></div>
+
+    <div id="loadMoreSection" class="load-more-section" style="display:none;">
+      <button id="loadMoreBtn" class="btn btn-secondary" type="button">Load More</button>
+    </div>
+
+    <div id="emptyState" class="empty-state">
+      <h3>Search YouTube</h3>
+      <p>Search videos or paste a youtube.com / youtu.be link</p>
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="loading-spinner loading-spinner-large"></div>
+    <div id="loadingOverlayText" class="loading-overlay-text">Loading...</div>
+  </div>
+
+  <div id="fullscreenOverlay" class="fullscreen-overlay"></div>
+  <div id="fullscreenControls" class="fullscreen-controls">
+    <button type="button" id="exitFullscreenBtn">Exit Fullscreen</button>
+  </div>
+
+<script src="/static/app.js?v=2.3.3"></script>
+</body>
+</html>

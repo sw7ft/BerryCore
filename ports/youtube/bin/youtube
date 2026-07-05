@@ -1,66 +1,49 @@
 #!/bin/sh
-# youtube - YouTube search and streaming for BB10
-# Requires python3 + pytube (youtube-search-python optional).
-# Install: qpkg install youtube
+# youtube - YouTube Navigator v2 for BB10 (port 8070)
 
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
 [ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
 SHARE="$NATIVE_TOOLS/share/youtube"
 PORT=8070
+BC_PY="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+BC_HOME="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static"
 
 FOREGROUND=0
 for arg in "$@"; do
     case "$arg" in
         help|-h|--help)
-            if [ -f "$SHARE/HELP.txt" ]; then
-                cat "$SHARE/HELP.txt"
-            else
-                echo "youtube - YouTube search and streaming for BB10"
-                echo ""
-                echo "Usage: youtube          # Start in background (default)"
-                echo "       youtube -f       # Run in foreground"
-                echo ""
-                echo "Open http://localhost:$PORT in browser."
-                echo "Requires: python3, pytube (python3 -m pip install pytube youtube-search-python)"
-            fi
+            cat "$SHARE/HELP.txt" 2>/dev/null || echo "youtube v2 - port $PORT"
             exit 0
             ;;
         -f|--foreground) FOREGROUND=1 ;;
     esac
 done
 
-PYTHON=""
-for p in python3 python3.11 python3.2; do
-    if command -v $p >/dev/null 2>&1; then
-        PYTHON="$p"
-        break
-    fi
-done
-
-if [ -z "$PYTHON" ]; then
-    echo "youtube: python3 not found. Run: qpkg install python3"
-    exit 1
-fi
-
-if ! "$PYTHON" -c "import pytube" 2>/dev/null; then
-    echo "youtube: Python module 'pytube' not found."
-    echo "Run: python3 -m ensurepip && python3 -m pip install pytube youtube-search-python"
+# Always use berrycore python with PYTHONHOME — pytube lives here.
+# No import checks; embed playback works even if pytube is unavailable.
+if [ -x "$BC_PY" ]; then
+    PYTHON="$BC_PY"
+    export PYTHONHOME="$BC_HOME"
+elif command -v python3.2 >/dev/null 2>&1; then
+    PYTHON="python3.2"
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON="python3"
+else
+    echo "youtube: python3 not found"
     exit 1
 fi
 
 if [ ! -f "$SHARE/app.py" ]; then
-    echo "youtube: app.py not found in $SHARE"
-    echo "Run: qpkg install youtube"
+    echo "youtube: app.py not found at $SHARE"
     exit 1
 fi
 
 if [ "$FOREGROUND" = 1 ]; then
-    exec "$PYTHON" "$SHARE/app.py"
+    exec env PYTHONHOME="$PYTHONHOME" "$PYTHON" "$SHARE/app.py"
 fi
 
 LOG="$SHARE/youtube.log"
-mkdir -p "$SHARE" 2>/dev/null
-echo "youtube: starting in background (log: $LOG)"
-echo "Open http://localhost:$PORT in browser"
-nohup "$PYTHON" "$SHARE/app.py" >> "$LOG" 2>&1 &
+echo "youtube: starting on port $PORT"
+echo "Open http://localhost:$PORT"
+nohup env PYTHONHOME="$PYTHONHOME" "$PYTHON" "$SHARE/app.py" >> "$LOG" 2>&1 &

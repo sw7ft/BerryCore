@@ -1,6 +1,6 @@
 # Telegram Port
 
-Telegram Messenger client for BB10 — same app as **Telegram** in BerryPy / BerryStore (v7.0.0).
+Telegram Messenger client **v2.1** for BB10 — enhanced UI with static assets and media cache support.
 
 ## Install
 
@@ -37,11 +37,8 @@ telegram -f   # foreground / debug
 
 - `share/telegram/app.py` — backend + Telethon
 - `share/telegram/index.html`, `auth.html`, `auth_code.html` — UI
-- `share/telegram/session_name.session` — created on first login
-
-## Source
-
-BerryStore: `http://berrystore.sw7ft.com/apps/Telegram.zip`
+- `share/telegram/static/` — tg-enhance.css/js
+- `share/telegram/session_name.session` — created on first login (not in port zip)
 
 ## Rebuild
 

@@ -14,6 +14,7 @@
     <meta name="apple-mobile-web-app-title" content="Telegram">
     <meta name="application-name" content="Telegram">
     <meta name="theme-color" content="#0088cc">
+    <link rel="stylesheet" href="/static/tg-enhance.css">
     
     <style>
         body {
@@ -747,6 +748,16 @@
             <a href="https://www.patreon.com/c/Sw7ft" target="_blank" class="donate">Donate to SW7FT</a>
         </div>
     </div>
+    <div class="tg-status-bar" id="tg-status-bar">
+        <span><span class="tg-status-dot" id="tg-status-dot"></span><span id="tg-status-text">Connecting...</span></span>
+        <span class="tg-status-right">
+            <span class="tg-unread-badge" id="tg-unread-badge" style="display:none">0</span>
+        </span>
+    </div>
+    <div class="tg-notify-bar" id="tg-notify-bar">
+        <span class="tg-notify-text" id="tg-notify-text"></span>
+        <button type="button" class="tg-notify-dismiss" id="tg-notify-dismiss">&#10005;</button>
+    </div>
     <div class="container">
         <div id="overlay" class="overlay"></div>
         <div id="sidebar" class="sidebar">
@@ -768,10 +779,16 @@
                 <input type="text" id="chat-search-input" placeholder="Search messages..." onkeyup="searchInChat()">
                 <button class="clear-search-button" onclick="clearChatSearch()">✕</button>
             </div>
-            <div id="messages" class="messages">
-                <div class="loading-older" id="loading-older">Loading older messages...</div>
-                <div class="no-messages" id="no-chat-selected">Select a chat to start messaging</div>
-                <!-- Messages will be displayed here -->
+            <div class="tg-messages-pane" id="tg-messages-pane">
+                <div class="tg-msg-loading" id="tg-msg-loading">
+                    <div class="tg-spinner"></div>
+                    <p>Loading messages...</p>
+                </div>
+                <div id="messages" class="messages">
+                    <div class="loading-older" id="loading-older">Loading older messages...</div>
+                    <div class="no-messages" id="no-chat-selected">Select a chat to start messaging</div>
+                    <!-- Messages will be displayed here -->
+                </div>
             </div>
             <!-- File Preview Area -->
             <div id="file-preview" class="file-preview">
@@ -877,12 +894,24 @@
                         for (var i = 0; i < rooms.length; i++) {
                             var roomDiv = document.createElement('button');
                             roomDiv.className = 'room-button';
+                            if (rooms[i].unread && rooms[i].unread > 0) {
+                                roomDiv.className += ' tg-has-unread';
+                            }
                             roomDiv.setAttribute('data-room', rooms[i].name.toLowerCase());
                             roomDiv.setAttribute('data-id', rooms[i].id);
-                            
-                            roomDiv.innerHTML = rooms[i].name;
+                            roomDiv.setAttribute('data-room-name', rooms[i].name);
+
+                            var label = rooms[i].name;
+                            if (rooms[i].unread && rooms[i].unread > 0) {
+                                var n = rooms[i].unread > 9 ? '9+' : String(rooms[i].unread);
+                                label += ' <span class="tg-room-unread">' + n + '</span>';
+                            }
+                            roomDiv.innerHTML = label;
                             roomDiv.onclick = createRoomClickHandler(rooms[i].id, rooms[i].name);
                             roomsDiv.appendChild(roomDiv);
+                        }
+                        if (typeof window.tgRoomsRendered === 'function') {
+                            window.tgRoomsRendered(rooms);
                         }
                     } catch (err) {
                         console.log('[ERROR] Error parsing rooms response:', err);
@@ -925,7 +954,7 @@
             document.getElementById('current-chat-title').textContent = chatName;
             
             // Show loading message in the messages area
-            document.getElementById('messages').innerHTML = 
+            document.getElementById('messages').innerHTML =
                 '<div class="loading">Loading messages...</div>';
             
             // Clear no-chat message
@@ -1008,6 +1037,9 @@
 
                         // Auto-scroll to the bottom after rendering the messages
                         messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        if (typeof window.tgMessagesLoaded === 'function') {
+                            window.tgMessagesLoaded(chat_id);
+                        }
                     } catch (err) {
                         console.log("Error parsing messages:", err);
                         messagesDiv.innerHTML = '<div class="no-messages">Error loading messages. Please try again.</div>';
@@ -1689,5 +1721,6 @@
         });
     };
     </script>
+    <script src="/static/tg-enhance.js"></script>
 </body>
 </html>

@@ -1,34 +1,44 @@
 #!/bin/sh
-# telegram - Telegram Messenger client for BB10
-# Requires python3 + telethon + requests.
-# Install: qpkg install telegram
+# telegram - Telegram Messenger client for BB10 (v2.1)
 
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
 [ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
 SHARE="$NATIVE_TOOLS/share/telegram"
 PORT=8010
+BC_PY="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+BC_HOME="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static"
 
 FOREGROUND=0
 for arg in "$@"; do
     case "$arg" in
         help|-h|--help)
-            if [ -f "$SHARE/HELP.txt" ]; then
-                cat "$SHARE/HELP.txt"
-            else
-                echo "telegram - Telegram Messenger for BB10"
-                echo ""
-                echo "Usage: telegram          # Start in background (default)"
-                echo "       telegram -f       # Run in foreground"
-                echo ""
-                echo "Open http://localhost:$PORT in browser."
-                echo "Requires: python3, telethon, requests"
-            fi
+            cat "$SHARE/HELP.txt" 2>/dev/null || echo "telegram - port $PORT"
             exit 0
             ;;
         -f|--foreground) FOREGROUND=1 ;;
     esac
 done
+
+if [ ! -f "$SHARE/app.py" ]; then
+    echo "telegram: app.py not found"
+    exit 1
+fi
+
+if [ -x "$BC_PY" ]; then
+    if ! env PYTHONHOME="$BC_HOME" PYTHONPATH= "$BC_PY" -c "import encodings, telethon, requests" 2>/dev/null; then
+        echo "telegram: berrycore python/deps check failed"
+        exit 1
+    fi
+    if [ "$FOREGROUND" = 1 ]; then
+        exec env PYTHONHOME="$BC_HOME" PYTHONPATH= "$BC_PY" "$SHARE/app.py"
+    fi
+    LOG="$SHARE/telegram.log"
+    echo "telegram v2.1: starting (log: $LOG)"
+    echo "Open http://localhost:$PORT"
+    nohup env PYTHONHOME="$BC_HOME" PYTHONPATH= "$BC_PY" "$SHARE/app.py" >> "$LOG" 2>&1 &
+    exit 0
+fi
 
 PYTHON=""
 for p in python3 python3.11 python3.2; do
@@ -39,19 +49,12 @@ for p in python3 python3.11 python3.2; do
 done
 
 if [ -z "$PYTHON" ]; then
-    echo "telegram: python3 not found. Run: qpkg install python3"
+    echo "telegram: python3 not found"
     exit 1
 fi
 
 if ! "$PYTHON" -c "import telethon, requests" 2>/dev/null; then
-    echo "telegram: Python modules 'telethon' and/or 'requests' not found."
-    echo "Run: python3 -m ensurepip && python3 -m pip install telethon requests"
-    exit 1
-fi
-
-if [ ! -f "$SHARE/app.py" ]; then
-    echo "telegram: app.py not found in $SHARE"
-    echo "Run: qpkg install telegram"
+    echo "telegram: need telethon and requests"
     exit 1
 fi
 
@@ -60,7 +63,6 @@ if [ "$FOREGROUND" = 1 ]; then
 fi
 
 LOG="$SHARE/telegram.log"
-mkdir -p "$SHARE" 2>/dev/null
-echo "telegram: starting in background (log: $LOG)"
-echo "Open http://localhost:$PORT in browser"
+echo "telegram v2.1: starting (log: $LOG)"
+echo "Open http://localhost:$PORT"
 nohup "$PYTHON" "$SHARE/app.py" >> "$LOG" 2>&1 &
