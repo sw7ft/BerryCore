@@ -1,0 +1,84 @@
+# XPS-built utilities manifest for qpkg PACKAGES generation
+# Format: name|category|version|size_hint|description|replaces
+less|util|661|50K|GNU pager|core
+pv|util|1.8.14|50K|Pipe progress meter|core
+msmtp|net|1.8.25|120K|Lightweight SMTP client|none
+cscope|dev|15.9|200K|C cross-reference database|none
+pkg-config|dev|2.3.0|30K|Library compile flags (pkgconf)|none
+tree|util|2.0.2|50K|Directory tree listing|none
+socat|net|1.8.0.0|250K|Socket relay and serial bridge|none
+dos2unix|util|7.5.2|20K|CRLF to LF conversion|none
+unix2dos|util|7.5.2|20K|LF to CRLF conversion|none
+zstd|archive|1.5.6|600K|Zstandard compress/decompress|core
+watch|sys|3.3.17|20K|Re-run command periodically|none
+logrotate|sys|3.21.0|80K|Rotate log files|none
+minisign|security|0.10|40K|Sign and verify files (libsodium)|none
+free|sys|1.0|4K|Memory summary (pidin fallback)|none
+xxd|util|9.1|15K|Hex dump (from vim)|core
+iperf3|net|3.17.1|100K|Network throughput test|none
+entr|util|5.6|15K|Re-run command when files change|none
+ctags|dev|6.2.1|150K|Generate tag index for editors|none
+unifdef|dev|2.12|15K|Strip ifdef blocks from source|none
+7za|archive|16.02|800K|7-Zip archiver CLI|none
+7z|archive|16.02|1K|Symlink to 7za|none
+unrar|archive|7.1.4|260K|Extract RAR archives|none
+doscat|util|1.0|4K|CP437 DOS text to UTF-8 via recode|none
+lha|archive|1.0|80K|LHA/LZH archive tool|none
+lrz|net|0.12|40K|ZMODEM receive|none
+lsz|net|0.12|40K|ZMODEM send|none
+rz|net|0.12|40K|ZMODEM receive (alias)|none
+sz|net|0.12|40K|ZMODEM send (alias)|none
+rx|net|0.12|40K|XMODEM receive|none
+sx|net|0.12|40K|XMODEM send|none
+lrx|net|0.12|40K|ZMODEM receive (l)|none
+lsx|net|0.12|40K|ZMODEM send (l)|none
+lrzsz|net|0.12|40K|ZMODEM tools meta|none
+rb|net|0.12|40K|YMODEM receive|none
+sb|net|0.12|40K|YMODEM send|none
+mtools|util|4.0|60K|FAT floppy/disk image ops|none
+mcopy|util|4.0|60K|Copy files to/from FAT image|none
+mdir|util|4.0|60K|List FAT directory|none
+mtype|util|4.0|60K|Display file from FAT image|none
+mcat|util|4.0|60K|Cat file from FAT image|none
+mdel|util|4.0|60K|Delete file on FAT image|none
+mmd|util|4.0|60K|Make directory on FAT image|none
+mrd|util|4.0|60K|Remove directory on FAT image|none
+mren|util|4.0|60K|Rename file on FAT image|none
+mmove|util|4.0|60K|Move file on FAT image|none
+mattrib|util|4.0|60K|Change FAT attributes|none
+minfo|util|4.0|60K|FAT filesystem info|none
+mkfs.fat|sys|4.2|40K|Create FAT filesystem|none
+fsck.fat|sys|4.2|40K|Check FAT filesystem|none
+fatlabel|sys|4.2|40K|Label FAT volume|none
+mkfs.vfat|sys|4.2|40K|Create VFAT filesystem|none
+fsck.vfat|sys|4.2|40K|Check VFAT filesystem|none
+ndisasm|dev|2.16|30K|x86 disassembler|none
+recode|util|3.6|1200K|Charset conversion|none
+minicom|net|2.8|160K|Serial terminal (ncursesw)|none
+cabextract|archive|1.11|30K|Extract Microsoft CAB files|none
+nomarch|archive|1.4|15K|Extract DOS ARC archives|none
+cpmcp|util|2.20|30K|Copy files on CP/M disk|none
+cpmls|util|2.20|30K|List CP/M directory|none
+cpmrm|util|2.20|30K|Remove CP/M file|none
+cpmchmod|util|2.20|30K|Change CP/M file mode|none
+cpmchattr|util|2.20|30K|Change CP/M attributes|none
+mkfs.cpm|sys|2.20|30K|Create CP/M filesystem|none
+fsck.cpm|sys|2.20|30K|Check CP/M filesystem|none
+hmount|util|3.2.6|30K|Mount HFS volume|none
+humount|util|3.2.6|30K|Unmount HFS volume|none
+hcopy|util|3.2.6|30K|Copy files on HFS|none
+hdir|util|3.2.6|30K|List HFS directory|none
+hls|util|3.2.6|30K|List HFS files|none
+hpwd|util|3.2.6|30K|Print HFS working dir|none
+hvol|util|3.2.6|30K|Show HFS volume name|none
+hformat|util|3.2.6|30K|Format HFS volume|none
+hattrib|util|3.2.6|30K|Change HFS attributes|none
+macunpack|archive|2.0|40K|Unpack Mac archives|none
+hexbin|archive|2.0|40K|Hex/BinHex converter|none
+macsave|archive|2.0|40K|Mac archive save|none
+macstream|archive|2.0|40K|Mac stream decoder|none
+binhex|archive|2.0|40K|BinHex encoder/decoder|none
+tomac|archive|2.0|40K|Convert to Mac format|none
+frommac|archive|2.0|40K|Convert from Mac format|none
+macbin|archive|2.0|40K|MacBinary handler|none
+lessecho|util|661|10K|Helper for less pager|none

@@ -101,16 +101,26 @@ fetch_ports_file() {
     init_qpkg_cache
     _url="$GITHUB_RAW/ports/$_file"
     _cache="$QPKG_CACHE_DIR/$_file"
+    _now=$(date +%s 2>/dev/null || echo 0)
 
-    if [ -f "$_cache" ]; then
-        cat "$_cache"
-        return 0
+    if [ -f "$_cache" ] && [ "$_now" != "0" ]; then
+        _mtime=$(stat -c %Y "$_cache" 2>/dev/null || stat -f %m "$_cache" 2>/dev/null || echo 0)
+        if [ "$_mtime" != "0" ] && [ $((_now - _mtime)) -lt "$QPKG_CACHE_TTL" ]; then
+            cat "$_cache"
+            return 0
+        fi
     fi
 
     _content=$(curl -s -k -L -m 20 "$_url" 2>&1)
     if [ -n "$_content" ] && ! echo "$_content" | head -1 | grep -qi '<html'; then
         echo "$_content" > "$_cache" 2>/dev/null || true
         echo "$_content"
+        return 0
+    fi
+
+    if [ -f "$_cache" ]; then
+        print_warning "Using cached $_file (fetch failed)" >&2
+        cat "$_cache"
         return 0
     fi
 

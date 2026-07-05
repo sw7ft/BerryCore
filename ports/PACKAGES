@@ -34,3 +34,85 @@ telnet|net|0.17|39K|Classic netkit telnet client|net-telnet-0.17.zip|none
 usbdbg|util|1.0.0|9K|Generic USB serial debugger|util-usbdbg-1.0.0.zip|none
 dropbear|net|2026.91|853K|Dropbear SSH client and server|net-dropbear-2026.91.zip|none
 bbm|net|1.0.0|12K|Berry Bridge Messenger relay client|net-bbm-1.0.0.zip|none
+less|util|661|103K|GNU pager|util-less-661.zip|core
+pv|util|1.8.14|30K|Pipe progress meter|util-pv-1.8.14.zip|core
+msmtp|net|1.8.25|45K|Lightweight SMTP client|util-msmtp-1.8.25.zip|none
+cscope|dev|15.9|169K|C cross-reference database|util-cscope-15.9.zip|none
+pkg-config|dev|2.3.0|34K|Library compile flags (pkgconf)|util-pkg-config-2.3.0.zip|none
+tree|util|2.0.2|28K|Directory tree listing|util-tree-2.0.2.zip|none
+socat|net|1.8.0.0|128K|Socket relay and serial bridge|util-socat-1.8.0.0.zip|none
+dos2unix|util|7.5.2|15K|CRLF to LF conversion|util-dos2unix-7.5.2.zip|none
+unix2dos|util|7.5.2|15K|LF to CRLF conversion|util-unix2dos-7.5.2.zip|none
+zstd|archive|1.5.6|338K|Zstandard compress/decompress|util-zstd-1.5.6.zip|core
+watch|sys|3.3.17|10K|Re-run command periodically|util-watch-3.3.17.zip|none
+logrotate|sys|3.21.0|55K|Rotate log files|util-logrotate-3.21.0.zip|none
+minisign|security|0.10|152K|Sign and verify files (libsodium)|util-minisign-0.10.zip|none
+free|sys|1.0|4.6K|Memory summary (pidin fallback)|util-free-1.0.zip|none
+xxd|util|9.1|9.6K|Hex dump (from vim)|util-xxd-9.1.zip|core
+iperf3|net|3.17.1|54K|Network throughput test|util-iperf3-3.17.1.zip|none
+entr|util|5.6|9.3K|Re-run command when files change|util-entr-5.6.zip|none
+ctags|dev|6.2.1|565K|Generate tag index for editors|util-ctags-6.2.1.zip|none
+unifdef|dev|2.12|13K|Strip ifdef blocks from source|util-unifdef-2.12.zip|none
+7za|archive|16.02|954K|7-Zip archiver CLI|util-7za-16.02.zip|none
+7z|archive|16.02|477K|Symlink to 7za|util-7z-16.02.zip|none
+unrar|archive|7.1.4|154K|Extract RAR archives|util-unrar-7.1.4.zip|none
+doscat|util|1.0|3.2K|CP437 DOS text to UTF-8 via recode|util-doscat-1.0.zip|none
+lha|archive|1.0|43K|LHA/LZH archive tool|util-lha-1.0.zip|none
+lrz|net|0.12|32K|ZMODEM receive|util-lrz-0.12.zip|none
+lsz|net|0.12|34K|ZMODEM send|util-lsz-0.12.zip|none
+rz|net|0.12|32K|ZMODEM receive (alias)|util-rz-0.12.zip|none
+sz|net|0.12|34K|ZMODEM send (alias)|util-sz-0.12.zip|none
+rx|net|0.12|32K|XMODEM receive|util-rx-0.12.zip|none
+sx|net|0.12|34K|XMODEM send|util-sx-0.12.zip|none
+lrx|net|0.12|32K|ZMODEM receive (l)|util-lrx-0.12.zip|none
+lsx|net|0.12|34K|ZMODEM send (l)|util-lsx-0.12.zip|none
+lrzsz|net|0.12|32K|ZMODEM tools meta|util-lrzsz-0.12.zip|none
+rb|net|0.12|32K|YMODEM receive|util-rb-0.12.zip|none
+sb|net|0.12|34K|YMODEM send|util-sb-0.12.zip|none
+mtools|util|4.0|72K|FAT floppy/disk image ops|util-mtools-4.0.zip|none
+mcopy|util|4.0|72K|Copy files to/from FAT image|util-mcopy-4.0.zip|none
+mdir|util|4.0|72K|List FAT directory|util-mdir-4.0.zip|none
+mtype|util|4.0|72K|Display file from FAT image|util-mtype-4.0.zip|none
+mcat|util|4.0|72K|Cat file from FAT image|util-mcat-4.0.zip|none
+mdel|util|4.0|72K|Delete file on FAT image|util-mdel-4.0.zip|none
+mmd|util|4.0|72K|Make directory on FAT image|util-mmd-4.0.zip|none
+mrd|util|4.0|72K|Remove directory on FAT image|util-mrd-4.0.zip|none
+mren|util|4.0|72K|Rename file on FAT image|util-mren-4.0.zip|none
+mmove|util|4.0|72K|Move file on FAT image|util-mmove-4.0.zip|none
+mattrib|util|4.0|72K|Change FAT attributes|util-mattrib-4.0.zip|none
+minfo|util|4.0|72K|FAT filesystem info|util-minfo-4.0.zip|none
+mkfs.fat|sys|4.2|24K|Create FAT filesystem|util-mkfs.fat-4.2.zip|none
+fsck.fat|sys|4.2|33K|Check FAT filesystem|util-fsck.fat-4.2.zip|none
+fatlabel|sys|4.2|20K|Label FAT volume|util-fatlabel-4.2.zip|none
+mkfs.vfat|sys|4.2|24K|Create VFAT filesystem|util-mkfs.vfat-4.2.zip|none
+fsck.vfat|sys|4.2|33K|Check VFAT filesystem|util-fsck.vfat-4.2.zip|none
+ndisasm|dev|2.16|150K|x86 disassembler|util-ndisasm-2.16.zip|none
+recode|util|3.6|690K|Charset conversion|util-recode-3.6.zip|none
+minicom|net|2.8|80K|Serial terminal (ncursesw)|util-minicom-2.8.zip|none
+cabextract|archive|1.11|30K|Extract Microsoft CAB files|util-cabextract-1.11.zip|none
+nomarch|archive|1.4|8.2K|Extract DOS ARC archives|util-nomarch-1.4.zip|none
+cpmcp|util|2.20|19K|Copy files on CP/M disk|util-cpmcp-2.20.zip|none
+cpmls|util|2.20|21K|List CP/M directory|util-cpmls-2.20.zip|none
+cpmrm|util|2.20|17K|Remove CP/M file|util-cpmrm-2.20.zip|none
+cpmchmod|util|2.20|17K|Change CP/M file mode|util-cpmchmod-2.20.zip|none
+cpmchattr|util|2.20|18K|Change CP/M attributes|util-cpmchattr-2.20.zip|none
+mkfs.cpm|sys|2.20|18K|Create CP/M filesystem|util-mkfs.cpm-2.20.zip|none
+fsck.cpm|sys|2.20|22K|Check CP/M filesystem|util-fsck.cpm-2.20.zip|none
+hmount|util|3.2.6|46K|Mount HFS volume|util-hmount-3.2.6.zip|none
+humount|util|3.2.6|46K|Unmount HFS volume|util-humount-3.2.6.zip|none
+hcopy|util|3.2.6|46K|Copy files on HFS|util-hcopy-3.2.6.zip|none
+hdir|util|3.2.6|46K|List HFS directory|util-hdir-3.2.6.zip|none
+hls|util|3.2.6|46K|List HFS files|util-hls-3.2.6.zip|none
+hpwd|util|3.2.6|46K|Print HFS working dir|util-hpwd-3.2.6.zip|none
+hvol|util|3.2.6|46K|Show HFS volume name|util-hvol-3.2.6.zip|none
+hformat|util|3.2.6|46K|Format HFS volume|util-hformat-3.2.6.zip|none
+hattrib|util|3.2.6|46K|Change HFS attributes|util-hattrib-3.2.6.zip|none
+macunpack|archive|2.0|40K|Unpack Mac archives|util-macunpack-2.0.zip|none
+hexbin|archive|2.0|17K|Hex/BinHex converter|util-hexbin-2.0.zip|none
+macsave|archive|2.0|8.8K|Mac archive save|util-macsave-2.0.zip|none
+macstream|archive|2.0|9.8K|Mac stream decoder|util-macstream-2.0.zip|none
+binhex|archive|2.0|11K|BinHex encoder/decoder|util-binhex-2.0.zip|none
+tomac|archive|2.0|11K|Convert to Mac format|util-tomac-2.0.zip|none
+frommac|archive|2.0|8.8K|Convert from Mac format|util-frommac-2.0.zip|none
+macbin|archive|2.0|40K|MacBinary handler|util-macbin-2.0.zip|none
+lessecho|util|661|103K|Helper for less pager|util-lessecho-661.zip|none
