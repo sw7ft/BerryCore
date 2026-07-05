@@ -1,0 +1,26 @@
+# BerryCore Featured Ports — shown by: qpkg ports
+# Format: name|category|version|size|description
+#
+# Full install catalog: ports/PACKAGES (qpkg search / qpkg available)
+
+python3|lang|3.11.10|25M|Python 3.11 interpreter with pip and full standard library
+berry-browser|web|1.0.27|111M|CLI browser via content_shell — berry-browser URL (Term49/SSH)
+telegram|web|2.1|40K|Telegram Messenger v2.1 for BB10 (port 8010)
+youtube|web|2.0|21K|YouTube Navigator v2 — search and embed playback (port 8070)
+rocketchat|web|3.0|30K|RocketChat Navigator v3 — channels, groups, DMs (port 8026)
+maps|web|1.0|36K|OpenStreetMap navigation — search and directions (port 8090)
+node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX — jitless by default
+claude-code|dev|2.1.91|45M|Claude Code AI agent for BB10 (requires node-term49)
+bcllm|ai|1.2.1|19M|On-device LLM assistant via llama.cpp (run: ai download model)
+bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI — Electrum sync over TLS (testnet)
+dropbear|net|2026.91|853K|Dropbear SSH client and server (dbclient, ssh, dropbearkey)
+bbm|net|1.0.0|12K|Berry Bridge Messenger — device relay for berrycore.sw7ft.com
+android-apps|util|1.0|89M|Curated Android APKs — RDP, Kiwi, Term49Bridge, XServer, etc.
+elinks|web|0.17.0|1.3M|Text web browser with SSL/TLS and JavaScript (QuickJS)
+term49-web|web|1.0|54K|Browser terminal — xterm.js over WebSocket (port 7681)
+openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI (Passport USB)
+ipfs-gw|util|0.1.0|608K|IPFS gateway client — fetch CIDs via HTTPS gateways
+berrypy|web|2.1.0|75K|BlackBerry app platform manager (requires python3)
+tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence
+telnet|net|0.17|39K|Classic netkit telnet client
+usbdbg|util|1.0.0|9K|Generic USB serial debugger (/dev/serusb*)

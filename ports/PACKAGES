@@ -1,0 +1,36 @@
+# BerryCore Package Catalog — full install index (qpkg install / search / available)
+# Format: name|category|version|size|description|zip|replaces
+#
+# replaces: none | core | port-name (warn before overwriting)
+
+apache-php|web|2.4.58|43M|Apache HTTP Server 2.4.58 + PHP 7.4.33|web-apache-php-2.4.58.zip|none
+berrypy|web|2.1.0|75K|BlackBerry app platform manager|web-berrypy-2.1.0.zip|none
+berrysnip|util|1.0|24K|Snippet and notes manager with web UI and TUI|util-berrysnip-1.0.zip|none
+elinks|web|0.17.0|1.3M|Text web browser with SSL/TLS and JavaScript|web-elinks-0.17.0.zip|none
+hydra|net|9.5|165K|Fast network logon cracker|net-hydra-9.5.zip|none
+python3|lang|3.11.10|25M|Python 3.11 with pip and stdlib|lang-python3-3.11.10.zip|none
+tetris|games|1.0|6K|Classic Tetris in pure bash|games-tetris-1.0.zip|none
+qnxdesktop|web|1.0|753K|Windows 98 style desktop with file explorer and AI chat|web-qnxdesktop-1.0.zip|none
+voiceagent|web|1.0|23K|AI voice assistant with OpenAI GPT-4o and Whisper|web-voiceagent-1.0.zip|none
+tmux|sys|3.3a|2.5M|Terminal multiplexer|sys-tmux-3.3a.zip|none
+term49-web|web|1.0|54K|Browser terminal over WebSocket (port 7681)|web-term49-web-1.0.zip|none
+bb-tools|web|1.0|44K|BerryCore web tools dashboard (port 8765)|web-bb-tools-1.0.zip|none
+content-shell-term49|web|1.0|62M|DEPRECATED — aliases to berry-browser|web-content-shell-term49-1.0.zip|none
+berry-browser|web|1.0.27|111M|CLI browser via content_shell|web-berry-browser-1.0.27.zip|none
+node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX|lang-node-term49-22.0.0.zip|none
+android-apps|util|1.0|89M|Curated Android APKs for sideloading|util-android-apps-1.0.zip|none
+wifi-chat|util|1.0.0|12K|P2P chat over WiFi|util-wifi-chat-1.0.0.zip|none
+berrybot|util|1.0.0|600K|Command-line teaching assistant|util-berrybot-1.0.0.zip|none
+rocketchat|web|3.0|30K|RocketChat Navigator v3|web-rocketchat-3.0.zip|none
+maps|web|1.0|36K|OpenStreetMap navigation|web-maps-1.0.zip|none
+youtube|web|2.0|21K|YouTube Navigator v2|web-youtube-2.0.zip|none
+telegram|web|2.1|40K|Telegram Messenger v2.1|web-telegram-2.1.zip|none
+claude-code|dev|2.1.91|45M|Claude Code AI agent|dev-claude-code-2.1.91.zip|none
+bcllm|ai|1.2.1|19M|On-device LLM assistant (llama.cpp)|ai-bcllm-1.2.1.zip|none
+ipfs-gw|util|0.1.0|608K|IPFS gateway client|util-ipfs-gw-0.1.0.zip|none
+bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI (testnet)|crypto-bdk-cli-2.0.0.zip|none
+openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI|util-openport-1.0.0.zip|none
+telnet|net|0.17|39K|Classic netkit telnet client|net-telnet-0.17.zip|none
+usbdbg|util|1.0.0|9K|Generic USB serial debugger|util-usbdbg-1.0.0.zip|none
+dropbear|net|2026.91|853K|Dropbear SSH client and server|net-dropbear-2026.91.zip|none
+bbm|net|1.0.0|12K|Berry Bridge Messenger relay client|net-bbm-1.0.0.zip|none

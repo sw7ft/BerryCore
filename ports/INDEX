@@ -1,4 +1,8 @@
-# BerryCore Ports Repository Index
+# BerryCore Ports Repository Index (LEGACY)
+#
+# DEPRECATED: use ports/FEATURED (qpkg ports) and ports/PACKAGES (qpkg install/search).
+# Kept for backward compatibility with older qpkg clients.
+#
 # Format: name|category|version|size|description
 # Lines starting with # are comments
 #

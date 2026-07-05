@@ -85,6 +85,106 @@ init_native_tools() {
     exit 1
 }
 
+# --- Ports catalog (FEATURED + PACKAGES) ---
+
+QPKG_CACHE_DIR=""
+QPKG_CACHE_TTL=86400
+
+init_qpkg_cache() {
+    QPKG_CACHE_DIR="${NATIVE_TOOLS}/.cache/qpkg"
+    mkdir -p "$QPKG_CACHE_DIR" 2>/dev/null || QPKG_CACHE_DIR="/tmp/qpkg-cache-$$"
+    mkdir -p "$QPKG_CACHE_DIR" 2>/dev/null || true
+}
+
+fetch_ports_file() {
+    _file="$1"
+    init_qpkg_cache
+    _url="$GITHUB_RAW/ports/$_file"
+    _cache="$QPKG_CACHE_DIR/$_file"
+
+    if [ -f "$_cache" ]; then
+        cat "$_cache"
+        return 0
+    fi
+
+    _content=$(curl -s -k -L -m 20 "$_url" 2>&1)
+    if [ -n "$_content" ] && ! echo "$_content" | head -1 | grep -qi '<html'; then
+        echo "$_content" > "$_cache" 2>/dev/null || true
+        echo "$_content"
+        return 0
+    fi
+
+    return 1
+}
+
+fetch_packages_content() {
+    _c=$(fetch_ports_file PACKAGES)
+    if [ $? -eq 0 ] && [ -n "$_c" ]; then
+        echo "$_c"
+        return 0
+    fi
+    print_warning "PACKAGES not found; falling back to INDEX"
+    fetch_ports_file INDEX
+}
+
+lookup_package_line() {
+    _name="$1"
+    _content="$2"
+    echo "$_content" | grep -v "^#" | grep -v "^$" | grep "^${_name}|" | head -1
+}
+
+parse_package_fields() {
+    _line="$1"
+    PKG_NAME=$(echo "$_line" | cut -d'|' -f1)
+    PKG_CATEGORY=$(echo "$_line" | cut -d'|' -f2)
+    PKG_VERSION=$(echo "$_line" | cut -d'|' -f3)
+    PKG_SIZE=$(echo "$_line" | cut -d'|' -f4)
+    PKG_DESC=$(echo "$_line" | cut -d'|' -f5)
+    PKG_ZIP=$(echo "$_line" | cut -d'|' -f6)
+    PKG_REPLACES=$(echo "$_line" | cut -d'|' -f7)
+    if [ -z "$PKG_ZIP" ]; then
+        PKG_ZIP="${PKG_CATEGORY}-${PKG_NAME}-${PKG_VERSION}.zip"
+    fi
+    if [ -z "$PKG_REPLACES" ]; then
+        PKG_REPLACES="none"
+    fi
+}
+
+log_installed_port() {
+    _name="$1"
+    _ver="$2"
+    _zip="$3"
+    _log="${NATIVE_TOOLS}/.qpkg/installed"
+    mkdir -p "${NATIVE_TOOLS}/.qpkg" 2>/dev/null || true
+    _date=$(date +%Y-%m-%d 2>/dev/null || echo "unknown")
+    echo "${_name}|${_ver}|${_date}|${_zip}" >> "$_log" 2>/dev/null || true
+}
+
+check_replaces_warning() {
+    _name="$1"
+    _replaces="$2"
+    case "$_replaces" in
+        none|"") return 0 ;;
+        core)
+            if [ -f "$NATIVE_TOOLS/bin/$_name" ] || [ -L "$NATIVE_TOOLS/bin/$_name" ]; then
+                print_warning "This port may replace core binary: $NATIVE_TOOLS/bin/$_name"
+            fi
+            ;;
+        *)
+            print_warning "This port replaces: $_replaces"
+            ;;
+    esac
+}
+
+display_package_row() {
+    _name="$1"
+    _cat="$2"
+    _ver="$3"
+    _size="$4"
+    _desc="$5"
+    printf "  ${GREEN}%-20s${NC} ${BLUE}[%s]${NC} v%-6s %-6s %s\n" "$_name" "$_cat" "$_ver" "$_size" "$_desc"
+}
+
 # Get current installed version
 get_current_version() {
     if [ -f "$NATIVE_TOOLS/VERSION" ]; then
@@ -309,46 +409,37 @@ cmd_update() {
     echo "Restart your shell or run: source $NATIVE_TOOLS/env.sh"
 }
 
-# List available ports from repository
+# List featured ports (showcase)
 cmd_ports() {
-    print_header "Available Ports"
-    
-    print_info "Fetching ports index from GitHub..."
+    print_header "Featured Ports"
+
+    print_info "Fetching featured ports from GitHub..."
     echo ""
-    
-    # Fetch INDEX file from GitHub
-    INDEX_URL="$GITHUB_RAW/ports/INDEX"
-    
-    # Try with increased timeout and show errors
-    # Use -k to bypass SSL cert issues on BB10/QNX with missing certs
-    INDEX_CONTENT=$(curl -s -k -L -m 15 "$INDEX_URL" 2>&1)
-    CURL_EXIT=$?
-    
-    if [ $CURL_EXIT -ne 0 ] || [ -z "$INDEX_CONTENT" ]; then
-        print_error "Failed to fetch ports index from GitHub (curl exit code: $CURL_EXIT)"
-        echo ""
-        echo "Error output:"
-        echo "$INDEX_CONTENT" | head -3
-        echo ""
-        echo "Try manually:"
-        echo "  curl -v '$INDEX_URL'"
-        echo ""
-        echo "Or visit: https://github.com/$GITHUB_REPO/tree/main/ports"
+
+    FEATURED_CONTENT=$(fetch_ports_file FEATURED)
+    if [ $? -ne 0 ] || [ -z "$FEATURED_CONTENT" ]; then
+        print_warning "FEATURED not available; showing legacy INDEX"
+        FEATURED_CONTENT=$(fetch_ports_file INDEX)
+    fi
+
+    if [ $? -ne 0 ] || [ -z "$FEATURED_CONTENT" ]; then
+        print_error "Failed to fetch ports catalog from GitHub"
+        echo "Try: https://github.com/$GITHUB_REPO/tree/main/ports"
         exit 1
     fi
-    
+
     {
-        echo "Available ports to install:"
+        echo "Featured ports to install:"
         echo "==========================================================="
         echo ""
-        
-        # Parse and display INDEX
-        echo "$INDEX_CONTENT" | grep -v "^#" | grep -v "^$" | while IFS='|' read -r name cat ver size desc; do
-            printf "  ${GREEN}%-20s${NC} ${BLUE}[%s]${NC} v%-6s %-6s %s\n" "$name" "$cat" "$ver" "$size" "$desc"
+
+        echo "$FEATURED_CONTENT" | grep -v "^#" | grep -v "^$" | while IFS='|' read -r name cat ver size desc; do
+            display_package_row "$name" "$cat" "$ver" "$size" "$desc"
         done
-        
+
         echo ""
         echo "Install with: ${GREEN}qpkg install <port-name>${NC}"
+        echo "Full catalog: ${GREEN}qpkg search <term>${NC}  or  ${GREEN}qpkg available${NC}"
         echo ""
     } | paginate
 }
@@ -512,43 +603,35 @@ cmd_install() {
     
     print_header "Installing Port: $PORT_NAME"
     
-    # Fetch INDEX to find the port
-    print_info "Searching for port: $PORT_NAME"
-    INDEX_URL="$GITHUB_RAW/ports/INDEX"
-    # Use -k to bypass SSL cert issues on BB10/QNX with missing certs
-    INDEX_CONTENT=$(curl -s -k -L -m 15 "$INDEX_URL" 2>&1)
+    print_info "Searching catalog for: $PORT_NAME"
+    PACKAGES_CONTENT=$(fetch_packages_content)
     CURL_EXIT=$?
-    
-    if [ $CURL_EXIT -ne 0 ] || [ -z "$INDEX_CONTENT" ]; then
-        print_error "Failed to fetch ports index from GitHub (curl exit code: $CURL_EXIT)"
-        echo ""
-        echo "Error: $INDEX_CONTENT" | head -3
-        echo ""
-        echo "Try: curl -v '$INDEX_URL'"
+
+    if [ $CURL_EXIT -ne 0 ] || [ -z "$PACKAGES_CONTENT" ]; then
+        print_error "Failed to fetch package catalog from GitHub"
         exit 1
     fi
-    
-    # Find port in INDEX
-    PORT_INFO=$(echo "$INDEX_CONTENT" | grep -v "^#" | grep "^$PORT_NAME|")
-    
+
+    PORT_INFO=$(lookup_package_line "$PORT_NAME" "$PACKAGES_CONTENT")
+
     if [ -z "$PORT_INFO" ]; then
-        print_error "Port '$PORT_NAME' not found in repository"
+        print_error "Package '$PORT_NAME' not found in catalog"
         echo ""
-        echo "Available ports:"
-        echo "$INDEX_CONTENT" | grep -v "^#" | grep -v "^$" | cut -d'|' -f1 | sed 's/^/  /'
-        echo ""
-        echo "Or run: qpkg ports"
+        echo "Try: qpkg search $PORT_NAME"
+        echo "     qpkg available"
+        echo "     qpkg ports          (featured only)"
         exit 1
     fi
-    
-    # Parse port info
-    CATEGORY=$(echo "$PORT_INFO" | cut -d'|' -f2)
-    VERSION=$(echo "$PORT_INFO" | cut -d'|' -f3)
-    SIZE=$(echo "$PORT_INFO" | cut -d'|' -f4)
-    DESCRIPTION=$(echo "$PORT_INFO" | cut -d'|' -f5)
-    
-    # Construct filename and URL
-    FILENAME="${CATEGORY}-${PORT_NAME}-${VERSION}.zip"
+
+    parse_package_fields "$PORT_INFO"
+    CATEGORY="$PKG_CATEGORY"
+    VERSION="$PKG_VERSION"
+    SIZE="$PKG_SIZE"
+    DESCRIPTION="$PKG_DESC"
+
+    check_replaces_warning "$PORT_NAME" "$PKG_REPLACES"
+
+    FILENAME="$PKG_ZIP"
     DOWNLOAD_URL="$GITHUB_RAW/ports/$FILENAME"
     
     echo ""
@@ -638,8 +721,9 @@ cmd_install() {
     
     echo ""
     print_success "Port '$PORT_NAME' installed successfully!"
+    log_installed_port "$PORT_NAME" "$VERSION" "$FILENAME"
     echo ""
-    
+
     # Show installed binaries or apps (before cleanup)
     if [ "$PORT_NAME" = "android-apps" ] && [ -d "$INSTALL_DIR/android-apps" ]; then
         echo "Apps installed to $INSTALL_DIR/android-apps/:"
@@ -727,20 +811,136 @@ cmd_install() {
     echo ""
 }
 
-# Search for ports (future implementation)
+# Search full package catalog
 cmd_search() {
     SEARCH_TERM="$1"
-    
+
     if [ -z "$SEARCH_TERM" ]; then
         print_error "Usage: qpkg search <keyword>"
         exit 1
     fi
-    
-    print_header "Searching Ports"
-    
-    print_info "Feature coming soon!"
+
+    print_header "Search Packages: $SEARCH_TERM"
+
+    PACKAGES_CONTENT=$(fetch_packages_content)
+    if [ $? -ne 0 ] || [ -z "$PACKAGES_CONTENT" ]; then
+        print_error "Failed to fetch package catalog"
+        exit 1
+    fi
+
+    {
+        echo ""
+        _found=0
+        echo "$PACKAGES_CONTENT" | grep -v "^#" | grep -v "^$" | while IFS='|' read -r name cat ver size desc zip replaces; do
+            _haystack="$name $cat $desc"
+            if echo "$_haystack" | grep -i "$SEARCH_TERM" >/dev/null 2>&1; then
+                display_package_row "$name" "$cat" "$ver" "$size" "$desc"
+                _found=1
+            fi
+        done
+        echo ""
+        echo "Install with: qpkg install <name>"
+        echo ""
+    } | paginate
+}
+
+# List full package catalog
+cmd_available() {
+    FILTER_CAT=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -c|--category)
+                FILTER_CAT="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    print_header "Package Catalog"
+
+    PACKAGES_CONTENT=$(fetch_packages_content)
+    if [ $? -ne 0 ] || [ -z "$PACKAGES_CONTENT" ]; then
+        print_error "Failed to fetch package catalog"
+        exit 1
+    fi
+
+    {
+        echo ""
+        if [ -n "$FILTER_CAT" ]; then
+            echo "Category: $FILTER_CAT"
+            echo "==========================================================="
+            echo ""
+            echo "$PACKAGES_CONTENT" | grep -v "^#" | grep -v "^$" | while IFS='|' read -r name cat ver size desc zip replaces; do
+                if [ "$cat" = "$FILTER_CAT" ]; then
+                    display_package_row "$name" "$cat" "$ver" "$size" "$desc"
+                fi
+            done
+        else
+            _current=""
+            echo "$PACKAGES_CONTENT" | grep -v "^#" | grep -v "^$" | sort -t'|' -k2,2 -k1,1 | while IFS='|' read -r name cat ver size desc zip replaces; do
+                if [ "$cat" != "$_current" ]; then
+                    _current="$cat"
+                    echo ""
+                    printf "${YELLOW}[%s]${NC}\n" "$cat"
+                fi
+                display_package_row "$name" "$cat" "$ver" "$size" "$desc"
+            done
+        fi
+        echo ""
+        echo "Featured only: qpkg ports"
+        echo "Install with:  qpkg install <name>"
+        echo ""
+    } | paginate
+}
+
+# Show package details
+cmd_show() {
+    PKG="$1"
+
+    if [ -z "$PKG" ]; then
+        print_error "Usage: qpkg show <package-name>"
+        exit 1
+    fi
+
+    PACKAGES_CONTENT=$(fetch_packages_content)
+    if [ $? -ne 0 ] || [ -z "$PACKAGES_CONTENT" ]; then
+        print_error "Failed to fetch package catalog"
+        exit 1
+    fi
+
+    PORT_INFO=$(lookup_package_line "$PKG" "$PACKAGES_CONTENT")
+    if [ -z "$PORT_INFO" ]; then
+        print_error "Package '$PKG' not found"
+        echo "Try: qpkg search $PKG"
+        exit 1
+    fi
+
+    parse_package_fields "$PORT_INFO"
+
+    print_header "Package: $PKG_NAME"
+    echo "Category:    $PKG_CATEGORY"
+    echo "Version:     $PKG_VERSION"
+    echo "Size:        $PKG_SIZE"
+    echo "Description: $PKG_DESC"
+    echo "Zip:         $PKG_ZIP"
+    echo "Replaces:    $PKG_REPLACES"
     echo ""
-    echo "This will search the ports repository for: $SEARCH_TERM"
+
+    if [ -f "${NATIVE_TOOLS}/.qpkg/installed" ]; then
+        _inst=$(grep "^${PKG_NAME}|" "${NATIVE_TOOLS}/.qpkg/installed" 2>/dev/null | tail -1)
+        if [ -n "$_inst" ]; then
+            echo "Installed:   yes ($_inst)"
+        else
+            echo "Installed:   no"
+        fi
+    fi
+
+    echo ""
+    echo "Install: qpkg install $PKG_NAME"
+    echo ""
 }
 
 # List installed packages
@@ -1000,9 +1200,12 @@ ${BOLD}USAGE:${NC}
 ${BOLD}COMMANDS:${NC}
   ${GREEN}update${NC}              Check for and install BerryCore updates
   ${GREEN}update --force${NC}      Reinstall latest release even if VERSION matches
-  ${GREEN}ports${NC}               List available ports from repository
-  ${GREEN}install${NC} <package>   Install a port package from repository
-  ${GREEN}catalog${NC} [options]   Browse available binaries (replaces bclist)
+  ${GREEN}ports${NC}               List featured ports (showcase)
+  ${GREEN}available${NC} [options] List full package catalog
+  ${GREEN}search${NC} <keyword>    Search full package catalog
+  ${GREEN}show${NC} <package>      Show package details
+  ${GREEN}install${NC} <package>   Install a package from catalog
+  ${GREEN}catalog${NC} [options]   Browse installed binaries (replaces bclist)
   ${GREEN}bins${NC}                List all installed binaries (replaces bcbins)
   ${GREEN}info${NC} <binary>       Show binary information (replaces bcinfo)
   list                List installed packages
@@ -1019,8 +1222,11 @@ ${BOLD}EXAMPLES:${NC}
   qpkg catalog -s compress     # Search for compression tools
   qpkg bins                    # List all installed binaries
   qpkg info nano               # Show info about nano binary
-  qpkg ports                   # List available ports
-  qpkg install hydra           # Install hydra port from repository
+  qpkg ports                   # Featured ports (showcase)
+  qpkg search browser          # Search full catalog
+  qpkg available -c net        # List net packages
+  qpkg show telegram           # Package details
+  qpkg install hydra           # Install from catalog
 
 ${BOLD}REPOSITORY:${NC}
   https://github.com/$GITHUB_REPO
@@ -1059,6 +1265,12 @@ main() {
             ;;
         search)
             cmd_search "$@"
+            ;;
+        available)
+            cmd_available "$@"
+            ;;
+        show)
+            cmd_show "$@"
             ;;
         list)
             cmd_list "$@"

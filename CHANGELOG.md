@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **qpkg two-tier catalog** — `qpkg ports` shows featured ports only; full catalog via `qpkg search`, `qpkg available`, `qpkg show`; install reads `ports/PACKAGES`
 - **rocketchat 3.0** — RocketChat Navigator v3 from Passport upgrade (static assets, BerryCore python)
 - **telegram 2.1** — Telegram v2.1 with enhanced UI (`static/tg-enhance.*`, media cache support)
 - **youtube 2.0** — YouTube Navigator v2 with bundled static UI and embed playback
