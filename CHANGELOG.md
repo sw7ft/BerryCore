@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.87.0] - 2026-07-05
+
 ### Added
 
-- **berrycore.html** — Self-contained ES5 catalog page: intro, install guides, copy-pastable commands, featured + full qpkg catalog with search/filter (`utilities/build-catalog-html.sh` regenerates from `ports/PACKAGES`)
+- **berrycore.html** — Self-contained ES5 dark-themed catalog: intro, install guides, copy-pastable commands, searchable featured + full qpkg catalog (~116 packages)
+- **utilities/build-catalog-html.sh** — Regenerates `berrycore.html` from `ports/PACKAGES` and `ports/FEATURED`
 
 ### Removed
 
-- **berrycore-helper.apk** — Dropped from releases; HTML catalog replaces sideload installer workflow
+- **berrycore-helper.apk** — Dropped from GitHub releases; use `berrycore.html` + `install.sh` instead
+
+### Changed
+
+- **VERSION** → 0.87.0 — Consolidated release bundling Phase 2 ports, two-tier qpkg catalog, XPS utilities, and HTML catalog guide
 
 ---
 

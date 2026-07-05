@@ -1,0 +1,17 @@
+BerryCore v0.87.0 Release Files
+================================
+
+Core install:
+  berrycore.zip
+  install.sh
+  berrycore.html (catalog & install guide — open in any browser)
+
+Catalog: 116 packages in ports/PACKAGES, 21 featured in ports/FEATURED
+
+Fresh install:
+  sh install.sh --fresh -y
+
+Upgrade:
+  qpkg update
+  # or: sh install.sh --upgrade -y
+
