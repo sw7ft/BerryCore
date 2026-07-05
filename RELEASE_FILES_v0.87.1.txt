@@ -1,0 +1,13 @@
+BerryCore v0.87.1 Release Files
+================================
+
+Patch: qpkg custom install dir + QNX staging extract fix
+
+Core install:
+  berrycore.zip
+  install.sh
+  berrycore.html
+
+c1181eb94fdeafa9c5ccef6555d09041a1fd67d5496b9bc9b1656bad7da5885c  berrycore.zip
+0d1c7139d9892f74c8ecc55bdf12b586de1ac7ca0a22b500a9539dfc94b9886b  install.sh
+2ba2c8f830f92bddef1da7b17903189c1e927d95702fdb0e10c00536be765762  berrycore.html

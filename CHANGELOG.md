@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.1] - 2026-07-05
+
+### Fixed
+
+- **qpkg custom install dirs** — Ports like openport/telnet/dropbear now install under the active `NATIVE_TOOLS` tree (e.g. `berrycore4/`) instead of always writing to shared `misc/` when the install dir is not named `berrycore`
+- **qpkg port extract** — Staging extract (`unzip` → `cp`) avoids QNX "cannot delete old share/doc/…" errors when reinstalling from a second Term49 session
+
+---
+
 ## [0.87.0] - 2026-07-05
 
 ### Added

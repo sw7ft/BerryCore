@@ -50,6 +50,54 @@ print_warning() {
     echo "${YELLOW}⚠${NC} $1"
 }
 
+# Default install uses shared misc/{bin,share}; custom names (e.g. berrycore4) stay self-contained.
+qpkg_is_shared_misc_layout() {
+    [ "$(basename "$NATIVE_TOOLS")" = "berrycore" ]
+}
+
+qpkg_misc_root() {
+    if qpkg_is_shared_misc_layout; then
+        echo "/accounts/1000/shared/misc"
+    else
+        echo "$NATIVE_TOOLS"
+    fi
+}
+
+qpkg_misc_app_root() {
+    if qpkg_is_shared_misc_layout; then
+        echo "/accounts/1000/shared/misc"
+    else
+        echo "$(dirname "$NATIVE_TOOLS")"
+    fi
+}
+
+qpkg_port_doc() {
+    _port="$1"
+    echo "$(qpkg_misc_root)/share/doc/${_port}/MANUAL.md"
+}
+
+# Extract port zip via staging dir (avoids unzip "cannot delete" on locked QNX files).
+qpkg_extract_port_zip() {
+    _zip="$1"
+    _dest="$2"
+    _stage="$3"
+    mkdir -p "$_stage" "$_dest" || return 1
+    unzip -o -q "$_zip" -d "$_stage" 2>/dev/null || \
+        unzip -o "$_zip" -d "$_stage" 2>&1 | grep -v "Archive:" | grep -v "inflating:" || true
+    _item=""
+    for _item in "$_stage"/*; do
+        [ -e "$_item" ] || continue
+        _base=$(basename "$_item")
+        if [ -d "$_item" ]; then
+            mkdir -p "$_dest/$_base"
+            cp -R "$_item/"* "$_dest/$_base/" 2>/dev/null || true
+        else
+            cp "$_item" "$_dest/" 2>/dev/null || true
+        fi
+    done
+    return 0
+}
+
 # Resolve BerryCore root (bin/qpkg -> ..). Safe if env.sh was not sourced.
 init_native_tools() {
     if [ -n "$NATIVE_TOOLS" ] && [ -f "$NATIVE_TOOLS/env.sh" ]; then
@@ -573,19 +621,22 @@ BDK_WRAP
     return 0
 }
 
-# Install OpenPort — misc/bin + berrycore/bin symlinks
+# Install OpenPort — misc/bin (or NATIVE_TOOLS/bin) + berrycore/bin symlinks when shared layout
 install_openport() {
-    MISC_BIN="/accounts/1000/shared/misc/bin"
+    _root=$(qpkg_misc_root)
+    MISC_BIN="$_root/bin"
     if [ ! -x "$MISC_BIN/openport" ]; then
         print_error "openport not found at $MISC_BIN/openport"
         return 1
     fi
     chmod +x "$MISC_BIN/openport" "$MISC_BIN/openport-canlog" 2>/dev/null || true
     mkdir -p "$NATIVE_TOOLS/bin" 2>/dev/null
-    ln -sf "$MISC_BIN/openport" "$NATIVE_TOOLS/bin/openport" 2>/dev/null || \
-        cp "$MISC_BIN/openport" "$NATIVE_TOOLS/bin/openport"
-    ln -sf "$MISC_BIN/openport-canlog" "$NATIVE_TOOLS/bin/openport-canlog" 2>/dev/null || \
-        cp "$MISC_BIN/openport-canlog" "$NATIVE_TOOLS/bin/openport-canlog" 2>/dev/null || true
+    if qpkg_is_shared_misc_layout; then
+        ln -sf "$MISC_BIN/openport" "$NATIVE_TOOLS/bin/openport" 2>/dev/null || \
+            cp "$MISC_BIN/openport" "$NATIVE_TOOLS/bin/openport"
+        ln -sf "$MISC_BIN/openport-canlog" "$NATIVE_TOOLS/bin/openport-canlog" 2>/dev/null || \
+            cp "$MISC_BIN/openport-canlog" "$NATIVE_TOOLS/bin/openport-canlog" 2>/dev/null || true
+    fi
     chmod +x "$NATIVE_TOOLS/bin/openport" 2>/dev/null || true
     echo "OpenPort installed to $MISC_BIN/"
     echo "  openport command: $NATIVE_TOOLS/bin/openport"
@@ -594,13 +645,14 @@ install_openport() {
     echo "  openport identify"
     echo "  openport -p /dev/serusb1 voltage"
     echo ""
-    echo "Manual: /accounts/1000/shared/misc/share/doc/openport/MANUAL.md"
+    echo "Manual: $(qpkg_port_doc openport)"
     return 0
 }
 
-# Symlink misc/bin tools into berrycore/bin
+# Symlink misc/bin tools into berrycore/bin (shared layout only)
 install_misc_bin() {
-    MISC_BIN="/accounts/1000/shared/misc/bin"
+    _root=$(qpkg_misc_root)
+    MISC_BIN="$_root/bin"
     mkdir -p "$NATIVE_TOOLS/bin" 2>/dev/null
     for bin in "$@"; do
         if [ ! -x "$MISC_BIN/$bin" ] && [ ! -L "$MISC_BIN/$bin" ]; then
@@ -608,8 +660,10 @@ install_misc_bin() {
             return 1
         fi
         chmod +x "$MISC_BIN/$bin" 2>/dev/null || true
-        ln -sf "$MISC_BIN/$bin" "$NATIVE_TOOLS/bin/$bin" 2>/dev/null || \
-            cp "$MISC_BIN/$bin" "$NATIVE_TOOLS/bin/$bin"
+        if qpkg_is_shared_misc_layout; then
+            ln -sf "$MISC_BIN/$bin" "$NATIVE_TOOLS/bin/$bin" 2>/dev/null || \
+                cp "$MISC_BIN/$bin" "$NATIVE_TOOLS/bin/$bin"
+        fi
         chmod +x "$NATIVE_TOOLS/bin/$bin" 2>/dev/null || true
     done
     return 0
@@ -698,28 +752,25 @@ cmd_install() {
         exit 1
     fi
     
-    # Install - most ports extract to NATIVE_TOOLS; some use custom paths
+    # Install - most ports extract to NATIVE_TOOLS; misc-bin ports use shared or local layout
     INSTALL_DIR="$NATIVE_TOOLS"
     case "$PORT_NAME" in
         android-apps)
-            INSTALL_DIR="/accounts/1000/shared/misc"
+            INSTALL_DIR="$(qpkg_misc_app_root)"
             ;;
-        bcllm)
-            INSTALL_DIR="/accounts/1000/shared/misc"
+        bcllm|bdk-cli)
+            INSTALL_DIR="$(qpkg_misc_app_root)"
             ;;
-        bdk-cli)
-            INSTALL_DIR="/accounts/1000/shared/misc"
-            ;;
-        openport)
-            INSTALL_DIR="/accounts/1000/shared/misc"
-            ;;
-        telnet|usbdbg|dropbear|bbm|ftp)
-            INSTALL_DIR="/accounts/1000/shared/misc"
+        openport|telnet|usbdbg|dropbear|bbm|ftp)
+            INSTALL_DIR="$(qpkg_misc_root)"
             ;;
     esac
     
     echo ""
     print_info "Installing to $INSTALL_DIR..."
+    if ! qpkg_is_shared_misc_layout; then
+        print_info "Custom install root ($NATIVE_TOOLS) — ports stay in this tree, not shared misc/"
+    fi
 
     if [ ! -d "$INSTALL_DIR" ]; then
         print_error "Install directory not found: $INSTALL_DIR"
@@ -727,14 +778,10 @@ cmd_install() {
         exit 1
     fi
 
-    if ! cd "$INSTALL_DIR" 2>/dev/null; then
-        print_error "Cannot access install directory: $INSTALL_DIR"
+    if ! qpkg_extract_port_zip "$TEMP_DIR/$FILENAME" "$INSTALL_DIR" "$TEMP_DIR/extract"; then
+        print_error "Failed to extract port archive"
         rm -rf "$TEMP_DIR"
         exit 1
-    fi
-    
-    if unzip -o "$TEMP_DIR/$FILENAME" 2>&1 | grep -v "Archive:" | grep -v "inflating:"; then
-        :
     fi
     
     # Set executable permissions on binaries (only in NATIVE_TOOLS)
@@ -761,28 +808,28 @@ cmd_install() {
     elif [ "$PORT_NAME" = "bdk-cli" ]; then
         install_bdk_cli "$INSTALL_DIR/bdk-cli" || print_warning "Run: sh /accounts/1000/shared/misc/bdk-cli/setup-bdk-cli.sh"
     elif [ "$PORT_NAME" = "openport" ]; then
-        install_openport || print_warning "Check /accounts/1000/shared/misc/bin/openport"
+        install_openport || print_warning "Check $(qpkg_misc_root)/bin/openport"
     elif [ "$PORT_NAME" = "telnet" ]; then
         install_misc_bin telnet && {
             echo "Telnet installed (netkit 0.17)"
             echo "  telnet 192.168.1.179"
             echo "  telnet host 8080"
-            echo "Manual: /accounts/1000/shared/misc/share/doc/telnet/MANUAL.md"
+            echo "Manual: $(qpkg_port_doc telnet)"
         }
     elif [ "$PORT_NAME" = "usbdbg" ]; then
         install_misc_bin usbdbg && {
             echo "usbdbg installed"
             echo "  usbdbg ports"
             echo "  usbdbg -p /dev/serusb1 probe"
-            echo "Manual: /accounts/1000/shared/misc/share/doc/usbdbg/MANUAL.md"
+            echo "Manual: $(qpkg_port_doc usbdbg)"
         }
     elif [ "$PORT_NAME" = "dropbear" ]; then
-        mkdir -p "/accounts/1000/shared/misc/etc/dropbear" 2>/dev/null || true
+        mkdir -p "$(qpkg_misc_root)/etc/dropbear" 2>/dev/null || true
         install_misc_bin dbclient dropbear dropbearkey ssh && {
             echo "Dropbear SSH installed (2026.91)"
             echo "  ssh mp@192.168.1.179"
-            echo "  dropbearkey -t ed25519 -f /accounts/1000/shared/misc/etc/dropbear/id_ed25519"
-            echo "Manual: /accounts/1000/shared/misc/share/doc/dropbear/MANUAL.md"
+            echo "  dropbearkey -t ed25519 -f $(qpkg_misc_root)/etc/dropbear/id_ed25519"
+            echo "Manual: $(qpkg_port_doc dropbear)"
         }
     elif [ "$PORT_NAME" = "bbm" ]; then
         install_misc_bin bbm berrymsg && {
@@ -791,7 +838,7 @@ cmd_install() {
             echo "  bbm who"
             echo "  bbm send @all \"online\""
             echo "  bbm poll"
-            echo "Manual: /accounts/1000/shared/misc/share/doc/bbm/MANUAL.md"
+            echo "Manual: $(qpkg_port_doc bbm)"
         }
     elif [ "$PORT_NAME" = "ftp" ]; then
         install_misc_bin ftp bftpd pftp && {
@@ -802,7 +849,7 @@ cmd_install() {
             echo "FTP installed (netkit client + bftpd server)"
             echo "  ftp hostname"
             echo "  bftpd -c $NATIVE_TOOLS/etc/bftpd.conf.example -D"
-            echo "Manual: /accounts/1000/shared/misc/share/doc/ftp/MANUAL.md"
+            echo "Manual: $(qpkg_port_doc ftp)"
         }
     elif [ "$PORT_NAME" = "ping" ]; then
         chmod +x "$NATIVE_TOOLS/bin/ping" 2>/dev/null || true
