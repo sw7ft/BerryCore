@@ -32,7 +32,7 @@ fi
 
 mkdir -p "$PKG_ROOT/bin" "$PKG_ROOT/share/doc/openport"
 cp "$STAGING/$SRC_PREFIX/bin/openport" "$PKG_ROOT/bin/openport"
-cp "$STAGING/$SRC_PREFIX/bin/openport" "$PKG_ROOT/bin/openport-canlog"
+ln -sf openport "$PKG_ROOT/bin/openport-canlog"
 cp "$STAGING/$SRC_PREFIX/share/doc/openport/"* "$PKG_ROOT/share/doc/openport/" 2>/dev/null || true
 cp "$SCRIPT_DIR/share/openport/HELP.txt" "$PKG_ROOT/share/doc/openport/" 2>/dev/null || true
 cp "$SCRIPT_DIR/README.md" "$PKG_ROOT/share/doc/openport/README-port.md" 2>/dev/null || true
@@ -40,7 +40,7 @@ cp "$SCRIPT_DIR/README.md" "$PKG_ROOT/share/doc/openport/README-port.md" 2>/dev/
 chmod +x "$PKG_ROOT/bin/openport" "$PKG_ROOT/bin/openport-canlog"
 
 cd "$PKG_ROOT"
-zip -r -q "$PORT_ZIP" bin share
+zip -ry -q "$PORT_ZIP" bin share
 cd - >/dev/null
 
 rm -rf "$BUILD_DIR"

@@ -713,7 +713,7 @@ cmd_install() {
         openport)
             INSTALL_DIR="/accounts/1000/shared/misc"
             ;;
-        telnet|usbdbg|dropbear|bbm)
+        telnet|usbdbg|dropbear|bbm|ftp)
             INSTALL_DIR="/accounts/1000/shared/misc"
             ;;
     esac
@@ -793,6 +793,25 @@ cmd_install() {
             echo "  bbm poll"
             echo "Manual: /accounts/1000/shared/misc/share/doc/bbm/MANUAL.md"
         }
+    elif [ "$PORT_NAME" = "ftp" ]; then
+        install_misc_bin ftp bftpd pftp && {
+            mkdir -p "$NATIVE_TOOLS/etc" "$NATIVE_TOOLS/ftp-root" "$NATIVE_TOOLS/var/log" 2>/dev/null || true
+            if [ -f "$INSTALL_DIR/etc/bftpd.conf.example" ] && [ ! -f "$NATIVE_TOOLS/etc/bftpd.conf" ]; then
+                cp "$INSTALL_DIR/etc/bftpd.conf.example" "$NATIVE_TOOLS/etc/bftpd.conf.example" 2>/dev/null || true
+            fi
+            echo "FTP installed (netkit client + bftpd server)"
+            echo "  ftp hostname"
+            echo "  bftpd -c $NATIVE_TOOLS/etc/bftpd.conf.example -D"
+            echo "Manual: /accounts/1000/shared/misc/share/doc/ftp/MANUAL.md"
+        }
+    elif [ "$PORT_NAME" = "ping" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/ping" 2>/dev/null || true
+        echo "ping installed (ICMP echo — may require root on BB10)"
+        echo "  ping -c 4 192.168.1.1"
+    elif [ "$PORT_NAME" = "tcpdump" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/tcpdump" 2>/dev/null || true
+        echo "tcpdump installed (v4.99.5 — may require root on BB10)"
+        echo "  tcpdump -i bptp0 -c 10"
     elif [ "$PORT_NAME" = "maps" ]; then
         chmod +x "$NATIVE_TOOLS/bin/maps" 2>/dev/null || true
         echo "Maps installed (OpenStreetMap + directions, port 8090)"

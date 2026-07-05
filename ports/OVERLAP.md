@@ -38,9 +38,26 @@ Source: XPS `portupdate.md` vs BerryCore core bundle vs existing qpkg ports.
 4. C++ ports (`7za`, `unrar`) — require `LD_LIBRARY_PATH` includes berrycore/bin
 5. Symlinks (`7z`→`7za`) — one zip, multiple PACKAGES rows (Phase 3)
 
+## Phase 2 complete (2026-07-05)
+
+Compared XPS tarballs vs existing BerryCore ports:
+
+| Tool | Result | Action taken |
+|------|--------|--------------|
+| telnet | SAME (66976 bytes) | No change |
+| dropbear | SAME | No change |
+| ftp/bftpd | SAME | Rebuilt `util-ftp-1.0.0.zip`; added qpkg install |
+| vim | SAME | No change (core v9.1.2148) |
+| usbdbg | SAME | No change |
+| openport | **DIFF** (25672 vs 18948) | Rebuilt from XPS tarball; upgraded on Passport |
+| ping | — | Added `util-ping-1.0.0.zip` + qpkg install |
+| tcpdump | — | Added `util-tcpdump-4.99.5.zip` + qpkg install |
+
+Passport tests: `qpkg install openport ftp ping tcpdump` — all OK.
+
 ## Next phases
 
-- Phase 2: Rebuild/compare telnet, dropbear, ftp against XPS tarballs
+- ~~Phase 2: Rebuild/compare telnet, dropbear, ftp against XPS tarballs~~ **Done**
 - ~~Phase 3: Split XPS bundles → individual `util-*` zips + PACKAGES rows~~ **Done (82 ports, commit 0b39634)**
 - Phase 4: Passport verification batch — in progress (nomarch, cabextract, iperf3 install OK via qpkg)
 - Phase 5: Featured port regression + remaining smoke tests

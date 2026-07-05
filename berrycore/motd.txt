@@ -1,2 +1,2 @@
-BerryCore v0.85 — Vim 9.1, FTP, BerryBrowser, OpenPort
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.85.0
+BerryCore v0.86 — full qpkg catalog, XPS utilities, OpenPort upgrade
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.86.0

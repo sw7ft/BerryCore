@@ -7,20 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.86.0] - 2026-07-05
+
 ### Added
 
+- **qpkg two-tier catalog** — `qpkg ports` shows featured ports; full catalog via `qpkg search`, `qpkg available`, `qpkg show`, `qpkg install` reads `ports/PACKAGES`
+- **82 XPS utility ports** — individual `util-*` zips (less, lha, cabextract, minicom, cpmtools, iperf3, etc.) in full PACKAGES catalog
 - **bbm 1.0.0** — Berry Bridge Messenger native relay client (`qpkg install bbm`)
-  - TCP client for berrycore.sw7ft.com BerryRelay (port 37193)
-  - Commands: `bbm who`, `bbm send`, `bbm poll`, `bbm group`
-  - Installs `bbm` + `berrymsg` symlink to `misc/bin/`
+- **ftp, ping, tcpdump qpkg ports** — `qpkg install ftp ping tcpdump` (ftp was core-only before; ping/tcpdump now installable)
+- **ports/ping/** and **ports/tcpdump/** — build scripts for util-ping and util-tcpdump port zips
 
 ### Changed
 
-- **qpkg two-tier catalog** — `qpkg ports` shows featured ports only; full catalog via `qpkg search`, `qpkg available`, `qpkg show`; install reads `ports/PACKAGES`
-- **82 XPS utility ports** — individual `util-*` zips (less, lha, cabextract, minicom, cpmtools, etc.) in full PACKAGES catalog
-- **rocketchat 3.0** — RocketChat Navigator v3 from Passport upgrade (static assets, BerryCore python)
-- **telegram 2.1** — Telegram v2.1 with enhanced UI (`static/tg-enhance.*`, media cache support)
-- **youtube 2.0** — YouTube Navigator v2 with bundled static UI and embed playback
+- **openport 1.0.0** — Rebuilt from XPS Passport tarball (25,672 bytes); `openport-canlog` preserved as symlink
+- **util-ftp 1.0.0** — Rebuilt from XPS tarball; dual output to `ports/` and `berrycore/packages/`
+- **rocketchat 3.0** — RocketChat Navigator v3 from Passport upgrade
+- **telegram 2.1** — Telegram v2.1 with enhanced UI
+- **youtube 2.0** — YouTube Navigator v2 with bundled static UI
+
+### Fixed
+
+- **qpkg catalog cache** — Prefer local cache when GitHub raw CDN is stale or QNX `stat` mtime unavailable
+
+- **VERSION** → 0.86.0
 
 ---
 

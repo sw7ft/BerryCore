@@ -29,8 +29,11 @@ claude-code|dev|2.1.91|45M|Claude Code AI agent|dev-claude-code-2.1.91.zip|none
 bcllm|ai|1.2.1|19M|On-device LLM assistant (llama.cpp)|ai-bcllm-1.2.1.zip|none
 ipfs-gw|util|0.1.0|608K|IPFS gateway client|util-ipfs-gw-0.1.0.zip|none
 bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI (testnet)|crypto-bdk-cli-2.0.0.zip|none
-openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI|util-openport-1.0.0.zip|none
+openport|util|1.0.0|24K|OpenPort 2.0 OBD diagnostic CLI|util-openport-1.0.0.zip|none
 telnet|net|0.17|39K|Classic netkit telnet client|net-telnet-0.17.zip|none
+ftp|net|1.0.0|109K|FTP client (netkit) + bftpd server|util-ftp-1.0.0.zip|core
+ping|net|1.0.0|5K|ICMP echo — network reachability test|util-ping-1.0.0.zip|none
+tcpdump|net|4.99.5|499K|Network packet capture and analysis|util-tcpdump-4.99.5.zip|none
 usbdbg|util|1.0.0|9K|Generic USB serial debugger|util-usbdbg-1.0.0.zip|none
 dropbear|net|2026.91|853K|Dropbear SSH client and server|net-dropbear-2026.91.zip|none
 bbm|net|1.0.0|12K|Berry Bridge Messenger relay client|net-bbm-1.0.0.zip|none

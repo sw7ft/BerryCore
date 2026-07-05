@@ -18,7 +18,7 @@ bbm|net|1.0.0|12K|Berry Bridge Messenger — device relay for berrycore.sw7ft.co
 android-apps|util|1.0|89M|Curated Android APKs — RDP, Kiwi, Term49Bridge, XServer, etc.
 elinks|web|0.17.0|1.3M|Text web browser with SSL/TLS and JavaScript (QuickJS)
 term49-web|web|1.0|54K|Browser terminal — xterm.js over WebSocket (port 7681)
-openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI (Passport USB)
+openport|util|1.0.0|24K|OpenPort 2.0 OBD diagnostic CLI (Passport USB)
 ipfs-gw|util|0.1.0|608K|IPFS gateway client — fetch CIDs via HTTPS gateways
 berrypy|web|2.1.0|75K|BlackBerry app platform manager (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence
