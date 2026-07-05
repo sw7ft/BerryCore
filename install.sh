@@ -312,6 +312,30 @@ relocate_berrybridge_agent() {
 
 relocate_berrybridge_agent
 
+# Install catalog HTML to Documents (open in BB10 browser or transfer to PC)
+install_catalog_html() {
+    DOCS="/accounts/1000/shared/documents"
+    CATALOG_NAME="berrycore.html"
+    mkdir -p "$DOCS" 2>/dev/null || return 0
+
+    if [ -f "$PWD/doc/berrycore.html" ]; then
+        cp "$PWD/doc/berrycore.html" "$DOCS/$CATALOG_NAME" 2>/dev/null && \
+            echo "Catalog guide installed: $DOCS/$CATALOG_NAME"
+        return 0
+    fi
+
+    if [ -f "../berrycore.html" ]; then
+        cp "../berrycore.html" "$DOCS/$CATALOG_NAME" 2>/dev/null && \
+            echo "Catalog guide installed: $DOCS/$CATALOG_NAME"
+        return 0
+    fi
+
+    echo "Note: berrycore.html not found — optional catalog guide skipped"
+    return 0
+}
+
+install_catalog_html
+
 # Backup existing .profile if it exists
 if [ -e "$HOME/.profile" ]; then
   BACKUP_NAME="$HOME/.profile.backup.$(date +%Y%m%d_%H%M%S)"
@@ -340,6 +364,9 @@ echo ""
 echo "To use BerryCore, either:"
 echo "  1. Start a new shell (if .profile was created/updated)"
 echo "  2. Run: source $PWD/env.sh"
+echo ""
+echo "Catalog & install guide: /accounts/1000/shared/documents/berrycore.html"
+echo "  (or run: docs — then open berrycore.html in the browser)"
 echo ""
 
 mkdir -p etc/qnxconf/qconfig

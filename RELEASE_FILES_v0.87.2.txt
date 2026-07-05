@@ -1,0 +1,14 @@
+BerryCore v0.87.2 Release Files
+================================
+
+Core install:
+  berrycore.zip          (includes doc/berrycore.html)
+  install.sh             (copies catalog to Documents/)
+  berrycore.html         (same file, optional standalone)
+
+Documents after install:
+  /accounts/1000/shared/documents/berrycore.html
+
+b677448de376a4ca8846d5dba2fc8c7d611d8bf177a42f41839bbca26bc9e36a  berrycore.zip
+b03dfa1ef454bdb00458c518cc509530bf8381e547edcce9231965366a1aeda7  install.sh
+589587852923bb4268a4563b167682d0eee93723c2de3066b3a5569cd01e0fa2  berrycore.html

@@ -69,7 +69,7 @@ if [ $? -eq 0 ]; then
     echo "Verifying key files..."
     missing=0
     
-    for file in env.sh pbpkgadd sample_profile CATALOG qconf-override.mk; do
+    for file in env.sh pbpkgadd sample_profile CATALOG qconf-override.mk doc/berrycore.html; do
         if unzip -l "$OUTPUT_ZIP" | grep -q "$file"; then
             echo "  ✓ $file"
         else

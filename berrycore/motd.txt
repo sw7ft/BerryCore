@@ -1,2 +1,2 @@
 BerryCore v0.87 — catalog page, full qpkg ports, fresh-install ready
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.1
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.2

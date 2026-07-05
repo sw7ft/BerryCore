@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.2] - 2026-07-05
+
+### Added
+
+- **berrycore.html in Documents** — `install.sh` copies the catalog guide to `/accounts/1000/shared/documents/berrycore.html` on fresh install and upgrade
+- **Bundled catalog** — `berrycore/doc/berrycore.html` included inside `berrycore.zip` (regenerate via `utilities/build-catalog-html.sh`)
+
+---
+
 ## [0.87.1] - 2026-07-05
 
 ### Fixed

@@ -424,4 +424,8 @@ renderCatalog();
 </html>
 HTMLEOF
 
+DOC_OUT="$REPO_ROOT/berrycore/doc/berrycore.html"
+mkdir -p "$(dirname "$DOC_OUT")"
+cp "$OUT" "$DOC_OUT"
 echo "Generated $OUT (${PACKAGES_COUNT} packages, ${FEATURED_COUNT} featured, v${VERSION})"
+echo "Also: $DOC_OUT (bundled in berrycore.zip)"
