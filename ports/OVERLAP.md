@@ -41,5 +41,11 @@ Source: XPS `portupdate.md` vs BerryCore core bundle vs existing qpkg ports.
 ## Next phases
 
 - Phase 2: Rebuild/compare telnet, dropbear, ftp against XPS tarballs
-- Phase 3: Split XPS bundles → individual `util-*` zips + PACKAGES rows
-- Phase 4: Wave 6 + 7 packaging and Passport verification
+- ~~Phase 3: Split XPS bundles → individual `util-*` zips + PACKAGES rows~~ **Done (82 ports, commit 0b39634)**
+- Phase 4: Passport verification batch — in progress (nomarch, cabextract, iperf3 install OK via qpkg)
+- Phase 5: Featured port regression + remaining smoke tests
+
+## qpkg notes (2026-07-05)
+
+- GitHub raw CDN may lag on `main` after push; qpkg keeps local cache if remote has fewer entries
+- QNX lacks reliable `stat` mtime — cache prefers local copy when mtime unavailable

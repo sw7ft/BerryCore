@@ -102,24 +102,42 @@ fetch_ports_file() {
     _url="$GITHUB_RAW/ports/$_file"
     _cache="$QPKG_CACHE_DIR/$_file"
     _now=$(date +%s 2>/dev/null || echo 0)
+    _cached_lines=0
+    if [ -f "$_cache" ]; then
+        _cached_lines=$(grep -v '^#' "$_cache" 2>/dev/null | grep -vc '^$' || echo 0)
+    fi
 
-    if [ -f "$_cache" ] && [ "$_now" != "0" ]; then
-        _mtime=$(stat -c %Y "$_cache" 2>/dev/null || stat -f %m "$_cache" 2>/dev/null || echo 0)
-        if [ "$_mtime" != "0" ] && [ $((_now - _mtime)) -lt "$QPKG_CACHE_TTL" ]; then
-            cat "$_cache"
+    _use_cache=0
+    if [ -f "$_cache" ] && [ "$_cached_lines" -gt 0 ]; then
+        _mtime=$(stat -c %Y "$_cache" 2>/dev/null || stat -f %m "$_cache" 2>/dev/null || echo "")
+        if [ -z "$_mtime" ] || [ "$_mtime" = "0" ]; then
+            _use_cache=1
+        elif [ "$_now" != "0" ] && [ $((_now - _mtime)) -lt "$QPKG_CACHE_TTL" ]; then
+            _use_cache=1
+        fi
+    fi
+
+    if [ "$_use_cache" = 1 ]; then
+        cat "$_cache"
+        return 0
+    fi
+
+    _content=$(curl -s -k -L -m 20 "$_url" 2>&1)
+    _new_lines=0
+    if [ -n "$_content" ]; then
+        _new_lines=$(echo "$_content" | grep -v '^#' | grep -vc '^$' || echo 0)
+    fi
+
+    if [ -n "$_content" ] && ! echo "$_content" | head -1 | grep -qi '<html'; then
+        if [ "$_new_lines" -ge "$_cached_lines" ] || [ "$_cached_lines" -eq 0 ]; then
+            echo "$_content" > "$_cache" 2>/dev/null || true
+            echo "$_content"
             return 0
         fi
     fi
 
-    _content=$(curl -s -k -L -m 20 "$_url" 2>&1)
-    if [ -n "$_content" ] && ! echo "$_content" | head -1 | grep -qi '<html'; then
-        echo "$_content" > "$_cache" 2>/dev/null || true
-        echo "$_content"
-        return 0
-    fi
-
-    if [ -f "$_cache" ]; then
-        print_warning "Using cached $_file (fetch failed)" >&2
+    if [ -f "$_cache" ] && [ "$_cached_lines" -gt 0 ]; then
+        print_warning "Using cached $_file (remote stale or unavailable)" >&2
         cat "$_cache"
         return 0
     fi
