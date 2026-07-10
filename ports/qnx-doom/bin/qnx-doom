@@ -1,5 +1,5 @@
 #!/bin/sh
-# QNX Doom launcher — requires XSDL / X server on BB10 (see MANUAL.md)
+# QNX Doom launcher — XSDL / X server on BB10 (see MANUAL.md)
 NT="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
 DOOM="$NT/share/qnx-doom"
 RUN="$DOOM/scripts/doom_run.sh"
@@ -9,17 +9,25 @@ if [ ! -x "$DOOM/bin/doomgeneric_qnx" ]; then
     exit 1
 fi
 
+# Prompt for DISPLAY if unset; default localhost (XSDL on same device)
 if [ -z "$DISPLAY" ]; then
     echo ""
-    echo "qnx-doom requires an X11 display (XSDL / XServer on BB10)."
+    echo "QNX Doom uses an X11 display — start XSDL first (APK: share/qnx-doom/apks/)."
+    echo "Press Enter for localhost, or type the address XSDL shows (e.g. 192.168.1.113:0)."
+    printf "Display [127.0.0.1:0]: "
+    read _disp
+    if [ -z "$_disp" ]; then
+        DISPLAY="127.0.0.1:0"
+    else
+        DISPLAY="$_disp"
+    fi
+    case "$DISPLAY" in
+        *:*) ;;
+        *) DISPLAY="${DISPLAY}:0" ;;
+    esac
+    export DISPLAY
+    echo "Using DISPLAY=$DISPLAY"
     echo ""
-    echo "  1. Install & start XSDL (APK bundled at share/qnx-doom/apks/)"
-    echo "  2. Note the IP shown in XSDL (e.g. 192.168.1.113:0)"
-    echo "  3. export DISPLAY=192.168.1.113:0"
-    echo "  4. Run qnx-doom again — on device, NOT over SSH"
-    echo ""
-    echo "Manual: $NT/share/doc/qnx-doom/MANUAL.md"
-    exit 1
 fi
 
 export LD_LIBRARY_PATH="$DOOM/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"

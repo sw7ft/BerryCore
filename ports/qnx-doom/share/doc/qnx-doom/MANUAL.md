@@ -53,22 +53,22 @@ Any X11 server on BB10 that exposes `IP:0` works (XSDL, XServer, etc.).
 
 ---
 
-## Step 2 — Set DISPLAY and run
+## Step 2 — Run (easy mode)
 
-In **Term49 on the Passport** (not SSH):
+In **Term49 on the Passport**:
 
 ```sh
 . $NATIVE_TOOLS/env.sh
-export DISPLAY=192.168.1.113:0    # use YOUR X server IP from step 1
 qnx-doom
 ```
 
-Or use the included script directly:
+When prompted for **Display**, just press **Enter** to use `127.0.0.1:0` (XSDL on the same device).
 
-```sh
-export DISPLAY=192.168.1.113:0
-sh $NATIVE_TOOLS/share/qnx-doom/scripts/doom_run.sh
-```
+Or type the IP XSDL shows if different (e.g. `192.168.1.113:0`).
+
+You can still preset it: `export DISPLAY=127.0.0.1:0` before running.
+
+**Tip:** Run on the device — keyboard input may not work over SSH.
 
 ---
 

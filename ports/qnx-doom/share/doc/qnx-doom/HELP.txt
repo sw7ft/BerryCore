@@ -4,10 +4,9 @@ REQUIRES XSDL or XServer — this is NOT a terminal game.
 
 Quick start:
   qpkg install qnx-doom
-  # Install XSDL from share/qnx-doom/apks/ (sideload)
-  # Start XSDL on BB10, set DISPLAY to the IP it shows
-  export DISPLAY=192.168.1.113:0
+  # Start XSDL (APK in share/qnx-doom/apks/)
   qnx-doom
+  # Press Enter at the Display prompt for 127.0.0.1:0
 
 Run on device only — not over SSH.
 
