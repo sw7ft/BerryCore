@@ -1,0 +1,26 @@
+#!/bin/sh
+# QNX Doom launcher — requires XSDL / X server on BB10 (see MANUAL.md)
+NT="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
+DOOM="$NT/share/qnx-doom"
+RUN="$DOOM/scripts/doom_run.sh"
+
+if [ ! -x "$DOOM/bin/doomgeneric_qnx" ]; then
+    echo "qnx-doom: game files not found. Run: qpkg install qnx-doom"
+    exit 1
+fi
+
+if [ -z "$DISPLAY" ]; then
+    echo ""
+    echo "qnx-doom requires an X11 display (XSDL / XServer on BB10)."
+    echo ""
+    echo "  1. Install & start XSDL (APK bundled at share/qnx-doom/apks/)"
+    echo "  2. Note the IP shown in XSDL (e.g. 192.168.1.113:0)"
+    echo "  3. export DISPLAY=192.168.1.113:0"
+    echo "  4. Run qnx-doom again — on device, NOT over SSH"
+    echo ""
+    echo "Manual: $NT/share/doc/qnx-doom/MANUAL.md"
+    exit 1
+fi
+
+export LD_LIBRARY_PATH="$DOOM/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec sh "$RUN" "$@"

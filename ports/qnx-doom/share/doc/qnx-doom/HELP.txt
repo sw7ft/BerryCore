@@ -1,0 +1,16 @@
+qnx-doom — Doom on QNX / BlackBerry Passport (X11)
+
+REQUIRES XSDL or XServer — this is NOT a terminal game.
+
+Quick start:
+  qpkg install qnx-doom
+  # Install XSDL from share/qnx-doom/apks/ (sideload)
+  # Start XSDL on BB10, set DISPLAY to the IP it shows
+  export DISPLAY=192.168.1.113:0
+  qnx-doom
+
+Run on device only — not over SSH.
+
+No audio. Passport test build.
+
+Manual: share/doc/qnx-doom/MANUAL.md

@@ -859,6 +859,19 @@ cmd_install() {
         chmod +x "$NATIVE_TOOLS/bin/tcpdump" 2>/dev/null || true
         echo "tcpdump installed (v4.99.5 — may require root on BB10)"
         echo "  tcpdump -i bptp0 -c 10"
+    elif [ "$PORT_NAME" = "qnx-doom" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/qnx-doom" 2>/dev/null || true
+        chmod +x "$NATIVE_TOOLS/share/qnx-doom/bin/doomgeneric_qnx" 2>/dev/null || true
+        chmod +x "$NATIVE_TOOLS/share/qnx-doom/scripts/doom_run.sh" 2>/dev/null || true
+        echo "QNX Doom installed (Passport — NO AUDIO)"
+        echo ""
+        echo "  *** REQUIRES XSDL / X server on BB10 ***"
+        echo "  1. Sideload APK: $NATIVE_TOOLS/share/qnx-doom/apks/"
+        echo "  2. Start XSDL, note IP (e.g. 192.168.1.113:0)"
+        echo "  3. export DISPLAY=192.168.1.113:0"
+        echo "  4. Run on device (Term49), NOT over SSH:  qnx-doom"
+        echo ""
+        echo "Manual: $NATIVE_TOOLS/share/doc/qnx-doom/MANUAL.md"
     elif [ "$PORT_NAME" = "maps" ]; then
         chmod +x "$NATIVE_TOOLS/bin/maps" 2>/dev/null || true
         echo "Maps installed (OpenStreetMap + directions, port 8090)"
