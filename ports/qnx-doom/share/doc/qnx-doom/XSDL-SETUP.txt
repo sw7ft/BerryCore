@@ -1,0 +1,19 @@
+QNX Doom — XSDL color fix (distorted / wrong colors)
+====================================================
+
+If colors look wrong (neon pinks, swapped red/blue, washed out):
+
+1. Open XSDL on BB10
+2. Menu → Change device config → Video
+3. Enable **24 bit color depth (24bpp)**
+4. Restart XSDL
+5. Run qnx-doom again (Enter at Display prompt)
+
+Passport optional ( sharper scaling ):
+  Change device config → Command line parameters →
+  XSDL -screen 720x720x32
+
+Then:
+  qnx-doom
+
+Reference: https://github.com/pelya/xserver-xsdl/issues/124

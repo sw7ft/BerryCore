@@ -13,5 +13,6 @@ fi
 
 echo "QNX Doom — DISPLAY=$DISPLAY"
 echo "(Start XSDL first. Run on device for keyboard — not SSH.)"
+echo "Colors wrong? XSDL → Change device config → Video → enable 24 bit color depth"
 cd "$DOOM_DIR"
 exec ./bin/doomgeneric_qnx "$@"

@@ -6,14 +6,14 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 INPUT_DIR="${1:-$SCRIPT_DIR/qnx_doom_deploy}"
-PORT_ZIP="$REPO_ROOT/ports/games-qnx-doom-1.1.zip"
+PORT_ZIP="$REPO_ROOT/ports/games-qnx-doom-1.1.2.zip"
 BUILD_DIR="$SCRIPT_DIR/.build"
 PKG_ROOT="$BUILD_DIR/pkg"
 DOOM_ROOT="$PKG_ROOT/share/qnx-doom"
 FREEDOOM_CACHE="$SCRIPT_DIR/.cache/freedoom-0.13.0.zip"
 FREEDOOM_URL="https://github.com/freedoom/freedoom/releases/download/v0.13.0/freedoom-0.13.0.zip"
 
-echo "Building qnx-doom 1.1 port..."
+echo "Building qnx-doom 1.1.2 port..."
 echo "  Input:  $INPUT_DIR"
 echo "  Output: $PORT_ZIP"
 
@@ -52,7 +52,7 @@ chmod +x "$PKG_ROOT/bin/qnx-doom" "$DOOM_ROOT/bin/doomgeneric_qnx" "$DOOM_ROOT/s
 
 cd "$PKG_ROOT"
 zip -r -q "$PORT_ZIP" bin share
-cd - >/dev/null
+cd "$SCRIPT_DIR"
 
 rm -rf "$BUILD_DIR"
 echo "Done:"

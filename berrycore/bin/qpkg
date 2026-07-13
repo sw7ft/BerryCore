@@ -868,6 +868,7 @@ cmd_install() {
         echo "  1. Sideload XSDL: $NATIVE_TOOLS/share/qnx-doom/apks/"
         echo "  2. Start XSDL on BB10"
         echo "  3. Run: qnx-doom  (Enter at Display prompt → 127.0.0.1:0)"
+        echo "  Colors wrong? XSDL → Video → enable 24 bit color depth"
         echo ""
         echo "Manual: $NATIVE_TOOLS/share/doc/qnx-doom/MANUAL.md"
     elif [ "$PORT_NAME" = "maps" ]; then

@@ -69,6 +69,14 @@ The launcher auto-selects **freedoom1.wad** from `share/qnx-doom/wads/`.
 
 Or type the IP XSDL shows if different (e.g. `192.168.1.113:0`).
 
+### XSDL color depth (important)
+
+If colors look wrong, enable **24 bit color depth** in XSDL:
+
+**Change device config → Video → 24 bit color depth** → restart XSDL.
+
+See also: `share/doc/qnx-doom/XSDL-SETUP.txt`
+
 You can still preset it: `export DISPLAY=127.0.0.1:0` before running.
 
 **Tip:** Run on the device — keyboard input may not work over SSH.
@@ -110,6 +118,7 @@ qnx-doom -iwad /path/to/doom2.wad
 | Problem | Fix |
 |---------|-----|
 | `No IWAD file found` | Reinstall: `qpkg install qnx-doom` (includes freedoom1.wad) |
+| Colors distorted / wrong | XSDL → Change device config → Video → enable **24 bit color depth**; restart XSDL |
 | `DISPLAY not set` | Start XSDL, export `DISPLAY=ip:0` |
 | Black screen | Wrong DISPLAY IP — check XSDL status screen |
 | No keyboard | You are on SSH — run in Term49 on device |
