@@ -863,11 +863,11 @@ cmd_install() {
         chmod +x "$NATIVE_TOOLS/bin/qnx-doom" 2>/dev/null || true
         chmod +x "$NATIVE_TOOLS/share/qnx-doom/bin/doomgeneric_qnx" 2>/dev/null || true
         chmod +x "$NATIVE_TOOLS/share/qnx-doom/scripts/doom_run.sh" 2>/dev/null || true
-        echo "QNX Doom installed (Passport — NO AUDIO)"
+        echo "QNX Doom installed (Passport — NO AUDIO, Freedoom bundled)"
         echo ""
         echo "  1. Sideload XSDL: $NATIVE_TOOLS/share/qnx-doom/apks/"
         echo "  2. Start XSDL on BB10"
-        echo "  3. Run: qnx-doom  (press Enter at Display prompt for 127.0.0.1:0)"
+        echo "  3. Run: qnx-doom  (Enter at Display prompt → 127.0.0.1:0)"
         echo ""
         echo "Manual: $NATIVE_TOOLS/share/doc/qnx-doom/MANUAL.md"
     elif [ "$PORT_NAME" = "maps" ]; then

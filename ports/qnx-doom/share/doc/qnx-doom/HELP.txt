@@ -1,6 +1,7 @@
 qnx-doom — Doom on QNX / BlackBerry Passport (X11)
 
 REQUIRES XSDL or XServer — this is NOT a terminal game.
+Includes Freedoom Phase 1 (freedoom1.wad) — ready to play.
 
 Quick start:
   qpkg install qnx-doom

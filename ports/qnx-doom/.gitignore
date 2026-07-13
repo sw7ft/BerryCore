@@ -1,3 +1,4 @@
-# Large upstream deploy tree — run build-port.sh; commit games-qnx-doom-1.0.zip
+# Large upstream deploy tree — run build-port.sh; commit games-qnx-doom-*.zip
 qnx_doom_deploy/
 .build/
+.cache/

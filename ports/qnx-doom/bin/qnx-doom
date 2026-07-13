@@ -1,19 +1,58 @@
 #!/bin/sh
-# QNX Doom launcher — XSDL / X server on BB10 (see MANUAL.md)
+# QNX Doom launcher — XSDL + IWAD (Freedoom bundled in wads/)
 NT="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
 DOOM="$NT/share/qnx-doom"
 RUN="$DOOM/scripts/doom_run.sh"
+WAD_DIR="$DOOM/wads"
 
 if [ ! -x "$DOOM/bin/doomgeneric_qnx" ]; then
     echo "qnx-doom: game files not found. Run: qpkg install qnx-doom"
     exit 1
 fi
 
-# Prompt for DISPLAY if unset; default localhost (XSDL on same device)
+mkdir -p "$WAD_DIR" 2>/dev/null || true
+export DOOMWADDIR="$WAD_DIR"
+
+# Resolve IWAD unless user passed -iwad on command line
+IWAD=""
+_i=1
+while [ $_i -le $# ]; do
+    eval _arg=\$$_i
+    if [ "$_arg" = "-iwad" ]; then
+        IWAD="user"
+        break
+    fi
+    _i=$((_i + 1))
+done
+
+if [ "$IWAD" != "user" ]; then
+    for _w in freedoom1.wad freedoom2.wad doom.wad doom2.wad doom1.wad; do
+        if [ -f "$WAD_DIR/$_w" ]; then
+            IWAD="$WAD_DIR/$_w"
+            break
+        fi
+    done
+    if [ -z "$IWAD" ]; then
+        echo ""
+        echo "No IWAD (game data) found in $WAD_DIR"
+        echo ""
+        echo "Reinstall:  qpkg install qnx-doom"
+        echo "Or copy a WAD file there, e.g.:"
+        echo "  freedoom1.wad  — https://freedoom.github.io/ (free)"
+        echo "  doom.wad / doom2.wad  — your own copy"
+        echo ""
+        echo "Then:  qnx-doom"
+        echo "Manual: $NT/share/doc/qnx-doom/MANUAL.md"
+        exit 1
+    fi
+    echo "Using IWAD: $(basename "$IWAD")"
+fi
+
+# DISPLAY prompt
 if [ -z "$DISPLAY" ]; then
     echo ""
-    echo "QNX Doom uses an X11 display — start XSDL first (APK: share/qnx-doom/apks/)."
-    echo "Press Enter for localhost, or type the address XSDL shows (e.g. 192.168.1.113:0)."
+    echo "Start XSDL first (APK: share/qnx-doom/apks/)."
+    echo "Press Enter for localhost, or type XSDL address (e.g. 192.168.1.113:0)."
     printf "Display [127.0.0.1:0]: "
     read _disp
     if [ -z "$_disp" ]; then
@@ -31,4 +70,8 @@ if [ -z "$DISPLAY" ]; then
 fi
 
 export LD_LIBRARY_PATH="$DOOM/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+if [ "$IWAD" != "user" ] && [ -n "$IWAD" ]; then
+    exec sh "$RUN" -iwad "$IWAD" "$@"
+fi
 exec sh "$RUN" "$@"

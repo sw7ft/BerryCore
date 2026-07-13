@@ -17,6 +17,7 @@ Source: [sw7ft/qnx-packages `qnx_doom_deploy`](https://github.com/sw7ft/qnx-pack
 | **Run location** | **On the device** (Term49). Do **not** run over SSH — keyboard/input will not work correctly. |
 | **Device** | Tested on Passport only |
 | **Audio** | None |
+| **Game data** | **Freedoom Phase 1** (`freedoom1.wad`) is bundled — no extra download needed |
 
 Without XSDL running and `DISPLAY` set, `qnx-doom` will exit with setup instructions.
 
@@ -64,11 +65,31 @@ qnx-doom
 
 When prompted for **Display**, just press **Enter** to use `127.0.0.1:0` (XSDL on the same device).
 
+The launcher auto-selects **freedoom1.wad** from `share/qnx-doom/wads/`.
+
 Or type the IP XSDL shows if different (e.g. `192.168.1.113:0`).
 
 You can still preset it: `export DISPLAY=127.0.0.1:0` before running.
 
 **Tip:** Run on the device — keyboard input may not work over SSH.
+
+---
+
+## Game data (IWAD)
+
+Bundled in `share/qnx-doom/wads/`:
+
+- **freedoom1.wad** — Freedoom Phase 1 (free, GPL/BSD)
+
+Optional — copy your own WADs into the same folder:
+
+- `freedoom2.wad`, `doom.wad`, `doom2.wad`
+
+Force a specific file:
+
+```sh
+qnx-doom -iwad /path/to/doom2.wad
+```
 
 ---
 
@@ -88,6 +109,7 @@ You can still preset it: `export DISPLAY=127.0.0.1:0` before running.
 
 | Problem | Fix |
 |---------|-----|
+| `No IWAD file found` | Reinstall: `qpkg install qnx-doom` (includes freedoom1.wad) |
 | `DISPLAY not set` | Start XSDL, export `DISPLAY=ip:0` |
 | Black screen | Wrong DISPLAY IP — check XSDL status screen |
 | No keyboard | You are on SSH — run in Term49 on device |
@@ -102,10 +124,11 @@ You can still preset it: `export DISPLAY=127.0.0.1:0` before running.
 share/qnx-doom/
 ├── bin/doomgeneric_qnx
 ├── lib/libX11.so* …
+├── wads/freedoom1.wad
 ├── scripts/doom_run.sh
 ├── apks/xserver-xsdl-1-11-40-(Utility).apk
 └── README.txt
-bin/qnx-doom          ← launcher (checks DISPLAY)
+bin/qnx-doom          ← launcher (IWAD + DISPLAY)
 ```
 
 ---

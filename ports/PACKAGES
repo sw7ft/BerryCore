@@ -10,7 +10,7 @@ elinks|web|0.17.0|1.3M|Text web browser with SSL/TLS and JavaScript|web-elinks-0
 hydra|net|9.5|165K|Fast network logon cracker|net-hydra-9.5.zip|none
 python3|lang|3.11.10|25M|Python 3.11 with pip and stdlib|lang-python3-3.11.10.zip|none
 tetris|games|1.0|6K|Classic Tetris in pure bash|games-tetris-1.0.zip|none
-qnx-doom|games|1.0|22M|Doom on Passport via X11 — requires XSDL/X server|games-qnx-doom-1.0.zip|none
+qnx-doom|games|1.1|31M|Doom on Passport via X11 — Freedoom bundled, requires XSDL|games-qnx-doom-1.1.zip|none
 qnxdesktop|web|1.0|753K|Windows 98 style desktop with file explorer and AI chat|web-qnxdesktop-1.0.zip|none
 voiceagent|web|1.0|23K|AI voice assistant with OpenAI GPT-4o and Whisper|web-voiceagent-1.0.zip|none
 tmux|sys|3.3a|2.5M|Terminal multiplexer|sys-tmux-3.3a.zip|none
