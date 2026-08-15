@@ -346,13 +346,13 @@ fi
 # Always create fresh .profile to prevent errors from old configs
 sed "s|/accounts/1000/shared/misc/berrycore|$PWD|g" sample_profile > "$HOME/.profile"
 
-# Add MOTD configuration
-echo "" >> "$HOME/.profile"
-echo "# BerryCore Message of the Day" >> "$HOME/.profile"
-echo "export BERRYCORE_MOTD_URL=\"https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt\"" >> "$HOME/.profile"
-echo "export BERRYCORE_MOTD_ENABLED=1" >> "$HOME/.profile"
+echo "Created fresh $HOME/.profile (Term49 splash + BERRYCORE_QUIET)"
 
-echo "Created fresh $HOME/.profile"
+# Offer the berry Term49 theme without clobbering an existing .term48rc
+if [ -f "$PWD/share/term48rc" ] && [ ! -e "$HOME/.term48rc" ]; then
+    cp "$PWD/share/term48rc" "$HOME/.term48rc"
+    echo "Installed Term49 berry theme: $HOME/.term48rc"
+fi
 
 echo ""
 echo "==========================================================="

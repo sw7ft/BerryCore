@@ -1,22 +1,37 @@
 umask 002
 
+# Fancy Term49 splash owns the launch screen.
+# Must be set BEFORE sourcing env.sh (skips plain banner + remote MOTD wait).
+export BERRYCORE_QUIET=1
+export BERRYCORE_MOTD_ENABLED=0
+
 # BerryCore Environment
 BERRYCORE_ENV="/accounts/1000/shared/misc/berrycore/env.sh"
 if [ -e $BERRYCORE_ENV ];then
     . $BERRYCORE_ENV
 fi
 
-# BerryCore Message of the Day
+# Keep URL for `bcmotd fetch` — login splash does not hit the network.
 export BERRYCORE_MOTD_URL="https://raw.githubusercontent.com/sw7ft/berrycore/main/motd.txt"
-export BERRYCORE_MOTD_ENABLED=1
 
-# Clear Screen Function and Aliases
+# Term49 / SSH theme + splash
+export TERM="${TERM:-xterm-256color}"
+
+if [ -f /accounts/1000/shared/misc/berrycore/share/term49-splash.sh ]; then
+    . /accounts/1000/shared/misc/berrycore/share/term49-splash.sh
+fi
+
 clear_screen() {
     printf '\033[2J\033[H'
+    term49_theme 2>/dev/null
 }
 
-alias cls='printf "\033[2J\033[H"'
-alias clear='printf "\033[2J\033[H"'
+alias cls=clear_screen
+alias clear=clear_screen
+
+if [ -t 1 ]; then
+    term49_splash
+fi
 
 # AI CLI Integration (optional - uncomment if you have .ai_cli.sh)
 # if [ -f ~/.ai_cli.sh ]; then

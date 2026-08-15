@@ -56,6 +56,9 @@ alias bcbins='qpkg bins'
 export LC_CTYPE=en_US.UTF-8
 
 # Welcome Message
+# Set BERRYCORE_QUIET=1 in .profile BEFORE sourcing env.sh to skip this
+# banner (Term49 fancy splash owns the launch screen).
+if [ "${BERRYCORE_QUIET:-0}" != "1" ]; then
 echo ""
 echo "==========================================================="
 echo "     BerryCore v0.87 - QNX Extended Userland"
@@ -78,6 +81,7 @@ echo "Quick start: nano, vim, git, nmap, curl, linux, hydra, term49-web"
 echo ""
 echo "Auto-start: settings sshd-on, settings tools-on, settings status"
 echo "==========================================================="
+fi
 
 # Message of the Day (MOTD) - Enabled by default
 # To disable: export BERRYCORE_MOTD_ENABLED=0 in your .profile BEFORE sourcing env.sh
