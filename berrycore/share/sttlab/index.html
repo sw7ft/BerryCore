@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>STT Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #080010;
+    color: #f3eaff;
+    font-family: "Courier New", Courier, monospace;
+    padding: 18px 14px 40px;
+    -webkit-text-size-adjust: 100%;
+  }
+  h1 {
+    font-size: 28px;
+    letter-spacing: 6px;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 0 12px #c44dff;
+  }
+  .sub { text-align: center; color: #8b86b0; font-size: 12px; margin: 6px 0 18px; }
+  .row { overflow: hidden; max-width: 720px; margin: 0 auto; }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px 10px;
+    margin: 0 0 10px;
+    border: 1px solid #4a2080;
+    background: #160024;
+    color: #ffb0ee;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn:active { background: #c44dff; color: #100014; }
+  .btn.go { background: #3a1866; border-color: #ff6ec8; color: #fff; }
+  .btn.hot { background: #5a1028; border-color: #ff4a6a; color: #fff; }
+  .status { text-align: center; font-size: 11px; color: #7d78a8; margin-bottom: 14px; }
+  .status b { color: #4cff9a; font-weight: normal; }
+  .status .off { color: #ff8a3d; }
+  .card {
+    float: left;
+    width: 48.5%;
+    margin: 0 3% 12px 0;
+    min-height: 140px;
+    background: #12001c;
+    border: 1px solid #3a1866;
+    padding: 12px;
+  }
+  .card:nth-child(2n) { margin-right: 0; }
+  .card h2 { font-size: 13px; letter-spacing: 2px; color: #ff7ad8; margin-bottom: 8px; }
+  .card .out { font-size: 15px; color: #fff; min-height: 48px; word-wrap: break-word; }
+  .card .meta { font-size: 11px; color: #6e6890; margin-top: 10px; }
+  .err { color: #ff8a3d; }
+  #file, #capture { display: none; }
+  .hint { clear: both; text-align: center; font-size: 11px; color: #5a5478; margin-top: 8px; }
+</style>
+</head>
+<body>
+  <h1>STT LAB</h1>
+  <p class="sub">same clip &nbsp;&middot;&nbsp; PocketSphinx vs Vosk</p>
+  <p class="status" id="status">checking engines…</p>
+  <div class="row">
+    <a href="#" class="btn" id="rec">Tap to record</a>
+    <a href="#" class="btn" id="pick">Pick a file</a>
+    <a href="#" class="btn go" id="demo">Run official goforward clip</a>
+    <a href="#" class="btn" id="voskonly">Vosk only — skip Sphinx</a>
+    <input id="capture" type="file" accept="audio/*" capture>
+    <input id="file" type="file" accept="audio/*,.wav,.raw,.m4a,.mp3">
+  </div>
+  <div class="row">
+    <div class="card">
+      <h2>POCKETSPHINX</h2>
+      <div class="out" id="sphinx">—</div>
+      <div class="meta" id="sphinx-meta"></div>
+    </div>
+    <div class="card">
+      <h2>VOSK</h2>
+      <div class="out" id="vosk">—</div>
+      <div class="meta" id="vosk-meta"></div>
+    </div>
+  </div>
+  <p class="hint" id="hint">Tap record — opens the BB10 voice recorder (same as VoiceAgent). Then both engines run.</p>
+<script>
+(function () {
+  "use strict";
+
+  function $(id) { return document.getElementById(id); }
+  function setOut(which, text, meta, err) {
+    var el = $(which);
+    var m = $(which + "-meta");
+    el.className = "out" + (err ? " err" : "");
+    el.innerHTML = "";
+    el.appendChild(document.createTextNode(text || "—"));
+    m.innerHTML = "";
+    m.appendChild(document.createTextNode(meta || ""));
+  }
+
+  function xhrJSON(method, url, body, cb) {
+    var x = new XMLHttpRequest();
+    x.open(method, url, true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      var obj = null;
+      try { obj = JSON.parse(x.responseText); } catch (e) { obj = { error: x.responseText || ("HTTP " + x.status) }; }
+      cb(x.status, obj);
+    };
+    if (body) x.send(body);
+    else x.send();
+  }
+
+  function showOne(which, r) {
+    r = r || {};
+    setOut(which, r.text || r.err || "no text", r.ok ? (r.ms + " ms") : (r.err || ""), !r.ok);
+  }
+
+  function pullEngine(job, which) {
+    xhrJSON("GET", "/api/job?id=" + job + "&engine=" + which, null, function (st, obj) {
+      if (st !== 200) {
+        setOut(which, (obj && obj.error) || "failed", "", true);
+        return;
+      }
+      showOne(which, obj[which] || obj);
+      if (which === "vosk") {
+        $("hint").innerHTML = engineMode === "vosk"
+          ? "Vosk done."
+          : "Vosk done — Sphinx still working…";
+      } else {
+        $("hint").innerHTML = "Tap record — BB10 voice recorder, then both engines run.";
+      }
+    });
+  }
+
+  function watchJob(st, obj) {
+    if (st !== 200 || !obj || !obj.job) {
+      setOut("sphinx", (obj && obj.error) || "decode failed", "", true);
+      setOut("vosk", (obj && obj.error) || "decode failed", "", true);
+      return;
+    }
+    pullEngine(obj.job, "vosk");
+    if (engineMode === "vosk") {
+      setOut("sphinx", "skipped", "", false);
+    } else {
+      pullEngine(obj.job, "sphinx");
+    }
+  }
+
+  var engineMode = "both";
+
+  function decodeBlob(blob) {
+    setOut("sphinx", engineMode === "vosk" ? "skipped" : "decoding…", "", false);
+    setOut("vosk", "decoding…", "", false);
+    $("hint").innerHTML = "Decoding on the Passport…";
+    var url = engineMode === "vosk" ? "/api/decode?engine=vosk" : "/api/decode";
+    xhrJSON("POST", url, blob, watchJob);
+  }
+
+  var canGum = false;
+  var canWebAudio = false;
+  var canServerRec = false;
+  var rec = { on: false, mode: "none", chunks: [], stream: null, last: 0 };
+
+  function getGum() {
+    return navigator.webkitGetUserMedia || navigator.getUserMedia || navigator.mozGetUserMedia || null;
+  }
+
+  xhrJSON("GET", "/api/status", null, function (st, obj) {
+    var el = $("status");
+    if (!obj) { el.innerHTML = "status failed"; return; }
+    canServerRec = !!obj.record;
+    el.innerHTML = "sphinx " + (obj.sphinx ? "<b>ready</b>" : "<span class='off'>missing</span>")
+      + " &nbsp;·&nbsp; vosk " + (obj.vosk ? "<b>ready</b>" : "<span class='off'>not built yet</span>")
+      + " &nbsp;·&nbsp; mic " + (obj.record ? "<b>" + (obj.record_method || "device") + "</b>" : "<span class='off'>STT Mic APK</span>");
+  });
+
+  var wasListening = false;
+  setInterval(function () {
+    xhrJSON("GET", "/api/partial", null, function (st, obj) {
+      if (st !== 200 || !obj) return;
+      if (obj.listening) {
+        wasListening = true;
+        setOut("vosk", obj.live || "…", "live · " + (obj.bytes || 0) + " b", false);
+        $("hint").innerHTML = "STT Mic APK is streaming — Vosk updating live.";
+      } else if (wasListening) {
+        wasListening = false;
+        setOut("vosk", obj.text || obj.live || "—", "stream done · " + (obj.ms || 0) + " ms", false);
+        $("hint").innerHTML = "Stream finished. Keep using the APK or tap record here.";
+      }
+    });
+  }, 400);
+
+  $("voskonly").onclick = function (e) {
+    e.preventDefault();
+    engineMode = engineMode === "vosk" ? "both" : "vosk";
+    $("voskonly").innerHTML = engineMode === "vosk" ? "Vosk only — ON" : "Vosk only — skip Sphinx";
+    $("hint").innerHTML = engineMode === "vosk"
+      ? "Vosk only. After the model is warm this is ~1s."
+      : "Both engines. Sphinx is the slow one now.";
+  };
+
+  $("demo").onclick = function (e) {
+    e.preventDefault();
+    setOut("sphinx", "decoding goforward…", "", false);
+    setOut("vosk", "decoding goforward…", "", false);
+    xhrJSON("GET", engineMode === "vosk" ? "/api/demo?engine=vosk" : "/api/demo", null, watchJob);
+  };
+
+  $("pick").onclick = function (e) {
+    e.preventDefault();
+    $("file").click();
+  };
+  $("file").onchange = function () {
+    if (this.files && this.files[0]) decodeBlob(this.files[0]);
+    this.value = "";
+  };
+  $("capture").onchange = function () {
+    if (this.files && this.files[0]) {
+      if (this.files[0].size < 100) {
+        $("hint").innerHTML = "Recording too short — try again.";
+        this.value = "";
+        return;
+      }
+      decodeBlob(this.files[0]);
+    } else if (canServerRec) {
+      startServerRec();
+    }
+    this.value = "";
+  };
+
+  function setRecBtn(hot, label) {
+    $("rec").innerHTML = label;
+    $("rec").className = hot ? "btn hot" : "btn";
+  }
+
+  function wavFromBuffers(bufs, rate) {
+    var i, j, n = 0;
+    for (i = 0; i < bufs.length; i++) n += bufs[i].length;
+    var pcm = new Int16Array(n);
+    var o = 0;
+    for (i = 0; i < bufs.length; i++) {
+      var b = bufs[i];
+      for (j = 0; j < b.length; j++) pcm[o++] = b[j];
+    }
+    var bytes = pcm.length * 2;
+    var hdr = new ArrayBuffer(44);
+    var v = new DataView(hdr);
+    function str(at, s) { for (var k = 0; k < s.length; k++) v.setUint8(at + k, s.charCodeAt(k)); }
+    str(0, "RIFF"); v.setUint32(4, 36 + bytes, true); str(8, "WAVE"); str(12, "fmt ");
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    str(36, "data"); v.setUint32(40, bytes, true);
+    return new Blob([hdr, pcm.buffer], { type: "audio/wav" });
+  }
+
+  function stopWebRec() {
+    rec.on = false;
+    rec.mode = "none";
+    setRecBtn(false, "Tap to record");
+    try { if (rec.proc) rec.proc.disconnect(); } catch (e1) {}
+    try { if (rec.src) rec.src.disconnect(); } catch (e2) {}
+    try { if (rec.ac && rec.ac.close) rec.ac.close(); } catch (e3) {}
+    try {
+      if (rec.stream) {
+        var t = rec.stream.getTracks();
+        for (var i = 0; i < t.length; i++) t[i].stop();
+      }
+    } catch (e4) {}
+    if (rec.chunks && rec.chunks.length) {
+      decodeBlob(wavFromBuffers(rec.chunks, rec.rate || 16000));
+    }
+    rec.chunks = [];
+    rec.stream = null;
+  }
+
+  function startWebRec() {
+    var gUM = getGum();
+    if (!gUM) { triggerNative(); return; }
+    setRecBtn(true, "Requesting mic…");
+    gUM.call(navigator, { audio: true }, function (stream) {
+      rec.on = true;
+      rec.mode = "webaudio";
+      rec.stream = stream;
+      rec.chunks = [];
+      setRecBtn(true, "Listening… tap to stop");
+      var AC = window.AudioContext || window.webkitAudioContext;
+      rec.ac = new AC();
+      rec.rate = rec.ac.sampleRate;
+      rec.src = rec.ac.createMediaStreamSource(stream);
+      rec.proc = rec.ac.createScriptProcessor(4096, 1, 1);
+      rec.proc.onaudioprocess = function (ev) {
+        var inp = ev.inputBuffer.getChannelData(0);
+        var i16 = new Int16Array(inp.length);
+        for (var i = 0; i < inp.length; i++) {
+          var s = inp[i];
+          if (s > 1) s = 1;
+          if (s < -1) s = -1;
+          i16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+        }
+        rec.chunks.push(i16);
+      };
+      rec.src.connect(rec.proc);
+      rec.proc.connect(rec.ac.destination);
+    }, function () {
+      $("hint").innerHTML = "Browser mic denied — opening BB10 voice recorder.";
+      triggerNative();
+    });
+  }
+
+  function triggerNative() {
+    rec.mode = "native";
+    setRecBtn(false, "Tap to record");
+    $("hint").innerHTML = "Opening BB10 voice recorder… speak, then save.";
+    $("capture").value = "";
+    $("capture").click();
+  }
+
+  function startServerRec() {
+    setRecBtn(true, "Starting device mic…");
+    xhrJSON("POST", "/api/record/start", "{}", function (st, obj) {
+      if (st === 200 && obj && obj.ok) {
+        rec.on = true;
+        rec.mode = "server";
+        setRecBtn(true, "Listening… tap to stop");
+        $("hint").innerHTML = "Device mic is live. Tap again to stop and decode.";
+      } else {
+        setRecBtn(false, "Tap to record");
+        $("hint").innerHTML = (obj && obj.error) ? obj.error : "Device mic failed — use Pick a file.";
+      }
+    });
+  }
+
+  function stopServerRec() {
+    rec.on = false;
+    rec.mode = "none";
+    setRecBtn(false, "Tap to record");
+    setOut("sphinx", "decoding…", "", false);
+    setOut("vosk", "decoding…", "", false);
+    xhrJSON("POST", "/api/record/stop", "{}", watchJob);
+  }
+
+  var gum = getGum();
+  canGum = !!gum;
+  canWebAudio = !!(canGum && (window.AudioContext || window.webkitAudioContext));
+
+  $("rec").onclick = function (e) {
+    e.preventDefault();
+    var now = new Date().getTime();
+    if (now - rec.last < 400) return;
+    rec.last = now;
+    if (rec.on && rec.mode === "webaudio") { stopWebRec(); return; }
+    if (rec.on && rec.mode === "server") { stopServerRec(); return; }
+    if (canWebAudio) startWebRec();
+    else triggerNative();
+  };
+})();
+</script>
+</body>
+</html>

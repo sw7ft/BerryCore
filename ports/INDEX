@@ -28,6 +28,8 @@ tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence and split panes
 term49-web|web|1.0|54K|Browser-based terminal for QNX/BB10 - xterm.js over WebSocket, access shell from any browser (port 7681)
 bb-tools|web|1.0|44K|BerryCore web tools - dashboard, drawing-board, markdown-editor, code-editor, compass, virtual-keyboard (native HTTP server port 8765)
 bb-games|games|1.0|110K|BerryCore Games menu — BerryCraft, BerryFly, BerryBoat, BerryDig, BerryMoto, BerryMX (port 8766)
+sttlab|web|1.0|13K|STT lab — PocketSphinx vs Vosk compare UI on port 8093
+vosk|ai|1.0|42M|Offline Vosk/Kaldi speech-to-text + small English model
 content-shell-term49|web|1.0|62M|DEPRECATED — use berry-browser (qpkg install berry-browser)
 berry-browser|web|1.0.27|111M|CLI browser via content_shell — berry-browser URL (Term49/SSH), berry-browser-screen (native UI)
 node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, npm 10.5.1 included

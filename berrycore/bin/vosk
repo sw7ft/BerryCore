@@ -1,0 +1,17 @@
+#!/bin/sh
+# Offline Vosk STT — usage: vosk [model_dir] clip.wav
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export LD_LIBRARY_PATH="$ROOT/lib:/accounts/1000/shared/misc/berrycore/lib:${LD_LIBRARY_PATH:-}"
+BIN="$ROOT/bin/vosk.bin"
+if [ ! -x "$BIN" ]; then
+    echo "vosk: engine missing — qpkg install vosk" >&2
+    exit 1
+fi
+if [ ! -d "$1" ]; then
+    DEF="$ROOT/share/stt/model/vosk-en"
+    [ -d "$DEF" ] || DEF="/accounts/1000/shared/misc/stt/model/vosk-en"
+    if [ -d "$DEF" ]; then
+        set -- "$DEF" "$@"
+    fi
+fi
+exec "$BIN" "$@"

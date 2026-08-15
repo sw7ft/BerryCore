@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.5] - 2026-08-15
+
+### Added
+
+- **sttlab** — STT compare lab on port **8093** (`sttlab` / `sttlab stop` / `sttlab status`). Bundled in core and as `qpkg install sttlab`
+- **vosk** qpkg port — QNX ARM `libvosk.so` + `vosk.bin` + small English model (`qpkg install vosk`). Not bundled in `berrycore.zip`
+- **vosk** wrapper in core PATH — prints `qpkg install vosk` until the engine is installed
+
+### Changed
+
+- **VERSION** → 0.87.5
+- **CATALOG / FEATURED / PACKAGES / env.sh** — `sttlab` and `vosk` listed with `games`
+
+---
+
 ## [0.87.4] - 2026-08-15
 
 ### Added

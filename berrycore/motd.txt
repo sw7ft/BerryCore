@@ -1,3 +1,3 @@
-BerryCore v0.87.4 — Games menu (port 8766)
-  games   ·   berry-browser http://127.0.0.1:8766/
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.4
+BerryCore v0.87.5 — STT lab + Vosk
+  qpkg install vosk   ·   sttlab   ·   berry-browser http://127.0.0.1:8093/
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.5

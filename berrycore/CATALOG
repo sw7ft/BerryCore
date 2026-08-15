@@ -177,6 +177,8 @@ linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 # Web Development
 tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (qpkg install bb-tools)
 games|games|BerryCore Games menu — BerryCraft, BerryFly, BerryBoat, BerryDig, BerryMoto, BerryMX (port 8766; qpkg install bb-games)
+sttlab|web|STT lab — record or upload a clip, compare PocketSphinx vs Vosk (port 8093; qpkg install sttlab)
+vosk|ai|Offline Vosk speech-to-text (qpkg install vosk)
 browse|web|Alias for berry-browser CLI (qpkg install berry-browser)
 berry-browser|web|CLI browser via content_shell — JS pages as readable text (Term49/SSH)
 berry-browser-screen|web|Full-screen Chromium — native QNX only (qpkg install berry-browser)

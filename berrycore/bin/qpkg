@@ -840,6 +840,19 @@ cmd_install() {
             echo "  bbm poll"
             echo "Manual: $(qpkg_port_doc bbm)"
         }
+    elif [ "$PORT_NAME" = "vosk" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/vosk" "$NATIVE_TOOLS/bin/vosk.bin" 2>/dev/null || true
+        echo "Vosk offline STT installed"
+        echo "  vosk clip.wav"
+        echo "  sttlab"
+        echo "  berry-browser http://127.0.0.1:8093/"
+        echo "Model: $NATIVE_TOOLS/share/stt/model/vosk-en"
+    elif [ "$PORT_NAME" = "sttlab" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/sttlab" 2>/dev/null || true
+        echo "STT lab installed"
+        echo "  sttlab"
+        echo "  berry-browser http://127.0.0.1:8093/"
+        echo "Engine: qpkg install vosk"
     elif [ "$PORT_NAME" = "ftp" ]; then
         install_misc_bin ftp bftpd pftp && {
             mkdir -p "$NATIVE_TOOLS/etc" "$NATIVE_TOOLS/ftp-root" "$NATIVE_TOOLS/var/log" 2>/dev/null || true

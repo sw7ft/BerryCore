@@ -1,0 +1,17 @@
+BerryCore v0.87.5 Release Files
+================================
+
+Core install:
+  berrycore.zip          (includes bin/sttlab, share/sttlab/, bin/vosk wrapper, packages/web-sttlab-1.0.zip)
+  install.sh
+  berrycore.html
+
+qpkg (also on main):
+  ports/web-sttlab-1.0.zip    qpkg install sttlab
+  ports/ai-vosk-1.0.zip       qpkg install vosk
+
+dcd9f968e103ed28ccfd805ac7c0503aa96156f75a4db5368f94dee25c5f5116  berrycore.zip
+ec8c2d5bad78bb594aebdd59fa38ba45e39c62d0883ebc926cc206a9fe51cbac  install.sh
+286887871eb3c9856dd2d4a5b1b70b02972f3898fef1dc66745ce603ee00df46  berrycore.html
+37f9e31a80207f0d67a0b83a3c2ec5e735bd59a68c835d1a5bc588f1dbe94822  ports/web-sttlab-1.0.zip
+fcd7f40bc1a73234321c19f452732dd0b3c9e99f45bafdbecffe9b0438fcc8cc  ports/ai-vosk-1.0.zip

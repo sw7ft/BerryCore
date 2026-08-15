@@ -1,0 +1,92 @@
+#!/bin/sh
+# STT lab — PocketSphinx vs Vosk compare UI on port 8093
+# Usage: sttlab [start|stop|status]
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE="$(cd "$BIN_DIR/.." && pwd)"
+WEB="$NATIVE/share/sttlab"
+PORT="${BERRYCORE_STTLAB_PORT:-8093}"
+PIDFILE="$NATIVE/.tmp/sttlab.pid"
+LOG="$NATIVE/.tmp/sttlab.log"
+PY="$NATIVE/bin/python3"
+[ -x "$PY" ] || PY="python3"
+
+# Engine tree: qpkg vosk installs lib/ + share/stt/model into NATIVE_TOOLS.
+# Legacy device tree stays at /misc/stt.
+if [ -n "$STT_ROOT" ]; then
+    :
+elif [ -f "$NATIVE/lib/libvosk.so" ] || [ -d "$NATIVE/share/stt/model/vosk-en" ]; then
+    STT_ROOT="$NATIVE"
+elif [ -d /accounts/1000/shared/misc/stt ]; then
+    STT_ROOT="/accounts/1000/shared/misc/stt"
+else
+    STT_ROOT="$NATIVE"
+fi
+export STT_ROOT
+
+cmd="${1:-start}"
+mkdir -p "$NATIVE/.tmp" "$STT_ROOT/tmp" 2>/dev/null || mkdir -p "$NATIVE/.tmp"
+
+is_running() {
+    if [ -f "$PIDFILE" ]; then
+        pid=$(cat "$PIDFILE" 2>/dev/null)
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            return 0
+        fi
+        rm -f "$PIDFILE"
+    fi
+    return 1
+}
+
+case "$cmd" in
+    start)
+        if [ ! -f "$WEB/serve.py" ]; then
+            echo "sttlab: missing $WEB/serve.py"
+            exit 1
+        fi
+        if is_running; then
+            echo "STT lab already running — http://127.0.0.1:$PORT/"
+            exit 0
+        fi
+        nohup "$PY" "$WEB/serve.py" "$PORT" >> "$LOG" 2>&1 &
+        echo $! > "$PIDFILE"
+        sleep 1
+        if is_running; then
+            echo "STT lab  http://127.0.0.1:$PORT/"
+            echo "Open in berry-browser.  sttlab stop  to quit."
+            if [ ! -f "$STT_ROOT/lib/libvosk.so" ] && [ ! -f "$NATIVE/lib/libvosk.so" ]; then
+                echo "Vosk engine not installed yet — qpkg install vosk"
+            fi
+        else
+            echo "sttlab: failed — see $LOG"
+            exit 1
+        fi
+        ;;
+    stop)
+        if is_running; then
+            kill "$(cat "$PIDFILE")" 2>/dev/null
+            rm -f "$PIDFILE"
+            echo "STT lab stopped"
+        else
+            echo "sttlab: not running"
+        fi
+        ;;
+    status)
+        if is_running; then
+            echo "running  pid $(cat "$PIDFILE")  http://127.0.0.1:$PORT/"
+        else
+            echo "stopped"
+            exit 1
+        fi
+        ;;
+    -h|--help|help)
+        echo "Usage: sttlab [start|stop|status]"
+        echo "  start   compare lab on port $PORT"
+        echo "  stop    stop the lab"
+        echo "Engine:  qpkg install vosk"
+        ;;
+    *)
+        echo "Usage: sttlab [start|stop|status]"
+        exit 1
+        ;;
+esac
