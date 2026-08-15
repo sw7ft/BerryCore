@@ -16,6 +16,7 @@ voiceagent|web|1.0|23K|AI voice assistant with OpenAI GPT-4o and Whisper|web-voi
 tmux|sys|3.3a|2.5M|Terminal multiplexer|sys-tmux-3.3a.zip|none
 term49-web|web|1.0|54K|Browser terminal over WebSocket (port 7681)|web-term49-web-1.0.zip|none
 bb-tools|web|1.0|44K|BerryCore web tools dashboard (port 8765)|web-bb-tools-1.0.zip|none
+bb-games|games|1.0|110K|BerryCore Games menu — HTML games on port 8766|games-bb-games-1.0.zip|none
 content-shell-term49|web|1.0|62M|DEPRECATED — aliases to berry-browser|web-content-shell-term49-1.0.zip|none
 berry-browser|web|1.0.27|111M|CLI browser via content_shell|web-berry-browser-1.0.27.zip|none
 node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX|lang-node-term49-22.0.0.zip|none

@@ -1,0 +1,92 @@
+#!/bin/sh
+# BerryCore Games — HTML game menu on port 8766 (like tools on 8765)
+# Usage: games [start|stop|status]
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." && pwd)"
+GAMES_DIR="$NATIVE_TOOLS/share/games"
+PORT="${BERRYCORE_GAMES_PORT:-8766}"
+PIDFILE="$NATIVE_TOOLS/.tmp/games.pid"
+LOG="$NATIVE_TOOLS/.tmp/games.log"
+PY="$NATIVE_TOOLS/bin/python3"
+BC_PY="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+if [ -x "$PY" ]; then
+    :
+elif [ -x "$BC_PY" ]; then
+    PY="$BC_PY"
+    export PYTHONHOME="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static"
+    export PYTHONPATH=
+else
+    PY="python3"
+fi
+
+cmd="${1:-start}"
+
+is_running() {
+    if [ -f "$PIDFILE" ]; then
+        pid=$(cat "$PIDFILE" 2>/dev/null)
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            return 0
+        fi
+        rm -f "$PIDFILE"
+    fi
+    return 1
+}
+
+do_start() {
+    if [ ! -f "$GAMES_DIR/index.html" ]; then
+        echo "games: missing $GAMES_DIR/index.html"
+        exit 1
+    fi
+    if is_running; then
+        echo "BerryCore Games already running — http://127.0.0.1:$PORT/"
+        exit 0
+    fi
+    mkdir -p "$NATIVE_TOOLS/.tmp"
+    nohup "$PY" "$GAMES_DIR/serve.py" "$PORT" >> "$LOG" 2>&1 &
+    echo $! > "$PIDFILE"
+    sleep 1
+    if is_running; then
+        echo "BerryCore Games  http://127.0.0.1:$PORT/"
+        echo "Open in berry-browser.  games stop  to quit."
+    else
+        echo "games: failed to start — see $LOG"
+        exit 1
+    fi
+}
+
+do_stop() {
+    if is_running; then
+        kill "$(cat "$PIDFILE")" 2>/dev/null
+        rm -f "$PIDFILE"
+        echo "BerryCore Games stopped"
+    else
+        echo "games: not running"
+    fi
+}
+
+do_status() {
+    if is_running; then
+        echo "running  pid $(cat "$PIDFILE")  http://127.0.0.1:$PORT/"
+    else
+        echo "stopped"
+        exit 1
+    fi
+}
+
+case "$cmd" in
+    start)  do_start ;;
+    stop)   do_stop ;;
+    status) do_status ;;
+    -h|--help|help)
+        echo "Usage: games [start|stop|status]"
+        echo "  start   serve share/games on port $PORT (default)"
+        echo "  stop    stop the games server"
+        echo "  status  show if running"
+        ;;
+    *)
+        echo "Unknown command: $cmd"
+        echo "Usage: games [start|stop|status]"
+        exit 1
+        ;;
+esac

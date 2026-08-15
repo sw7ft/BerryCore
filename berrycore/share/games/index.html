@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BerryCore Games</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: #05000c;
+    color: #f3eaff;
+    font-family: "Courier New", Courier, monospace;
+    -webkit-text-size-adjust: 100%;
+  }
+  body { overflow-x: hidden; }
+  #sky {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+  .glow {
+    position: fixed; left: 50%; top: -80px;
+    width: 520px; height: 520px;
+    margin-left: -260px;
+    background: radial-gradient(circle, rgba(196,77,255,0.28) 0%, rgba(255,80,180,0.08) 42%, transparent 70%);
+    z-index: 0; pointer-events: none;
+  }
+  .wrap { position: relative; z-index: 1; padding: 22px 16px 48px; max-width: 860px; margin: 0 auto; }
+
+  .hero { text-align: center; padding: 8px 0 6px; }
+  .berry {
+    width: 72px; height: 72px;
+    margin: 0 auto 8px;
+    filter: drop-shadow(0 0 14px #ff4ad6);
+  }
+  .kicker {
+    font-size: 11px;
+    letter-spacing: 7px;
+    color: #ff7ad8;
+    text-transform: uppercase;
+  }
+  .wordmark {
+    font-size: 56px;
+    font-weight: bold;
+    letter-spacing: 10px;
+    line-height: 1;
+    margin: 4px 0 2px;
+    color: #fff;
+    text-shadow:
+      0 0 6px #ff6ec8,
+      0 0 22px #c44dff,
+      0 0 48px #7a1cff;
+    animation: pulse 2.8s ease-in-out infinite;
+  }
+  .tag {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: #9aa0d0;
+    margin-top: 4px;
+  }
+  .meta {
+    margin-top: 12px;
+    font-size: 11px;
+    color: #7d78a8;
+    letter-spacing: 1px;
+  }
+  .meta b { color: #ffb0ee; font-weight: normal; }
+
+  @keyframes pulse {
+    0%, 100% { text-shadow: 0 0 6px #ff6ec8, 0 0 22px #c44dff, 0 0 48px #7a1cff; }
+    50% { text-shadow: 0 0 10px #fff, 0 0 28px #ff6ec8, 0 0 60px #c44dff; }
+  }
+
+  .rule {
+    height: 2px;
+    margin: 20px auto 22px;
+    max-width: 420px;
+    background: linear-gradient(90deg, transparent, #ff6ec8, #7af0ff, #c44dff, transparent);
+    opacity: 0.85;
+  }
+
+  .grid { overflow: hidden; }
+  .cab {
+    float: left;
+    width: 48.5%;
+    margin: 0 3% 14px 0;
+    position: relative;
+    background: linear-gradient(180deg, #160024 0%, #0a0014 100%);
+    border: 1px solid #4a2080;
+    overflow: hidden;
+    min-height: 196px;
+  }
+  .cab:nth-child(2n) { margin-right: 0; }
+  .cab:before {
+    content: "";
+    position: absolute; left: 0; right: 0; top: 0; height: 4px;
+    background: var(--c, #c44dff);
+    box-shadow: 0 0 16px var(--c, #c44dff);
+  }
+  .cab:hover, .cab:active { border-color: var(--c, #ff6ec8); }
+  .art {
+    height: 78px;
+    text-align: center;
+    padding-top: 12px;
+    background:
+      radial-gradient(circle at 50% 120%, rgba(255,255,255,0.08), transparent 55%),
+      linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+  }
+  .art svg { width: 56px; height: 56px; vertical-align: middle; }
+  .body { padding: 8px 12px 12px; }
+  .name {
+    font-size: 17px;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  .blurb { font-size: 11px; color: #8b86b0; margin: 3px 0 10px; min-height: 28px; }
+  .play {
+    display: block;
+    text-align: center;
+    padding: 11px 8px;
+    background: var(--c, #c44dff);
+    color: #100014;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .play:active { filter: brightness(1.15); }
+  .alts { margin-top: 8px; font-size: 11px; color: #6e6890; }
+  .alts a {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 3px 8px;
+    border: 1px solid #3d2a66;
+    color: #cbb8ff;
+    text-decoration: none;
+  }
+  .alts a:active { border-color: #ff6ec8; color: #fff; }
+
+  .foot {
+    text-align: center;
+    margin-top: 26px;
+    font-size: 11px;
+    color: #5a5478;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="glow"></div>
+<div class="wrap">
+  <div class="hero">
+    <svg class="berry" viewBox="0 0 72 72" aria-hidden="true">
+      <ellipse cx="36" cy="42" rx="22" ry="20" fill="#c44dff"/>
+      <ellipse cx="24" cy="38" rx="10" ry="9" fill="#ff4ad6"/>
+      <ellipse cx="48" cy="38" rx="10" ry="9" fill="#9b4dff"/>
+      <ellipse cx="36" cy="30" rx="9" ry="8" fill="#ff7ae6"/>
+      <path d="M36 18 C36 12 42 10 46 14 C40 16 38 20 36 24 C34 20 32 16 26 14 C30 10 36 12 36 18Z" fill="#4cff9a"/>
+    </svg>
+    <div class="kicker">BerryCore</div>
+    <div class="wordmark">GAMES</div>
+    <div class="tag">QNX PLAYGROUND</div>
+    <div class="meta"><b>6</b> cabinets &nbsp;&middot;&nbsp; tap a title to play</div>
+  </div>
+  <div class="rule"></div>
+  <div class="grid" id="grid"></div>
+  <p class="foot">berry-browser &nbsp;&middot;&nbsp; :8766</p>
+</div>
+<script>
+/* ES5 — BerryCore Games title screen */
+(function () {
+  "use strict";
+
+  var icons = {
+    craft: '<svg viewBox="0 0 56 56"><rect x="8" y="28" width="16" height="16" fill="#5d3"/><rect x="24" y="20" width="16" height="16" fill="#3a2"/><rect x="24" y="36" width="16" height="12" fill="#a75"/><rect x="40" y="28" width="10" height="20" fill="#6c4"/></svg>',
+    fly: '<svg viewBox="0 0 56 56"><path d="M6 30 L50 26 L28 22 Z" fill="#7af0ff"/><path d="M28 22 L32 8 L36 24" fill="#fff"/><path d="M18 30 L14 40 L24 32" fill="#4ad"/></svg>',
+    boat: '<svg viewBox="0 0 56 56"><path d="M10 32 L46 32 L40 44 L16 44 Z" fill="#3aa0ff"/><path d="M28 12 L28 32 L42 32 Z" fill="#e8f4ff"/><path d="M6 46 Q28 40 50 46" fill="none" stroke="#7af0ff" stroke-width="2"/></svg>',
+    dig: '<svg viewBox="0 0 56 56"><rect x="24" y="8" width="8" height="22" fill="#c8a070"/><path d="M16 30 L40 30 L36 46 L20 46 Z" fill="#e8c14a"/><rect x="10" y="46" width="36" height="6" fill="#8a5"/></svg>',
+    moto: '<svg viewBox="0 0 56 56"><circle cx="16" cy="40" r="8" fill="none" stroke="#ff4d6d" stroke-width="3"/><circle cx="42" cy="40" r="8" fill="none" stroke="#ff4d6d" stroke-width="3"/><path d="M16 40 L26 24 L40 26 L42 40" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 24 L22 16" stroke="#ffb0c8" stroke-width="3"/></svg>',
+    mx: '<svg viewBox="0 0 56 56"><path d="M4 44 L20 28 L36 36 L52 18" fill="none" stroke="#ff8a3d" stroke-width="4"/><circle cx="18" cy="42" r="6" fill="#222" stroke="#ffc14a" stroke-width="2"/><circle cx="40" cy="34" r="6" fill="#222" stroke="#ffc14a" stroke-width="2"/></svg>'
+  };
+
+  var games = [
+    { name: "BerryCraft", tag: "Third-person voxel world. Orbit, swing, jump.", play: "berrycraft-tp-3.html", playLabel: "Play v3", color: "#5d3", icon: "craft",
+      alts: [{ n: "v2", h: "berrycraft-tp-2.html" }] },
+    { name: "BerryFly", tag: "Seat-of-the-pants flight over the islands.", play: "berryfly-2.html", playLabel: "Play v2", color: "#7af0ff", icon: "fly",
+      alts: [{ n: "v1", h: "berryfly.html" }] },
+    { name: "BerryBoat", tag: "Open water, wake, and a wide horizon.", play: "berryboat-3.html", playLabel: "Play v3", color: "#3aa0ff", icon: "boat",
+      alts: [{ n: "v2", h: "berryboat-2.html" }, { n: "v1", h: "berryboat.html" }] },
+    { name: "BerryDig", tag: "Carve down. Find what the dirt is hiding.", play: "berrydig-2.html", playLabel: "Play v2", color: "#e8c14a", icon: "dig",
+      alts: [{ n: "v1", h: "berrydig.html" }] },
+    { name: "BerryMoto", tag: "Night road. Lean in. Don't lift.", play: "berrymoto.html", playLabel: "Play", color: "#ff4d6d", icon: "moto",
+      alts: [] },
+    { name: "BerryMX", tag: "Whoops, jumps, dirt in the teeth.", play: "berrymx-2.html", playLabel: "Play v2", color: "#ff8a3d", icon: "mx",
+      alts: [{ n: "v1", h: "berrymx.html" }] }
+  ];
+
+  var grid = document.getElementById("grid");
+  var i, g, cab, art, body, name, blurb, play, alts, j, al;
+  for (i = 0; i < games.length; i++) {
+    g = games[i];
+    cab = document.createElement("div");
+    cab.className = "cab";
+    cab.style.setProperty("--c", g.color);
+
+    art = document.createElement("div");
+    art.className = "art";
+    art.innerHTML = icons[g.icon] || "";
+    cab.appendChild(art);
+
+    body = document.createElement("div");
+    body.className = "body";
+
+    name = document.createElement("div");
+    name.className = "name";
+    name.appendChild(document.createTextNode(g.name));
+    body.appendChild(name);
+
+    blurb = document.createElement("div");
+    blurb.className = "blurb";
+    blurb.appendChild(document.createTextNode(g.tag));
+    body.appendChild(blurb);
+
+    play = document.createElement("a");
+    play.className = "play";
+    play.href = g.play;
+    play.appendChild(document.createTextNode(g.playLabel));
+    body.appendChild(play);
+
+    if (g.alts && g.alts.length) {
+      alts = document.createElement("div");
+      alts.className = "alts";
+      for (j = 0; j < g.alts.length; j++) {
+        al = document.createElement("a");
+        al.href = g.alts[j].h;
+        al.appendChild(document.createTextNode(g.alts[j].n));
+        alts.appendChild(al);
+      }
+      body.appendChild(alts);
+    }
+    cab.appendChild(body);
+    grid.appendChild(cab);
+  }
+
+  /* soft berry-dust field */
+  var c = document.getElementById("sky");
+  var ctx = c.getContext("2d");
+  var dots = [];
+  var n = 48;
+  var w, h, t;
+
+  function resize() {
+    w = c.width = window.innerWidth;
+    h = c.height = window.innerHeight;
+  }
+  function seed() {
+    dots = [];
+    var k;
+    for (k = 0; k < n; k++) {
+      dots.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: 0.6 + Math.random() * 1.8,
+        s: 0.08 + Math.random() * 0.28,
+        a: 0.15 + Math.random() * 0.45,
+        hue: Math.random() > 0.55 ? "196,77,255" : "255,110,200"
+      });
+    }
+  }
+  function tick() {
+    var k, d;
+    ctx.clearRect(0, 0, w, h);
+    for (k = 0; k < dots.length; k++) {
+      d = dots[k];
+      d.y -= d.s;
+      if (d.y < -4) { d.y = h + 4; d.x = Math.random() * w; }
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(" + d.hue + "," + d.a + ")";
+      ctx.arc(d.x, d.y, d.r, 0, 6.2832);
+      ctx.fill();
+    }
+    t = window.requestAnimationFrame(tick);
+  }
+  resize();
+  seed();
+  if (ctx && window.requestAnimationFrame) {
+    tick();
+    window.addEventListener("resize", function () { resize(); seed(); }, false);
+  }
+})();
+</script>
+</body>
+</html>

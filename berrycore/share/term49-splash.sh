@@ -53,7 +53,7 @@ term49_splash() {
     printf "  ${_box}──────────────────────────────────────────────────${_rst}\n"
     printf "  ${_acc}qpkg${_rst} ${_mut}catalog · install · ports · bins${_rst}\n"
     printf "  ${_acc}jump${_rst} ${_mut}misc · docs · downloads · sdcard · bc${_rst}\n"
-    printf "  ${_acc}run${_rst}  ${_mut}linux · nano · vim · git · settings${_rst}\n"
+    printf "  ${_acc}run${_rst}  ${_mut}linux · games · nano · vim · settings${_rst}\n"
     printf "  ${_box}──────────────────────────────────────────────────${_rst}\n"
     printf "  ${_prp}metamode${_rst} ${_dim}tap top-left or hold space${_rst}\n"
     printf "  ${_dim}hjkl arrows · c ctrl · a alt · v paste · e esc${_rst}\n"

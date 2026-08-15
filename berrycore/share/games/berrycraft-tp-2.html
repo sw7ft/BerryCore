@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BerryCraft &#183; third person</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+  #gl { display:block; width:100%; height:100%; touch-action:none; }
+  #hud {
+    position:absolute; top:0; left:0; right:0;
+    font-family:monospace; color:#fff; pointer-events:none;
+    text-shadow:1px 1px 0 rgba(0,0,0,0.6);
+  }
+  #hud .title { position:absolute; top:6px; left:8px; font-size:12px; opacity:0.85; }
+  #hud .fps   { position:absolute; top:6px; right:8px; font-size:12px; opacity:0.85; }
+  #err {
+    position:absolute; left:0; right:0; top:40%; text-align:center;
+    color:#f66; font-family:monospace; font-size:14px; display:none; padding:0 20px;
+  }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="hud">
+  <div class="title">BerryCraft &#183; drag right side to orbit &#183; left side / WASD to move</div>
+  <div class="fps" id="fps"></div>
+</div>
+<div id="err">WebGL not available on this device/browser.</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------
+  // Compat shims (BB10 WebKit)
+  // ---------------------------------------------------------------
+  var raf = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            function (cb) { return setTimeout(function () { cb(now()); }, 16); };
+
+  function now() {
+    return (window.performance && window.performance.now)
+      ? window.performance.now()
+      : Date.now();
+  }
+
+  // ---------------------------------------------------------------
+  // Canvas + GL context
+  // ---------------------------------------------------------------
+  var canvas = document.getElementById("gl");
+  var gl = null;
+  var ctxNames = ["webgl", "experimental-webgl"];
+  for (var ci = 0; ci < ctxNames.length && !gl; ci++) {
+    try { gl = canvas.getContext(ctxNames[ci], { antialias: false }); } catch (e) {}
+  }
+  if (!gl) {
+    document.getElementById("err").style.display = "block";
+    return;
+  }
+
+  var MAX_DIM = 720; // cap backing store for the Passport's 1440x1440 panel
+  function resize() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.clientWidth  * dpr;
+    var h = canvas.clientHeight * dpr;
+    var scale = Math.min(1, MAX_DIM / Math.max(w, h));
+    var bw = Math.max(1, Math.floor(w * scale));
+    var bh = Math.max(1, Math.floor(h * scale));
+    if (canvas.width !== bw || canvas.height !== bh) {
+      canvas.width = bw;
+      canvas.height = bh;
+    }
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener("resize", resize, false);
+  window.addEventListener("orientationchange", resize, false);
+
+  // ---------------------------------------------------------------
+  // Shaders (GLSL ES 1.0) - now with a model matrix for the character
+  // ---------------------------------------------------------------
+  var VSH =
+    "attribute vec3 aPos;\n" +
+    "attribute vec2 aUV;\n" +
+    "attribute float aShade;\n" +
+    "uniform mat4 uProj;\n" +
+    "uniform mat4 uView;\n" +
+    "uniform mat4 uModel;\n" +
+    "varying vec2 vUV;\n" +
+    "varying float vShade;\n" +
+    "varying float vDist;\n" +
+    "void main() {\n" +
+    "  vec4 eye = uView * uModel * vec4(aPos, 1.0);\n" +
+    "  vDist = length(eye.xyz);\n" +
+    "  vUV = aUV;\n" +
+    "  vShade = aShade;\n" +
+    "  gl_Position = uProj * eye;\n" +
+    "}\n";
+
+  var FSH =
+    "precision mediump float;\n" +
+    "uniform sampler2D uTex;\n" +
+    "uniform vec3 uSky;\n" +
+    "uniform float uFogStart;\n" +
+    "uniform float uFogEnd;\n" +
+    "varying vec2 vUV;\n" +
+    "varying float vShade;\n" +
+    "varying float vDist;\n" +
+    "void main() {\n" +
+    "  vec4 tex = texture2D(uTex, vUV);\n" +
+    "  vec3 col = tex.rgb * vShade;\n" +
+    "  float f = clamp((vDist - uFogStart) / (uFogEnd - uFogStart), 0.0, 1.0);\n" +
+    "  gl_FragColor = vec4(mix(col, uSky, f), 1.0);\n" +
+    "}\n";
+
+  function makeShader(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(s) || "shader compile failed");
+    }
+    return s;
+  }
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, makeShader(gl.VERTEX_SHADER, VSH));
+  gl.attachShader(prog, makeShader(gl.FRAGMENT_SHADER, FSH));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    throw new Error(gl.getProgramInfoLog(prog) || "link failed");
+  }
+  gl.useProgram(prog);
+
+  var loc = {
+    aPos:   gl.getAttribLocation(prog, "aPos"),
+    aUV:    gl.getAttribLocation(prog, "aUV"),
+    aShade: gl.getAttribLocation(prog, "aShade"),
+    uProj:  gl.getUniformLocation(prog, "uProj"),
+    uView:  gl.getUniformLocation(prog, "uView"),
+    uModel: gl.getUniformLocation(prog, "uModel"),
+    uTex:   gl.getUniformLocation(prog, "uTex"),
+    uSky:   gl.getUniformLocation(prog, "uSky"),
+    uFogStart: gl.getUniformLocation(prog, "uFogStart"),
+    uFogEnd:   gl.getUniformLocation(prog, "uFogEnd")
+  };
+
+  // ---------------------------------------------------------------
+  // Procedural texture atlas: 64x64, two rows of 16px tiles.
+  // Row 0: grass top | grass side | dirt | stone
+  // Row 1: skin      | face       | shirt | pants
+  // ---------------------------------------------------------------
+  var TILE = 16;
+  var ATLAS = 64;
+
+  function rnd(seed) {
+    var s = seed;
+    return function () {
+      s = (s * 1103515245 + 12345) & 0x7fffffff;
+      return s / 0x7fffffff;
+    };
+  }
+
+  function noiseTile(x, col, row, r, cr, cg, cb, lo, hi) {
+    var i, j, v;
+    for (j = 0; j < TILE; j++) for (i = 0; i < TILE; i++) {
+      v = lo + r() * (hi - lo);
+      x.fillStyle = "rgb(" + Math.floor(cr * v) + "," + Math.floor(cg * v) + "," + Math.floor(cb * v) + ")";
+      x.fillRect(col * TILE + i, row * TILE + j, 1, 1);
+    }
+  }
+
+  function buildAtlas() {
+    var c = document.createElement("canvas");
+    c.width = ATLAS; c.height = ATLAS;
+    var x = c.getContext("2d");
+    var r = rnd(1337);
+    var i, j, v;
+
+    // (0,0) grass top
+    noiseTile(x, 0, 0, r, 70, 160, 60, 0.75, 1.0);
+
+    // (1,0) grass side: dirt with a green lip
+    for (j = 0; j < TILE; j++) for (i = 0; i < TILE; i++) {
+      v = 0.7 + r() * 0.3;
+      if (j < 3 || (j === 3 && r() > 0.5)) {
+        x.fillStyle = "rgb(" + Math.floor(75 * v) + "," + Math.floor(150 * v) + "," + Math.floor(55 * v) + ")";
+      } else {
+        x.fillStyle = "rgb(" + Math.floor(134 * v) + "," + Math.floor(96 * v) + "," + Math.floor(67 * v) + ")";
+      }
+      x.fillRect(TILE + i, j, 1, 1);
+    }
+
+    // (2,0) dirt, (3,0) stone
+    noiseTile(x, 2, 0, r, 134, 96, 67, 0.7, 1.0);
+    noiseTile(x, 3, 0, r, 128, 128, 128, 0.75, 1.0);
+
+    // (0,1) skin, (2,1) shirt, (3,1) pants
+    noiseTile(x, 0, 1, r, 224, 172, 138, 0.92, 1.0);
+    noiseTile(x, 2, 1, r, 40, 150, 160, 0.85, 1.0);
+    noiseTile(x, 3, 1, r, 60, 70, 150, 0.85, 1.0);
+
+    // (1,1) face: skin + eyes + mouth (drawn in tile-local pixels)
+    noiseTile(x, 1, 1, r, 224, 172, 138, 0.92, 1.0);
+    var fx = TILE, fy = TILE;
+    x.fillStyle = "#fff";
+    x.fillRect(fx + 3,  fy + 5, 3, 2);
+    x.fillRect(fx + 10, fy + 5, 3, 2);
+    x.fillStyle = "#3a2a86";
+    x.fillRect(fx + 4,  fy + 5, 2, 2);
+    x.fillRect(fx + 10, fy + 5, 2, 2);
+    x.fillStyle = "#8a5a3a";
+    x.fillRect(fx + 6,  fy + 10, 4, 1);
+    // hair line
+    x.fillStyle = "#4a3220";
+    x.fillRect(fx, fy, TILE, 3);
+
+    return c;
+  }
+
+  var tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, buildAtlas());
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  function tileUV(col, row) {
+    var u0 = (col * TILE + 0.5) / ATLAS;
+    var u1 = ((col + 1) * TILE - 0.5) / ATLAS;
+    var v0 = (row * TILE + 0.5) / ATLAS;
+    var v1 = ((row + 1) * TILE - 0.5) / ATLAS;
+    return [u0, v0, u1, v1];
+  }
+  var UV_GRASS_TOP  = tileUV(0, 0);
+  var UV_GRASS_SIDE = tileUV(1, 0);
+  var UV_DIRT       = tileUV(2, 0);
+  var UV_STONE      = tileUV(3, 0);
+  var UV_SKIN       = tileUV(0, 1);
+  var UV_FACE       = tileUV(1, 1);
+  var UV_SHIRT      = tileUV(2, 1);
+  var UV_PANTS      = tileUV(3, 1);
+
+  // ---------------------------------------------------------------
+  // Geometry builder. World + character share one VBO/IBO;
+  // ranges are drawn with different model matrices.
+  // ---------------------------------------------------------------
+  var verts = [];   // pos(3) uv(2) shade(1)
+  var idx = [];
+  var vCount = 0;
+
+  function quad(p0, p1, p2, p3, uv, shade) {
+    var us = [uv[0], uv[1],  uv[2], uv[1],  uv[2], uv[3],  uv[0], uv[3]];
+    var ps = [p0, p1, p2, p3];
+    for (var k = 0; k < 4; k++) {
+      verts.push(ps[k][0], ps[k][1], ps[k][2], us[k * 2], us[k * 2 + 1], shade);
+    }
+    idx.push(vCount, vCount + 1, vCount + 2, vCount, vCount + 2, vCount + 3);
+    vCount += 4;
+  }
+
+  var SH_TOP = 1.0, SH_X = 0.8, SH_Z = 0.65, SH_BOT = 0.5;
+
+  // Axis-aligned box from (x0,y0,z0) to (x1,y1,z1), outward faces.
+  // uvs = {top, bottom, front(+z), back(-z), left(-x), right(+x)}
+  function box(x0, y0, z0, x1, y1, z1, uvs) {
+    quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0], uvs.top,    SH_TOP); // +Y
+    quad([x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1], uvs.bottom, SH_BOT); // -Y
+    quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1], uvs.front,  SH_Z);   // +Z
+    quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0], uvs.back,   SH_Z);   // -Z
+    quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1], uvs.right,  SH_X);   // +X
+    quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0], uvs.left,   SH_X);   // -X
+  }
+
+  function uniformUVs(uv) {
+    return { top: uv, bottom: uv, front: uv, back: uv, left: uv, right: uv };
+  }
+
+  // ----- World mesh -----
+  var W = 48, D = 48;
+  var gx, gz;
+  function blockTop(x, z, y, uv, tint) {
+    quad([x, y, z + 1], [x + 1, y, z + 1], [x + 1, y, z], [x, y, z], uv, SH_TOP * tint);
+  }
+  for (gz = 0; gz < D; gz++) {
+    for (gx = 0; gx < W; gx++) {
+      var tint = ((gx + gz) % 2 === 0) ? 1.0 : 0.94;
+      blockTop(gx, gz, 1, UV_GRASS_TOP, tint);
+    }
+  }
+  for (gx = 0; gx < W; gx++) {
+    quad([gx, 0, D], [gx + 1, 0, D], [gx + 1, 1, D], [gx, 1, D], UV_GRASS_SIDE, SH_Z);
+    quad([gx + 1, 0, 0], [gx, 0, 0], [gx, 1, 0], [gx + 1, 1, 0], UV_GRASS_SIDE, SH_Z);
+  }
+  for (gz = 0; gz < D; gz++) {
+    quad([W, 0, gz + 1], [W, 0, gz], [W, 1, gz], [W, 1, gz + 1], UV_GRASS_SIDE, SH_X);
+    quad([0, 0, gz], [0, 0, gz + 1], [0, 1, gz + 1], [0, 1, gz], UV_GRASS_SIDE, SH_X);
+  }
+
+  // Landmark stone blocks so motion reads on a flat world.
+  var landmarks = [
+    [10, 10, 1], [10, 10, 2],
+    [38, 12, 1],
+    [24, 24, 1], [24, 24, 2], [24, 24, 3],
+    [14, 36, 1],
+    [36, 38, 1], [37, 38, 1], [36, 39, 1]
+  ];
+  for (var li = 0; li < landmarks.length; li++) {
+    var L = landmarks[li];
+    box(L[0], L[2], L[1], L[0] + 1, L[2] + 1, L[1] + 1, uniformUVs(UV_STONE));
+  }
+
+  var worldIndexCount = idx.length;
+
+  // ----- Character mesh -----
+  // Each part is built in pivot-local space (pivot at origin), so at
+  // draw time: partMat = playerMat * T(pivot) * Rx(swing).
+  // Model faces +Z in local space. ~1.75 blocks tall.
+  var parts = []; // {start, count, pivot:[x,y,z], swingScale}
+
+  function beginPart(pivot, swingScale) {
+    parts.push({ start: idx.length, count: 0, pivot: pivot, swingScale: swingScale });
+  }
+  function endPart() {
+    var p = parts[parts.length - 1];
+    p.count = idx.length - p.start;
+  }
+
+  var LEG_H = 0.65, BODY_H = 0.6, HEAD = 0.45;
+  var HIP_Y = LEG_H, SHOULDER_Y = LEG_H + BODY_H;
+
+  // Head (pivot at neck; no swing)
+  beginPart([0, SHOULDER_Y, 0], 0);
+  box(-HEAD / 2, 0.02, -HEAD / 2, HEAD / 2, 0.02 + HEAD, HEAD / 2, {
+    top: UV_SKIN, bottom: UV_SKIN, front: UV_FACE,
+    back: UV_SKIN, left: UV_SKIN, right: UV_SKIN
+  });
+  endPart();
+
+  // Body (pivot at hips; no swing)
+  beginPart([0, HIP_Y, 0], 0);
+  box(-0.25, 0, -0.13, 0.25, BODY_H, 0.13, uniformUVs(UV_SHIRT));
+  endPart();
+
+  // Arms (pivot at shoulder, swing opposite to legs)
+  beginPart([-0.34, SHOULDER_Y - 0.05, 0], -0.8);
+  box(-0.09, -0.58, -0.09, 0.09, 0.05, 0.09, uniformUVs(UV_SKIN));
+  endPart();
+  beginPart([0.34, SHOULDER_Y - 0.05, 0], 0.8);
+  box(-0.09, -0.58, -0.09, 0.09, 0.05, 0.09, uniformUVs(UV_SKIN));
+  endPart();
+
+  // Legs (pivot at hip)
+  beginPart([-0.13, HIP_Y, 0], 1.0);
+  box(-0.11, -LEG_H, -0.11, 0.11, 0, 0.11, uniformUVs(UV_PANTS));
+  endPart();
+  beginPart([0.13, HIP_Y, 0], -1.0);
+  box(-0.11, -LEG_H, -0.11, 0.11, 0, 0.11, uniformUVs(UV_PANTS));
+  endPart();
+
+  // ----- Upload -----
+  var vbo = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+  var ibo = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx), gl.STATIC_DRAW);
+
+  var STRIDE = 6 * 4;
+  gl.enableVertexAttribArray(loc.aPos);
+  gl.vertexAttribPointer(loc.aPos, 3, gl.FLOAT, false, STRIDE, 0);
+  gl.enableVertexAttribArray(loc.aUV);
+  gl.vertexAttribPointer(loc.aUV, 2, gl.FLOAT, false, STRIDE, 12);
+  gl.enableVertexAttribArray(loc.aShade);
+  gl.vertexAttribPointer(loc.aShade, 1, gl.FLOAT, false, STRIDE, 20);
+
+  // ---------------------------------------------------------------
+  // Minimal mat4 (column-major)
+  // ---------------------------------------------------------------
+  function mat4() { var m = new Float32Array(16); m[0]=m[5]=m[10]=m[15]=1; return m; }
+
+  function mul(out, a, b) { // out = a * b
+    var r, c, i, s;
+    var t = mulTmp;
+    for (c = 0; c < 4; c++) {
+      for (r = 0; r < 4; r++) {
+        s = 0;
+        for (i = 0; i < 4; i++) s += a[i * 4 + r] * b[c * 4 + i];
+        t[c * 4 + r] = s;
+      }
+    }
+    for (i = 0; i < 16; i++) out[i] = t[i];
+  }
+  var mulTmp = new Float32Array(16);
+
+  function setTRY(out, tx, ty, tz, yaw) { // translate * rotateY
+    var cy = Math.cos(yaw), sy = Math.sin(yaw);
+    out[0]=cy;  out[1]=0; out[2]=-sy; out[3]=0;
+    out[4]=0;   out[5]=1; out[6]=0;   out[7]=0;
+    out[8]=sy;  out[9]=0; out[10]=cy; out[11]=0;
+    out[12]=tx; out[13]=ty; out[14]=tz; out[15]=1;
+  }
+
+  function setTRX(out, tx, ty, tz, ang) { // translate * rotateX
+    var c = Math.cos(ang), s = Math.sin(ang);
+    out[0]=1; out[1]=0;  out[2]=0;  out[3]=0;
+    out[4]=0; out[5]=c;  out[6]=s;  out[7]=0;
+    out[8]=0; out[9]=-s; out[10]=c; out[11]=0;
+    out[12]=tx; out[13]=ty; out[14]=tz; out[15]=1;
+  }
+
+  function perspective(out, fovy, aspect, near, far) {
+    var f = 1 / Math.tan(fovy / 2);
+    var nf = 1 / (near - far);
+    out[0]=f/aspect; out[1]=0; out[2]=0;              out[3]=0;
+    out[4]=0;        out[5]=f; out[6]=0;              out[7]=0;
+    out[8]=0;        out[9]=0; out[10]=(far+near)*nf; out[11]=-1;
+    out[12]=0;       out[13]=0;out[14]=2*far*near*nf; out[15]=0;
+  }
+
+  function viewMatrix(out, ex, ey, ez, yaw, pitch) {
+    var cy = Math.cos(yaw),  sy = Math.sin(yaw);
+    var cp = Math.cos(pitch), sp = Math.sin(pitch);
+    var rx = [cy, sy * sp, sy * cp];
+    var ry = [0,  cp,     -sp];
+    var rz = [-sy, cy * sp, cy * cp];
+    out[0]=rx[0]; out[1]=rx[1]; out[2]=rx[2];  out[3]=0;
+    out[4]=ry[0]; out[5]=ry[1]; out[6]=ry[2];  out[7]=0;
+    out[8]=rz[0]; out[9]=rz[1]; out[10]=rz[2]; out[11]=0;
+    out[12]=-(rx[0]*ex + ry[0]*ey + rz[0]*ez);
+    out[13]=-(rx[1]*ex + ry[1]*ey + rz[1]*ez);
+    out[14]=-(rx[2]*ex + ry[2]*ey + rz[2]*ez);
+    out[15]=1;
+  }
+
+  var proj = mat4();
+  var view = mat4();
+  var identity = mat4();
+  var playerMat = mat4();
+  var pivotMat = mat4();
+  var partMat = mat4();
+
+  // ---------------------------------------------------------------
+  // Player + orbit camera
+  // ---------------------------------------------------------------
+  var GROUND_Y = 1;
+  var player = {
+    x: W / 2, z: D / 2 + 8,
+    yaw: Math.PI,        // facing direction of the character
+    speed: 4.5,
+    moving: false,
+    walkPhase: 0
+  };
+  var cam = {
+    yaw: Math.PI,        // orbit angle (movement is camera-relative)
+    pitch: -0.25,
+    dist: 5.0
+  };
+
+  // ---------------------------------------------------------------
+  // Keyboard: the Passport's physical keyboard under BB10 WebKit can
+  // deliver keys three different ways depending on OS build:
+  //   1. keydown/keyup with a normal keyCode (87 = W)
+  //   2. keydown with keyCode 0 but old-WebKit keyIdentifier ("U+0057")
+  //   3. only a keypress with a charCode
+  // We accept all three. keyHeld tracks keydown/keyup; keyExpiry is a
+  // belt-and-suspenders path fed by keypress (which has no keyup), kept
+  // alive by key-repeat. Window blur clears everything so a missed
+  // keyup can never leave the character walking forever.
+  var keyHeld = {};
+  var keyExpiry = {};
+  var PRESS_HOLD_MS = 300;
+
+  function mapCode(code) {
+    switch (code) {
+      case 87: case 119: case 38: return "fwd";    // W w Up
+      case 83: case 115: case 40: return "back";   // S s Down
+      case 65: case 97:  case 37: return "left";   // A a Left
+      case 68: case 100: case 39: return "right";  // D d Right
+    }
+    return null;
+  }
+
+  function mapKeyEvent(e) {
+    var name = null;
+    if (e.key) {
+      switch (e.key) {
+        case "w": case "W": case "ArrowUp":    case "Up":    name = "fwd";   break;
+        case "s": case "S": case "ArrowDown":  case "Down":  name = "back";  break;
+        case "a": case "A": case "ArrowLeft":  case "Left":  name = "left";  break;
+        case "d": case "D": case "ArrowRight": case "Right": name = "right"; break;
+      }
+    }
+    if (!name && e.keyIdentifier) {
+      var ki = e.keyIdentifier;
+      if (ki.indexOf("U+") === 0) name = mapCode(parseInt(ki.slice(2), 16));
+      else if (ki === "Up")    name = "fwd";
+      else if (ki === "Down")  name = "back";
+      else if (ki === "Left")  name = "left";
+      else if (ki === "Right") name = "right";
+    }
+    if (!name && e.keyCode) name = mapCode(e.keyCode);
+    return name;
+  }
+
+  document.addEventListener("keydown", function (e) {
+    var name = mapKeyEvent(e);
+    if (name) {
+      keyHeld[name] = true;
+      keyExpiry[name] = now() + PRESS_HOLD_MS;
+      if (e.preventDefault) e.preventDefault();
+    }
+  }, false);
+
+  document.addEventListener("keyup", function (e) {
+    var name = mapKeyEvent(e);
+    if (name) {
+      keyHeld[name] = false;
+      keyExpiry[name] = 0;
+    }
+  }, false);
+
+  document.addEventListener("keypress", function (e) {
+    var name = mapCode(e.charCode || e.keyCode || 0);
+    if (name) {
+      keyExpiry[name] = now() + PRESS_HOLD_MS;
+      if (e.preventDefault) e.preventDefault();
+    }
+  }, false);
+
+  window.addEventListener("blur", function () {
+    keyHeld = {};
+    keyExpiry = {};
+  }, false);
+
+  function isDown(name) {
+    if (keyHeld[name]) return true;
+    var exp = keyExpiry[name];
+    return !!exp && exp > now();
+  }
+
+  var moveTouch = null;
+  var lookTouch = null;
+  var LOOK_SENS = 0.0045;
+  var STICK_RANGE = 60;
+
+  function findTouch(list, id) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].identifier === id) return list[i];
+    }
+    return null;
+  }
+
+  canvas.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    var half = canvas.clientWidth / 2;
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var t = e.changedTouches[i];
+      if (t.clientX < half && !moveTouch) {
+        moveTouch = { id: t.identifier, sx: t.clientX, sy: t.clientY, dx: 0, dy: 0 };
+      } else if (!lookTouch) {
+        lookTouch = { id: t.identifier, lx: t.clientX, ly: t.clientY };
+      }
+    }
+  }, false);
+
+  canvas.addEventListener("touchmove", function (e) {
+    e.preventDefault();
+    var t;
+    if (moveTouch) {
+      t = findTouch(e.touches, moveTouch.id);
+      if (t) {
+        moveTouch.dx = t.clientX - moveTouch.sx;
+        moveTouch.dy = t.clientY - moveTouch.sy;
+      }
+    }
+    if (lookTouch) {
+      t = findTouch(e.touches, lookTouch.id);
+      if (t) {
+        cam.yaw   += (t.clientX - lookTouch.lx) * LOOK_SENS;
+        cam.pitch -= (t.clientY - lookTouch.ly) * LOOK_SENS;
+        lookTouch.lx = t.clientX;
+        lookTouch.ly = t.clientY;
+      }
+    }
+  }, false);
+
+  function endTouches(e) {
+    e.preventDefault();
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var id = e.changedTouches[i].identifier;
+      if (moveTouch && moveTouch.id === id) moveTouch = null;
+      if (lookTouch && lookTouch.id === id) lookTouch = null;
+    }
+  }
+  canvas.addEventListener("touchend", endTouches, false);
+  canvas.addEventListener("touchcancel", endTouches, false);
+
+  // Mouse behaves exactly like touch: left half of the screen drives
+  // the move stick, right half orbits the camera. This covers desktop
+  // testing AND any BB10 webview mode that synthesizes mouse events
+  // instead of (or as well as) touch events. Real touchstart calls
+  // preventDefault, which suppresses WebKit's synthesized mouse events,
+  // so the two paths never double-fire.
+  var mousePointer = null; // { mode: "move" | "look", lx, ly }
+  canvas.addEventListener("mousedown", function (e) {
+    if (e.preventDefault) e.preventDefault();
+    var half = canvas.clientWidth / 2;
+    if (e.clientX < half) {
+      if (!moveTouch) {
+        moveTouch = { id: "mouse", sx: e.clientX, sy: e.clientY, dx: 0, dy: 0 };
+        mousePointer = { mode: "move" };
+      }
+    } else {
+      mousePointer = { mode: "look", lx: e.clientX, ly: e.clientY };
+    }
+  }, false);
+  document.addEventListener("mouseup", function () {
+    if (mousePointer && mousePointer.mode === "move" &&
+        moveTouch && moveTouch.id === "mouse") {
+      moveTouch = null;
+    }
+    mousePointer = null;
+  }, false);
+  document.addEventListener("mousemove", function (e) {
+    if (!mousePointer) return;
+    if (mousePointer.mode === "move" &&
+        moveTouch && moveTouch.id === "mouse") {
+      moveTouch.dx = e.clientX - moveTouch.sx;
+      moveTouch.dy = e.clientY - moveTouch.sy;
+    } else if (mousePointer.mode === "look") {
+      cam.yaw   += (e.clientX - mousePointer.lx) * LOOK_SENS;
+      cam.pitch -= (e.clientY - mousePointer.ly) * LOOK_SENS;
+      mousePointer.lx = e.clientX;
+      mousePointer.ly = e.clientY;
+    }
+  }, false);
+  // Stop BB10's long-press context menu / selection from stealing drags.
+  canvas.addEventListener("contextmenu", function (e) {
+    if (e.preventDefault) e.preventDefault();
+  }, false);
+
+  function clampf(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+
+  function angleLerp(a, b, t) {
+    var d = b - a;
+    while (d >  Math.PI) d -= 2 * Math.PI;
+    while (d < -Math.PI) d += 2 * Math.PI;
+    return a + d * t;
+  }
+
+  function updatePlayer(dt) {
+    cam.pitch = clampf(cam.pitch, -1.1, 0.45);
+
+    var fwd = 0, strafe = 0;
+    if (isDown("fwd"))   fwd += 1;
+    if (isDown("back"))  fwd -= 1;
+    if (isDown("left"))  strafe -= 1;
+    if (isDown("right")) strafe += 1;
+
+    if (moveTouch) {
+      fwd    += clampf(-moveTouch.dy / STICK_RANGE, -1, 1);
+      strafe += clampf( moveTouch.dx / STICK_RANGE, -1, 1);
+    }
+
+    var len = Math.sqrt(fwd * fwd + strafe * strafe);
+    if (len > 1) { fwd /= len; strafe /= len; }
+
+    player.moving = len > 0.05;
+
+    if (player.moving) {
+      var sy = Math.sin(cam.yaw), cy = Math.cos(cam.yaw);
+      var vx = sy * -fwd + cy * strafe;
+      var vz = cy * -fwd - sy * strafe;
+      player.x += vx * player.speed * dt;
+      player.z += vz * player.speed * dt;
+
+      // Face travel direction. Local model forward is +Z, and the
+      // world-forward for yaw is (-sin(yaw), -cos(yaw)), so aim +Z
+      // at the velocity by adding PI.
+      var targetYaw = Math.atan2(vx, vz);
+      player.yaw = angleLerp(player.yaw, targetYaw, Math.min(1, dt * 12));
+
+      player.walkPhase += dt * player.speed * 1.9 * Math.min(1, len);
+    }
+
+    player.x = clampf(player.x, 0.5, W - 0.5);
+    player.z = clampf(player.z, 0.5, D - 0.5);
+  }
+
+  // ---------------------------------------------------------------
+  // Main loop
+  // ---------------------------------------------------------------
+  var SKY = [0.55, 0.75, 0.95];
+  gl.clearColor(SKY[0], SKY[1], SKY[2], 1);
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.CULL_FACE);
+  gl.cullFace(gl.BACK);
+
+  gl.uniform1i(loc.uTex, 0);
+  gl.uniform3f(loc.uSky, SKY[0], SKY[1], SKY[2]);
+  gl.uniform1f(loc.uFogStart, 22.0);
+  gl.uniform1f(loc.uFogEnd, 44.0);
+
+  var fpsEl = document.getElementById("fps");
+  var frames = 0, fpsTime = 0;
+  var last = now();
+
+  function frame() {
+    var t = now();
+    var dt = (t - last) / 1000;
+    last = t;
+    if (dt > 0.1) dt = 0.1;
+
+    resize();
+    updatePlayer(dt);
+
+    // Orbit camera: aim at the character's chest, sit cam.dist behind
+    // the camera's look direction, never below the grass.
+    var cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+    var fx = -Math.sin(cam.yaw) * cp;
+    var fy = sp;
+    var fz = -Math.cos(cam.yaw) * cp;
+
+    var tx = player.x;
+    var ty = GROUND_Y + 1.35;
+    var tz = player.z;
+
+    var ex = tx - fx * cam.dist;
+    var ey = ty - fy * cam.dist;
+    var ez = tz - fz * cam.dist;
+    if (ey < GROUND_Y + 0.3) ey = GROUND_Y + 0.3;
+
+    perspective(proj, 70 * Math.PI / 180, canvas.width / canvas.height, 0.1, 100);
+    viewMatrix(view, ex, ey, ez, cam.yaw, cam.pitch);
+
+    gl.uniformMatrix4fv(loc.uProj, false, proj);
+    gl.uniformMatrix4fv(loc.uView, false, view);
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // World
+    gl.uniformMatrix4fv(loc.uModel, false, identity);
+    gl.drawElements(gl.TRIANGLES, worldIndexCount, gl.UNSIGNED_SHORT, 0);
+
+    // Character: swing eases back to idle when stopped
+    var swing = player.moving ? Math.sin(player.walkPhase) * 0.7 : 0;
+    setTRY(playerMat, player.x, GROUND_Y, player.z, player.yaw);
+
+    for (var pi = 0; pi < parts.length; pi++) {
+      var p = parts[pi];
+      setTRX(pivotMat, p.pivot[0], p.pivot[1], p.pivot[2], swing * p.swingScale);
+      mul(partMat, playerMat, pivotMat);
+      gl.uniformMatrix4fv(loc.uModel, false, partMat);
+      gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_SHORT, p.start * 2);
+    }
+
+    frames++;
+    fpsTime += dt;
+    if (fpsTime >= 1) {
+      fpsEl.innerHTML = frames + " fps";
+      frames = 0;
+      fpsTime = 0;
+    }
+    raf(frame);
+  }
+
+  resize();
+  raf(frame);
+})();
+</script>
+</body>
+</html>

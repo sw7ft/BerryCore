@@ -1,0 +1,17 @@
+BerryCore Games
+===============
+
+HTML game menu (ES5). Same idea as `tools`, different port.
+
+  games          Start server on port 8766
+  games stop
+  games status
+
+Then open:  http://127.0.0.1:8766/   in berry-browser
+
+Autostart:  settings games-on
+
+Games: BerryCraft, BerryFly, BerryBoat, BerryDig, BerryMoto, BerryMX
+(latest version on the tile; older versions as chips)
+
+Requires: python3 (bundled with BerryCore)

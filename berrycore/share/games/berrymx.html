@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BerryMX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+  #cv { display:block; width:100%; height:100%; touch-action:none; }
+  #hud {
+    position:absolute; top:0; left:0; right:0;
+    font-family:monospace; color:#fff; pointer-events:none;
+    text-shadow:1px 1px 0 rgba(0,0,0,0.55);
+  }
+  #hud .title { position:absolute; top:6px; left:8px; font-size:11px; opacity:0.9; }
+  #hud .stat  { position:absolute; top:6px; right:8px; font-size:12px; opacity:0.9; }
+  #hud .big   {
+    position:absolute; top:34%; left:0; right:0; text-align:center;
+    font-size:26px; font-weight:bold; opacity:0; letter-spacing:2px;
+  }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="hud">
+  <div class="title">BerryMX &#183; W gas &#183; S brake &#183; A/D lean &#183; touch: right=gas left=brake, drag sideways to lean</div>
+  <div class="stat" id="stat"></div>
+  <div class="big" id="big"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------
+  // Shims (BB10 WebKit)
+  // ---------------------------------------------------------------
+  var raf = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            function (cb) { return setTimeout(function () { cb(now()); }, 16); };
+  function now() {
+    return (window.performance && window.performance.now)
+      ? window.performance.now()
+      : Date.now();
+  }
+
+  var canvas = document.getElementById("cv");
+  var ctx = canvas.getContext("2d");
+  var vw = 0, vh = 0;
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5); // cap for the Passport GPU
+    var w = Math.floor(canvas.clientWidth * dpr);
+    var h = Math.floor(canvas.clientHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+    }
+    vw = w; vh = h;
+  }
+  window.addEventListener("resize", resize, false);
+  window.addEventListener("orientationchange", resize, false);
+
+  // ---------------------------------------------------------------
+  // Terrain: an endless 1D profile built from feature "recipes".
+  // Control points are cosine-interpolated, so ramps launch smoothly.
+  // World units are meters, +y is UP (flipped only at draw time).
+  // ---------------------------------------------------------------
+  function hash(n) {
+    var s = Math.sin(n * 127.1) * 43758.5453;
+    return s - Math.floor(s);
+  }
+
+  var pts = [{ x: -30, y: 0 }, { x: 0, y: 0 }, { x: 18, y: 0 }]; // runway
+  var segIdx = 1;
+  var levelY = 0;
+
+  function pushPt(dx, dy) {
+    var lastP = pts[pts.length - 1];
+    pts.push({ x: lastP.x + dx, y: lastP.y + dy });
+    levelY = lastP.y + dy;
+  }
+
+  function genFeature() {
+    var r = hash(segIdx * 7.31);
+    segIdx++;
+    // Mean reversion keeps the track from wandering off to space.
+    if (levelY > 7)  { pushPt(9, -3.2); pushPt(6, -1.5); return; }
+    if (levelY < -7) { pushPt(9,  3.2); pushPt(6,  1.5); return; }
+
+    if (r < 0.16) {                       // breather flat
+      pushPt(7, 0);
+    } else if (r < 0.34) {                // rollers
+      var n = 2 + Math.floor(hash(segIdx * 3.7) * 3);
+      for (var i = 0; i < n; i++) { pushPt(2.6, 1.1); pushPt(2.6, -1.1); }
+    } else if (r < 0.52) {                // tabletop
+      var hgt = 1.6 + hash(segIdx * 5.1) * 1.4;
+      pushPt(3.2, hgt); pushPt(3.5, 0); pushPt(1.4, -hgt); pushPt(4, 0);
+    } else if (r < 0.66) {                // double jump
+      var h2 = 1.4 + hash(segIdx * 4.3) * 1.0;
+      pushPt(2.6, h2); pushPt(1.2, -h2);
+      pushPt(3.4, 0);
+      pushPt(2.6, h2 * 1.1); pushPt(1.3, -h2 * 1.1);
+      pushPt(3, 0);
+    } else if (r < 0.82) {                // whoops
+      for (var j = 0; j < 6; j++) { pushPt(1.25, 0.45); pushPt(1.25, -0.45); }
+    } else if (r < 0.92) {                // big hill
+      var dir = hash(segIdx * 9.7) < 0.5 ? 1 : -1;
+      pushPt(9, 3.4 * dir); pushPt(7, 1.2 * dir);
+    } else {                              // step-up sender
+      pushPt(3.0, 2.6); pushPt(1.0, -2.6); pushPt(6, 0);
+    }
+  }
+
+  function genTo(x) {
+    while (pts[pts.length - 1].x < x) genFeature();
+    // prune far behind
+    while (pts.length > 4 && pts[1].x < x - 220) pts.shift();
+  }
+
+  var hCache = 0;
+  function height(x) {
+    // walk from a cached index; queries cluster near the bike
+    var i = hCache;
+    if (i > pts.length - 2) i = pts.length - 2;
+    while (i > 0 && pts[i].x > x) i--;
+    while (i < pts.length - 2 && pts[i + 1].x <= x) i++;
+    hCache = i;
+    var p0 = pts[i], p1 = pts[i + 1];
+    var t = (x - p0.x) / (p1.x - p0.x);
+    if (t < 0) t = 0; if (t > 1) t = 1;
+    var tt = (1 - Math.cos(t * Math.PI)) / 2;
+    return p0.y + (p1.y - p0.y) * tt;
+  }
+  function slope(x) {
+    return (height(x + 0.06) - height(x - 0.06)) / 0.12;
+  }
+
+  // ---------------------------------------------------------------
+  // Bike: rigid body + two spring wheels. Suspension forces applied
+  // at the wheel offsets create torque, so wheelies, endos, and
+  // flip control all fall out of one model.
+  // ---------------------------------------------------------------
+  var bike = {
+    x: 2, y: 1.2, a: 0,        // position, angle (CCW+)
+    vx: 0, vy: 0, av: 0,       // velocities
+    wheelSpin: 0,
+    airAngle: 0,               // accumulated rotation while airborne
+    grounded: true,
+    crashed: 0                 // crash timer
+  };
+  var MASS = 1, INERTIA = 0.55;
+  var G = -22;
+  var WHEEL_R = 0.31, WB = 0.78;     // wheel radius, half wheelbase
+  var SUS_K = 120, SUS_C = 9;
+  var DRIVE_F = 26, BRAKE_F = 30, VCAP = 23;
+  var LEAN_T = 14;                    // player torque (~1 flip per 0.7s held in air)
+  var startX = 2;
+  var maxDist = 0, flips = 0;
+
+  var bigEl = document.getElementById("big");
+  var bigTimer = 0;
+  function flashBig(msg, color) {
+    bigEl.innerHTML = msg;
+    bigEl.style.color = color || "#fff";
+    bigTimer = 1.1;
+  }
+
+  function crash() {
+    if (bike.crashed > 0) return;
+    bike.crashed = 1.3;
+    flashBig("CRASHED", "#ff5544");
+  }
+  function respawn() {
+    bike.y = height(bike.x) + 1.0;
+    bike.a = Math.atan(slope(bike.x));
+    bike.vx = 0; bike.vy = 0; bike.av = 0;
+    bike.airAngle = 0;
+  }
+
+  function stepPhysics(dt, inp) {
+    if (bike.crashed > 0) {
+      // tumble: no input, heavy angular drag, still hits the ground
+      inp = { thr: 0, lean: 0 };
+      bike.av *= Math.max(0, 1 - 2.5 * dt);
+    }
+
+    var fx = 0, fy = MASS * G, torque = 0;
+    var groundedCount = 0;
+
+    // player lean torque (stronger authority in the air)
+    var leanAuth = bike.grounded ? 0.45 : 1.0;
+    torque += inp.lean * LEAN_T * leanAuth;
+
+    var ca = Math.cos(bike.a), sa = Math.sin(bike.a);
+    var contacts = [
+      { lx: -WB, ly: 0,    r: WHEEL_R, drive: true,  k: 1.0 }, // rear wheel
+      { lx:  WB, ly: 0,    r: WHEEL_R, drive: false, k: 1.0 }, // front wheel
+      { lx:  0,  ly: 0.06, r: 0.18,    drive: false, k: 0.8 }  // skid plate
+    ];
+
+    for (var i = 0; i < contacts.length; i++) {
+      var w = contacts[i];
+      // contact center in world (local offset rotated)
+      var ox = w.lx * ca - w.ly * sa;
+      var oy = w.lx * sa + w.ly * ca;
+      var wx = bike.x + ox, wy = bike.y + oy;
+      var gh = height(wx);
+      var pen = gh + w.r - wy;
+      if (pen > 0) {
+        groundedCount++;
+        if (pen > w.r) pen = w.r;
+        var sl = slope(wx);
+        var nl = Math.sqrt(1 + sl * sl);
+        var nx = -sl / nl, ny = 1 / nl;      // ground normal
+        var tx2 = 1 / nl, ty2 = sl / nl;     // tangent, +x forward
+
+        // velocity of the contact point
+        var pvx = bike.vx - bike.av * oy;
+        var pvy = bike.vy + bike.av * ox;
+        var vn = pvx * nx + pvy * ny;
+
+        var Fn = SUS_K * w.k * pen - SUS_C * vn;
+        if (Fn < 0) Fn = 0;
+        var Fx = nx * Fn, Fy = ny * Fn;
+
+        // drive / brake along the tangent
+        var vt = pvx * tx2 + pvy * ty2;
+        var Ft = 0;
+        if (w.drive && inp.thr > 0 && bike.vx * ca + bike.vy * sa < VCAP) {
+          Ft += inp.thr * DRIVE_F;
+        }
+        if (inp.thr < 0) {
+          // brakes on both wheels, opposing motion
+          var bmax = -inp.thr * BRAKE_F;
+          Ft += vt > 0 ? -Math.min(bmax, vt * 8) : Math.min(bmax, -vt * 8);
+        }
+        Fx += tx2 * Ft; Fy += ty2 * Ft;
+
+        fx += Fx; fy += Fy;
+        torque += ox * Fy - oy * Fx;
+      }
+    }
+
+    var groundedNow = groundedCount > 0;
+
+    // flips: accumulate rotation only while fully airborne
+    if (!groundedNow) {
+      bike.airAngle += bike.av * dt;
+    } else if (!bike.grounded) {
+      // just landed: award flips
+      var n = Math.floor(Math.abs(bike.airAngle) / (Math.PI * 2) + 0.12);
+      if (n > 0 && bike.crashed <= 0) {
+        flips += n;
+        flashBig(bike.airAngle > 0
+          ? (n > 1 ? n + "x BACKFLIP!" : "BACKFLIP!")
+          : (n > 1 ? n + "x FRONTFLIP!" : "FRONTFLIP!"), "#ffd24a");
+      }
+      bike.airAngle = 0;
+    }
+    bike.grounded = groundedNow;
+
+    // integrate
+    bike.vx += (fx / MASS) * dt;
+    bike.vy += (fy / MASS) * dt;
+    bike.av += (torque / INERTIA) * dt;
+    bike.av *= Math.max(0, 1 - 0.4 * dt);
+    bike.x += bike.vx * dt;
+    bike.y += bike.vy * dt;
+    bike.a += bike.av * dt;
+
+    // rider head vs ground = crash. Head local offset (-0.15, +0.95).
+    var hx = bike.x + (-0.15) * ca - 0.95 * sa;
+    var hy = bike.y + (-0.15) * sa + 0.95 * ca;
+    if (hy < height(hx) + 0.05) crash();
+
+    bike.wheelSpin += ((bike.vx * ca + bike.vy * sa) / WHEEL_R) * dt +
+                      (inp.thr > 0 && !bike.grounded ? 18 * dt : 0);
+
+    if (bike.x - startX > maxDist) maxDist = bike.x - startX;
+  }
+
+  function updateBike(dt, inp) {
+    // substeps keep the stiff suspension stable
+    var n = 3, i;
+    for (i = 0; i < n; i++) stepPhysics(dt / n, inp);
+    if (bike.crashed > 0) {
+      bike.crashed -= dt;
+      if (bike.crashed <= 0) respawn();
+    }
+    genTo(bike.x + 90);
+  }
+
+  // ---------------------------------------------------------------
+  // Input: keyboard (BB10 multi-path) + touch pedals with drag-lean
+  // ---------------------------------------------------------------
+  var keyHeld = {};
+  var keyExpiry = {};
+  var PRESS_HOLD_MS = 300;
+
+  function mapCode(code) {
+    switch (code) {
+      case 87: case 119: case 73: case 105: case 38: return "thr";   // W I Up
+      case 83: case 115: case 75: case 107: case 40: return "brake"; // S K Down
+      case 65: case 97:  case 74: case 106: case 37: return "leanB"; // A J Left
+      case 68: case 100: case 76: case 108: case 39: return "leanF"; // D L Right
+    }
+    return null;
+  }
+  function mapKeyEvent(e) {
+    var name = null;
+    if (e.key) {
+      switch (e.key) {
+        case "w": case "W": case "i": case "I":
+        case "ArrowUp": case "Up": name = "thr"; break;
+        case "s": case "S": case "k": case "K":
+        case "ArrowDown": case "Down": name = "brake"; break;
+        case "a": case "A": case "j": case "J":
+        case "ArrowLeft": case "Left": name = "leanB"; break;
+        case "d": case "D": case "l": case "L":
+        case "ArrowRight": case "Right": name = "leanF"; break;
+      }
+    }
+    if (!name && e.keyIdentifier) {
+      var ki = e.keyIdentifier;
+      if (ki.indexOf("U+") === 0) name = mapCode(parseInt(ki.slice(2), 16));
+      else if (ki === "Up")    name = "thr";
+      else if (ki === "Down")  name = "brake";
+      else if (ki === "Left")  name = "leanB";
+      else if (ki === "Right") name = "leanF";
+    }
+    if (!name && e.keyCode) name = mapCode(e.keyCode);
+    return name;
+  }
+  document.addEventListener("keydown", function (e) {
+    var name = mapKeyEvent(e);
+    if (name) {
+      keyHeld[name] = true;
+      keyExpiry[name] = now() + PRESS_HOLD_MS;
+      if (e.preventDefault) e.preventDefault();
+    }
+  }, false);
+  document.addEventListener("keyup", function (e) {
+    var name = mapKeyEvent(e);
+    if (name) { keyHeld[name] = false; keyExpiry[name] = 0; }
+  }, false);
+  document.addEventListener("keypress", function (e) {
+    var name = mapCode(e.charCode || e.keyCode || 0);
+    if (name) {
+      keyExpiry[name] = now() + PRESS_HOLD_MS;
+      if (e.preventDefault) e.preventDefault();
+    }
+  }, false);
+  window.addEventListener("blur", function () {
+    keyHeld = {}; keyExpiry = {};
+  }, false);
+  function isDown(name) {
+    if (keyHeld[name]) return true;
+    var exp = keyExpiry[name];
+    return !!exp && exp > now();
+  }
+
+  // Touch: hold right half = gas, hold left half = brake. Dragging a
+  // held touch sideways leans (drag left = lean back, right = lean
+  // forward). Mouse behaves identically.
+  var touches = []; // {id, sx, half, dx}
+  function addPointer(id, cx) {
+    var half = cx < canvas.clientWidth / 2 ? "brake" : "gas";
+    touches.push({ id: id, sx: cx, half: half, dx: 0 });
+  }
+  function movePointer(id, cx) {
+    for (var i = 0; i < touches.length; i++) {
+      if (touches[i].id === id) touches[i].dx = cx - touches[i].sx;
+    }
+  }
+  function removePointer(id) {
+    for (var i = touches.length - 1; i >= 0; i--) {
+      if (touches[i].id === id) touches.splice(i, 1);
+    }
+  }
+  canvas.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      addPointer(e.changedTouches[i].identifier, e.changedTouches[i].clientX);
+    }
+  }, false);
+  canvas.addEventListener("touchmove", function (e) {
+    e.preventDefault();
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      movePointer(e.changedTouches[i].identifier, e.changedTouches[i].clientX);
+    }
+  }, false);
+  function endT(e) {
+    e.preventDefault();
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      removePointer(e.changedTouches[i].identifier);
+    }
+  }
+  canvas.addEventListener("touchend", endT, false);
+  canvas.addEventListener("touchcancel", endT, false);
+  canvas.addEventListener("mousedown", function (e) {
+    if (e.preventDefault) e.preventDefault();
+    addPointer("mouse", e.clientX);
+  }, false);
+  document.addEventListener("mousemove", function (e) {
+    movePointer("mouse", e.clientX);
+  }, false);
+  document.addEventListener("mouseup", function () {
+    removePointer("mouse");
+  }, false);
+  canvas.addEventListener("contextmenu", function (e) {
+    if (e.preventDefault) e.preventDefault();
+  }, false);
+
+  function clampf(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+
+  function readInput() {
+    var thr = 0, lean = 0;
+    if (isDown("thr"))   thr += 1;
+    if (isDown("brake")) thr -= 1;
+    if (isDown("leanB")) lean += 1;   // CCW = lean back
+    if (isDown("leanF")) lean -= 1;
+    for (var i = 0; i < touches.length; i++) {
+      var tc = touches[i];
+      thr += tc.half === "gas" ? 1 : -1;
+      lean += clampf(-tc.dx / 55, -1, 1);
+    }
+    return { thr: clampf(thr, -1, 1), lean: clampf(lean, -1, 1) };
+  }
+
+  // ---------------------------------------------------------------
+  // Rendering (Canvas 2D, y-up world flipped at draw time)
+  // ---------------------------------------------------------------
+  var camX = 0, camY = 0, camScale = 34;
+
+  function drawSky() {
+    var g = ctx.createLinearGradient(0, 0, 0, vh);
+    g.addColorStop(0, "#7ec2ee");
+    g.addColorStop(0.7, "#bfe0f2");
+    g.addColorStop(1, "#e8d9b8");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, vw, vh);
+  }
+
+  function drawParallax(layerAmp, layerFreq, speed, color, baseFrac) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    var baseY = vh * baseFrac;
+    ctx.moveTo(0, vh);
+    for (var px = 0; px <= vw; px += 12) {
+      var wx2 = px + camX * camScale * speed;
+      var y = baseY - (Math.sin(wx2 * layerFreq) * 0.6 +
+                       Math.sin(wx2 * layerFreq * 2.7 + 1.7) * 0.4) * layerAmp;
+      ctx.lineTo(px, y);
+    }
+    ctx.lineTo(vw, vh);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function w2sx(x) { return (x - camX) * camScale + vw * 0.42; }
+  function w2sy(y) { return vh * 0.58 - (y - camY) * camScale; }
+
+  function drawTerrain() {
+    var x0 = camX - (vw * 0.42) / camScale - 2;
+    var x1 = camX + (vw * 0.58) / camScale + 2;
+    var step = 0.22;
+    ctx.beginPath();
+    ctx.moveTo(w2sx(x0), vh + 10);
+    for (var x = x0; x <= x1; x += step) {
+      ctx.lineTo(w2sx(x), w2sy(height(x)));
+    }
+    ctx.lineTo(w2sx(x1), vh + 10);
+    ctx.closePath();
+    ctx.fillStyle = "#8a5f3a";
+    ctx.fill();
+    // packed top layer
+    ctx.beginPath();
+    for (var x2 = x0; x2 <= x1; x2 += step) {
+      var sx = w2sx(x2), sy = w2sy(height(x2));
+      if (x2 === x0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = "#6e4526";
+    ctx.lineWidth = Math.max(3, camScale * 0.16);
+    ctx.stroke();
+  }
+
+  function drawWheel(wx, wy, spin) {
+    var r = WHEEL_R * camScale;
+    var sx = w2sx(wx), sy = w2sy(wy);
+    ctx.beginPath();
+    ctx.arc(sx, sy, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#1d1d20";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(sx, sy, r * 0.45, 0, Math.PI * 2);
+    ctx.fillStyle = "#555";
+    ctx.fill();
+    ctx.strokeStyle = "#999";
+    ctx.lineWidth = Math.max(1, r * 0.12);
+    for (var i = 0; i < 3; i++) {
+      var a = spin + i * Math.PI / 1.5;
+      ctx.beginPath();
+      ctx.moveTo(sx - Math.cos(a) * r * 0.8, sy - Math.sin(a) * r * 0.8);
+      ctx.lineTo(sx + Math.cos(a) * r * 0.8, sy + Math.sin(a) * r * 0.8);
+      ctx.stroke();
+    }
+  }
+
+  function drawBike(inp) {
+    var ca = Math.cos(bike.a), sa = Math.sin(bike.a);
+    function L(lx, ly) { // local -> world (bike frame)
+      return { x: bike.x + lx * ca - ly * sa, y: bike.y + lx * sa + ly * ca };
+    }
+    var rear = L(-WB, 0), front = L(WB, 0);
+    drawWheel(rear.x, rear.y, -bike.wheelSpin);
+    drawWheel(front.x, front.y, -bike.wheelSpin);
+
+    ctx.lineCap = "round";
+    function seg(p, q, wpx, color) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = Math.max(2, camScale * wpx);
+      ctx.beginPath();
+      ctx.moveTo(w2sx(p.x), w2sy(p.y));
+      ctx.lineTo(w2sx(q.x), w2sy(q.y));
+      ctx.stroke();
+    }
+    seg(rear, L(-0.1, 0.34), 0.09, "#3a3a3f");         // swingarm
+    seg(front, L(0.32, 0.55), 0.08, "#3a3a3f");        // forks
+    seg(L(-0.45, 0.3), L(0.3, 0.42), 0.17, "#d23a2c"); // tank/frame
+    seg(L(-0.5, 0.42), L(-0.15, 0.46), 0.12, "#d23a2c"); // seat
+
+    // rider, leaning with input
+    var lean = inp.lean * 0.2;
+    var hip = L(-0.28, 0.5);
+    var shoulder = L(-0.28 + Math.sin(-lean) * 0.42 + 0.1, 0.5 + Math.cos(lean) * 0.42);
+    seg(hip, shoulder, 0.15, "#2f5fae");               // torso
+    seg(shoulder, L(0.32, 0.62), 0.07, "#2f5fae");     // arm to bar
+    seg(hip, L(-0.05, 0.2), 0.08, "#26262b");          // leg
+    // helmet
+    ctx.beginPath();
+    var hd = { x: shoulder.x + (-sa) * 0.16, y: shoulder.y + ca * 0.16 };
+    ctx.arc(w2sx(hd.x), w2sy(hd.y), 0.14 * camScale, 0, Math.PI * 2);
+    ctx.fillStyle = "#e8c23a";
+    ctx.fill();
+  }
+
+  // ---------------------------------------------------------------
+  // Main loop
+  // ---------------------------------------------------------------
+  var statEl = document.getElementById("stat");
+  var frames = 0, fpsTime = 0, lastFps = 0, statTime = 0;
+  var last = now();
+
+  function frame() {
+    var t = now();
+    var dt = (t - last) / 1000;
+    last = t;
+    if (dt > 0.05) dt = 0.05;
+
+    resize();
+    var inp = readInput();
+    updateBike(dt, inp);
+
+    // camera: lead ahead of the bike, zoom out a touch with speed
+    var spd = Math.sqrt(bike.vx * bike.vx + bike.vy * bike.vy);
+    var targetScale = clampf(38 - spd * 0.55, 24, 38) * (vh / 720);
+    camScale += (targetScale - camScale) * Math.min(1, 3 * dt);
+    camX += (bike.x + bike.vx * 0.35 - camX) * Math.min(1, 6 * dt);
+    camY += (bike.y + 0.8 - camY) * Math.min(1, 4 * dt);
+
+    drawSky();
+    drawParallax(60 * (vh / 720), 0.004, 0.15, "#a8c8a0", 0.62);
+    drawParallax(90 * (vh / 720), 0.007, 0.35, "#8fb07e", 0.72);
+    drawTerrain();
+    drawBike(inp);
+
+    // HUD
+    frames++;
+    fpsTime += dt;
+    statTime += dt;
+    if (fpsTime >= 1) { lastFps = frames; frames = 0; fpsTime = 0; }
+    if (statTime >= 0.2) {
+      statTime = 0;
+      statEl.innerHTML = lastFps + " fps &#183; " + Math.floor(maxDist) +
+        " m &#183; spd " + spd.toFixed(1) + " &#183; flips " + flips;
+    }
+    if (bigTimer > 0) {
+      bigTimer -= dt;
+      bigEl.style.opacity = Math.min(1, bigTimer * 2).toFixed(2);
+    } else {
+      bigEl.style.opacity = 0;
+    }
+
+    raf(frame);
+  }
+
+  resize();
+  genTo(120);
+  bike.y = height(bike.x) + 1.0;
+  raf(frame);
+})();
+</script>
+</body>
+</html>

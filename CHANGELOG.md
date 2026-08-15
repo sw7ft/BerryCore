@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.4] - 2026-08-15
+
+### Added
+
+- **games** — BerryCore Games menu on port **8766** (`games` / `games stop` / `settings games-on`). ES5 splash + BerryCraft, BerryFly, BerryBoat, BerryDig, BerryMoto, BerryMX
+- **bb-games** qpkg port — bundled `packages/games-bb-games-1.0.zip` and `ports/games-bb-games-1.0.zip` (`qpkg install bb-games`)
+
+### Changed
+
+- **VERSION** → 0.87.4
+- **CATALOG / FEATURED / env.sh** — `games` listed next to `tools`
+
+---
+
 ## [0.87.3] - 2026-08-14
 
 ### Added

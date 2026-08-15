@@ -1,0 +1,15 @@
+BerryCore v0.87.4 Release Files
+================================
+
+Core install:
+  berrycore.zip          (includes bin/games, share/games/, packages/games-bb-games-1.0.zip)
+  install.sh
+  berrycore.html
+
+qpkg (also on main):
+  ports/games-bb-games-1.0.zip    qpkg install bb-games
+
+406a46a6afeb88fb78e9a2fe1ee623d655a776869cb4454899889622b511934f  berrycore.zip
+ec8c2d5bad78bb594aebdd59fa38ba45e39c62d0883ebc926cc206a9fe51cbac  install.sh
+1c5d9eb436c640bfdea00cf2d65a2bbf7248d05c6ccda73a973806680a2d120c  berrycore.html
+8515d81a82c7dfa009cb85be14a5c8d26117290116bb2e79752806af5a013315  ports/games-bb-games-1.0.zip

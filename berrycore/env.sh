@@ -61,7 +61,7 @@ export LC_CTYPE=en_US.UTF-8
 if [ "${BERRYCORE_QUIET:-0}" != "1" ]; then
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.87.3 - QNX Extended Userland"
+echo "     BerryCore v0.87.4 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"
@@ -77,9 +77,9 @@ echo ""
 echo "Quick navigation shortcuts:"
 echo "  misc, docs, downloads, sdcard, bc"
 echo ""
-echo "Quick start: nano, vim, git, nmap, curl, linux, hydra, term49-web"
+echo "Quick start: nano, vim, git, nmap, curl, linux, games, term49-web"
 echo ""
-echo "Auto-start: settings sshd-on, settings tools-on, settings status"
+echo "Auto-start: settings sshd-on, settings tools-on, settings games-on, settings status"
 echo "==========================================================="
 fi
 

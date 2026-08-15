@@ -1,0 +1,175 @@
+#!/bin/sh
+# BerryCore Settings - toggle options written to ~/.profile
+# Usage: settings {sshd-on|sshd-off|tools-on|tools-off|games-on|games-off|motd-on|motd-off|status}
+
+NATIVE_TOOLS="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
+PROFILE="${HOME:-/var}/.profile"
+DEFAULT_MOTD_URL="https://raw.githubusercontent.com/sw7ft/BerryCore/main/motd.txt"
+
+# Ensure profile exists
+[ -f "$PROFILE" ] || touch "$PROFILE"
+
+add_sshd_autostart() {
+    grep -q "# BerryCore: sshd auto-start" "$PROFILE" 2>/dev/null && {
+        echo "sshd auto-start already enabled"
+        return
+    }
+    cat >> "$PROFILE" << 'SSHD_EOF'
+
+# BerryCore: sshd auto-start (added by settings sshd-on)
+if ! pgrep -x sshd >/dev/null 2>&1; then
+    nohup sshd -D >> ${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}/.tmp/sshd.log 2>&1 &
+fi
+SSHD_EOF
+    mkdir -p "$NATIVE_TOOLS/.tmp"
+    echo "Added sshd auto-start to $PROFILE"
+}
+
+remove_sshd_autostart() {
+    if grep -q "# BerryCore: sshd auto-start" "$PROFILE" 2>/dev/null; then
+        sed -i.bak '/# BerryCore: sshd auto-start/,/^fi$/d' "$PROFILE" 2>/dev/null
+        rm -f "$PROFILE.bak"
+        echo "Removed sshd auto-start from $PROFILE"
+    else
+        echo "sshd auto-start was not enabled"
+    fi
+}
+
+add_tools_autostart() {
+    grep -q "# BerryCore: tools auto-start" "$PROFILE" 2>/dev/null && {
+        echo "tools auto-start already enabled"
+        return
+    }
+    cat >> "$PROFILE" << 'TOOLS_EOF'
+
+# BerryCore: tools auto-start (added by settings tools-on)
+if command -v tools >/dev/null 2>&1; then
+    tools &
+fi
+TOOLS_EOF
+    echo "Added tools auto-start to $PROFILE"
+}
+
+remove_tools_autostart() {
+    if grep -q "# BerryCore: tools auto-start" "$PROFILE" 2>/dev/null; then
+        sed -i.bak '/# BerryCore: tools auto-start/,/^fi$/d' "$PROFILE" 2>/dev/null
+        rm -f "$PROFILE.bak"
+        echo "Removed tools auto-start from $PROFILE"
+    else
+        echo "tools auto-start was not enabled"
+    fi
+}
+
+add_games_autostart() {
+    grep -q "# BerryCore: games auto-start" "$PROFILE" 2>/dev/null && {
+        echo "games auto-start already enabled"
+        return
+    }
+    cat >> "$PROFILE" << 'GAMES_EOF'
+
+# BerryCore: games auto-start (added by settings games-on)
+if command -v games >/dev/null 2>&1; then
+    games start
+fi
+GAMES_EOF
+    echo "Added games auto-start to $PROFILE"
+}
+
+remove_games_autostart() {
+    if grep -q "# BerryCore: games auto-start" "$PROFILE" 2>/dev/null; then
+        sed -i.bak '/# BerryCore: games auto-start/,/^fi$/d' "$PROFILE" 2>/dev/null
+        rm -f "$PROFILE.bak"
+        echo "Removed games auto-start from $PROFILE"
+    else
+        echo "games auto-start was not enabled"
+    fi
+}
+
+add_motd() {
+    if grep -q "BERRYCORE_MOTD_URL" "$PROFILE" 2>/dev/null; then
+        # Already has MOTD - just ensure enabled
+        if grep -q "BERRYCORE_MOTD_ENABLED=0" "$PROFILE" 2>/dev/null; then
+            sed -i.bak 's/BERRYCORE_MOTD_ENABLED=0/BERRYCORE_MOTD_ENABLED=1/' "$PROFILE" 2>/dev/null
+            rm -f "$PROFILE.bak"
+        fi
+        echo "MOTD already configured, enabled"
+        return
+    fi
+    cat >> "$PROFILE" << MOTD_EOF
+
+# BerryCore: MOTD (added by settings motd-on)
+export BERRYCORE_MOTD_URL="$DEFAULT_MOTD_URL"
+export BERRYCORE_MOTD_ENABLED=1
+MOTD_EOF
+    echo "Added MOTD to $PROFILE (URL: $DEFAULT_MOTD_URL)"
+}
+
+remove_motd() {
+    if grep -q "BERRYCORE_MOTD_ENABLED" "$PROFILE" 2>/dev/null; then
+        sed -i.bak 's/BERRYCORE_MOTD_ENABLED=1/BERRYCORE_MOTD_ENABLED=0/' "$PROFILE" 2>/dev/null
+        rm -f "$PROFILE.bak"
+        echo "MOTD disabled in $PROFILE"
+    else
+        echo "export BERRYCORE_MOTD_ENABLED=0" >> "$PROFILE"
+        echo "MOTD disabled"
+    fi
+}
+
+show_status() {
+    echo "BerryCore Settings"
+    echo "==========================================================="
+    echo ""
+    echo "Profile: $PROFILE"
+    echo ""
+    printf "  sshd auto-start:  "
+    grep -q "# BerryCore: sshd auto-start" "$PROFILE" 2>/dev/null && echo "enabled" || echo "disabled"
+    printf "  tools auto-start: "
+    grep -q "# BerryCore: tools auto-start" "$PROFILE" 2>/dev/null && echo "enabled" || echo "disabled"
+    printf "  games auto-start: "
+    grep -q "# BerryCore: games auto-start" "$PROFILE" 2>/dev/null && echo "enabled" || echo "disabled"
+    printf "  MOTD:            "
+    if grep -q "BERRYCORE_MOTD_ENABLED=0" "$PROFILE" 2>/dev/null; then
+        echo "disabled"
+    elif grep -q "BERRYCORE_MOTD" "$PROFILE" 2>/dev/null || [ -n "${BERRYCORE_MOTD_ENABLED:-}" ]; then
+        echo "enabled"
+    else
+        echo "enabled (default)"
+    fi
+    echo ""
+}
+
+show_usage() {
+    echo "BerryCore Settings - configure auto-start options in ~/.profile"
+    echo ""
+    echo "Usage: settings {command}"
+    echo ""
+    echo "Commands:"
+    echo "  sshd-on    Add sshd auto-start to .profile"
+    echo "  sshd-off   Remove sshd auto-start from .profile"
+    echo "  tools-on   Add BerryCore tools server auto-start to .profile"
+    echo "  tools-off  Remove tools auto-start from .profile"
+    echo "  games-on   Add BerryCore games server auto-start to .profile"
+    echo "  games-off  Remove games auto-start from .profile"
+    echo "  motd-on    Enable Message of the Day in .profile"
+    echo "  motd-off   Disable Message of the Day"
+    echo "  status     Show current settings"
+    echo ""
+}
+
+case "${1:-}" in
+    sshd-on)   add_sshd_autostart ;;
+    sshd-off)  remove_sshd_autostart ;;
+    tools-on)  add_tools_autostart ;;
+    tools-off) remove_tools_autostart ;;
+    games-on)  add_games_autostart ;;
+    games-off) remove_games_autostart ;;
+    motd-on)   add_motd ;;
+    motd-off)  remove_motd ;;
+    status)    show_status ;;
+    -h|--help|help) show_usage ;;
+    *)
+        echo "Unknown command: $1"
+        show_usage
+        exit 1
+        ;;
+esac
