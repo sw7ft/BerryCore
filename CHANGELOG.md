@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.87.3] - 2026-08-14
+
 ### Added
 
 - **Term49 launch splash** — 256-color TERM49 / BerryCore wordmark on login (`share/term49-splash.sh`, `splash` to redraw)
@@ -16,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **sample_profile / install.sh** — `BERRYCORE_QUIET=1` skips the plain env.sh banner and remote MOTD wait so the splash owns the launch screen
 - **env.sh** — honors `BERRYCORE_QUIET=1` to suppress the ASCII welcome box
+- **VERSION** → 0.87.3
 
 ---
 

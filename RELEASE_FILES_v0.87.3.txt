@@ -1,0 +1,14 @@
+BerryCore v0.87.3 Release Files
+================================
+
+Core install:
+  berrycore.zip          (includes share/term49-splash.sh, share/term48rc, doc/berrycore.html)
+  install.sh             (writes splash .profile; copies berry theme if no .term48rc)
+  berrycore.html         (same file, optional standalone)
+
+Documents after install:
+  /accounts/1000/shared/documents/berrycore.html
+
+a56b8567b5737f380cf3b8ccea2c794b411a2097e4d3f6b238fd318479a7ed17  berrycore.zip
+ec8c2d5bad78bb594aebdd59fa38ba45e39c62d0883ebc926cc206a9fe51cbac  install.sh
+ecd5fafaf0d597c292971040e0832f5a639109a42d5e7a202f18c090d7e0b2a7  berrycore.html

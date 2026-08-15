@@ -61,7 +61,7 @@ export LC_CTYPE=en_US.UTF-8
 if [ "${BERRYCORE_QUIET:-0}" != "1" ]; then
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.87 - QNX Extended Userland"
+echo "     BerryCore v0.87.3 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"
