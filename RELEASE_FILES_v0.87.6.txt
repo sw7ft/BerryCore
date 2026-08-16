@@ -1,0 +1,16 @@
+BerryCore v0.87.6 Release Files
+
+Core:
+  berrycore.zip          (includes bin/sttlab, bin/sttlabs, share/sttlab/, STT-Drop.apk, packages/web-sttlab-1.1.zip)
+  install.sh
+  berrycore.html
+
+Ports:
+  ports/web-sttlab-1.1.zip    qpkg install sttlabs   (also: qpkg install sttlab)
+  ports/ai-vosk-1.0.zip       qpkg install vosk      (unchanged from v0.87.5)
+
+SHA-256:
+bb8205117573287530546d281d31a059d891dc02dac5da884afbe04051e96e73  berrycore.zip
+ec8c2d5bad78bb594aebdd59fa38ba45e39c62d0883ebc926cc206a9fe51cbac  install.sh
+15ee4f78c33b6e217764854a97201dd85215078e1106253d37bf677131220e2f  berrycore.html
+bf50580e1cff66cd01cdb0be69a926e7faebaf25b7735c72c4c72d2fbfd5de29  ports/web-sttlab-1.1.zip

@@ -676,6 +676,7 @@ cmd_install() {
     # Legacy port name → berry-browser
     case "$PORT_NAME" in
         content-shell-term49) PORT_NAME="berry-browser" ;;
+        sttlabs|stt-labs) PORT_NAME="sttlab" ;;
     esac
     
     if [ -z "$PORT_NAME" ]; then
@@ -848,10 +849,14 @@ cmd_install() {
         echo "  berry-browser http://127.0.0.1:8093/"
         echo "Model: $NATIVE_TOOLS/share/stt/model/vosk-en"
     elif [ "$PORT_NAME" = "sttlab" ]; then
-        chmod +x "$NATIVE_TOOLS/bin/sttlab" 2>/dev/null || true
-        echo "STT lab installed"
-        echo "  sttlab"
+        chmod +x "$NATIVE_TOOLS/bin/sttlab" "$NATIVE_TOOLS/bin/sttlabs" \
+            "$NATIVE_TOOLS/share/sttlab/serve.py" "$NATIVE_TOOLS/share/sttlab/term49.py" 2>/dev/null || true
+        echo "STT lab installed (ice/black UI, Term49 text, Android drop)"
+        echo "  sttlab                         # web lab on :8093"
+        echo "  sttlabs                        # Term49 text UI"
         echo "  berry-browser http://127.0.0.1:8093/"
+        echo "  berry-browser http://127.0.0.1:8093/term"
+        echo "Android: copy share/sttlab/STT-Drop.apk to Documents"
         echo "Engine: qpkg install vosk"
     elif [ "$PORT_NAME" = "ftp" ]; then
         install_misc_bin ftp bftpd pftp && {

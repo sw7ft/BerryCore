@@ -1,6 +1,7 @@
 #!/bin/sh
 # STT lab — PocketSphinx vs Vosk compare UI on port 8093
-# Usage: sttlab [start|stop|status]
+# Usage: sttlab [start|stop|status|term|demo|vosk|rec]
+#        sttlabs  →  Term49 text UI (same as sttlab term)
 
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 NATIVE="$(cd "$BIN_DIR/.." && pwd)"
@@ -9,7 +10,16 @@ PORT="${BERRYCORE_STTLAB_PORT:-8093}"
 PIDFILE="$NATIVE/.tmp/sttlab.pid"
 LOG="$NATIVE/.tmp/sttlab.log"
 PY="$NATIVE/bin/python3"
-[ -x "$PY" ] || PY="python3"
+BC_PY="$NATIVE/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+if [ -x "$PY" ]; then
+    :
+elif [ -x "$BC_PY" ]; then
+    PY="$BC_PY"
+    export PYTHONHOME="$NATIVE/lib/python3_ntoarmv7-qnx-static"
+    export PYTHONPATH=
+else
+    PY="python3"
+fi
 
 # Engine tree: qpkg vosk installs lib/ + share/stt/model into NATIVE_TOOLS.
 # Legacy device tree stays at /misc/stt.
@@ -24,7 +34,20 @@ else
 fi
 export STT_ROOT
 
-cmd="${1:-start}"
+# Device lab also lives under /misc/stt/web (older layout).
+if [ ! -f "$WEB/serve.py" ] && [ -f "$STT_ROOT/web/serve.py" ]; then
+    WEB="$STT_ROOT/web"
+    PIDFILE="$STT_ROOT/tmp/sttlab.pid"
+    LOG="$STT_ROOT/tmp/sttlab.log"
+fi
+
+cmd="${1:-}"
+if [ -z "$cmd" ]; then
+    case "$(basename "$0")" in
+        sttlabs|stt-labs) cmd="term" ;;
+        *) cmd="start" ;;
+    esac
+fi
 mkdir -p "$NATIVE/.tmp" "$STT_ROOT/tmp" 2>/dev/null || mkdir -p "$NATIVE/.tmp"
 
 is_running() {
@@ -38,29 +61,49 @@ is_running() {
     return 1
 }
 
+do_start() {
+    if [ ! -f "$WEB/serve.py" ]; then
+        echo "sttlab: missing $WEB/serve.py"
+        return 1
+    fi
+    if is_running; then
+        echo "STT lab already running — http://127.0.0.1:$PORT/"
+        return 0
+    fi
+    nohup "$PY" "$WEB/serve.py" "$PORT" >> "$LOG" 2>&1 &
+    echo $! > "$PIDFILE"
+    sleep 1
+    if is_running; then
+        echo "STT lab  http://127.0.0.1:$PORT/"
+        echo "Term49:  sttlabs     (text UI)   or   berry-browser http://127.0.0.1:$PORT/term"
+        echo "Open in berry-browser.  sttlab stop  to quit."
+        if [ ! -f "$STT_ROOT/lib/libvosk.so" ] && [ ! -f "$NATIVE/lib/libvosk.so" ]; then
+            echo "Vosk engine not installed yet — qpkg install vosk"
+        fi
+        return 0
+    fi
+    echo "sttlab: failed — see $LOG"
+    return 1
+}
+
+do_term() {
+    if ! do_start; then
+        return 1
+    fi
+    TERM49="$WEB/term49.py"
+    if [ ! -f "$TERM49" ]; then
+        echo "sttlabs: missing $TERM49"
+        return 1
+    fi
+    if [ "$1" = "term" ] || [ "$1" = "tui" ] || [ "$1" = "menu" ] || [ "$1" = "sttlabs" ]; then
+        shift
+    fi
+    exec "$PY" "$TERM49" "$@"
+}
+
 case "$cmd" in
     start)
-        if [ ! -f "$WEB/serve.py" ]; then
-            echo "sttlab: missing $WEB/serve.py"
-            exit 1
-        fi
-        if is_running; then
-            echo "STT lab already running — http://127.0.0.1:$PORT/"
-            exit 0
-        fi
-        nohup "$PY" "$WEB/serve.py" "$PORT" >> "$LOG" 2>&1 &
-        echo $! > "$PIDFILE"
-        sleep 1
-        if is_running; then
-            echo "STT lab  http://127.0.0.1:$PORT/"
-            echo "Open in berry-browser.  sttlab stop  to quit."
-            if [ ! -f "$STT_ROOT/lib/libvosk.so" ] && [ ! -f "$NATIVE/lib/libvosk.so" ]; then
-                echo "Vosk engine not installed yet — qpkg install vosk"
-            fi
-        else
-            echo "sttlab: failed — see $LOG"
-            exit 1
-        fi
+        do_start
         ;;
     stop)
         if is_running; then
@@ -79,14 +122,25 @@ case "$cmd" in
             exit 1
         fi
         ;;
+    term|tui|menu|sttlabs)
+        do_term "$@"
+        ;;
+    demo|vosk|rec|record|file|decode)
+        if ! do_start; then
+            exit 1
+        fi
+        exec "$PY" "$WEB/term49.py" "$@"
+        ;;
     -h|--help|help)
-        echo "Usage: sttlab [start|stop|status]"
+        echo "Usage: sttlab [start|stop|status|term|demo|vosk|rec]"
         echo "  start   compare lab on port $PORT"
         echo "  stop    stop the lab"
+        echo "  term    Term49 text UI (also: sttlabs)"
+        echo "  demo    run official goforward clip"
         echo "Engine:  qpkg install vosk"
         ;;
     *)
-        echo "Usage: sttlab [start|stop|status]"
+        echo "Usage: sttlab [start|stop|status|term|demo|vosk|rec]"
         exit 1
         ;;
 esac

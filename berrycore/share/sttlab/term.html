@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>STT Lab — Term49</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background: #02040a;
+    color: #e8f2ff;
+    font-family: "Courier New", Courier, monospace;
+    padding: 22px 16px 40px;
+  }
+  .bar { width: 56px; height: 3px; margin: 0 auto 14px; background: #1e90ff; }
+  h1 {
+    letter-spacing: 8px;
+    text-align: center;
+    text-shadow: 0 0 16px #4db8ff;
+  }
+  a {
+    display: block;
+    padding: 13px;
+    margin: 0 0 10px;
+    border: 1px solid #1a3a5c;
+    background: #0a1220;
+    color: #7ad4ff;
+    text-decoration: none;
+  }
+  .go { background: #0e2844; border-color: #4db8ff; color: #fff; }
+  .mut { color: #6b7c94; font-size: 12px; text-align: center; margin: 6px 0 14px; }
+  pre { white-space: pre-wrap; color: #fff; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <div class="bar"></div>
+  <h1>STT LAB</h1>
+  <p class="mut">Term49 test — no JavaScript. Links wait and print results.</p>
+  <p class="mut" id="st">__STATUS__</p>
+  <a class="go" href="/term/demo">Run official goforward clip (both engines)</a>
+  <a href="/term/vosk">Vosk only — goforward</a>
+  <a href="/term/rec?sec=3">Record 3 seconds (device mic)</a>
+  <a href="/term/rec?sec=6">Record 6 seconds (device mic)</a>
+  <a href="/term">Refresh status</a>
+  <pre>__RESULT__</pre>
+</body>
+</html>

@@ -743,6 +743,97 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _html(self, code, html):
+        data = html.encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def _esc(self, s):
+        return (
+            (s or "")
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+        )
+
+    def _term_html(self, result=""):
+        st = which_engines()
+        status = "sphinx %s · vosk %s%s · mic %s" % (
+            "ready" if st.get("sphinx") else "missing",
+            "ready" if st.get("vosk") else "missing",
+            " (warm)" if st.get("vosk_warm") else "",
+            (st.get("record_method") or "none") if st.get("record") else "none",
+        )
+        path = os.path.join(ROOT, "term.html")
+        try:
+            tmpl = open(path, "r", encoding="utf-8").read()
+        except Exception:
+            tmpl = (
+                "<pre>STT LAB Term49\n%s\n\n"
+                "<a href='/term/demo'>demo</a>  "
+                "<a href='/term/vosk'>vosk</a>  "
+                "<a href='/term/rec?sec=3'>rec 3s</a>\n\n%s</pre>"
+            ) % ("%s", "%s")
+            tmpl = tmpl.replace("%s", "__STATUS__", 1).replace("%s", "__RESULT__", 1)
+        return (
+            tmpl.replace("__STATUS__", self._esc(status))
+            .replace("__RESULT__", self._esc(result))
+        )
+
+    def _fmt_engine(self, name, r):
+        r = r or {}
+        text = r.get("text") or r.get("err") or r.get("error") or "no text"
+        ms = r.get("ms")
+        line = "%s: %s" % (name, text)
+        if ms is not None:
+            line += "  (%s ms)" % ms
+        return line
+
+    def _term_wait_job(self, jid):
+        vosk, err_v = wait_job(jid, "vosk")
+        sphinx, err_s = wait_job(jid, "sphinx")
+        lines = []
+        if err_v:
+            lines.append("vosk: " + err_v)
+        else:
+            lines.append(self._fmt_engine("vosk", vosk))
+        if err_s:
+            lines.append("sphinx: " + err_s)
+        else:
+            lines.append(self._fmt_engine("sphinx", sphinx))
+        return "\n".join(lines)
+
+    def _term_demo(self, engines):
+        demo = os.path.join(STT_ROOT, "share", "goforward.raw")
+        if not os.path.isfile(demo):
+            return self._term_html("goforward.raw missing")
+        prune_jobs()
+        jid = start_job(demo, engines=engines)
+        return self._term_html(self._term_wait_job(jid))
+
+    def _term_rec(self):
+        q = self.path.split("?", 1)[1] if "?" in self.path else ""
+        sec = 3
+        for part in q.split("&"):
+            if part.startswith("sec="):
+                try:
+                    sec = max(1, min(int(part[4:]), 20))
+                except Exception:
+                    sec = 3
+        ok, msg = start_record()
+        if not ok:
+            return self._term_html(msg or "mic failed")
+        time.sleep(sec)
+        src, err = stop_record()
+        if not src:
+            return self._term_html(err or "record stop failed")
+        prune_jobs()
+        jid = start_job(src, engines="both")
+        return self._term_html("recorded %ds\n%s" % (sec, self._term_wait_job(jid)))
+
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -754,6 +845,14 @@ class Handler(BaseHTTPRequestHandler):
         path = self.path.split("?", 1)[0]
         if path == "/" or path == "/index.html":
             self._file(os.path.join(ROOT, "index.html"), "text/html; charset=utf-8")
+        elif path == "/term" or path == "/term/":
+            self._html(200, self._term_html())
+        elif path == "/term/demo":
+            self._html(200, self._term_demo("both"))
+        elif path == "/term/vosk":
+            self._html(200, self._term_demo("vosk"))
+        elif path == "/term/rec":
+            self._html(200, self._term_rec())
         elif path == "/api/status":
             self._json(200, which_engines())
         elif path == "/api/demo":
@@ -910,13 +1009,127 @@ class Handler(BaseHTTPRequestHandler):
                 shutil.rmtree(work, ignore_errors=True)
 
 
+INBOX_DIRS = [
+    "/sdcard/sttmic",
+    "/accounts/1000/shared/documents/sttmic",
+    os.path.join(STT_ROOT, "inbox"),
+]
+
+
+def ensure_inbox():
+    for d in INBOX_DIRS:
+        try:
+            os.makedirs(d, exist_ok=True)
+        except Exception:
+            continue
+        try:
+            os.chmod(d, 0o2775)
+        except Exception:
+            pass
+        try:
+            open(os.path.join(d, ".lab-ready"), "w").write("%d\n" % int(time.time()))
+        except Exception:
+            pass
+
+
+def _write_json(path, obj):
+    tmp = path + ".tmp"
+    open(tmp, "w").write(json.dumps(obj))
+    try:
+        os.rename(tmp, path)
+    except Exception:
+        open(path, "w").write(json.dumps(obj))
+        try:
+            os.remove(tmp)
+        except Exception:
+            pass
+
+
+def handle_inbox_req(req_path):
+    base = req_path[:-4] if req_path.endswith(".req") else req_path
+    src = None
+    for ext in (".wav", ".raw", ".m4a", ".pcm", ".mp3"):
+        cand = base + ext
+        if os.path.isfile(cand) and os.path.getsize(cand) > 44:
+            src = cand
+            break
+    if not src:
+        return
+    engines = "vosk"
+    try:
+        body = open(req_path).read()
+        if "engine=both" in body:
+            engines = "both"
+        elif "engine=sphinx" in body:
+            engines = "sphinx"
+    except Exception:
+        pass
+    try:
+        os.remove(req_path)
+    except Exception:
+        pass
+    sys.stderr.write("inbox decode %s engines=%s\n" % (src, engines))
+    prune_jobs()
+    jid = start_job(src, engines=engines)
+    vosk, err_v = wait_job(jid, "vosk")
+    sphinx, err_s = wait_job(jid, "sphinx")
+    if err_v:
+        vosk = {"ok": False, "text": "", "err": err_v, "ms": 0}
+    if err_s:
+        sphinx = {"ok": False, "text": "", "err": err_s, "ms": 0}
+    out = {"vosk": vosk or {}, "sphinx": sphinx or {}, "file": os.path.basename(src)}
+    _write_json(base + ".json", out)
+    text = (vosk or {}).get("text") or ""
+    try:
+        open(base + ".txt", "w").write(text + "\n")
+    except Exception:
+        pass
+
+
+def inbox_loop():
+    seen = {}
+    while True:
+        ensure_inbox()
+        for d in INBOX_DIRS:
+            try:
+                names = os.listdir(d)
+            except Exception:
+                continue
+            for name in names:
+                if not name.endswith(".req"):
+                    continue
+                path = os.path.join(d, name)
+                try:
+                    mtime = os.path.getmtime(path)
+                    size = os.path.getsize(path)
+                except Exception:
+                    continue
+                key = path
+                prev = seen.get(key)
+                if prev == (mtime, size):
+                    try:
+                        handle_inbox_req(path)
+                    except Exception as e:
+                        sys.stderr.write("inbox err %s: %s\n" % (path, e))
+                        try:
+                            open(path[:-4] + ".err", "w").write(str(e))
+                        except Exception:
+                            pass
+                    seen.pop(key, None)
+                else:
+                    seen[key] = (mtime, size)
+        time.sleep(0.35)
+
+
 if __name__ == "__main__":
     os.makedirs(os.path.join(STT_ROOT, "tmp"), exist_ok=True)
+    ensure_inbox()
 
     def _warm():
         VOSK.load()
 
     threading.Thread(target=_warm, daemon=True).start()
+    threading.Thread(target=inbox_loop, daemon=True).start()
     httpd = ThreadedHTTPServer(("0.0.0.0", PORT), Handler)
-    sys.stderr.write("STT lab http://0.0.0.0:%d/  root=%s\n" % (PORT, STT_ROOT))
+    sys.stderr.write("STT lab http://0.0.0.0:%d/  root=%s  inbox=/sdcard/sttmic\n" % (PORT, STT_ROOT))
     httpd.serve_forever()

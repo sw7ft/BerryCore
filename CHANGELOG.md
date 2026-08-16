@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.6] - 2026-08-16
+
+### Added
+
+- **sttlabs** — Term49 text UI (`sttlabs` / `sttlab term` / `sttlabs demo`)
+- **`qpkg install sttlabs`** — alias for `sttlab` (`web-sttlab-1.1.zip`)
+- **STT Drop APK** — bundled at `share/sttlab/STT-Drop.apk` (file-drop, no HTTP)
+- **Android inbox** — lab watches `/sdcard/sttmic` for WAV + `.req`
+
+### Changed
+
+- **sttlab 1.1** — ice/black web UI, `/term` no-JS page, Python fallback like games
+- **VERSION** → 0.87.6
+- **CATALOG / FEATURED / PACKAGES / env.sh** — `sttlabs` listed with `sttlab`
+
+---
+
 ## [0.87.5] - 2026-08-15
 
 ### Added

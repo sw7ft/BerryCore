@@ -17,7 +17,8 @@ tmux|sys|3.3a|2.5M|Terminal multiplexer|sys-tmux-3.3a.zip|none
 term49-web|web|1.0|54K|Browser terminal over WebSocket (port 7681)|web-term49-web-1.0.zip|none
 bb-tools|web|1.0|44K|BerryCore web tools dashboard (port 8765)|web-bb-tools-1.0.zip|none
 bb-games|games|1.0|110K|BerryCore Games menu — HTML games on port 8766|games-bb-games-1.0.zip|none
-sttlab|web|1.0|13K|STT lab — PocketSphinx vs Vosk compare UI on port 8093|web-sttlab-1.0.zip|none
+sttlab|web|1.1|43K|STT lab — ice/black UI, Term49 sttlabs, Android file drop (port 8093)|web-sttlab-1.1.zip|none
+sttlabs|web|1.1|43K|Alias for sttlab — Term49 text UI + web lab on port 8093|web-sttlab-1.1.zip|sttlab
 vosk|ai|1.0|42M|Offline Vosk/Kaldi speech-to-text + small English model|ai-vosk-1.0.zip|none
 content-shell-term49|web|1.0|62M|DEPRECATED — aliases to berry-browser|web-content-shell-term49-1.0.zip|none
 berry-browser|web|1.0.27|111M|CLI browser via content_shell|web-berry-browser-1.0.27.zip|none

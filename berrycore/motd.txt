@@ -1,3 +1,4 @@
-BerryCore v0.87.5 — STT lab + Vosk
-  qpkg install vosk   ·   sttlab   ·   berry-browser http://127.0.0.1:8093/
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.5
+BerryCore v0.87.6 — STT lab + sttlabs
+  qpkg install vosk   ·   qpkg install sttlabs   ·   sttlabs
+  berry-browser http://127.0.0.1:8093/
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.6

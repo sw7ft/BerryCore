@@ -1,0 +1,4 @@
+#!/bin/sh
+# Term49 text front-end for STT lab (same as: sttlab term)
+DIR="$(cd "$(dirname "$0")" && pwd)"
+exec "$DIR/sttlab" term "$@"
