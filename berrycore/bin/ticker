@@ -1,0 +1,3 @@
+#!/bin/sh
+# Stocks — same app as `stocks`
+exec "$(cd "$(dirname "$0")" && pwd)/stocks" "$@"

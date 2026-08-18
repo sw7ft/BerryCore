@@ -179,6 +179,10 @@ tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compas
 games|games|BerryCore Games menu — BerryCraft, BerryFly, BerryBoat, BerryDig, BerryMoto, BerryMX (port 8766; qpkg install bb-games)
 library|web|On-device EPUB/HTML shelf and reader (port 8094; also: books)
 books|web|Alias for library — EPUB/HTML reader on port 8094
+waterwaymap|web|OSM waterway / river-basin map (port 8095; qpkg install waterwaymap)
+waterway|web|Alias for waterwaymap — OSM basins on port 8095
+stocks|web|Stock ticker and research — lists, upticks, PPS alerts (port 8096; qpkg install stocks)
+ticker|web|Alias for stocks — ticker on port 8096
 sttlab|web|STT lab — ice/black UI, Term49 text, Android drop (port 8093; qpkg install sttlab)
 sttlabs|web|Term49 text front-end for STT lab (qpkg install sttlabs)
 vosk|ai|Offline Vosk speech-to-text (qpkg install vosk)

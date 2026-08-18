@@ -1,0 +1,216 @@
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: #071018;
+  color: #e8f4ff;
+  overflow: hidden;
+}
+#map {
+  position: absolute;
+  top: 88px; left: 0; right: 0; bottom: 0;
+  background: #dde5d9;
+  overflow: hidden;
+  touch-action: none;
+}
+#tiles, #overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+#overlay { pointer-events: none; }
+.tile {
+  position: absolute;
+  width: 256px;
+  height: 256px;
+  border: 0;
+  display: block;
+}
+
+.bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 44px;
+  background: #0b1c28;
+  border-bottom: 1px solid #1e4a5c;
+  z-index: 8;
+}
+.bar h1 {
+  margin: 0;
+  padding: 11px 12px 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #7ee0d0;
+  letter-spacing: 0.4px;
+}
+.bar .sub {
+  position: absolute;
+  left: 14px; top: 28px;
+  font-size: 10px;
+  color: #7a93a3;
+}
+.bar .menu {
+  position: absolute;
+  right: 8px; top: 6px;
+  width: 32px; height: 32px;
+  border: 1px solid #2a6a78;
+  background: #102838;
+  color: #7ee0d0;
+  font-size: 16px;
+  line-height: 28px;
+  text-align: center;
+}
+
+.find {
+  position: absolute;
+  top: 44px; left: 0; right: 0;
+  height: 44px;
+  background: #0b1c28;
+  border-bottom: 1px solid #1e4a5c;
+  z-index: 8;
+  padding: 6px 8px 6px 10px;
+}
+.find-q {
+  width: 62%;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #2a6a78;
+  background: #071018;
+  color: #e8f4ff;
+  font-size: 14px;
+  vertical-align: top;
+}
+.find-x {
+  width: 10%;
+  height: 32px;
+  margin-left: 1%;
+  border: 1px solid #2a6a78;
+  background: #102838;
+  color: #7ee0d0;
+  font-size: 18px;
+  line-height: 28px;
+  vertical-align: top;
+}
+.find-go {
+  width: 22%;
+  height: 32px;
+  margin-left: 2%;
+  border: 1px solid #3d8;
+  background: #134;
+  color: #b8ffd0;
+  font-size: 14px;
+  vertical-align: top;
+}
+
+.hits {
+  position: absolute;
+  top: 88px; left: 0; right: 0;
+  z-index: 9;
+  max-height: 45%;
+  overflow: auto;
+  background: #0d2230;
+  border-bottom: 1px solid #2a6a78;
+}
+.hits .item {
+  display: block;
+  padding: 12px 14px;
+  border-bottom: 1px solid #1a3a48;
+  color: #e8f4ff;
+  text-decoration: none;
+}
+.hits .item.on { background: #134; }
+.hits .item .t { font-size: 15px; color: #7ee0d0; }
+.hits .item .m { font-size: 11px; color: #7a93a3; margin-top: 3px; }
+.hits .empty { padding: 12px 14px; color: #7a93a3; }
+
+.ctrls {
+  position: absolute;
+  right: 10px; bottom: 56px;
+  z-index: 3;
+}
+.ctrls button {
+  display: block;
+  width: 36px; height: 36px;
+  margin-bottom: 6px;
+  border: 1px solid #2a6a78;
+  background: rgba(11, 28, 40, 0.92);
+  color: #d7f3ff;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.chip {
+  position: absolute;
+  left: 10px; right: 56px; bottom: 12px;
+  z-index: 3;
+  background: rgba(11, 28, 40, 0.92);
+  border: 1px solid #2a6a78;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #c9e8f0;
+  min-height: 34px;
+}
+.chip b { color: #7ee0d0; }
+.chip .muted { color: #7a93a3; }
+
+.scrim {
+  display: none;
+  position: absolute;
+  top: 88px; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 5;
+}
+.scrim.on { display: block; }
+
+.sheet {
+  display: none;
+  position: absolute;
+  top: 88px; right: 0; bottom: 0;
+  width: 72%;
+  max-width: 320px;
+  background: #0d2230;
+  border-left: 1px solid #2a6a78;
+  z-index: 6;
+  overflow: auto;
+  padding: 12px 14px 24px;
+}
+.sheet.on { display: block; }
+.sheet h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #7ee0d0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.sheet label {
+  display: block;
+  margin: 6px 0;
+  font-size: 13px;
+  color: #d7f3ff;
+}
+.sheet input[type="number"] {
+  width: 100%;
+  margin: 4px 0 10px;
+  padding: 7px 8px;
+  border: 1px solid #2a6a78;
+  background: #071018;
+  color: #e8f4ff;
+  font-size: 14px;
+}
+.sheet .jump {
+  display: block;
+  width: 100%;
+  margin: 4px 0;
+  padding: 10px 7px;
+  border: 1px solid #2a6a78;
+  background: #102838;
+  color: #d7f3ff;
+  font-size: 13px;
+  text-align: left;
+}
+.note {
+  font-size: 11px;
+  color: #7a93a3;
+  line-height: 1.4;
+  margin-top: 14px;
+}

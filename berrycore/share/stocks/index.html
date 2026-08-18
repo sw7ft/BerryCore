@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Tape</title>
+<link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+<body>
+  <div class="mast">
+    <div class="kicker">BerryCore · session</div>
+    <h1>The Tape</h1>
+    <div class="rule"></div>
+    <div class="sub" id="asof">Custom lists · upticks · hub alerts</div>
+    <button type="button" class="menu" id="btnMenu" title="Menu">☰</button>
+  </div>
+
+  <div class="lists" id="lists"></div>
+
+  <form id="addForm" class="find" action="javascript:void(0)" method="post" onsubmit="return false;">
+    <input type="text" id="q" class="find-q" placeholder="Add AAPL, Tesla, SPY…" autocomplete="off">
+    <button type="button" id="btnSearch" class="find-go">Add</button>
+  </form>
+  <div id="hits" class="hits" style="display:none;"></div>
+
+  <div id="board"></div>
+  <div class="chip" id="chip"><span class="muted">Pulling the tape…</span></div>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="sheet" id="research"></div>
+
+<script src="/static/app.js?v=2"></script>
+</body>
+</html>

@@ -39,6 +39,8 @@ wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: 
 berrybot|util|1.0.0|600K|Command-line teaching assistant - Linux, QNX, bash, BerryCore (run: bot grep, bot lessons)
 rocketchat|web|3.0|30K|RocketChat Navigator v3 for BB10 - channels, groups, DMs (requires python3, port 8026)
 maps|web|1.0|36K|OpenStreetMap navigation - search, directions (requires python3, requests, port 8090)
+waterwaymap|web|1.0|18K|OSM waterway / river-basin map (port 8095)
+stocks|web|1.0|16K|Stock ticker, lists, upticks, PPS alerts (port 8096)
 youtube|web|2.0|21K|YouTube Navigator v2 - search and embed playback (requires python3, port 8070)
 telegram|web|2.1|40K|Telegram Messenger v2.1 for BB10 (requires python3, telethon, requests, port 8010)
 claude-code|dev|2.1.91|45M|Claude Code AI agent for BB10 - terminal coding assistant (requires node-term49, run claude-setup)

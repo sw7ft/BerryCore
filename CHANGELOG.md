@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.8] - 2026-08-18
+
+### Added
+
+- **stocks** / **ticker** — ES5 ticker and research on port **8096** (`The Tape`)
+- **Custom lists**, per-symbol up-tick hub banners, price above/below alerts
+- **PPS notify** — same `/pps/services/notify/control` path as Rocket.Chat
+- **waterwaymap** / **waterway** qpkg — OSM river-basin map on port **8095**
+- Bundled `packages/web-stocks-1.0.zip` and `packages/web-waterwaymap-1.0.zip`
+
+### Changed
+
+- **VERSION** → 0.87.8
+- **CATALOG / FEATURED / PACKAGES / env.sh** — `stocks`, `ticker`, `waterwaymap`, `waterway`
+
+---
+
 ## [0.87.7] - 2026-08-18
 
 ### Added

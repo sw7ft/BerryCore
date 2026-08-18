@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Waterway Map</title>
+<link rel="stylesheet" href="/static/style.css?v=9">
+</head>
+<body>
+  <div class="bar">
+    <h1>Waterway Map</h1>
+    <div class="sub">OSM river basins</div>
+    <button type="button" class="menu" id="btnMenu" title="Settings">☰</button>
+  </div>
+
+  <form id="searchForm" class="find" action="javascript:void(0)" method="post" onsubmit="return false;">
+    <input type="text" id="q" class="find-q" placeholder="Trail BC, river, city…" autocomplete="off">
+    <button type="button" id="btnClear" class="find-x" title="Clear">×</button>
+    <button type="button" id="btnSearch" class="find-go">Go</button>
+  </form>
+  <div id="hits" class="hits" style="display:none;"></div>
+
+  <div id="map">
+    <div id="tiles"></div>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="ctrls">
+    <button type="button" id="zoomIn">+</button>
+    <button type="button" id="zoomOut">−</button>
+    <button type="button" id="btnPin" title="Back to pin">⊙</button>
+  </div>
+  <div class="chip" id="chip">Search a place, then zoom in for rivers</div>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet">
+    <h2>Filter</h2>
+    <label><input type="checkbox" id="tRiver" checked> Rivers</label>
+    <label><input type="checkbox" id="tCanal" checked> Canals</label>
+    <label><input type="checkbox" id="tStream"> Streams</label>
+    <label><input type="checkbox" id="tDrain"> Drains / ditches</label>
+    <label>Minimum length (km)</label>
+    <input type="number" id="minKm" value="0" min="0" step="1">
+
+    <h2>Jump</h2>
+    <button type="button" class="jump" id="jumpWorld">World · #map=3/40/15</button>
+    <button type="button" class="jump" id="jumpSask">North Saskatchewan</button>
+    <button type="button" class="jump" id="jumpNile">Nile</button>
+    <button type="button" class="jump" id="jumpAmazon">Amazon</button>
+
+    <p class="note">
+      Inspired by waterwaymap.org. Standard OSM tiles, waterways from Overpass,
+      colours = connected groups in the current view.
+      Zoom 8+ to load rivers. © OpenStreetMap contributors.
+    </p>
+  </div>
+
+<script src="/static/map.js?v=9"></script>
+<script src="/static/app.js?v=9"></script>
+</body>
+</html>

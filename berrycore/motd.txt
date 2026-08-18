@@ -1,4 +1,4 @@
-BerryCore v0.87.7 — Library
-  library   ·   books   ·   berry-browser http://127.0.0.1:8094/
-  Bell Labs UNIX papers + xv6 ship in the core zip
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.7
+BerryCore v0.87.8 — The Tape + Waterway Map
+  stocks    ·   ticker   ·   berry-browser http://127.0.0.1:8096/
+  waterwaymap on :8095   ·   qpkg install stocks | waterwaymap
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.8

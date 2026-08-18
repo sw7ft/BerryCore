@@ -139,7 +139,49 @@
   }
   .alts a:active { border-color: #ff6ec8; color: #fff; }
 
+  .bins-head {
+    clear: both;
+    text-align: center;
+    margin: 8px 0 14px;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #ff7ad8;
+    text-transform: uppercase;
+  }
+  .bin {
+    float: left;
+    width: 48.5%;
+    margin: 0 3% 12px 0;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(180deg, #12001c 0%, #080010 100%);
+    border: 1px solid #3a1866;
+    min-height: 92px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bin:nth-child(2n) { margin-right: 0; }
+  .bin:before {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--c, #c44dff);
+  }
+  .bin:hover, .bin:active { border-color: var(--c, #ff6ec8); }
+  .bin .art {
+    float: left;
+    width: 64px;
+    height: 92px;
+    padding: 18px 0 0 10px;
+    background: none;
+  }
+  .bin .art svg { width: 44px; height: 44px; }
+  .bin .body { padding: 16px 10px 12px 0; overflow: hidden; }
+  .bin .name { font-size: 15px; }
+  .bin .blurb { min-height: 0; margin: 2px 0 0; }
+
   .foot {
+    clear: both;
     text-align: center;
     margin-top: 26px;
     font-size: 11px;
@@ -167,7 +209,10 @@
   </div>
   <div class="rule"></div>
   <div class="grid" id="grid"></div>
-  <p class="foot">berry-browser &nbsp;&middot;&nbsp; :8766</p>
+  <div class="rule"></div>
+  <div class="bins-head">Useful bins</div>
+  <div class="grid" id="bins"></div>
+  <p class="foot">berry-browser &nbsp;&middot;&nbsp; start the bin if a link is down</p>
 </div>
 <script>
 /* ES5 — BerryCore Games title screen */
@@ -180,7 +225,16 @@
     boat: '<svg viewBox="0 0 56 56"><path d="M10 32 L46 32 L40 44 L16 44 Z" fill="#3aa0ff"/><path d="M28 12 L28 32 L42 32 Z" fill="#e8f4ff"/><path d="M6 46 Q28 40 50 46" fill="none" stroke="#7af0ff" stroke-width="2"/></svg>',
     dig: '<svg viewBox="0 0 56 56"><rect x="24" y="8" width="8" height="22" fill="#c8a070"/><path d="M16 30 L40 30 L36 46 L20 46 Z" fill="#e8c14a"/><rect x="10" y="46" width="36" height="6" fill="#8a5"/></svg>',
     moto: '<svg viewBox="0 0 56 56"><circle cx="16" cy="40" r="8" fill="none" stroke="#ff4d6d" stroke-width="3"/><circle cx="42" cy="40" r="8" fill="none" stroke="#ff4d6d" stroke-width="3"/><path d="M16 40 L26 24 L40 26 L42 40" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 24 L22 16" stroke="#ffb0c8" stroke-width="3"/></svg>',
-    mx: '<svg viewBox="0 0 56 56"><path d="M4 44 L20 28 L36 36 L52 18" fill="none" stroke="#ff8a3d" stroke-width="4"/><circle cx="18" cy="42" r="6" fill="#222" stroke="#ffc14a" stroke-width="2"/><circle cx="40" cy="34" r="6" fill="#222" stroke="#ffc14a" stroke-width="2"/></svg>'
+    mx: '<svg viewBox="0 0 56 56"><path d="M4 44 L20 28 L36 36 L52 18" fill="none" stroke="#ff8a3d" stroke-width="4"/><circle cx="18" cy="42" r="6" fill="#222" stroke="#ffc14a" stroke-width="2"/><circle cx="40" cy="34" r="6" fill="#222" stroke="#ffc14a" stroke-width="2"/></svg>',
+    tools: '<svg viewBox="0 0 56 56"><rect x="10" y="12" width="36" height="8" fill="#4cff9a"/><rect x="10" y="24" width="28" height="8" fill="#2a8"/><rect x="10" y="36" width="32" height="8" fill="#4cff9a"/></svg>',
+    maps: '<svg viewBox="0 0 56 56"><path d="M10 14 L24 10 L40 16 L46 12 L46 44 L40 48 L24 42 L10 46 Z" fill="#3aa0ff"/><path d="M24 10 L24 42" stroke="#0a2038" stroke-width="2"/><path d="M40 16 L40 48" stroke="#0a2038" stroke-width="2"/></svg>',
+    water: '<svg viewBox="0 0 56 56"><rect x="6" y="6" width="44" height="44" fill="#071018"/><path d="M8 18 Q18 10 28 20 T48 16" fill="none" stroke="#4d96ff" stroke-width="3"/><path d="M10 28 Q20 20 30 30 T50 26" fill="none" stroke="#ffd93d" stroke-width="3"/><path d="M8 40 Q22 30 34 40 T50 36" fill="none" stroke="#6bcb77" stroke-width="3"/></svg>',
+    telegram: '<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="20" fill="#2ea6ff"/><path d="M16 28 L42 18 L36 40 L28 32 L22 36 Z" fill="#fff"/></svg>',
+    youtube: '<svg viewBox="0 0 56 56"><rect x="8" y="16" width="40" height="24" rx="6" fill="#ff4d4d"/><path d="M24 22 L36 28 L24 34 Z" fill="#fff"/></svg>',
+    chat: '<svg viewBox="0 0 56 56"><rect x="8" y="12" width="40" height="28" rx="6" fill="#ff6ec8"/><path d="M18 40 L22 36 L30 40 Z" fill="#ff6ec8"/><rect x="16" y="20" width="24" height="4" fill="#2a1038"/><rect x="16" y="28" width="16" height="4" fill="#2a1038"/></svg>',
+    term: '<svg viewBox="0 0 56 56"><rect x="8" y="12" width="40" height="32" fill="#1a0828" stroke="#c44dff" stroke-width="3"/><path d="M16 22 L24 28 L16 34" fill="none" stroke="#c44dff" stroke-width="3"/><path d="M28 34 L40 34" stroke="#ff7ad8" stroke-width="3"/></svg>',
+    snip: '<svg viewBox="0 0 56 56"><rect x="14" y="10" width="28" height="36" fill="#e8c14a"/><rect x="18" y="16" width="20" height="3" fill="#5a4010"/><rect x="18" y="24" width="16" height="3" fill="#5a4010"/><rect x="18" y="32" width="18" height="3" fill="#5a4010"/></svg>',
+    voice: '<svg viewBox="0 0 56 56"><rect x="24" y="10" width="8" height="22" rx="4" fill="#ff8a3d"/><path d="M16 28 Q16 40 28 42 Q40 40 40 28" fill="none" stroke="#ffc14a" stroke-width="3"/><path d="M28 42 L28 48 L20 48 L36 48" stroke="#ff8a3d" stroke-width="3"/></svg>'
   };
 
   var games = [
@@ -243,6 +297,47 @@
     }
     cab.appendChild(body);
     grid.appendChild(cab);
+  }
+
+  var bins = [
+    { name: "Tools", tag: "tools  ·  :8765", href: "http://127.0.0.1:8765/dashboard/", color: "#4cff9a", icon: "tools" },
+    { name: "Maps", tag: "maps  ·  :8090", href: "http://127.0.0.1:8090/", color: "#3aa0ff", icon: "maps" },
+    { name: "Waterway", tag: "waterwaymap  ·  :8095", href: "http://127.0.0.1:8095/", color: "#4d96ff", icon: "water" },
+    { name: "Stocks", tag: "stocks  ·  :8096", href: "http://127.0.0.1:8096/", color: "#3d8", icon: "snip" },
+    { name: "Telegram", tag: "telegram  ·  :8010", href: "http://127.0.0.1:8010/", color: "#2ea6ff", icon: "telegram" },
+    { name: "YouTube", tag: "youtube  ·  :8070", href: "http://127.0.0.1:8070/", color: "#ff4d4d", icon: "youtube" },
+    { name: "RocketChat", tag: "rocketchat  ·  :8026", href: "http://127.0.0.1:8026/", color: "#ff6ec8", icon: "chat" },
+    { name: "Term49", tag: "term49-web  ·  :7681", href: "http://127.0.0.1:7681/", color: "#c44dff", icon: "term" },
+    { name: "BerrySnip", tag: "berrysnip  ·  :8018", href: "http://127.0.0.1:8018/", color: "#e8c14a", icon: "snip" },
+    { name: "Voice", tag: "voiceagent  ·  :8085", href: "http://127.0.0.1:8085/", color: "#ff8a3d", icon: "voice" }
+  ];
+
+  var binGrid = document.getElementById("bins");
+  var b, tile, bart, bbody, bname, bblurb;
+  for (i = 0; i < bins.length; i++) {
+    b = bins[i];
+    tile = document.createElement("a");
+    tile.className = "bin";
+    tile.href = b.href;
+    tile.style.setProperty("--c", b.color);
+
+    bart = document.createElement("div");
+    bart.className = "art";
+    bart.innerHTML = icons[b.icon] || "";
+    tile.appendChild(bart);
+
+    bbody = document.createElement("div");
+    bbody.className = "body";
+    bname = document.createElement("div");
+    bname.className = "name";
+    bname.appendChild(document.createTextNode(b.name));
+    bbody.appendChild(bname);
+    bblurb = document.createElement("div");
+    bblurb.className = "blurb";
+    bblurb.appendChild(document.createTextNode(b.tag));
+    bbody.appendChild(bblurb);
+    tile.appendChild(bbody);
+    binGrid.appendChild(tile);
   }
 
   /* soft berry-dust field */

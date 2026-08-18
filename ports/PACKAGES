@@ -28,6 +28,10 @@ wifi-chat|util|1.0.0|12K|P2P chat over WiFi|util-wifi-chat-1.0.0.zip|none
 berrybot|util|1.0.0|600K|Command-line teaching assistant|util-berrybot-1.0.0.zip|none
 rocketchat|web|3.0|30K|RocketChat Navigator v3|web-rocketchat-3.0.zip|none
 maps|web|1.0|36K|OpenStreetMap navigation|web-maps-1.0.zip|none
+waterwaymap|web|1.0|18K|OSM waterway / river-basin map (port 8095)|web-waterwaymap-1.0.zip|none
+waterway|web|1.0|18K|Alias for waterwaymap|web-waterwaymap-1.0.zip|waterwaymap
+stocks|web|1.0|16K|Stock ticker, lists, upticks, PPS alerts (port 8096)|web-stocks-1.0.zip|none
+ticker|web|1.0|16K|Alias for stocks|web-stocks-1.0.zip|stocks
 youtube|web|2.0|21K|YouTube Navigator v2|web-youtube-2.0.zip|none
 telegram|web|2.1|40K|Telegram Messenger v2.1|web-telegram-2.1.zip|none
 claude-code|dev|2.1.91|45M|Claude Code AI agent|dev-claude-code-2.1.91.zip|none
