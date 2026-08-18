@@ -1,0 +1,144 @@
+#!/bin/sh
+# BerryCore setup guide — catalog + app pins on port 8098
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." && pwd)"
+WEB="$NATIVE_TOOLS/share/setup"
+PORT="${BERRYCORE_SETUP_PORT:-${BERRYCORE_HOMESCREEN_PORT:-8098}}"
+PIDFILE="$NATIVE_TOOLS/.tmp/setup.pid"
+# Keep the older homescreen pid so a previous pin-pack process is reused/stopped.
+OLD_PID="$NATIVE_TOOLS/.tmp/homescreen.pid"
+LOG="$NATIVE_TOOLS/.tmp/setup.log"
+export NATIVE_TOOLS
+PY="$NATIVE_TOOLS/bin/python3"
+BC_PY="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+if [ -x "$PY" ]; then
+    :
+elif [ -x "$BC_PY" ]; then
+    PY="$BC_PY"
+    export PYTHONHOME="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static"
+    export PYTHONPATH=
+else
+    PY="python3"
+fi
+
+cmd="${1:-open}"
+
+is_running() {
+    for f in "$PIDFILE" "$OLD_PID"; do
+        if [ -f "$f" ]; then
+            pid=$(cat "$f" 2>/dev/null)
+            if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+                return 0
+            fi
+            rm -f "$f"
+        fi
+    done
+    return 1
+}
+
+do_start() {
+    if [ ! -f "$WEB/serve.py" ]; then
+        echo "setup: missing $WEB/serve.py"
+        exit 1
+    fi
+    if [ -f "$OLD_PID" ] && [ ! -f "$PIDFILE" ]; then
+        kill "$(cat "$OLD_PID")" 2>/dev/null
+        rm -f "$OLD_PID"
+        sleep 1
+    fi
+    if is_running; then
+        echo "Setup already running — http://127.0.0.1:$PORT/"
+        return 0
+    fi
+    mkdir -p "$NATIVE_TOOLS/.tmp"
+    nohup "$PY" "$WEB/serve.py" "$PORT" >> "$LOG" 2>&1 &
+    echo $! > "$PIDFILE"
+    sleep 1
+    if is_running; then
+        echo "BerryCore setup  http://127.0.0.1:$PORT/"
+    else
+        echo "setup: failed to start — see $LOG"
+        exit 1
+    fi
+}
+
+do_stop() {
+    stopped=0
+    for f in "$PIDFILE" "$OLD_PID"; do
+        if [ -f "$f" ]; then
+            kill "$(cat "$f")" 2>/dev/null
+            rm -f "$f"
+            stopped=1
+        fi
+    done
+    if [ "$stopped" = 1 ]; then
+        echo "Setup stopped"
+    else
+        echo "setup: not running"
+    fi
+}
+
+open_browser() {
+    url="http://127.0.0.1:$PORT/"
+    if command -v weblauncher >/dev/null 2>&1; then
+        weblauncher "$url" >/dev/null 2>&1 &
+        echo "Opened $url"
+        return
+    fi
+    echo "Open the BB10 Browser to: $url"
+}
+
+do_open() {
+    do_start
+    echo "Setup:     http://127.0.0.1:$PORT/"
+    echo "Apps:      http://127.0.0.1:$PORT/apps"
+    echo "Manual:    http://127.0.0.1:$PORT/manual"
+    open_browser
+}
+
+do_notify() {
+    pps="/pps/services/notify/control"
+    [ -w "$pps" ] || return 0
+    url="http://127.0.0.1:$PORT/apps"
+    printf '%s\n' "msg::notify" \
+        "dat:json:{\"itemid\":\"BerryCore\",\"title\":\"BerryCore\",\"subtitle\":\"App catalog ready\",\"payload\":\"$url\",\"payloadType\":\"url\",\"payloadURI\":\"$url\"}" \
+        >> "$pps" 2>/dev/null || true
+}
+
+do_boot() {
+    if is_running; then
+        return 0
+    fi
+    do_start >/dev/null 2>&1 || return 1
+    do_notify
+}
+
+case "$cmd" in
+    start)  do_start ;;
+    stop)   do_stop ;;
+    boot)   do_boot ;;
+    status)
+        if is_running; then
+            echo "running  http://127.0.0.1:$PORT/"
+        else
+            echo "stopped"
+            exit 1
+        fi
+        ;;
+    open|setup|pin|"")
+        do_open
+        ;;
+    -h|--help|help)
+        echo "Usage: setup [open|start|stop|status|boot]"
+        echo "  setup          start the guide and open the Browser  (port $PORT)"
+        echo "  setup boot     start quietly + hub notification (Term49 login)"
+        echo "  Also: homescreen, pins"
+        echo "  Apps:    http://127.0.0.1:$PORT/apps"
+        echo "  Manual:  http://127.0.0.1:$PORT/manual"
+        ;;
+    *)
+        echo "Unknown command: $cmd"
+        exit 1
+        ;;
+esac

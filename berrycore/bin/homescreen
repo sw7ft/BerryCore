@@ -1,0 +1,3 @@
+#!/bin/sh
+# homescreen — same as setup
+exec "$(cd "$(dirname "$0")" && pwd)/setup" "$@"

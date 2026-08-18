@@ -1,6 +1,6 @@
 #!/bin/sh
 # BerryCore Settings - toggle options written to ~/.profile
-# Usage: settings {sshd-on|sshd-off|tools-on|tools-off|games-on|games-off|motd-on|motd-off|status}
+# Usage: settings {sshd-on|sshd-off|tools-on|tools-off|games-on|games-off|homescreen-on|homescreen-off|motd-on|motd-off|status}
 
 NATIVE_TOOLS="${NATIVE_TOOLS:-/accounts/1000/shared/misc/berrycore}"
 PROFILE="${HOME:-/var}/.profile"
@@ -57,6 +57,33 @@ remove_tools_autostart() {
         echo "Removed tools auto-start from $PROFILE"
     else
         echo "tools auto-start was not enabled"
+    fi
+}
+
+add_homescreen_autostart() {
+    grep -q "# BerryCore: homescreen auto-start" "$PROFILE" 2>/dev/null && {
+        echo "homescreen auto-start already enabled"
+        return
+    }
+    cat >> "$PROFILE" << 'HS_EOF'
+
+# BerryCore: homescreen auto-start (added by settings homescreen-on)
+if command -v setup >/dev/null 2>&1; then
+    setup start
+elif command -v homescreen >/dev/null 2>&1; then
+    homescreen start
+fi
+HS_EOF
+    echo "Added homescreen auto-start to $PROFILE"
+}
+
+remove_homescreen_autostart() {
+    if grep -q "# BerryCore: homescreen auto-start" "$PROFILE" 2>/dev/null; then
+        sed -i.bak '/# BerryCore: homescreen auto-start/,/^fi$/d' "$PROFILE" 2>/dev/null
+        rm -f "$PROFILE.bak"
+        echo "Removed homescreen auto-start from $PROFILE"
+    else
+        echo "homescreen auto-start was not enabled"
     fi
 }
 
@@ -127,6 +154,8 @@ show_status() {
     grep -q "# BerryCore: tools auto-start" "$PROFILE" 2>/dev/null && echo "enabled" || echo "disabled"
     printf "  games auto-start: "
     grep -q "# BerryCore: games auto-start" "$PROFILE" 2>/dev/null && echo "enabled" || echo "disabled"
+    printf "  homescreen pins:  "
+    grep -q "# BerryCore: homescreen auto-start" "$PROFILE" 2>/dev/null && echo "enabled" || echo "disabled"
     printf "  MOTD:            "
     if grep -q "BERRYCORE_MOTD_ENABLED=0" "$PROFILE" 2>/dev/null; then
         echo "disabled"
@@ -150,6 +179,8 @@ show_usage() {
     echo "  tools-off  Remove tools auto-start from .profile"
     echo "  games-on   Add BerryCore games server auto-start to .profile"
     echo "  games-off  Remove games auto-start from .profile"
+    echo "  homescreen-on   Start pin pack + web apps on login"
+    echo "  homescreen-off  Remove homescreen auto-start"
     echo "  motd-on    Enable Message of the Day in .profile"
     echo "  motd-off   Disable Message of the Day"
     echo "  status     Show current settings"
@@ -163,6 +194,8 @@ case "${1:-}" in
     tools-off) remove_tools_autostart ;;
     games-on)  add_games_autostart ;;
     games-off) remove_games_autostart ;;
+    homescreen-on)  add_homescreen_autostart ;;
+    homescreen-off) remove_homescreen_autostart ;;
     motd-on)   add_motd ;;
     motd-off)  remove_motd ;;
     status)    show_status ;;

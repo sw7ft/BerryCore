@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BerryCore · Apps</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BerryCore">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="apple-touch-icon-precomposed" href="/icon.png">
+<link rel="stylesheet" href="/static/style.css?v=8">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img class="mark" src="/icon.png" alt="">
+      <div class="lockup">
+        <div class="name">Berry<span>Core</span></div>
+        <div class="tag">Web app catalog</div>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge">v0.87.8</span>
+      <span class="badge">ES5 · local ports</span>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <a href="/">Setup</a>
+    <a href="/apps">Apps</a>
+    <a href="/manual">Manual</a>
+  </nav>
+
+  <section class="hero">
+    <p class="eyebrow">Catalog</p>
+    <h1>Web apps</h1>
+    <p class="lead">Each app is its own localhost server. Start only the one you want. Pin uses Browser → Add to Home Screen.</p>
+    <form class="find" action="javascript:void(0)" method="post" onsubmit="return false;">
+      <input type="text" id="q" class="find-q" placeholder="Search apps" autocomplete="off" autocorrect="off">
+    </form>
+    <p class="note" id="note"></p>
+  </section>
+
+  <section>
+    <div id="grid"></div>
+  </section>
+
+  <footer>
+    Package ports and install notes live in the <a href="/manual">manual</a>.
+  </footer>
+  <script src="/static/app.js?v=8"></script>
+</body>
+</html>

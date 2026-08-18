@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <title>BerryCore Games</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Games">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="http://127.0.0.1:8098/icon/games.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
@@ -234,7 +238,8 @@
     chat: '<svg viewBox="0 0 56 56"><rect x="8" y="12" width="40" height="28" rx="6" fill="#ff6ec8"/><path d="M18 40 L22 36 L30 40 Z" fill="#ff6ec8"/><rect x="16" y="20" width="24" height="4" fill="#2a1038"/><rect x="16" y="28" width="16" height="4" fill="#2a1038"/></svg>',
     term: '<svg viewBox="0 0 56 56"><rect x="8" y="12" width="40" height="32" fill="#1a0828" stroke="#c44dff" stroke-width="3"/><path d="M16 22 L24 28 L16 34" fill="none" stroke="#c44dff" stroke-width="3"/><path d="M28 34 L40 34" stroke="#ff7ad8" stroke-width="3"/></svg>',
     snip: '<svg viewBox="0 0 56 56"><rect x="14" y="10" width="28" height="36" fill="#e8c14a"/><rect x="18" y="16" width="20" height="3" fill="#5a4010"/><rect x="18" y="24" width="16" height="3" fill="#5a4010"/><rect x="18" y="32" width="18" height="3" fill="#5a4010"/></svg>',
-    voice: '<svg viewBox="0 0 56 56"><rect x="24" y="10" width="8" height="22" rx="4" fill="#ff8a3d"/><path d="M16 28 Q16 40 28 42 Q40 40 40 28" fill="none" stroke="#ffc14a" stroke-width="3"/><path d="M28 42 L28 48 L20 48 L36 48" stroke="#ff8a3d" stroke-width="3"/></svg>'
+    voice: '<svg viewBox="0 0 56 56"><rect x="24" y="10" width="8" height="22" rx="4" fill="#ff8a3d"/><path d="M16 28 Q16 40 28 42 Q40 40 40 28" fill="none" stroke="#ffc14a" stroke-width="3"/><path d="M28 42 L28 48 L20 48 L36 48" stroke="#ff8a3d" stroke-width="3"/></svg>',
+    solar: '<svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="7" fill="#e6c56a"/><circle cx="28" cy="28" r="16" fill="none" stroke="#8ea2d6" stroke-width="1"/><circle cx="28" cy="28" r="22" fill="none" stroke="#3a4a78" stroke-width="1"/><circle cx="44" cy="28" r="3" fill="#4d96ff"/><circle cx="18" cy="14" r="2" fill="#ff922b"/></svg>'
   };
 
   var games = [
@@ -304,6 +309,8 @@
     { name: "Maps", tag: "maps  ·  :8090", href: "http://127.0.0.1:8090/", color: "#3aa0ff", icon: "maps" },
     { name: "Waterway", tag: "waterwaymap  ·  :8095", href: "http://127.0.0.1:8095/", color: "#4d96ff", icon: "water" },
     { name: "Stocks", tag: "stocks  ·  :8096", href: "http://127.0.0.1:8096/", color: "#3d8", icon: "snip" },
+    { name: "Orrery", tag: "solarsystem  ·  :8097", href: "http://127.0.0.1:8097/", color: "#e6c56a", icon: "solar" },
+    { name: "Setup", tag: "setup  ·  :8098", href: "http://127.0.0.1:8098/", color: "#8b5cf6", icon: "snip" },
     { name: "Telegram", tag: "telegram  ·  :8010", href: "http://127.0.0.1:8010/", color: "#2ea6ff", icon: "telegram" },
     { name: "YouTube", tag: "youtube  ·  :8070", href: "http://127.0.0.1:8070/", color: "#ff4d4d", icon: "youtube" },
     { name: "RocketChat", tag: "rocketchat  ·  :8026", href: "http://127.0.0.1:8026/", color: "#ff6ec8", icon: "chat" },

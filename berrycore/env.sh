@@ -55,6 +55,12 @@ alias bcbins='qpkg bins'
 # locale
 export LC_CTYPE=en_US.UTF-8
 
+# Term49 / login: start the web-app catalog (port 8098) and notify once.
+# Disable: export BERRYCORE_SETUP_AUTO=0 in .profile before sourcing env.sh
+if [ -t 1 ] && [ "${BERRYCORE_SETUP_AUTO:-1}" = "1" ] && [ -x "$NATIVE_TOOLS/bin/setup" ]; then
+    "$NATIVE_TOOLS/bin/setup" boot >/dev/null 2>&1 &
+fi
+
 # Welcome Message
 # Set BERRYCORE_QUIET=1 in .profile BEFORE sourcing env.sh to skip this
 # banner (Term49 fancy splash owns the launch screen).
@@ -77,9 +83,9 @@ echo ""
 echo "Quick navigation shortcuts:"
 echo "  misc, docs, downloads, sdcard, bc"
 echo ""
-echo "Quick start: nano, vim, git, nmap, curl, linux, games, library, waterwaymap, stocks, sttlab, sttlabs, term49-web"
+echo "Quick start: setup, nano, vim, git, nmap, curl, linux, games, library, waterwaymap, stocks, solarsystem, sttlab, sttlabs, term49-web"
 echo ""
-echo "Auto-start: settings sshd-on, settings tools-on, settings games-on, settings status"
+echo "Auto-start: settings sshd-on, settings tools-on, settings games-on, settings homescreen-on, settings status"
 echo "==========================================================="
 fi
 

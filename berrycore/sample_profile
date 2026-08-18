@@ -1,9 +1,10 @@
 umask 002
 
-# Fancy Term49 splash owns the launch screen.
+# BerryCore splash owns the launch screen.
 # Must be set BEFORE sourcing env.sh (skips plain banner + remote MOTD wait).
 export BERRYCORE_QUIET=1
 export BERRYCORE_MOTD_ENABLED=0
+# export BERRYCORE_SETUP_AUTO=0   # skip app-catalog autostart + hub banner
 
 # BerryCore Environment
 BERRYCORE_ENV="/accounts/1000/shared/misc/berrycore/env.sh"

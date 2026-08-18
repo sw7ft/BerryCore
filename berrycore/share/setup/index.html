@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BerryCore</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BerryCore">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="apple-touch-icon-precomposed" href="/icon.png">
+<link rel="stylesheet" href="/static/style.css?v=5">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img class="mark" src="/icon.png" alt="">
+      <div class="lockup">
+        <div class="name">Berry<span>Core</span></div>
+        <div class="tag">Learn Systems to Control Systems</div>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge">v0.87.8</span>
+      <span class="badge">QNX userland</span>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <a href="/">Setup</a>
+    <a href="/apps">Apps</a>
+    <a href="/manual">Manual</a>
+    <a href="#pins">Pins</a>
+  </nav>
+
+  <section class="hero" id="start">
+    <p class="eyebrow">On-device setup</p>
+    <h1>Two books, one home screen.</h1>
+    <p class="lead">The <b>app catalog</b> is the live web apps — start one, pin one, open one. The <b>manual</b> is how BerryCore is installed, how <code>qpkg</code> works, and the port index.</p>
+    <div class="actions">
+      <a class="btn primary" href="/apps">Web app catalog</a>
+      <a class="btn ghost" href="/manual">Manual</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>First session</h2>
+    <ol class="steps">
+      <li>In Term49: <code>. /accounts/1000/shared/misc/berrycore/env.sh</code></li>
+      <li>Type <code>setup</code> — this page. Overflow → <b>Add to Home Screen</b>.</li>
+      <li><code>settings sshd-on</code> if you SSH from a desktop.</li>
+      <li><code>settings homescreen-on</code> so this guide starts on login.</li>
+    </ol>
+  </section>
+
+  <section id="pins">
+    <h2>Home screen pins</h2>
+    <p class="muted">BB10 will not let the shell write icons. The Browser overflow menu is the official path.</p>
+    <ol class="steps">
+      <li>On this page: overflow → <b>Add to Home Screen</b> → save as <b>BerryCore</b>.</li>
+      <li>Or open the <a href="/apps">app catalog</a>, tap <b>Pin</b> on one app, then Add to Home Screen.</li>
+    </ol>
+  </section>
+
+  <footer>
+    BerryCore v0.87.8 · <code>setup</code> ·
+    <a href="/apps">apps</a> ·
+    <a href="/manual">manual</a>
+  </footer>
+</body>
+</html>
