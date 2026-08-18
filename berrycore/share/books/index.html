@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Library</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #231910;
+    color: #f0e6d2;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  #lib {
+    padding: 22px 14px 40px;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(196, 165, 116, 0.2), transparent 52%),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.14) 0, rgba(0, 0, 0, 0.14) 1px, transparent 1px, transparent 22px);
+  }
+  .hero { text-align: center; padding: 8px 0 18px; }
+  .kicker {
+    font-size: 10px;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: #c4a574;
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: normal;
+    letter-spacing: 0.16em;
+    color: #f7efe0;
+    margin-top: 6px;
+  }
+  .rule {
+    width: 120px;
+    height: 1px;
+    margin: 12px auto 10px;
+    background: linear-gradient(90deg, transparent, #c4a574, transparent);
+  }
+  .sub { color: #b9a78a; font-size: 13px; font-style: italic; }
+  #libham {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 44px;
+    padding: 6px 0 8px;
+    border: 1px solid #8a6d44;
+    background: #2c2118;
+    color: #e8d5b0;
+    text-decoration: none;
+    font-size: 22px;
+    line-height: 1;
+    text-align: center;
+    z-index: 9;
+  }
+  #libmenu, #about {
+    display: none;
+    position: fixed;
+    z-index: 9;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+  }
+  #libmenu {
+    top: 56px;
+    right: 10px;
+    width: 230px;
+  }
+  #libmenu a {
+    display: block;
+    padding: 12px 14px;
+    color: #e8d5b0;
+    text-decoration: none;
+    border-bottom: 1px solid #4a3a2a;
+    font-size: 15px;
+  }
+  #libmenu a.on { color: #c4a574; }
+  #libham:active, #libmenu a:active { background: #c4a574; color: #231910; }
+  #about {
+    left: 12px;
+    right: 12px;
+    top: 56px;
+    bottom: 16px;
+    overflow: auto;
+    padding: 16px 16px 20px;
+    color: #e8d5b0;
+  }
+  #about h2 {
+    font-weight: normal;
+    color: #f7efe0;
+    margin: 0 0 10px;
+  }
+  #about p, #about li { color: #cbbba0; font-size: 14px; line-height: 1.55; margin: 0 0 0.8em; }
+  #about ul { padding-left: 1.2em; margin-bottom: 0.8em; }
+  .search {
+    display: block;
+    width: 100%;
+    max-width: 740px;
+    margin: 0 auto 16px;
+    padding: 11px 14px;
+    border: 1px solid #6b5438;
+    background: #1a130c;
+    color: #f0e6d2;
+    font-family: Georgia, serif;
+    font-size: 15px;
+  }
+  .shelf { overflow: hidden; max-width: 740px; margin: 0 auto; }
+  .cont {
+    max-width: 740px;
+    margin: 0 auto 16px;
+    padding: 12px 12px 12px 0;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+    border-left: 3px solid #c4a574;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+  }
+  .cont .thumb {
+    float: left;
+    width: 52px;
+    height: 76px;
+    margin: 0 12px 0 12px;
+    background: #3a2c20;
+    overflow: hidden;
+    border: 1px solid #6b5438;
+  }
+  .cont .thumb img { width: 52px; height: 76px; }
+  .cont a { color: #e8d5b0; text-decoration: none; font-size: 16px; }
+  .cont .who { color: #b9a78a; font-size: 12px; margin-top: 6px; font-style: italic; }
+  .card {
+    float: left;
+    margin: 0 3% 16px 0;
+    background: #2c2118;
+    border: 1px solid #5c4630;
+    overflow: hidden;
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(232, 213, 176, 0.14);
+    -webkit-animation: rise 0.5s ease-out;
+    animation: rise 0.5s ease-out;
+  }
+  .cols-2 .card { width: 48.5%; }
+  .cols-2 .card:nth-child(2n) { margin-right: 0; }
+  .cols-3 .card { width: 31.33%; }
+  .cols-3 .card:nth-child(3n) { margin-right: 0; }
+  .card:active { border-color: #c4a574; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); }
+  @-webkit-keyframes rise {
+    from { opacity: 0; -webkit-transform: translateY(10px); }
+    to { opacity: 1; -webkit-transform: translateY(0); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .cover {
+    height: 168px;
+    background: #3a2c20;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: inset 0 -28px 28px rgba(35, 25, 16, 0.5);
+  }
+  .cols-3 .cover, .cols-3 .cover img, .cols-3 .cover .ph { height: 118px; }
+  .cols-3 .cover .ph { padding-top: 38px; font-size: 22px; }
+  .cols-3 .ttl { min-height: 32px; font-size: 12px; }
+  .cols-3 .go { margin: 6px 6px 8px; padding: 6px 0; font-size: 10px; }
+  .cover img { height: 168px; max-width: 100%; }
+  .cover .ph {
+    height: 168px;
+    padding-top: 58px;
+    color: #c4a574;
+    font-size: 28px;
+    letter-spacing: 2px;
+    background: #4a3828;
+  }
+  .meta { padding: 10px 10px 4px; }
+  .ttl { color: #f7efe0; font-size: 14px; min-height: 36px; }
+  .auth { color: #b9a78a; font-size: 11px; margin-top: 4px; font-style: italic; }
+  .bar {
+    height: 2px;
+    margin-top: 8px;
+    background: #3a2c20;
+  }
+  .bar i {
+    display: block;
+    height: 2px;
+    background: #c4a574;
+  }
+  .go {
+    display: block;
+    margin: 10px 10px 12px;
+    padding: 8px 0;
+    border: 1px solid #c4a574;
+    color: #e8d5b0;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .empty { text-align: center; color: #b9a78a; padding: 30px 10px; font-style: italic; }
+  #grid { max-width: 740px; margin: 0 auto; }
+  .sec { max-width: 740px; margin: 18px auto 8px; }
+  .sec-h {
+    display: block;
+    padding: 11px 12px;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+    border-left: 3px solid #c4a574;
+    color: #e8d5b0;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .sec-h i {
+    float: right;
+    color: #b9a78a;
+    font-style: normal;
+    font-size: 13px;
+    padding-top: 2px;
+  }
+  .sec-h:active { background: #3a2c20; }
+  .chip {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 7px;
+    border: 1px solid #8a6d44;
+    color: #c4a574;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-style: normal;
+  }
+  .chip:active { background: #c4a574; color: #231910; }
+  #catman, #catpick {
+    display: none;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: 56px;
+    bottom: 16px;
+    overflow: auto;
+    z-index: 9;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+    padding: 16px 16px 20px;
+    color: #e8d5b0;
+  }
+  #catman h2, #catpick h2 {
+    font-weight: normal;
+    color: #f7efe0;
+    margin: 0 0 10px;
+  }
+  #catman p, #catpick p { color: #cbbba0; font-size: 14px; margin: 0 0 0.8em; }
+  #catpick a, #catman .crow a {
+    display: block;
+    padding: 11px 4px;
+    color: #e8d5b0;
+    text-decoration: none;
+    border-bottom: 1px solid #4a3a2a;
+    font-size: 15px;
+  }
+  #catpick a.danger { color: #d4a08a; }
+  #catman .crow { overflow: hidden; }
+  #catman .crow a.act { float: right; width: auto; padding: 11px 8px; color: #c4a574; border: 0; }
+  #catman .addline { overflow: hidden; margin: 12px 0; }
+  #catman input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #6b5438;
+    background: #1a130c;
+    color: #f0e6d2;
+    font-family: Georgia, serif;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  #read { display: none; background: #f4ead4; }
+  #bar {
+    position: fixed;
+    left: 0; right: 0; top: 0;
+    background: #231910;
+    z-index: 5;
+    border-bottom: 1px solid #8a6d44;
+    padding: 8px 8px 8px;
+    overflow: hidden;
+  }
+  #back {
+    position: relative;
+    z-index: 6;
+    float: left;
+    padding: 8px 10px;
+    border: 1px solid #8a6d44;
+    color: #e8d5b0;
+    text-decoration: none;
+    font-size: 13px;
+  }
+  #ham {
+    float: right;
+    width: 44px;
+    padding: 6px 0 8px;
+    border: 1px solid #8a6d44;
+    color: #e8d5b0;
+    text-decoration: none;
+    font-size: 22px;
+    line-height: 1;
+    text-align: center;
+  }
+  #back:active, #ham:active, #menu a:active { background: #c4a574; color: #231910; }
+  #btitle {
+    margin: 0 56px 0 88px;
+    padding: 9px 6px 0;
+    font-size: 12px;
+    color: #c4a574;
+    white-space: nowrap;
+    overflow: hidden;
+    font-style: italic;
+  }
+  #menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    right: 8px;
+    width: 220px;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+    z-index: 7;
+    overflow: auto;
+    max-height: 80%;
+  }
+  #menu a {
+    display: block;
+    padding: 12px 14px;
+    color: #e8d5b0;
+    text-decoration: none;
+    border-bottom: 1px solid #4a3a2a;
+    font-size: 15px;
+  }
+  #menu a.off { color: #7a6a55; }
+  #page {
+    padding: 68px 22px 36px;
+    max-width: 680px;
+    margin: 0 auto;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 20px;
+    line-height: 1.7;
+    color: #2c2118;
+    background: #f4ead4;
+  }
+  #page h1, #page h2, #page h3 {
+    color: #5c3d1e;
+    margin: 0.9em 0 0.45em;
+    font-family: Georgia, serif;
+    line-height: 1.25;
+    font-weight: normal;
+  }
+  #page p { margin: 0 0 0.95em; }
+  #page img { max-width: 100%; }
+  #page blockquote { margin: 0 0 1em 1em; color: #5a4632; font-style: italic; }
+  #toc {
+    display: none;
+    position: fixed;
+    left: 8px; right: 8px; top: 60px; bottom: 16px;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+    overflow: auto;
+    z-index: 6;
+    padding: 8px;
+  }
+  #toc a {
+    display: block;
+    padding: 11px 8px;
+    color: #e8d5b0;
+    text-decoration: none;
+    border-bottom: 1px solid #4a3a2a;
+    font-size: 14px;
+  }
+  #toc a.on { color: #f7efe0; background: #3a2c20; }
+  body.sepia { background: #e8d5a8; }
+  body.sepia #page { color: #3a2a14; background: #e8d5a8; }
+  body.sepia #page h1, body.sepia #page h2, body.sepia #page h3 { color: #6a3010; }
+  body.sepia #bar, body.sepia #toc, body.sepia #marks, body.sepia #menu { background: #d4c08a; border-color: #b08a4a; }
+  body.sepia #back, body.sepia #ham, body.sepia #menu a { color: #4a3010; border-color: #b08a4a; }
+  body.sepia #btitle { color: #5a4018; }
+  body.paper { background: #f7f3ea; }
+  body.paper #page { color: #1c1a16; background: #f7f3ea; }
+  body.paper #page h1, body.paper #page h2, body.paper #page h3 { color: #3a2a18; }
+  body.paper #bar, body.paper #toc, body.paper #marks, body.paper #menu { background: #efeae0; border-color: #c8c0b0; }
+  body.paper #back, body.paper #ham, body.paper #menu a { color: #333; border-color: #c8c0b0; }
+  body.paper #btitle { color: #444; }
+  body.fs #bar, body.fs #menu, body.fs #toc, body.fs #marks { display: none !important; }
+  body.fs #page { padding: 28px 22px 36px; }
+  body.fs #read { min-height: 100%; }
+  #marks {
+    display: none;
+    position: fixed;
+    left: 8px; right: 8px; top: 60px; bottom: 16px;
+    background: #2c2118;
+    border: 1px solid #8a6d44;
+    overflow: auto;
+    z-index: 6;
+    padding: 8px;
+  }
+  #marks a {
+    display: block;
+    padding: 11px 8px;
+    color: #e8d5b0;
+    text-decoration: none;
+    border-bottom: 1px solid #4a3a2a;
+    font-size: 14px;
+  }
+  #marks .who { color: #b9a78a; font-size: 12px; font-style: italic; }
+  #marks .x { float: right; color: #c4a574; padding: 0 6px; }
+  .flash {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    width: 180px;
+    margin-left: -90px;
+    padding: 10px 8px;
+    background: #2c2118;
+    border: 1px solid #c4a574;
+    color: #e8d5b0;
+    text-align: center;
+    font-size: 14px;
+    z-index: 8;
+    display: none;
+  }
+  .hint { color: #b9a78a; font-size: 12px; font-style: italic; margin: 8px 4px 12px; }
+</style>
+</head>
+<body>
+<div id="lib">
+  <div class="hero">
+    <div class="kicker">BerryCore</div>
+    <h1>The Library</h1>
+    <div class="rule"></div>
+    <p class="sub" id="sub">Tap a book to read</p>
+  </div>
+  <a href="#" id="libham">☰</a>
+  <div id="libmenu">
+    <a href="#" data-cols="2" id="cols2" class="on">2 books across</a>
+    <a href="#" data-cols="3" id="cols3">3 books across</a>
+    <a href="#" id="archive">Archive library</a>
+    <a href="#" id="import">Import from Documents</a>
+    <a href="#" id="pickfiles">Choose files…</a>
+    <a href="#" id="catmanbtn">Manage categories</a>
+    <a href="#" id="aboutbtn">About</a>
+  </div>
+  <input id="fileimp" type="file" multiple="multiple" style="display:none" accept=".epub,.txt,.text,.html,.htm,.xhtml,.md,.markdown,.fb2,.zip">
+  <div id="about">
+    <h2>About the Library</h2>
+    <p>BerryCore Library is an on-device shelf and reader. Books stay on the Passport. Nothing is uploaded to a cloud.</p>
+    <p><strong>Reads well</strong></p>
+    <ul>
+      <li>EPUB — preferred. Chapters, covers, and in-book links.</li>
+      <li>FB2 — FictionBook. Common for public-domain libraries.</li>
+      <li>HTML / HTM / XHTML — a single page or saved article.</li>
+      <li>Markdown — headings and paragraphs.</li>
+      <li>Plain text — .txt / .text, split on blank lines.</li>
+    </ul>
+    <p><strong>Not yet</strong> — PDF, MOBI/AZW, DOCX, and comics (CBZ). Those need extra engines. Convert to EPUB or HTML for now, or drop a .txt.</p>
+    <p>Shelves are categories you can open, rename, reorder, and add. Tap a book’s gold chip to file it or remove it. Archive saves categories with the books.</p>
+    <p>The Bell Labs UNIX shelf starts with the Seventh Edition Volume 2 papers (the 1979 document set people still used when System III shipped in 1981) plus Dennis Ritchie’s essays. The Operating Systems shelf starts with MIT’s xv6 book. The famous trade books — K&amp;R, Kernighan &amp; Pike, Bach — are still in copyright, so they are not bundled.</p>
+    <p>Put files in <em>/accounts/1000/shared/books</em>, or use Import to copy from Documents and Downloads. Archive writes a zip of the shelf plus reading progress to Documents.</p>
+    <p><a href="#" id="aboutclose" style="color:#c4a574">Close</a></p>
+  </div>
+  <input class="search" id="q" type="text" placeholder="Search title or author">
+  <div id="continue"></div>
+  <div id="shelfmarks"></div>
+  <div id="grid"></div>
+  <div id="catman"></div>
+  <div id="catpick"></div>
+</div>
+
+<div id="read">
+  <div id="bar">
+    <a href="#lib" id="back">Library</a>
+    <a href="#" id="ham">☰</a>
+    <div id="btitle">—</div>
+  </div>
+  <div id="menu">
+    <a href="#" id="tocbtn">Contents</a>
+    <a href="#" id="marksbtn">Bookmarks</a>
+    <a href="#" id="prev">Previous chapter</a>
+    <a href="#" id="next">Next chapter</a>
+    <a href="#" id="mark">Bookmark this place</a>
+    <a href="#" id="full">Full screen</a>
+    <a href="#" id="article">Article / Browser Reader</a>
+    <a href="#" id="theme">Theme · Lamp</a>
+    <a href="#" id="minus">Smaller type</a>
+    <a href="#" id="plus">Larger type</a>
+    <a href="#" id="delread">Remove this book</a>
+  </div>
+  <div id="toc"></div>
+  <div id="marks"></div>
+  <div id="page">Opening…</div>
+</div>
+<div class="flash" id="flash">Saved</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var books = [];
+  var cur = null;
+  var idx = 0;
+  var sizes = [16, 18, 20, 22, 26, 30];
+  var si = 2;
+  var themes = ["night", "sepia", "paper"];
+  var names = ["Lamp", "Sepia", "Paper"];
+  var ti = 0;
+  var fs = false;
+  var saveT = null;
+  var marks = [];
+  var flashT = null;
+  var cols = 2;
+  var cats = [];
+  var opening = "";
+  var backT = 0;
+
+  function $(id) { return document.getElementById(id); }
+  function xhr(method, url, body, cb) {
+    var x = new XMLHttpRequest();
+    x.open(method, url, true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      var obj = null;
+      try { obj = JSON.parse(x.responseText); } catch (e) { obj = null; }
+      cb(x.status, obj);
+    };
+    if (body) x.send(body);
+    else x.send();
+  }
+  function esc(s) {
+    return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function pct(b) {
+    if (!b.chapters) return 0;
+    var p = Math.floor((b.chapter / b.chapters) * 100);
+    if (b.scroll > 40 && p < 99) p += 1;
+    if (p > 100) p = 100;
+    return p;
+  }
+  function inRead() {
+    return $("read").style.display === "block";
+  }
+  function readHash() {
+    var h = (location.hash || "").replace(/^#/, "");
+    if (h.indexOf("b=") === 0) return decodeURIComponent(h.slice(2).split("&")[0] || "");
+    return "";
+  }
+  function showLib() {
+    $("read").style.display = "none";
+    $("lib").style.display = "block";
+    $("libham").style.display = "block";
+    hidePanels();
+    fs = false;
+    document.body.className = "";
+    xhr("GET", "/api/library", null, function (st, obj) {
+      books = (obj && obj.books) ? obj.books : books;
+      if (obj && obj.categories) cats = obj.categories;
+      renderGrid($("q").value);
+    });
+  }
+  function leaveRead() {
+    persist();
+    hidePanels();
+    fs = false;
+    opening = "";
+    showLib();
+  }
+  function goLibHash() {
+    if ((location.hash || "").indexOf("#b=") === 0) location.hash = "lib";
+    else leaveRead();
+  }
+  function handleBack() {
+    if (!inRead()) return false;
+    if ($("toc").style.display === "block" || $("marks").style.display === "block" || $("menu").style.display === "block") {
+      hidePanels();
+      return true;
+    }
+    if (fs) {
+      fs = false;
+      applyChrome();
+      return true;
+    }
+    goLibHash();
+    return true;
+  }
+  function showRead() {
+    $("lib").style.display = "none";
+    $("read").style.display = "block";
+    $("libham").style.display = "none";
+    $("libmenu").style.display = "none";
+    $("about").style.display = "none";
+    $("catman").style.display = "none";
+    $("catpick").style.display = "none";
+    applyChrome();
+  }
+  function applyChrome() {
+    var cls = ti === 0 ? "" : themes[ti];
+    if (fs) cls = (cls ? cls + " " : "") + "fs";
+    document.body.className = cls;
+    $("page").style.fontSize = sizes[si] + "px";
+    $("theme").innerHTML = "Theme · " + names[ti];
+    $("prev").className = (cur && idx <= 0) ? "off" : "";
+    $("next").className = (cur && idx >= cur.chapters.length - 1) ? "off" : "";
+    try {
+      if (window.localStorage) {
+        localStorage.setItem("bcLibTheme", String(ti));
+        localStorage.setItem("bcLibSize", String(si));
+      }
+    } catch (e) {}
+  }
+  function flash(msg) {
+    $("flash").innerHTML = msg;
+    $("flash").style.display = "block";
+    if (flashT) clearTimeout(flashT);
+    flashT = setTimeout(function () { $("flash").style.display = "none"; }, 1400);
+  }
+  function applyCols(n) {
+    cols = n === 3 ? 3 : 2;
+    $("cols2").className = cols === 2 ? "on" : "";
+    $("cols3").className = cols === 3 ? "on" : "";
+    var shelves = document.getElementsByClassName("shelf");
+    var i;
+    for (i = 0; i < shelves.length; i++) shelves[i].className = "shelf cols-" + cols;
+    try {
+      if (window.localStorage) localStorage.setItem("bcLibCols", String(cols));
+    } catch (e) {}
+  }
+  function catName(id) {
+    var i;
+    for (i = 0; i < cats.length; i++) {
+      if (cats[i].id === id) return cats[i].name;
+    }
+    return "Unfiled";
+  }
+  function catOf(b) { return b.category || "unfiled"; }
+  function postCat(body, msg, after) {
+    xhr("POST", "/api/categories", JSON.stringify(body), function (st, obj) {
+      if (st !== 200 || !obj) { flash("Could not update category"); return; }
+      if (obj.categories) cats = obj.categories;
+      if (body.op === "assign" && body.id) {
+        var i;
+        for (i = 0; i < books.length; i++) {
+          if (books[i].id === body.id) books[i].category = body.cat;
+        }
+      }
+      renderGrid($("q").value);
+      if (after) after();
+      if (msg) flash(msg);
+    });
+  }
+  function cardHtml(b) {
+    var html = '<div class="card" data-id="' + esc(b.id) + '">';
+    html += '<div class="cover">';
+    if (b.cover) html += '<img src="/api/cover?id=' + encodeURIComponent(b.id) + '">';
+    else html += '<div class="ph">' + esc((b.title || "EPUB").charAt(0)) + "</div>";
+    html += '</div><div class="meta"><div class="ttl">' + esc(b.title) + "</div>";
+    html += '<div class="auth">' + esc(b.author || "Unknown") + " · " + b.chapters + " ch" +
+      (b.fmt ? " · " + esc(b.fmt) : "") + "</div>";
+    html += '<a class="chip" href="#" data-file="' + esc(b.id) + '">' + esc(catName(catOf(b))) + "</a>";
+    html += '<div class="bar"><i style="width:' + pct(b) + '%"></i></div></div>';
+    html += '<div class="go">Read</div></div>';
+    return html;
+  }
+  function hidePanels() {
+    $("toc").style.display = "none";
+    $("marks").style.display = "none";
+    $("menu").style.display = "none";
+  }
+  function renderGrid(q) {
+    q = (q || "").toLowerCase();
+    var html = "";
+    var i, j, b, c, show, n = 0, best = null, bestT = -1;
+    var groups = {};
+    var items;
+    for (i = 0; i < books.length; i++) {
+      b = books[i];
+      show = !q || (b.title || "").toLowerCase().indexOf(q) >= 0 || (b.author || "").toLowerCase().indexOf(q) >= 0;
+      if (!show) continue;
+      n++;
+      if (!groups[catOf(b)]) groups[catOf(b)] = [];
+      groups[catOf(b)].push(b);
+      if ((b.chapter > 0 || b.scroll > 0) && (b.chapter * 1000 + b.scroll) > bestT) {
+        bestT = b.chapter * 1000 + b.scroll;
+        best = b;
+      }
+    }
+    for (i = 0; i < cats.length; i++) {
+      c = cats[i];
+      items = groups[c.id] || [];
+      if (!items.length && q) continue;
+      items.sort(function (a, b) {
+        var ap = (a.chapter > 0 || a.scroll > 0) ? 1 : 0;
+        var bp = (b.chapter > 0 || b.scroll > 0) ? 1 : 0;
+        if (ap !== bp) return bp - ap;
+        var at = (a.title || "").toLowerCase();
+        var bt = (b.title || "").toLowerCase();
+        if (at < bt) return -1;
+        if (at > bt) return 1;
+        return 0;
+      });
+      html += '<div class="sec" data-cat="' + esc(c.id) + '">';
+      html += '<a href="#" class="sec-h">' + (c.open ? "▾ " : "▸ ") + esc(c.name);
+      html += "<i>" + items.length + "</i></a></div>";
+      if (c.open) {
+        html += '<div class="shelf cols-' + cols + '">';
+        if (!items.length) {
+          html += '<p class="empty">Empty shelf. Tap a gold chip on a book to file it here.</p>';
+        } else {
+          for (j = 0; j < items.length; j++) html += cardHtml(items[j]);
+        }
+        html += "</div>";
+      }
+    }
+    $("grid").innerHTML = html || '<p class="empty">No books yet. Open the menu to import, or put files in /accounts/1000/shared/books</p>';
+    $("sub").innerHTML = n + " title" + (n === 1 ? "" : "s") + " — tap a shelf, or a chip to file";
+    if (best) {
+      $("continue").innerHTML = '<div class="cont" data-id="' + esc(best.id) + '"><div class="thumb">' +
+        (best.cover ? '<img src="/api/cover?id=' + encodeURIComponent(best.id) + '">' : "") +
+        '</div><a href="#" id="resume">Continue reading · ' + esc(best.title) + "</a>" +
+        '<div class="who">' + esc(best.author || "") + " · chapter " + (best.chapter + 1) +
+        " of " + best.chapters + " · " + pct(best) + "%</div></div>";
+    } else {
+      $("continue").innerHTML = "";
+    }
+    renderShelfMarks();
+  }
+  function renderShelfMarks() {
+    var html = "";
+    var i, m, n = 0;
+    for (i = 0; i < marks.length && n < 6; i++) {
+      m = marks[i];
+      html += '<div class="cont" data-id="' + esc(m.id) + '" data-ch="' + m.chapter +
+        '" data-sc="' + m.scroll + '"><a href="#">' + esc(m.book || "Bookmark") + "</a>" +
+        '<div class="who">' + esc(m.label || ("Chapter " + (m.chapter + 1))) + "</div></div>";
+      n++;
+    }
+    $("shelfmarks").innerHTML = html ? '<p class="hint">Bookmarks</p>' + html : "";
+  }
+  function renderMarksPanel() {
+    var html = "";
+    var i, m, mine = 0;
+    for (i = 0; i < marks.length; i++) {
+      m = marks[i];
+      if (cur && m.id !== cur.id) continue;
+      mine++;
+      html += '<a href="#" data-id="' + esc(m.id) + '" data-ch="' + m.chapter +
+        '" data-sc="' + m.scroll + '" data-t="' + m.t + '"><span class="x" data-del="' +
+        m.t + '">×</span>' + esc(m.label || ("Chapter " + (m.chapter + 1))) +
+        '<div class="who">' + esc(m.book || "") + "</div></a>";
+    }
+    if (!html) html = '<p class="hint">No bookmarks in this book yet. Tap Mark to save this place.</p>';
+    $("marks").innerHTML = html;
+  }
+  function cardId(el, cls) {
+    var n = el;
+    while (n && n !== document.body) {
+      if (n.getAttribute && n.getAttribute("data-id") && (!cls || (n.className || "").indexOf(cls) >= 0)) {
+        return n.getAttribute("data-id");
+      }
+      n = n.parentNode;
+    }
+    return "";
+  }
+  function openBook(id, chapter, scroll) {
+    if (!id) return;
+    if ((location.hash || "") !== "#b=" + encodeURIComponent(id)) {
+      location.hash = "b=" + encodeURIComponent(id);
+    }
+    if (opening === id && inRead() && typeof chapter !== "number") return;
+    opening = id;
+    $("page").innerHTML = "Opening…";
+    hidePanels();
+    fs = false;
+    showRead();
+    xhr("GET", "/api/book?id=" + encodeURIComponent(id), null, function (st, obj) {
+      if (st !== 200 || !obj) { $("page").innerHTML = "Could not open this book."; return; }
+      cur = obj;
+      if (typeof chapter === "number") idx = chapter;
+      else idx = obj.chapter || 0;
+      if (idx < 0) idx = 0;
+      if (idx >= obj.chapters.length) idx = 0;
+      buildToc();
+      loadChapter(typeof scroll === "number" ? scroll : (obj.scroll || 0));
+    });
+  }
+  function buildToc() {
+    var html = "";
+    var i, c;
+    for (i = 0; i < cur.chapters.length; i++) {
+      c = cur.chapters[i];
+      html += '<a href="#" data-i="' + i + '"' + (i === idx ? ' class="on"' : "") + ">" +
+        (i + 1) + ". " + esc(c.title) + "</a>";
+    }
+    $("toc").innerHTML = html;
+    var as = $("toc").getElementsByTagName("a");
+    for (i = 0; i < as.length; i++) {
+      as[i].onclick = function (e) {
+        e.preventDefault();
+        idx = parseInt(this.getAttribute("data-i"), 10);
+        $("toc").style.display = "none";
+        loadChapter(0);
+      };
+    }
+  }
+  function loadChapter(scrollTo, frag) {
+    if (!cur) return;
+    $("page").innerHTML = "Loading…";
+    $("btitle").innerHTML = esc(cur.title) + "  ·  " + (idx + 1) + " / " + cur.chapters.length;
+    applyChrome();
+    buildToc();
+    xhr("GET", "/api/chapter?id=" + encodeURIComponent(cur.id) + "&i=" + idx, null, function (st, obj) {
+      if (st !== 200 || !obj) { $("page").innerHTML = "This chapter is missing."; return; }
+      $("page").innerHTML = obj.html || "<p>(empty)</p>";
+      $("btitle").innerHTML = esc(obj.title) + "  ·  " + (idx + 1) + " / " + obj.n;
+      if (frag) {
+        var el = document.getElementById(frag) || (document.getElementsByName(frag)[0]);
+        if (el && el.scrollIntoView) el.scrollIntoView();
+        else window.scrollTo(0, scrollTo || 0);
+      } else {
+        window.scrollTo(0, scrollTo || 0);
+      }
+      persist();
+    });
+  }
+  function persist() {
+    if (!cur) return;
+    xhr("POST", "/api/progress", JSON.stringify({
+      id: cur.id,
+      chapter: idx,
+      scroll: window.pageYOffset || 0
+    }), function () {});
+  }
+  function persistSoon() {
+    if (saveT) clearTimeout(saveT);
+    saveT = setTimeout(persist, 700);
+  }
+
+  function qs() {
+    var out = {}, i, p, s = (location.search || "").replace(/^\?/, "").split("&");
+    for (i = 0; i < s.length; i++) {
+      if (!s[i]) continue;
+      p = s[i].split("=");
+      out[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || "");
+    }
+    return out;
+  }
+  function loadMarks(cb) {
+    xhr("GET", "/api/bookmarks", null, function (st, obj) {
+      marks = (obj && obj.bookmarks) ? obj.bookmarks : [];
+      if (cb) cb();
+    });
+  }
+  function addMark() {
+    if (!cur) return;
+    var label = $("btitle").innerHTML || ("Chapter " + (idx + 1));
+    xhr("POST", "/api/bookmarks", JSON.stringify({
+      op: "add",
+      id: cur.id,
+      chapter: idx,
+      scroll: window.pageYOffset || 0,
+      book: cur.title || "",
+      label: label
+    }), function (st, obj) {
+      if (obj && obj.bookmarks) marks = obj.bookmarks;
+      flash("Bookmark saved");
+      renderMarksPanel();
+    });
+  }
+  function delMark(t) {
+    xhr("POST", "/api/bookmarks", JSON.stringify({ op: "del", t: t }), function (st, obj) {
+      if (obj && obj.bookmarks) marks = obj.bookmarks;
+      renderMarksPanel();
+      renderShelfMarks();
+    });
+  }
+  function toggleFull() {
+    fs = !fs;
+    hidePanels();
+    applyChrome();
+    if (fs) flash("Tap the page to show controls");
+  }
+  function openArticle() {
+    if (!cur) return;
+    persist();
+    window.location.href = "/reader?id=" + encodeURIComponent(cur.id) + "&i=" + idx;
+  }
+
+  try {
+    if (window.localStorage) {
+      if (localStorage.getItem("bcLibTheme")) ti = parseInt(localStorage.getItem("bcLibTheme"), 10) || 0;
+      if (localStorage.getItem("bcLibSize")) si = parseInt(localStorage.getItem("bcLibSize"), 10) || 2;
+      if (localStorage.getItem("bcLibCols")) cols = parseInt(localStorage.getItem("bcLibCols"), 10) || 2;
+    }
+  } catch (e) {}
+  applyCols(cols);
+
+  xhr("GET", "/api/library", null, function (st, obj) {
+    books = (obj && obj.books) ? obj.books : [];
+    if (obj && obj.categories) cats = obj.categories;
+    loadMarks(function () {
+      renderGrid("");
+      var q = qs();
+      if (q.b) openBook(q.b, q.c ? parseInt(q.c, 10) : undefined, q.s ? parseInt(q.s, 10) : undefined);
+    });
+  });
+
+  function hideLibPop() {
+    $("libmenu").style.display = "none";
+    $("about").style.display = "none";
+    $("catman").style.display = "none";
+    $("catpick").style.display = "none";
+  }
+  function renderCatman() {
+    var html = "<h2>Categories</h2>";
+    html += "<p>Tap a name to rename. Reorder with the arrows. New shelves start open. Unfiled cannot be deleted.</p>";
+    var i, c;
+    for (i = 0; i < cats.length; i++) {
+      c = cats[i];
+      html += '<div class="crow" data-cat="' + esc(c.id) + '">';
+      html += '<a href="#" data-act="ren">' + esc(c.name) + "</a>";
+      html += '<a class="act" href="#" data-act="up">▲</a>';
+      html += '<a class="act" href="#" data-act="down">▼</a>';
+      if (c.id !== "unfiled") html += '<a class="act" href="#" data-act="del">Delete</a>';
+      html += "</div>";
+    }
+    html += '<div class="addline"><input id="newcat" type="text" placeholder="New category name">';
+    html += '<a href="#" id="addcat">Add category</a></div>';
+    html += '<p><a href="#" id="catmanclose">Close</a></p>';
+    $("catman").innerHTML = html;
+  }
+  function bookTitle(id) {
+    var i;
+    for (i = 0; i < books.length; i++) {
+      if (books[i].id === id) return books[i].title || "";
+    }
+    if (cur && cur.id === id) return cur.title || "";
+    return "";
+  }
+  function deleteBook(id) {
+    if (!id) return;
+    var title = bookTitle(id);
+    var msg = "Delete \"" + (title || "this book") + "\" from the library? The file is removed from the books folder.";
+    if (window.confirm && !window.confirm(msg)) return;
+    xhr("POST", "/api/delete", JSON.stringify({ id: id }), function (st, obj) {
+      if (!obj || !obj.ok) {
+        flash((obj && obj.error) || "Could not delete");
+        return;
+      }
+      $("catpick").style.display = "none";
+      flash("Deleted");
+      if (cur && cur.id === id) cur = null;
+      showLib();
+    });
+  }
+  function openPick(id) {
+    var html = "<h2>File this book</h2><p>Choose a shelf.</p>";
+    var i;
+    for (i = 0; i < cats.length; i++) {
+      html += '<a href="#" data-cat="' + esc(cats[i].id) + '" data-id="' + esc(id) + '">' +
+        esc(cats[i].name) + "</a>";
+    }
+    html += '<a class="danger" href="#" data-del="' + esc(id) + '">Remove from library</a>';
+    html += '<p><a href="#" id="pickclose">Cancel</a></p>';
+    $("catpick").innerHTML = html;
+    hideLibPop();
+    $("catpick").style.display = "block";
+  }
+  function moveCat(id, dir) {
+    var ids = [], i, j = -1, t;
+    for (i = 0; i < cats.length; i++) {
+      ids.push(cats[i].id);
+      if (cats[i].id === id) j = i;
+    }
+    if (j < 0) return;
+    i = j + dir;
+    if (i < 0 || i >= ids.length) return;
+    t = ids[j];
+    ids[j] = ids[i];
+    ids[i] = t;
+    postCat({ op: "order", ids: ids }, "", renderCatman);
+  }
+
+  $("grid").onclick = function (e) {
+    var n = e.target || e.srcElement;
+    var file = n.getAttribute && n.getAttribute("data-file");
+    if (file) {
+      if (e.preventDefault) e.preventDefault();
+      openPick(file);
+      return;
+    }
+    var walk = n;
+    while (walk && walk !== $("grid")) {
+      if ((walk.className || "").indexOf("sec-h") >= 0) {
+        if (e.preventDefault) e.preventDefault();
+        var sec = walk.parentNode;
+        var cid = sec && sec.getAttribute("data-cat");
+        if (cid) postCat({ op: "toggle", cat: cid });
+        return;
+      }
+      walk = walk.parentNode;
+    }
+    var id = cardId(n, "card");
+    if (id) openBook(id);
+  };
+  $("continue").onclick = function (e) {
+    if (e.preventDefault) e.preventDefault();
+    var id = cardId(e.target || e.srcElement, "cont");
+    if (id) openBook(id);
+  };
+  $("shelfmarks").onclick = function (e) {
+    if (e.preventDefault) e.preventDefault();
+    var n = e.target || e.srcElement;
+    while (n && n !== $("shelfmarks")) {
+      if (n.getAttribute && n.getAttribute("data-id")) {
+        openBook(n.getAttribute("data-id"), parseInt(n.getAttribute("data-ch"), 10), parseInt(n.getAttribute("data-sc"), 10));
+        return;
+      }
+      n = n.parentNode;
+    }
+  };
+  $("q").onkeyup = function () { renderGrid(this.value); };
+  $("libham").onclick = function (e) {
+    e.preventDefault();
+    $("about").style.display = "none";
+    $("catman").style.display = "none";
+    $("catpick").style.display = "none";
+    $("libmenu").style.display = $("libmenu").style.display === "block" ? "none" : "block";
+  };
+  $("libmenu").onclick = function (e) {
+    if (e.preventDefault) e.preventDefault();
+    var n = e.target || e.srcElement;
+    var c = n.getAttribute && n.getAttribute("data-cols");
+    if (c) {
+      applyCols(parseInt(c, 10));
+      $("libmenu").style.display = "none";
+    }
+  };
+  $("aboutbtn").onclick = function (e) {
+    e.preventDefault();
+    hideLibPop();
+    $("about").style.display = "block";
+  };
+  $("catmanbtn").onclick = function (e) {
+    e.preventDefault();
+    hideLibPop();
+    renderCatman();
+    $("catman").style.display = "block";
+  };
+  $("catman").onclick = function (e) {
+    var n = e.target || e.srcElement;
+    if (n.id === "catmanclose") {
+      if (e.preventDefault) e.preventDefault();
+      $("catman").style.display = "none";
+      return;
+    }
+    if (n.id === "addcat") {
+      if (e.preventDefault) e.preventDefault();
+      var name = ($("newcat") && $("newcat").value || "").replace(/^\s+|\s+$/g, "");
+      if (!name) return;
+      postCat({ op: "add", name: name }, "Category added", function () {
+        renderCatman();
+      });
+      return;
+    }
+    var act = n.getAttribute && n.getAttribute("data-act");
+    if (!act) return;
+    if (e.preventDefault) e.preventDefault();
+    var row = n;
+    while (row && row !== $("catman")) {
+      if (row.getAttribute && row.getAttribute("data-cat")) break;
+      row = row.parentNode;
+    }
+    var cid = row && row.getAttribute ? row.getAttribute("data-cat") : "";
+    if (!cid) return;
+    if (act === "up") moveCat(cid, -1);
+    else if (act === "down") moveCat(cid, 1);
+    else if (act === "del") postCat({ op: "delete", cat: cid }, "Removed", renderCatman);
+    else if (act === "ren") {
+      var cur = catName(cid);
+      var next = window.prompt ? window.prompt("Rename category", cur) : cur;
+      if (next && next !== cur) postCat({ op: "rename", cat: cid, name: next }, "Renamed", renderCatman);
+    }
+  };
+  $("catpick").onclick = function (e) {
+    var n = e.target || e.srcElement;
+    if (e.preventDefault) e.preventDefault();
+    if (n.id === "pickclose") {
+      $("catpick").style.display = "none";
+      return;
+    }
+    if (n.getAttribute && n.getAttribute("data-del")) {
+      deleteBook(n.getAttribute("data-del"));
+      return;
+    }
+    var cid = n.getAttribute && n.getAttribute("data-cat");
+    var bid = n.getAttribute && n.getAttribute("data-id");
+    if (cid && bid) {
+      $("catpick").style.display = "none";
+      postCat({ op: "assign", id: bid, cat: cid }, "Filed under " + catName(cid));
+    }
+  };
+  $("aboutclose").onclick = function (e) { e.preventDefault(); $("about").style.display = "none"; };
+  $("archive").onclick = function (e) {
+    e.preventDefault();
+    $("libmenu").style.display = "none";
+    flash("Archiving…");
+    xhr("POST", "/api/archive", "{}", function (st, obj) {
+      if (obj && obj.ok) flash("Saved " + obj.name);
+      else flash("Archive failed");
+    });
+  };
+  $("import").onclick = function (e) {
+    e.preventDefault();
+    $("libmenu").style.display = "none";
+    flash("Importing…");
+    xhr("POST", "/api/import", "{}", function (st, obj) {
+      var n = obj && obj.count ? obj.count : 0;
+      flash(n ? ("Imported " + n) : "Nothing new to import");
+      showLib();
+    });
+  };
+  $("pickfiles").onclick = function (e) {
+    e.preventDefault();
+    $("libmenu").style.display = "none";
+    $("fileimp").click();
+  };
+  $("fileimp").onchange = function () {
+    var files = this.files || [];
+    var i = 0;
+    function next() {
+      if (i >= files.length) {
+        flash("Import done");
+        showLib();
+        return;
+      }
+      var f = files[i++];
+      var x = new XMLHttpRequest();
+      x.open("POST", "/api/upload?name=" + encodeURIComponent(f.name), true);
+      x.onreadystatechange = function () {
+        if (x.readyState === 4) next();
+      };
+      x.send(f);
+    }
+    if (files.length) {
+      flash("Uploading…");
+      next();
+    }
+  };
+  function onLibBtn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+    var now = new Date().getTime();
+    if (now - backT < 400) return false;
+    backT = now;
+    persist();
+    hidePanels();
+    fs = false;
+    goLibHash();
+    return false;
+  }
+  $("back").onclick = onLibBtn;
+  $("back").ontouchend = onLibBtn;
+  window.onhashchange = function () {
+    var id = readHash();
+    if (id) {
+      if (!inRead() || !cur || cur.id !== id) openBook(id);
+      return;
+    }
+    if (inRead()) leaveRead();
+  };
+  document.onkeydown = function (e) {
+    e = e || window.event;
+    var k = e.keyCode || e.which;
+    if (k === 8 || k === 27 || k === 166 || k === 4) {
+      if (handleBack()) {
+        if (e.preventDefault) e.preventDefault();
+        return false;
+      }
+    }
+  };
+  try {
+    if (window.blackberry && blackberry.system && blackberry.system.event) {
+      var bev = blackberry.system.event;
+      bev.onHardwareKey(bev.KEY_BACK, function () {
+        return handleBack() ? false : true;
+      });
+    }
+  } catch (err) {}
+  $("ham").onclick = function (e) {
+    e.preventDefault();
+    $("toc").style.display = "none";
+    $("marks").style.display = "none";
+    $("menu").style.display = $("menu").style.display === "block" ? "none" : "block";
+  };
+  $("tocbtn").onclick = function (e) {
+    e.preventDefault();
+    $("menu").style.display = "none";
+    $("marks").style.display = "none";
+    $("toc").style.display = $("toc").style.display === "block" ? "none" : "block";
+  };
+  $("marksbtn").onclick = function (e) {
+    e.preventDefault();
+    $("menu").style.display = "none";
+    $("toc").style.display = "none";
+    renderMarksPanel();
+    $("marks").style.display = $("marks").style.display === "block" ? "none" : "block";
+  };
+  $("marks").onclick = function (e) {
+    if (e.preventDefault) e.preventDefault();
+    var n = e.target || e.srcElement;
+    if (n.getAttribute && n.getAttribute("data-del")) {
+      delMark(parseInt(n.getAttribute("data-del"), 10));
+      return;
+    }
+    while (n && n !== $("marks")) {
+      if (n.getAttribute && n.getAttribute("data-id")) {
+        hidePanels();
+        openBook(n.getAttribute("data-id"), parseInt(n.getAttribute("data-ch"), 10), parseInt(n.getAttribute("data-sc"), 10));
+        return;
+      }
+      n = n.parentNode;
+    }
+  };
+  $("page").onclick = function (e) {
+    var t = e.target || e.srcElement;
+    while (t && t !== $("page") && (!t.tagName || t.tagName.toLowerCase() !== "a")) {
+      t = t.parentNode;
+    }
+    var tag = (t && t.tagName) ? t.tagName.toLowerCase() : "";
+    if (tag === "a") {
+      var href = t.getAttribute("href") || "";
+      var jump = href.match(/^#bc-ch-(\d+)$/);
+      if (jump) {
+        if (e.preventDefault) e.preventDefault();
+        idx = parseInt(jump[1], 10);
+        hidePanels();
+        loadChapter(0, t.getAttribute("data-bc-frag") || "");
+        return;
+      }
+      if (href.charAt(0) === "#") return;
+      return;
+    }
+    t = e.target || e.srcElement;
+    tag = (t && t.tagName) ? t.tagName.toLowerCase() : "";
+    if (tag === "img") return;
+    if ($("toc").style.display === "block" || $("marks").style.display === "block" || $("menu").style.display === "block") {
+      hidePanels();
+      return;
+    }
+    try {
+      var sel = window.getSelection && window.getSelection();
+      if (sel && String(sel).length > 0) return;
+    } catch (err) {}
+    var x = e.clientX || 0;
+    var w = document.body.clientWidth || 320;
+    if (cur && x > 0 && x < w * 0.2 && idx > 0) {
+      idx--;
+      loadChapter(0);
+      return;
+    }
+    if (cur && x > w * 0.8 && idx < cur.chapters.length - 1) {
+      idx++;
+      loadChapter(0);
+      return;
+    }
+    toggleFull();
+  };
+  $("prev").onclick = function (e) { e.preventDefault(); hidePanels(); if (idx > 0) { idx--; loadChapter(0); } };
+  $("next").onclick = function (e) { e.preventDefault(); hidePanels(); if (cur && idx < cur.chapters.length - 1) { idx++; loadChapter(0); } };
+  $("minus").onclick = function (e) { e.preventDefault(); if (si > 0) { si--; applyChrome(); } };
+  $("plus").onclick = function (e) { e.preventDefault(); if (si < sizes.length - 1) { si++; applyChrome(); } };
+  $("theme").onclick = function (e) { e.preventDefault(); ti = (ti + 1) % themes.length; applyChrome(); };
+  $("mark").onclick = function (e) { e.preventDefault(); hidePanels(); addMark(); };
+  $("full").onclick = function (e) { e.preventDefault(); toggleFull(); };
+  $("article").onclick = function (e) { e.preventDefault(); openArticle(); };
+  $("delread").onclick = function (e) {
+    e.preventDefault();
+    hidePanels();
+    if (cur) deleteBook(cur.id);
+  };
+  window.onscroll = persistSoon;
+})();
+</script>
+</body>
+</html>

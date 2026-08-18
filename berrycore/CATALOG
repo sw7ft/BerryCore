@@ -177,6 +177,8 @@ linux|emu|RISC-V Linux emulator - Full Linux on BB10!
 # Web Development
 tools|web|BerryCore web tools server - dashboard, drawing-board, editors, compass, virtual-keyboard (qpkg install bb-tools)
 games|games|BerryCore Games menu — BerryCraft, BerryFly, BerryBoat, BerryDig, BerryMoto, BerryMX (port 8766; qpkg install bb-games)
+library|web|On-device EPUB/HTML shelf and reader (port 8094; also: books)
+books|web|Alias for library — EPUB/HTML reader on port 8094
 sttlab|web|STT lab — ice/black UI, Term49 text, Android drop (port 8093; qpkg install sttlab)
 sttlabs|web|Term49 text front-end for STT lab (qpkg install sttlabs)
 vosk|ai|Offline Vosk speech-to-text (qpkg install vosk)

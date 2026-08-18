@@ -1,0 +1,3 @@
+#!/bin/sh
+# BerryCore Library — same app as `books`
+exec "$(cd "$(dirname "$0")" && pwd)/books" "$@"

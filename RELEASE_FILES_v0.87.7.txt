@@ -1,0 +1,11 @@
+BerryCore v0.87.7 Release Files
+
+Core:
+  berrycore.zip          (includes bin/library, bin/books, share/books/, classics)
+  install.sh
+  berrycore.html
+
+SHA-256:
+cc877c23d4ce4d547e49aa7615bd1fb1398f2644b6fcd3f0a5939bb6df047682  berrycore.zip
+ec8c2d5bad78bb594aebdd59fa38ba45e39c62d0883ebc926cc206a9fe51cbac  install.sh
+ff56efefdfb963671838359d520cc6897c5d836f3d36884511371131de65b668  berrycore.html

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Unix Programmer's Manual, First Edition</title>
+<meta name="author" content="Ken Thompson and Dennis M. Ritchie">
+</head>
+<body>
+<h1>Unix Programmer's Manual, First Edition</h1>
+<p><em>Ken Thompson and Dennis M. Ritchie, 1971</em></p>
+<p>Life before pipes. The first UNIX programmer's manual. Posted for browsing by Dennis M. Ritchie on his Bell Labs pages; preserved by the Unix Heritage Society. Not a substitute for the copyrighted trade books (K&amp;R, Kernighan &amp; Pike, Bach).</p>
+<hr>
+<BASE HREF="http://cm.bell-labs.com/cm/cs/who/dmr/">
+<center>
+<h2>
+Unix Programmer's Manual
+<br>
+November 3, 1971
+</center>
+</h2>
+
+<p>
+The first edition of the Unix Programmer's Manual, dated November 3, 1971, is available
+here in image and Postscript format.  Return with us to the golden days of yesteryear!
+<p>
+The image links refer to PDF files produced by the scanner.  They are fairly large, ranging
+up to a couple of MB, and are named <b>.pdf</b>.  You may need a plugin or other software in
+order to view them; Adobe Acrobat is readily available.
+<p>
+The Postscript files are the result of OCR, are relatively modest in size (up to about 135KB)
+and should be suitable for viewing with a PS viewer or sending to a printer.
+They have been hand-edited by me in an attempt to make them look the same as
+they originally did.
+<p>
+OCR technology does a creditable job on reading plain typewritten text and
+in finding the page layout, and a moderately good one in inferring what's likely
+to be adjustable (as opposed to tabular) text.
+Underlining, particularly when combined with quote marks on the next line, is hard.
+The page layout in the PS version is like that of the original, except that
+adjustment of words across lines uses some combination of the OCR program's guess
+and hand repair of its misapprehensions.
+Substantive differences owe either to errors
+in the OCR that I failed to correct, or those introduced by me.
+
+
+
+<p>
+The scanning and OCR was done by the Textbridge package to create <b>.tif</b>
+files and also Word <b>.doc</b> files
+that I edited in Word;
+the PS was produced from Word 7.0. I'd like to make good
+HTML, but the tools I've tried so far are inadequate.
+The PDF was created later (from the <b>.tif</b>), but also with Textbridge.
+<p>
+The original manuals were typed on a Model 37 Teletype terminal that was evidently not in
+perfect tune.
+No contemporary digital representation (e.g. tape) survives, so far as I know.
+Nor do we have an original paper copy of it.
+If you look at the title page reproduced here in the image format, you'll see that
+the real ink-and-hammer version belonged to Joe Ossanna and is marked in his hand.
+The paper on which this version was printed
+was given to Mel Ferentz on his retirement from Usenix,
+and the rendition here is from a xerographic copy of Ossanna's original,
+made just before the gift to Mel.
+<p>
+I don't know the whereabouts of any true "first edition" of the manual, in the sense of
+one of the copies in Bell System covers that we made for local distribution.
+Ken Thompson or someone else might conceivably have one secreted somewhere;
+I do not.  Likewise, although we do have paper copies of the second through fourth
+edition manuals, I don't know of any digital version.
+<p>
+When I look over this manual, I'm amazed by a lot of things:
+first, by what has survived so long (the semantics of important system calls,
+and the important early commands) and also by
+what wasn't there.  Neither pipes nor grep are in it, for example.
+Even B was not central (the manual apologizes that the B
+compiler is callable only by a shell script);
+C was still to come.
+<p>
+We even anticipated the millenium bug: time was measured in sixtieths of
+a second since 1 Jan. 1971 as a 32 bit quantity. The BUGS section for time(II) remarks,
+"The cronological-minded reader will note that 2**32 sixtieths of a second is only
+about 2.5 years."
+Later, this was patched more than once by declaring a new epoch, then again
+in 1973 by making the
+units full seconds dating from the 1970 New Year--this is the "classical" Unix
+epoch. Of course, it only pushed the issue off to 2038.
+Yet, the <u>cal</u> program even in 1971 knew about the hanky-panky in 1752!.
+<p>
+On the other hand, Ken had already written a chess-playing program, and we had done most of
+a Fortran compiler.
+<p>
+In 1971, when this manual was written, we had moved off the original PDP-7
+to the PDP-11/20; it had 24KB of core memory, and no memory management hardware
+at all.
+The operating system and most of the software was still in assembly language,
+(rewritten or new, not "ported").
+By this time we knew about the upcoming PDP-11/45, and had visited Digital in Maynard
+to talk about it; in particular, we had the specs for the floating-point
+instructions it supported.
+So the system described here included a simulator for the instructions
+(fptrap(III)).
+<p>
+<hr>
+Here's what is available for downloading now.
+
+<p>
+
+Lucent Technologies retains copyright on this material.
+
+<p>
+
+<H4>
+HTML:
+</H4>
+<ul>
+<li><a href="manintro.html">manintro.html</a>, the Title page and Introduction
+</ul>
+<p>
+<H4>
+The manual contents, in PostScript:
+</H4>
+<p>
+<ul>
+
+<li><a href="manintro.ps">manintro.ps</a>, Title page and Introduction
+
+<li><a href="man11.ps">man11.ps</a>, Commands, part 1
+
+<li><a href="man12.ps">man12.ps</a>, Commands, part 2
+
+<li><a href="man13.ps">man13.ps</a>, Commands, part 3
+
+<li><a href="man14.ps">man14.ps</a>, Commands, part 4
+
+<li><a href="man21.ps">man21.ps</a>, System calls, part 1
+
+<li><a href="man22.ps">man22.ps</a>, System calls, part 2
+
+<li><a href="man31.ps">man31.ps</a>, Library routines
+
+<li><a href="man41.ps">man41.ps</a>, Special files
+
+<li><a href="man51.ps">man51.ps</a>, File formats
+
+<li><a href="man61.ps">man61.ps</a>, User-maintained software
+
+<li><a href="man71.ps">man71.ps</a>, Miscellaneous
+
+</ul>
+<H4>
+The manual contents, in gzipped PostScript:
+</H4>
+<p>
+<ul>
+
+<li><a href="manintro.ps.gz">manintro.ps.gz</a>, Title page and Introduction
+
+<li><a href="man11.ps.gz">man11.ps.gz</a>, Commands, part 1
+
+<li><a href="man12.ps.gz">man12.ps.gz</a>, Commands, part 2
+
+<li><a href="man13.ps.gz">man13.ps.gz</a>, Commands, part 3
+
+<li><a href="man14.ps.gz">man14.ps.gz</a>, Commands, part 4
+
+<li><a href="man21.ps.gz">man21.ps.gz</a>, System calls, part 1
+
+<li><a href="man22.ps.gz">man22.ps.gz</a>, System calls, part 2
+
+<li><a href="man31.ps.gz">man31.ps.gz</a>, Library routines
+
+<li><a href="man41.ps.gz">man41.ps.gz</a>, Special files
+
+<li><a href="man51.ps.gz">man51.ps.gz</a>, File formats
+
+<li><a href="man61.ps.gz">man61.ps.gz</a>, User-maintained software
+
+<li><a href="man71.ps.gz">man71.ps.gz</a>, Miscellaneous
+
+</ul>
+<H4>
+The manual in (big) image format.
+</H4>
+<p>
+
+On 11 Jan 1999, these files were converted from TIFF format to
+the more generally portable (and somewhat smaller) PDF.
+I still have the TIFF versions.
+<p>
+If you would prefer to download via ftp, these files are available in
+<tt>/cm/cs/who/dmr/pdfs</tt>, using anonymous ftp to
+<tt>plan9.bell-labs.com</tt>.
+
+<p>
+<ul>
+<li><a href="pdfs/manintro.pdf">manintro.pdf</a>, Title page and introduction.
+
+<li><a href="pdfs/manindex.pdf">manindex.pdf</a>, Table of contents and permuted index.
+
+<li><a href="pdfs/man11.pdf">man11.pdf</a>, Commands, part 1
+
+<li><a href="pdfs/man12.pdf">man12.pdf</a>, Commands, part 2
+
+<li><a href="pdfs/man13.pdf">man13.pdf</a>, Commands, part 3
+
+<li><a href="pdfs/man14.pdf">man14.pdf</a>, Commands, part 4
+
+<li><a href="pdfs/man21.pdf">man21.pdf</a>, System calls, part 1
+
+<li><a href="pdfs/man22.pdf">man22.pdf</a>, System calls, part 2
+
+<li><a href="pdfs/man31.pdf">man31.pdf</a>, Library routines
+
+<li><a href="pdfs/man41.pdf">man41.pdf</a>, Special files
+
+<li><a href="pdfs/man51.pdf">man51.pdf</a>, File formats
+
+<li><a href="pdfs/man61.pdf">man61.pdf</a>, User-maintained software
+
+<li><a href="pdfs/man71.pdf">man71.pdf</a>, Miscellaneous
+
+</ul>
+</body>
+</html>

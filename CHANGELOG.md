@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.87.7] - 2026-08-18
+
+### Added
+
+- **library** / **books** — on-device EPUB/HTML shelf and reader on port **8094**
+- **Formats** — EPUB, FB2, HTML/XHTML, Markdown, plain text
+- **Categories** — expandable user-editable shelves (file, rename, reorder)
+- **Archive / import / delete** — zip the shelf to Documents; import from Documents; remove a title
+- **Bell Labs UNIX + xv6** — bundled under `share/books/classics/` (V7 Volume 2 papers, Ritchie essays, MIT xv6 book)
+
+### Changed
+
+- **VERSION** → 0.87.7
+- **CATALOG / env.sh** — `library` and `books` listed with `games`
+
+---
+
 ## [0.87.6] - 2026-08-16
 
 ### Added
