@@ -127,6 +127,7 @@ footer{margin-top:48px;padding-top:24px;border-top:1px solid #21262d;color:#484f
   <li><a href="#install">Install</a></li>
   <li><a href="#how">How it works</a></li>
   <li><a href="#qpkg">qpkg</a></li>
+  <li><a href="#apps">Web apps</a></li>
   <li><a href="#featured">Featured</a></li>
   <li><a href="#catalog">Full catalog</a></li>
 </ul></nav>
@@ -245,6 +246,53 @@ settings status</div>
     <tr><td><code>qpkg install</code></td><td>ports/PACKAGES</td><td>Download zip from GitHub, extract, post-install hooks</td></tr>
     <tr><td><code>qpkg catalog</code></td><td>local CATALOG</td><td>Browse binaries already on device</td></tr>
   </table>
+</section>
+
+<section id="apps">
+  <h2>Web apps</h2>
+  <p>ES5 berry-browser apps bundled in the core zip and installable with <code>qpkg</code>.</p>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <h3>The Tape — stocks</h3>
+      <p>Night-desk ticker on port <strong>8096</strong>. Custom lists, per-symbol up-ticks, price alerts, research (spark, range, headlines). Hub banners use the same PPS path as Rocket.Chat.</p>
+      <div class="copyblock" data-copy="qpkg install stocks
+stocks
+berry-browser http://127.0.0.1:8096/">qpkg install stocks
+stocks
+berry-browser http://127.0.0.1:8096/</div>
+      <button type="button" class="copybtn" onclick="copyFromPrev(this)">Copy</button>
+      <p style="margin-top:8px;font-size:.85rem;color:#8b949e"><code>qpkg install ticker</code> is the same package. Also: <code>ticker</code>.</p>
+    </div>
+    <div class="card">
+      <h3>Waterway Map</h3>
+      <p>OSM river-basin map on port <strong>8095</strong>. Search a place, zoom 8+ for Overpass waterways. Light street tiles, dark chrome.</p>
+      <div class="copyblock" data-copy="qpkg install waterwaymap
+waterwaymap
+berry-browser http://127.0.0.1:8095/">qpkg install waterwaymap
+waterwaymap
+berry-browser http://127.0.0.1:8095/</div>
+      <button type="button" class="copybtn" onclick="copyFromPrev(this)">Copy</button>
+      <p style="margin-top:8px;font-size:.85rem;color:#8b949e"><code>qpkg install waterway</code> is the same package. Also: <code>waterway</code>.</p>
+    </div>
+    <div class="card">
+      <h3>Library</h3>
+      <p>On-device shelf and reader on port <strong>8094</strong>. EPUB, HTML, Markdown, text. Also: <code>books</code>.</p>
+      <div class="copyblock" data-copy="library
+berry-browser http://127.0.0.1:8094/">library
+berry-browser http://127.0.0.1:8094/</div>
+      <button type="button" class="copybtn" onclick="copyFromPrev(this)">Copy</button>
+    </div>
+    <div class="card">
+      <h3>STT lab</h3>
+      <p>Speech-to-text compare lab on port <strong>8093</strong>. Term49 text UI: <code>sttlabs</code>.</p>
+      <div class="copyblock" data-copy="qpkg install sttlabs
+sttlab
+berry-browser http://127.0.0.1:8093/">qpkg install sttlabs
+sttlab
+berry-browser http://127.0.0.1:8093/</div>
+      <button type="button" class="copybtn" onclick="copyFromPrev(this)">Copy</button>
+    </div>
+  </div>
 </section>
 
 <section id="qpkg">

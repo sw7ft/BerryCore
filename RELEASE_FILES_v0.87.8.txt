@@ -8,4 +8,4 @@ Core:
 SHA-256:
 04dcf4e5a0e7167040e14430f1c664a4a09821888dfdd4bf7b333a8eefb17de3  berrycore.zip
 ec8c2d5bad78bb594aebdd59fa38ba45e39c62d0883ebc926cc206a9fe51cbac  install.sh
-5fef2ac1bb64dbc74f1aacbf5fcb6aadd1d52279263fc1981832921be08132b3  berrycore.html
+9ce74ed9d110fb45e2fc150692fa4998f69e6d3a10e357b8419715f069d3466a  berrycore.html
