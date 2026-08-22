@@ -7,7 +7,7 @@ berrycore_theme() {
         # Dark Ubuntu aubergine (#300A24) + paper text + orange cursor
         printf '\033]11;rgb:3000/0a00/2400\007'
         printf '\033]10;rgb:ee00/ee00/ee00\007'
-        printf '\033]12;rgb:e900/5400/2000\007'
+        printf '\033]12;rgb:c000/8400/fc00\007'
     fi
 }
 
@@ -49,8 +49,9 @@ berrycore_splash() {
     printf "\n"
     printf "   ${_sky}v%s${_rst}  ${_dim}│${_rst}  ${_lbl}%s${_rst}  ${_dim}│${_rst}  ${_mut}%s${_rst}\n" "$_ver" "$_host" "$_when"
     printf "  ${_box}──────────────────────────────────────────────────${_rst}\n"
+    printf "  ${_acc}%-10s${_rst} ${_mut}%s${_rst}\n" "hub" "Running locally at 127.0.0.1:8098"
     printf "  ${_acc}%-10s${_rst} ${_mut}%s${_rst}\n" "qpkg" "catalog · install · ports · bins"
-    printf "  ${_acc}%-10s${_rst} ${_mut}%s${_rst}\n" "apps" "http://127.0.0.1:8098/apps"
+    printf "  ${_acc}%-10s${_rst} ${_mut}%s${_rst}\n" "apps" "catalog · packages · core · settings"
     printf "  ${_acc}%-10s${_rst} ${_mut}%s${_rst}\n" "shortcuts" "misc · docs · downloads · sdcard · bc"
     printf "  ${_acc}%-10s${_rst} ${_mut}%s${_rst}\n" "run" "setup · linux · games · nano · vim · settings"
     printf "  ${_box}──────────────────────────────────────────────────${_rst}\n"

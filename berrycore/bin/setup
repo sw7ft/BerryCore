@@ -93,7 +93,10 @@ do_open() {
     do_start
     echo "Setup:     http://127.0.0.1:$PORT/"
     echo "Apps:      http://127.0.0.1:$PORT/apps"
+    echo "Packages:  http://127.0.0.1:$PORT/packages"
+    echo "Core:      http://127.0.0.1:$PORT/core"
     echo "Manual:    http://127.0.0.1:$PORT/manual"
+    echo "Settings:  http://127.0.0.1:$PORT/settings"
     open_browser
 }
 
@@ -101,16 +104,16 @@ do_notify() {
     pps="/pps/services/notify/control"
     [ -w "$pps" ] || return 0
     url="http://127.0.0.1:$PORT/apps"
+    sub="Running locally at 127.0.0.1:$PORT"
     printf '%s\n' "msg::notify" \
-        "dat:json:{\"itemid\":\"BerryCore\",\"title\":\"BerryCore\",\"subtitle\":\"App catalog ready\",\"payload\":\"$url\",\"payloadType\":\"url\",\"payloadURI\":\"$url\"}" \
+        "dat:json:{\"itemid\":\"BerryCore\",\"title\":\"BerryCore\",\"subtitle\":\"$sub\",\"payload\":\"$url\",\"payloadType\":\"url\",\"payloadURI\":\"$url\"}" \
         >> "$pps" 2>/dev/null || true
 }
 
 do_boot() {
-    if is_running; then
-        return 0
+    if ! is_running; then
+        do_start >/dev/null 2>&1 || return 1
     fi
-    do_start >/dev/null 2>&1 || return 1
     do_notify
 }
 
@@ -134,8 +137,11 @@ case "$cmd" in
         echo "  setup          start the guide and open the Browser  (port $PORT)"
         echo "  setup boot     start quietly + hub notification (Term49 login)"
         echo "  Also: homescreen, pins"
-        echo "  Apps:    http://127.0.0.1:$PORT/apps"
-        echo "  Manual:  http://127.0.0.1:$PORT/manual"
+        echo "  Apps:      http://127.0.0.1:$PORT/apps"
+        echo "  Packages:  http://127.0.0.1:$PORT/packages"
+        echo "  Core:      http://127.0.0.1:$PORT/core"
+        echo "  Manual:    http://127.0.0.1:$PORT/manual"
+        echo "  Settings:  http://127.0.0.1:$PORT/settings"
         ;;
     *)
         echo "Unknown command: $cmd"

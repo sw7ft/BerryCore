@@ -69,7 +69,7 @@ if [ $? -eq 0 ]; then
     echo "Verifying key files..."
     missing=0
     
-    for file in env.sh pbpkgadd sample_profile CATALOG qconf-override.mk doc/berrycore.html share/term49-splash.sh share/term48rc bin/games share/games/index.html packages/games-bb-games-1.0.zip bin/sttlab bin/sttlabs share/sttlab/index.html share/sttlab/term.html share/sttlab/term49.py share/sttlab/serve.py share/sttlab/STT-Drop.apk bin/vosk packages/web-sttlab-1.1.zip bin/library bin/books share/books/index.html share/books/serve.py share/books/classics/cacm.html bin/stocks bin/ticker share/stocks/index.html share/stocks/serve.py packages/web-stocks-1.0.zip bin/waterwaymap bin/waterway share/waterwaymap/index.html share/waterwaymap/serve.py packages/web-waterwaymap-1.0.zip; do
+    for file in env.sh pbpkgadd sample_profile CATALOG qconf-override.mk doc/berrycore.html share/term49-splash.sh share/term48rc bin/setup share/setup/index.html share/setup/settings.html bin/talkbutton bin/games share/games/index.html packages/games-bb-games-1.0.zip bin/sttlab bin/sttlabs share/sttlab/index.html share/sttlab/term.html share/sttlab/term49.py share/sttlab/serve.py share/sttlab/STT-Drop.apk bin/vosk packages/web-sttlab-1.1.zip bin/library bin/books share/books/index.html share/books/serve.py share/books/classics/cacm.html bin/stocks bin/ticker share/stocks/index.html share/stocks/serve.py packages/web-stocks-1.0.zip bin/waterwaymap bin/waterway share/waterwaymap/index.html share/waterwaymap/serve.py packages/web-waterwaymap-1.0.zip; do
         if unzip -l "$OUTPUT_ZIP" | grep -q "$file"; then
             echo "  ✓ $file"
         else

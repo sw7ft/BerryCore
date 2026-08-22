@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BerryCore · Manual</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BerryCore">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#300A24">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="apple-touch-icon-precomposed" href="/icon.png">
+<link rel="stylesheet" href="/static/style.css?v=19">
+</head>
+<body class="man">
+<script src="/static/theme.js?v=19"></script>
+  <nav class="nav">
+    <a href="/">Home</a>
+    <a href="/apps">Apps</a>
+    <a href="/packages">Packages</a>
+    <a href="/core">Core</a>
+    <a class="on" href="/manual">Manual</a>
+    <a href="/settings">Settings</a>
+  </nav>
+
+  <section class="hero">
+    <p class="eyebrow">Guide</p>
+    <h1>Manual</h1>
+    <p class="lead">Install, layout, shell, and qpkg. Live apps and the full port list are in the hub — not buried in this page.</p>
+    <div class="cats">
+      <a class="chip" href="#setup">Setup</a>
+      <a class="chip" href="#intro">Intro</a>
+      <a class="chip" href="#install">Install</a>
+      <a class="chip" href="#how">How</a>
+      <a class="chip" href="#shell">Shell</a>
+      <a class="chip" href="#qpkg">qpkg</a>
+    </div>
+  </section>
+
+  <section id="setup">
+    <h2>On-device setup</h2>
+    <p>Type <code>setup</code> in Term49. That opens this hub in the BB10 Browser.</p>
+    <pre class="code">setup
+# hub       http://127.0.0.1:8098/
+# apps      http://127.0.0.1:8098/apps
+# packages  http://127.0.0.1:8098/packages
+# core      http://127.0.0.1:8098/core
+# manual    http://127.0.0.1:8098/manual</pre>
+    <p><button type="button" class="btn ghost tiny copy-btn" data-copy="setup">Copy setup</button></p>
+    <p>Pin the hub from Browser → Add to Home Screen. Login: <code>settings homescreen-on</code> starts the hub only. Aliases: <code>homescreen</code>, <code>pins</code>.</p>
+  </section>
+
+  <section id="intro">
+    <h2>Introduction</h2>
+    <p class="lead">BerryCore is the QNX Extended Userland for BlackBerry 10 — a modern continuation of Berry Much OS.</p>
+    <div class="man-card">
+      <h3>Core bundle</h3>
+      <p>~210 MB <code>berrycore.zip</code> — bash, vim 9.1, git, gcc, python-ready env. Installs to <code>/accounts/1000/shared/misc/berrycore/</code>.</p>
+    </div>
+    <div class="man-card">
+      <h3>Optional ports</h3>
+      <p><code>qpkg install NAME</code> downloads a port zip. Browse and install from <a href="/packages">Packages</a>.</p>
+    </div>
+    <div class="man-card">
+      <h3>Default tools</h3>
+      <p>What ships on the device is listed under <a href="/core">Core</a>. Same index as <code>qpkg catalog</code> and <code>qpkg bins</code>.</p>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install</h2>
+    <h3>Fresh device</h3>
+    <ol class="steps">
+      <li>Copy <code>berrycore.zip</code> and <code>install.sh</code> to <code>/accounts/1000/shared/misc/</code>.</li>
+      <li>In Term49 or SSH:
+        <pre class="code">cd /accounts/1000/shared/misc
+sh install.sh --fresh -y
+. berrycore/env.sh</pre>
+        <button type="button" class="btn ghost tiny copy-btn" data-copy="cd /accounts/1000/shared/misc&#10;sh install.sh --fresh -y&#10;. berrycore/env.sh">Copy</button>
+      </li>
+      <li>Verify:
+        <pre class="code">cat $NATIVE_TOOLS/VERSION
+qpkg ports
+vim --version</pre>
+      </li>
+    </ol>
+    <h3>Upgrade</h3>
+    <pre class="code">cd /accounts/1000/shared/misc
+sh install.sh --upgrade -y
+# or:
+qpkg update</pre>
+    <p><button type="button" class="btn ghost tiny copy-btn" data-copy="cd /accounts/1000/shared/misc&#10;sh install.sh --upgrade -y">Copy</button></p>
+    <h3>Install a port</h3>
+    <pre class="code">qpkg search cab
+qpkg show cabextract
+qpkg install cabextract</pre>
+    <p>Or tap Install on <a href="/packages">Packages</a>.</p>
+    <h3>Auto-start</h3>
+    <pre class="code">settings sshd-on
+settings tools-on
+settings homescreen-on
+settings status</pre>
+    <p><button type="button" class="btn ghost tiny copy-btn" data-copy="settings sshd-on&#10;settings tools-on&#10;settings homescreen-on&#10;settings status">Copy</button></p>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <p><b>berrycore.zip</b> → <b>install.sh</b> → <b>env.sh</b> → <b>qpkg</b> for extra ports.</p>
+    <h3>Layout</h3>
+    <pre class="code">/accounts/1000/shared/misc/
+├── berrycore/          ← NATIVE_TOOLS
+│   ├── bin/            ← qpkg, vim, git, curl, …
+│   ├── packages/       ← bundled zips
+│   ├── env.sh
+│   └── CATALOG
+├── bin/                ← misc tools
+└── share/              ← port docs, web UIs</pre>
+    <h3>Catalogs</h3>
+    <table>
+      <tr><th>Where</th><th>Command</th><th>What</th></tr>
+      <tr><td><a href="/apps">Apps</a></td><td><code>setup</code></td><td>Local web apps — start, open, pin</td></tr>
+      <tr><td><a href="/packages">Packages</a></td><td><code>qpkg available</code></td><td>Installable ports</td></tr>
+      <tr><td><a href="/core">Core</a></td><td><code>qpkg catalog</code> / <code>qpkg bins</code></td><td>Default userland on this device</td></tr>
+    </table>
+  </section>
+
+  <section id="shell">
+    <h2>Shell</h2>
+    <p>After <code>. berrycore/env.sh</code>, <code>$NATIVE_TOOLS/bin</code> is on PATH.</p>
+    <pre class="code">setup
+qpkg catalog
+qpkg catalog -s vim
+settings status</pre>
+    <p>Shortcuts: <code>bc</code> · <code>misc</code> · <code>docs</code> · <code>downloads</code> · <code>sdcard</code> — no args <code>cd</code>, a name copies a file out.</p>
+    <p>Web apps live in <a href="/apps">Apps</a>, not in this manual.</p>
+  </section>
+
+  <section id="qpkg">
+    <h2>qpkg</h2>
+    <table>
+      <tr><th>Command</th><th>Description</th></tr>
+      <tr><td><code>qpkg ports</code></td><td>Featured port showcase</td></tr>
+      <tr><td><code>qpkg search TERM</code></td><td>Search the full catalog</td></tr>
+      <tr><td><code>qpkg available</code></td><td>List all packages</td></tr>
+      <tr><td><code>qpkg show NAME</code></td><td>Details before install</td></tr>
+      <tr><td><code>qpkg install NAME</code></td><td>Download and install</td></tr>
+      <tr><td><code>qpkg update</code></td><td>Upgrade BerryCore</td></tr>
+      <tr><td><code>qpkg catalog</code></td><td>Local binary catalog</td></tr>
+      <tr><td><code>qpkg info BINARY</code></td><td>Info about an installed binary</td></tr>
+    </table>
+    <p>Full list: <a href="/packages">Packages</a>. Default install: <a href="/core">Core</a>.</p>
+  </section>
+
+  <footer>
+    BerryCore v0.88.0 ·
+    <a href="https://github.com/sw7ft/BerryCore">github.com/sw7ft/BerryCore</a> ·
+    <a href="/berrycore.html">classic page</a>
+  </footer>
+  <script src="/static/manual.js?v=18"></script>
+</body>
+</html>

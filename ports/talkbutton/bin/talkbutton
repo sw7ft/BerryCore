@@ -1,0 +1,91 @@
+#!/bin/sh
+# talkbutton — play/pause PTT, clipboard + Hub (no web)
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+NATIVE_TOOLS="$(cd "$BIN_DIR/.." 2>/dev/null && pwd)"
+[ -z "$NATIVE_TOOLS" ] && NATIVE_TOOLS="/accounts/1000/shared/misc/berrycore"
+SHARE="$NATIVE_TOOLS/share/talkbutton"
+V2T="$NATIVE_TOOLS/share/voice2text"
+BC_PY="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static/tools/python3/python3"
+BC_HOME="$NATIVE_TOOLS/lib/python3_ntoarmv7-qnx-static"
+PIDFILE="$SHARE/talkbutton.pid"
+LOG="$SHARE/talkbutton.log"
+STT_LIB="/accounts/1000/shared/misc/stt/lib"
+export LD_LIBRARY_PATH="$STT_LIB:$NATIVE_TOOLS/lib:${LD_LIBRARY_PATH:-}"
+
+already_running() {
+    if [ -f "$PIDFILE" ]; then
+        oldpid=$(cat "$PIDFILE" 2>/dev/null)
+        if [ -n "$oldpid" ] && kill -0 "$oldpid" 2>/dev/null; then
+            return 0
+        fi
+    fi
+    return 1
+}
+
+FOREGROUND=0
+STOP=0
+for arg in "$@"; do
+    case "$arg" in
+        help|-h|--help)
+            cat <<'EOF'
+talkbutton — play/pause dictation (QSA + Vosk)
+
+Usage:
+  talkbutton          Start in background (play/pause from any app)
+  talkbutton -f       Run in the foreground (Term49)
+  talkbutton stop     Stop the background process
+
+After a transcript: system clipboard (paste anywhere) + Hub notify.
+EOF
+            exit 0
+            ;;
+        -f|--foreground) FOREGROUND=1 ;;
+        stop) STOP=1 ;;
+    esac
+done
+
+if [ ! -f "$SHARE/talkbutton.py" ]; then
+    echo "talkbutton: $SHARE/talkbutton.py missing"
+    exit 1
+fi
+if [ ! -f "$V2T/qsa_capture.py" ]; then
+    echo "talkbutton: needs voice2text share (qsa_capture.py)"
+    exit 1
+fi
+if [ ! -x "$BC_PY" ]; then
+    echo "talkbutton: berrycore python not found"
+    exit 1
+fi
+
+if [ "$STOP" = 1 ]; then
+    if already_running; then
+        kill "$(cat "$PIDFILE")" 2>/dev/null
+        rm -f "$PIDFILE"
+        echo "talkbutton: stopped"
+    else
+        echo "talkbutton: not running"
+    fi
+    exit 0
+fi
+
+if [ "$FOREGROUND" != 1 ] && already_running; then
+    echo "talkbutton: already running (pid $(cat "$PIDFILE"))"
+    echo "play/pause to dictate — text is on the system clipboard"
+    echo "talkbutton stop   to quit"
+    exit 0
+fi
+
+if [ "$FOREGROUND" = 1 ]; then
+    exec env PYTHONUNBUFFERED=1 PYTHONHOME="$BC_HOME" PYTHONPATH= \
+        LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+        "$BC_PY" "$SHARE/talkbutton.py"
+fi
+
+mkdir -p "$SHARE" 2>/dev/null
+echo "talkbutton: starting in background (log: $LOG)"
+echo "play/pause to dictate — transcript copies to the system clipboard"
+nohup env PYTHONUNBUFFERED=1 PYTHONHOME="$BC_HOME" PYTHONPATH= \
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+    "$BC_PY" "$SHARE/talkbutton.py" >> "$LOG" 2>&1 &
+echo $! > "$PIDFILE"

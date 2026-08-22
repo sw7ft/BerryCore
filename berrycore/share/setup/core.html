@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BerryCore · Apps</title>
+<title>BerryCore · Core</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="BerryCore">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -12,36 +12,36 @@
 <link rel="apple-touch-icon-precomposed" href="/icon.png">
 <link rel="stylesheet" href="/static/style.css?v=19">
 </head>
-<body>
+<body class="pkgs">
 <script src="/static/theme.js?v=19"></script>
   <nav class="nav">
     <a href="/">Home</a>
-    <a class="on" href="/apps">Apps</a>
+    <a href="/apps">Apps</a>
     <a href="/packages">Packages</a>
-    <a href="/core">Core</a>
+    <a class="on" href="/core">Core</a>
     <a href="/manual">Manual</a>
     <a href="/settings">Settings</a>
   </nav>
 
   <section class="hero">
-    <p class="eyebrow">Catalog</p>
-    <h1>Apps</h1>
-    <p class="lead">Local web apps on this device. Start one, then Open. Pin uses Browser → Add to Home Screen.</p>
+    <p class="eyebrow">qpkg catalog · qpkg bins</p>
+    <h1>Core</h1>
+    <p class="lead">Default BerryCore userland — the tools that ship with the install. Green means the binary is on this device.</p>
     <form class="find" action="javascript:void(0)" method="post" onsubmit="return false;">
-      <input type="text" id="q" class="find-q" placeholder="Search apps" autocomplete="off" autocorrect="off">
+      <input type="text" id="q" class="find-q" placeholder="Filter name, category, description" autocomplete="off" autocorrect="off">
     </form>
     <div id="cats" class="cats"></div>
     <p class="count" id="count"></p>
     <p class="note" id="note"></p>
   </section>
 
-  <section>
+  <section class="pkg-sec">
     <div id="grid"></div>
   </section>
 
   <footer>
-    Ports install from <a href="/packages">Packages</a>. Notes live in the <a href="/manual">manual</a>.
+    Same index as <code>qpkg catalog</code> and <code>qpkg bins</code>. Extra ports live under <a href="/packages">Packages</a>.
   </footer>
-  <script src="/static/app.js?v=17"></script>
+  <script src="/static/core.js?v=15"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ import socketserver
 import struct
 import subprocess
 import sys
+import time
 import urllib.parse
 import zlib
 
@@ -15,8 +16,10 @@ PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8098
 BASE = os.path.dirname(os.path.abspath(__file__))
 NATIVE = os.environ.get("NATIVE_TOOLS", os.path.normpath(os.path.join(BASE, "..", "..")))
 ICON_DIR = os.path.join(BASE, "icons")
-VERSION = "2.0"
-BC_VERSION = "0.87.8"
+VERSION = "2.2"
+BC_VERSION = "0.88.0"
+_PKG_JOBS = {}
+_PKG_FAIL = {}
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -59,12 +62,22 @@ def port_up(port):
         return False
 
 
+def wait_port(port, want, tries=6, delay=0.16):
+    i = 0
+    while i < tries:
+        if port_up(port) == want:
+            return True
+        time.sleep(delay)
+        i += 1
+    return port_up(port) == want
+
+
 def start_app(app):
     path = bin_path(app["bin"])
     if not os.path.isfile(path):
-        return {"id": app["id"], "started": False, "error": "bin missing"}
+        return {"id": app["id"], "started": False, "up": False, "error": "bin missing"}
     if port_up(app["port"]):
-        return {"id": app["id"], "started": True, "already": True}
+        return {"id": app["id"], "started": True, "up": True, "already": True}
     try:
         argv = [path]
         if app.get("start_arg", True):
@@ -75,9 +88,344 @@ def start_app(app):
             stderr=subprocess.DEVNULL,
             cwd=NATIVE,
         )
-        return {"id": app["id"], "started": True, "already": False}
+        up = wait_port(app["port"], True)
+        return {"id": app["id"], "started": True, "up": up, "already": False}
     except Exception as exc:
-        return {"id": app["id"], "started": False, "error": str(exc)}
+        return {"id": app["id"], "started": False, "up": False, "error": str(exc)}
+
+
+def stop_app(app):
+    path = bin_path(app["bin"])
+    if not port_up(app["port"]):
+        return {"id": app["id"], "stopped": True, "up": False, "already": True}
+    try:
+        if os.path.isfile(path):
+            subprocess.call(
+                [path, "stop"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                cwd=NATIVE,
+            )
+        if port_up(app["port"]):
+            subprocess.call(
+                ["slay", "-f", app.get("slay") or app["bin"]],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        down = wait_port(app["port"], False)
+        return {"id": app["id"], "stopped": down, "up": not down}
+    except Exception as exc:
+        return {"id": app["id"], "stopped": False, "up": port_up(app["port"]), "error": str(exc)}
+
+
+def pkg_root():
+    return os.environ.get("NATIVE_TOOLS") or os.path.dirname(os.path.dirname(BASE))
+
+
+def pkg_catalog_path():
+    native = pkg_root()
+    for path in (
+        os.path.join(native, ".cache", "qpkg", "PACKAGES"),
+        os.path.join(BASE, "PACKAGES"),
+        os.path.join(native, "share", "setup", "PACKAGES"),
+        os.path.join(native, "ports", "PACKAGES"),
+    ):
+        if os.path.isfile(path):
+            return path
+    return ""
+
+
+def pkg_installed_map():
+    found = {}
+    native = pkg_root()
+    log = os.path.join(native, ".qpkg", "installed")
+    if os.path.isfile(log):
+        try:
+            with open(log) as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "|" not in line:
+                        continue
+                    parts = line.split("|")
+                    name = parts[0].strip()
+                    if name:
+                        found[name] = {
+                            "ver": parts[1].strip() if len(parts) > 1 else "",
+                            "date": parts[2].strip() if len(parts) > 2 else "",
+                            "zip": parts[3].strip() if len(parts) > 3 else "",
+                        }
+        except OSError:
+            pass
+    bindir = os.path.join(native, "bin")
+    if os.path.isdir(bindir):
+        try:
+            for name in os.listdir(bindir):
+                path = os.path.join(bindir, name)
+                if os.path.isfile(path) and os.access(path, os.X_OK):
+                    found.setdefault(name, {"ver": "", "date": "", "zip": ""})
+        except OSError:
+            pass
+    return found
+
+
+def bundled_zips():
+    names = set()
+    pkgdir = os.path.join(pkg_root(), "packages")
+    if os.path.isdir(pkgdir):
+        try:
+            for name in os.listdir(pkgdir):
+                if name.endswith(".zip"):
+                    names.add(name)
+        except OSError:
+            pass
+    return names
+
+
+def parse_packages():
+    path = pkg_catalog_path()
+    rows = []
+    installed = pkg_installed_map()
+    zips = bundled_zips()
+    if path:
+        try:
+            with open(path) as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "|" not in line:
+                        continue
+                    parts = line.split("|")
+                    while len(parts) < 7:
+                        parts.append("")
+                    name = parts[0].strip()
+                    if not name:
+                        continue
+                    zipname = parts[5].strip()
+                    rows.append({
+                        "name": name,
+                        "cat": parts[1].strip() or "other",
+                        "ver": parts[2].strip(),
+                        "size": parts[3].strip(),
+                        "desc": parts[4].strip(),
+                        "zip": zipname,
+                        "replaces": parts[6].strip(),
+                        "installed": name in installed,
+                        "bundled": zipname in zips,
+                        "busy": name in _PKG_JOBS and _PKG_JOBS[name].poll() is None,
+                        "fail": _PKG_FAIL.get(name, ""),
+                    })
+        except OSError:
+            pass
+    return rows, path
+
+
+def valid_pkg_name(name):
+    if not name or len(name) > 64:
+        return False
+    for ch in name:
+        if not (ch.isalnum() or ch in "._-"):
+            return False
+    return True
+
+
+def prune_pkg_jobs():
+    done = []
+    for name, proc in list(_PKG_JOBS.items()):
+        code = proc.poll()
+        if code is None:
+            continue
+        done.append(name)
+        if code != 0:
+            _PKG_FAIL[name] = "install failed (exit %s)" % code
+        else:
+            _PKG_FAIL.pop(name, None)
+    for name in done:
+        _PKG_JOBS.pop(name, None)
+
+
+def start_pkg_install(name):
+    prune_pkg_jobs()
+    if not valid_pkg_name(name):
+        return {"error": "bad package name"}
+    if name in _PKG_JOBS and _PKG_JOBS[name].poll() is None:
+        return {"status": "ok", "already": True, "busy": True}
+    rows, _path = parse_packages()
+    catalog = {row["name"]: row for row in rows}
+    if name not in catalog:
+        return {"error": "unknown package"}
+    qpkg = os.path.join(pkg_root(), "bin", "qpkg")
+    if not os.path.isfile(qpkg):
+        return {"error": "qpkg not found"}
+    env = os.environ.copy()
+    env["NATIVE_TOOLS"] = pkg_root()
+    env["QPKG_YES"] = "1"
+    tmp = os.path.join(pkg_root(), ".tmp")
+    try:
+        os.makedirs(tmp, exist_ok=True)
+    except OSError:
+        pass
+    log = os.path.join(tmp, "qpkg-install-%s.log" % name)
+    try:
+        logf = open(log, "wb")
+        proc = subprocess.Popen(
+            [qpkg, "install", name],
+            stdin=subprocess.PIPE,
+            stdout=logf,
+            stderr=subprocess.STDOUT,
+            env=env,
+        )
+        logf.close()
+        try:
+            proc.stdin.write(b"y\n")
+            proc.stdin.close()
+        except Exception:
+            pass
+        _PKG_JOBS[name] = proc
+        _PKG_FAIL.pop(name, None)
+        return {"status": "ok", "name": name}
+    except Exception as exc:
+        return {"error": str(exc)}
+
+
+HUB_THEMES = {
+    "aubergine": {"bg": [48, 10, 36], "fg": [238, 238, 238]},
+    "midnight": {"bg": [11, 11, 16], "fg": [232, 232, 238]},
+    "ember": {"bg": [44, 0, 30], "fg": [238, 238, 238]},
+    "paper": {"bg": [244, 239, 230], "fg": [42, 31, 24]},
+}
+
+
+def hub_theme_path():
+    return os.path.join(pkg_root(), ".tmp", "hub-theme")
+
+
+def read_hub_theme():
+    path = hub_theme_path()
+    if os.path.isfile(path):
+        try:
+            name = open(path).read().strip()
+            if name in HUB_THEMES:
+                return name
+        except OSError:
+            pass
+    return "aubergine"
+
+
+def write_term48_colors(theme):
+    colors = HUB_THEMES.get(theme)
+    if not colors:
+        return False
+    bg = colors["bg"]
+    fg = colors["fg"]
+    written = 0
+    homes = [
+        os.path.join(pkg_root(), "share", "term48rc"),
+        os.path.join(os.path.expanduser("~"), ".term48rc"),
+    ]
+    for path in homes:
+        if not os.path.isfile(path):
+            continue
+        try:
+            text = open(path).read()
+            lines = []
+            for line in text.splitlines():
+                if line.startswith("background_color"):
+                    lines.append("background_color = [ %d, %d, %d ];" % (bg[0], bg[1], bg[2]))
+                elif line.startswith("text_color"):
+                    lines.append("text_color = [ %d, %d, %d ];" % (fg[0], fg[1], fg[2]))
+                else:
+                    lines.append(line)
+            open(path, "w").write("\n".join(lines) + "\n")
+            written += 1
+        except OSError:
+            pass
+    return written > 0
+
+
+def set_hub_theme(name):
+    if name not in HUB_THEMES:
+        return {"error": "unknown theme"}
+    tmp = os.path.join(pkg_root(), ".tmp")
+    try:
+        os.makedirs(tmp, exist_ok=True)
+        open(hub_theme_path(), "w").write(name + "\n")
+    except OSError as exc:
+        return {"error": str(exc)}
+    term = write_term48_colors(name)
+    return {"status": "ok", "theme": name, "term48": term}
+
+
+def core_catalog_path():
+    for path in (
+        os.path.join(pkg_root(), "CATALOG"),
+        os.path.join(NATIVE, "CATALOG"),
+        os.path.join(BASE, "CATALOG"),
+    ):
+        if os.path.isfile(path):
+            return path
+    return ""
+
+
+def installed_bin_names():
+    names = set()
+    bindir = os.path.join(pkg_root(), "bin")
+    if not os.path.isdir(bindir):
+        return names
+    try:
+        for name in os.listdir(bindir):
+            if name.startswith("."):
+                continue
+            path = os.path.join(bindir, name)
+            if os.path.isfile(path) or os.path.islink(path):
+                names.add(name)
+    except OSError:
+        pass
+    return names
+
+
+def parse_core():
+    present = installed_bin_names()
+    rows = []
+    seen = set()
+    path = core_catalog_path()
+    if path:
+        try:
+            with open(path) as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "|" not in line:
+                        continue
+                    parts = line.split("|")
+                    while len(parts) < 3:
+                        parts.append("")
+                    name = parts[0].strip()
+                    if not name or name in seen:
+                        continue
+                    desc = parts[2].strip()
+                    port = "qpkg install" in desc.lower()
+                    seen.add(name)
+                    rows.append({
+                        "name": name,
+                        "cat": parts[1].strip() or "util",
+                        "desc": desc,
+                        "present": name in present,
+                        "port": port,
+                        "core": not port,
+                        "extra": False,
+                    })
+        except OSError:
+            pass
+    extras = sorted(present - seen)
+    for name in extras:
+        rows.append({
+            "name": name,
+            "cat": "extra",
+            "desc": "On this device — not in the core catalog",
+            "present": True,
+            "port": False,
+            "core": False,
+            "extra": True,
+        })
+    return rows, path
 
 
 def png_chunk(tag, data):
@@ -267,7 +615,19 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if path in ("/apps", "/apps.html", "/catalog", "/catalog.html"):
             self.send_bytes(200, "text/html; charset=utf-8", open(os.path.join(BASE, "apps.html"), "rb").read())
             return
-        if path in ("/manual", "/manual.html", "/docs", "/berrycore.html"):
+        if path in ("/packages", "/packages.html", "/pkg", "/qpkg"):
+            self.send_bytes(200, "text/html; charset=utf-8", open(os.path.join(BASE, "packages.html"), "rb").read())
+            return
+        if path in ("/core", "/core.html", "/bins", "/installed"):
+            self.send_bytes(200, "text/html; charset=utf-8", open(os.path.join(BASE, "core.html"), "rb").read())
+            return
+        if path in ("/settings", "/settings.html"):
+            self.send_bytes(200, "text/html; charset=utf-8", open(os.path.join(BASE, "settings.html"), "rb").read())
+            return
+        if path in ("/manual", "/manual.html", "/docs"):
+            self.send_bytes(200, "text/html; charset=utf-8", open(os.path.join(BASE, "manual.html"), "rb").read())
+            return
+        if path in ("/berrycore.html", "/classic"):
             cat = catalog_path()
             if not cat:
                 self.send_error(404)
@@ -279,6 +639,21 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
         if path == "/static/app.js":
             self.send_bytes(200, "application/javascript", open(os.path.join(BASE, "static", "app.js"), "rb").read())
+            return
+        if path == "/static/packages.js":
+            self.send_bytes(200, "application/javascript", open(os.path.join(BASE, "static", "packages.js"), "rb").read())
+            return
+        if path == "/static/core.js":
+            self.send_bytes(200, "application/javascript", open(os.path.join(BASE, "static", "core.js"), "rb").read())
+            return
+        if path == "/static/manual.js":
+            self.send_bytes(200, "application/javascript", open(os.path.join(BASE, "static", "manual.js"), "rb").read())
+            return
+        if path == "/static/theme.js":
+            self.send_bytes(200, "application/javascript", open(os.path.join(BASE, "static", "theme.js"), "rb").read())
+            return
+        if path == "/static/settings.js":
+            self.send_bytes(200, "application/javascript", open(os.path.join(BASE, "static", "settings.js"), "rb").read())
             return
         if path == "/icon.png":
             hub = {"id": "hub", "name": "BerryCore", "color": "139,92,246", "letters": "BC"}
@@ -314,6 +689,26 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 "apps": apps,
             })
             return
+        if path == "/api/packages":
+            prune_pkg_jobs()
+            rows, src = parse_packages()
+            self.send_json({
+                "status": "ok",
+                "source": src,
+                "packages": rows,
+            })
+            return
+        if path == "/api/core":
+            rows, src = parse_core()
+            self.send_json({
+                "status": "ok",
+                "source": src,
+                "bins": rows,
+            })
+            return
+        if path == "/api/theme":
+            self.send_json({"status": "ok", "theme": read_hub_theme()})
+            return
         self.send_error(404)
 
     def do_POST(self):
@@ -338,6 +733,57 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 self.send_json({"status": "error", "error": "unknown id"})
                 return
             self.send_json({"status": "ok", "results": results})
+            return
+        if parsed.path == "/api/stop":
+            length = int(self.headers.get("Content-Length", 0) or 0)
+            body = self.rfile.read(length).decode("utf-8") if length else "{}"
+            try:
+                data = json.loads(body or "{}")
+            except Exception:
+                data = {}
+            want = data.get("id")
+            if not want:
+                self.send_json({"status": "error", "error": "id required"})
+                return
+            results = []
+            for app in load_apps():
+                if app["id"] != want:
+                    continue
+                results.append(stop_app(app))
+            if not results:
+                self.send_json({"status": "error", "error": "unknown id"})
+                return
+            self.send_json({"status": "ok", "results": results})
+            return
+        if parsed.path == "/api/pkg/install":
+            length = int(self.headers.get("Content-Length", 0) or 0)
+            body = self.rfile.read(length).decode("utf-8") if length else "{}"
+            try:
+                data = json.loads(body or "{}")
+            except Exception:
+                data = {}
+            name = (data.get("name") or "").strip()
+            if not name:
+                self.send_json({"status": "error", "error": "name required"})
+                return
+            result = start_pkg_install(name)
+            if result.get("error"):
+                self.send_json({"status": "error", "error": result["error"]})
+                return
+            self.send_json(result)
+            return
+        if parsed.path == "/api/theme":
+            length = int(self.headers.get("Content-Length", 0) or 0)
+            body = self.rfile.read(length).decode("utf-8") if length else "{}"
+            try:
+                data = json.loads(body or "{}")
+            except Exception:
+                data = {}
+            result = set_hub_theme((data.get("theme") or "").strip())
+            if result.get("error"):
+                self.send_json({"status": "error", "error": result["error"]})
+                return
+            self.send_json(result)
             return
         self.send_error(404)
 

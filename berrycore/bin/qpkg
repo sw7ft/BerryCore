@@ -725,8 +725,12 @@ cmd_install() {
     echo ""
     echo "Download URL: $DOWNLOAD_URL"
     echo ""
-    echo -n "Install this port? [Y/n]: "
-    read CONFIRM
+    if [ "${QPKG_YES:-0}" = "1" ]; then
+        CONFIRM="y"
+    else
+        echo -n "Install this port? [Y/n]: "
+        read CONFIRM
+    fi
     
     if [ "$CONFIRM" != "" ] && [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
         echo "Installation cancelled."
@@ -841,6 +845,13 @@ cmd_install() {
             echo "  bbm poll"
             echo "Manual: $(qpkg_port_doc bbm)"
         }
+    elif [ "$PORT_NAME" = "talkbutton" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/talkbutton" 2>/dev/null || true
+        echo "talkbutton installed (play/pause dictation)"
+        echo "  talkbutton          # background"
+        echo "  talkbutton -f       # Term49 foreground"
+        echo "  talkbutton stop"
+        echo "Engine: qpkg install vosk"
     elif [ "$PORT_NAME" = "vosk" ]; then
         chmod +x "$NATIVE_TOOLS/bin/vosk" "$NATIVE_TOOLS/bin/vosk.bin" 2>/dev/null || true
         echo "Vosk offline STT installed"

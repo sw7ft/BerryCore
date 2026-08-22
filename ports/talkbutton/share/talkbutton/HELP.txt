@@ -1,0 +1,9 @@
+talkbutton — play/pause dictation (QSA + Vosk)
+
+  talkbutton          start in background
+  talkbutton -f       foreground (Term49)
+  talkbutton stop     stop background process
+
+Play/pause starts listening, play/pause stops.
+Transcript: system clipboard + Hub notify + last.txt
+Requires: qpkg install vosk

@@ -7,9 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.88.0] - 2026-08-22
+
 ### Added
 
-- **talkbutton** qpkg — play/pause dictation (QSA mic, warm Vosk, system clipboard + Hub). `qpkg install talkbutton` (`util-talkbutton-1.0.zip`). Requires `qpkg install vosk`.
+- **Setup hub** — branded on-device guide at `http://127.0.0.1:8098/` (Home, Apps, Packages, Core, Manual, Settings). Ubuntu aubergine, orchid accents, BB10 Browser safe.
+- **Packages** — searchable qpkg table; Install / Reinstall from the hub (`QPKG_YES` for non-interactive install).
+- **Core** — default userland inventory (`qpkg catalog` / `qpkg bins`) with present/missing marks.
+- **Settings** — hub themes (Aubergine, Midnight, Ember, Paper) plus SW7FT / Patreon / GitHub. Term49 colors follow the theme.
+- **talkbutton** qpkg — play/pause dictation (QSA mic, warm Vosk, system clipboard + Hub). `qpkg install talkbutton`. Requires `qpkg install vosk`.
+- Apps catalog: QNX Desktop, Term49 Web, BerryPy, Voice Agent, BerrySnip.
+
+### Changed
+
+- **Term49 splash** — short hub line: `Running locally at 127.0.0.1:8098`. Setup still auto-starts on login (`setup boot`) and posts that address on the Hub banner.
+- **Apps** — Start/Stop show Starting/Stopping immediately, then a green lamp when the port is up.
+- **Manual** — same hub chrome as the rest of the guide.
+- **VERSION** → 0.88.0
 
 ---
 

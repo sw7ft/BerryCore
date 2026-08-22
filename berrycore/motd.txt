@@ -1,4 +1,4 @@
-BerryCore v0.87.9 — Term49 aubergine splash
-Learn Systems to Control Systems
-Type splash to redraw the launch screen
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.87.9
+BerryCore v0.88.0 — setup hub + talkbutton
+Hub running locally at 127.0.0.1:8098
+Type splash to redraw · setup for Apps / Packages / Core
+Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.88.0
