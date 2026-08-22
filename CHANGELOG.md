@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **talkbutton** qpkg — play/pause dictation (QSA mic, warm Vosk, system clipboard + Hub). `qpkg install talkbutton` (`util-talkbutton-1.0.zip`). Requires `qpkg install vosk`.
+
+---
+
+## [0.87.9] - 2026-08-22
+
+### Changed
+
+- **Term49 splash** — official launch screen: white 3-wide BERRYCORE, 7-dot blackberry mark, Ubuntu aubergine (`#300A24`), paper text, orange cursor (`share/term49-splash.sh`, `share/term48rc`).
+- **VERSION** → 0.87.9
+
 ---
 
 ## [0.87.8] - 2026-08-18

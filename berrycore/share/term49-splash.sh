@@ -39,9 +39,9 @@ berrycore_splash() {
     printf '\033[2J\033[H'
 
     printf "\n"
-    printf "  ${_wht}█▀█ █▀▀ █▀█ █▀█ █ █ █▀▀ █▀█ █▀█ █▀▀${_rst}\n"
-    printf "  ${_wht}█▀█ █▀  █▀▄ █▀▄ ▀█▀ █   █ █ █▀▄ █▀ ${_rst}\n"
-    printf "  ${_wht}█▄█ █▄▄ █ █ █ █  █  █▄▄ █▄█ █ █ █▄▄${_rst}\n"
+    printf "    ${_wht}█▀█ █▀▀ █▀█ █▀█ █ █ █▀▀ █▀█ █▀█ █▀▀${_rst}  ${_ice}● ●${_rst}\n"
+    printf "    ${_wht}█▀█ █▀  █▀▄ █▀▄ ▀█▀ █   █ █ █▀▄ █▀ ${_rst} ${_ice}● ● ●${_rst}\n"
+    printf "    ${_wht}█▄█ █▄▄ █ █ █ █  █  █▄▄ █▄█ █ █ █▄▄${_rst}  ${_ice}● ●${_rst}\n"
     printf "\n"
     printf "     ${_ice}◆${_rst} ${_wht}Q N X  U S E R L A N D${_rst}  ${_dim}·${_rst}  ${_cyn}T E R M  4 9${_rst} ${_ice}◆${_rst}\n"
     printf "\n"
