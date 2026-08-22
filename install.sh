@@ -348,10 +348,10 @@ sed "s|/accounts/1000/shared/misc/berrycore|$PWD|g" sample_profile > "$HOME/.pro
 
 echo "Created fresh $HOME/.profile (Term49 splash + BERRYCORE_QUIET)"
 
-# Offer the berry Term49 theme without clobbering an existing .term48rc
+# Offer the Term49 aubergine theme without clobbering an existing .term48rc
 if [ -f "$PWD/share/term48rc" ] && [ ! -e "$HOME/.term48rc" ]; then
     cp "$PWD/share/term48rc" "$HOME/.term48rc"
-    echo "Installed Term49 berry theme: $HOME/.term48rc"
+    echo "Installed Term49 aubergine theme: $HOME/.term48rc"
 fi
 
 echo ""

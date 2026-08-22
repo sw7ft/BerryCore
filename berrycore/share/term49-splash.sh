@@ -1,12 +1,13 @@
 # BerryCore launch splash — sourced from ~/.profile (POSIX sh, 256-color)
+# Canonical look: white 3-wide BERRYCORE on Ubuntu aubergine (#300A24).
 # Re-run anytime: splash   (aliases: berrycore, term49)
 
 berrycore_theme() {
     if [ -t 1 ] || [ "${TERM49_SPLASH_FORCE:-0}" = "1" ]; then
-        # Match share/term48rc: deep navy + ice text
-        printf '\033]11;rgb:0400/0c00/2000\007'
-        printf '\033]10;rgb:c800/dc00/ff00\007'
-        printf '\033]12;rgb:3d00/c400/ff00\007'
+        # Dark Ubuntu aubergine (#300A24) + paper text + orange cursor
+        printf '\033]11;rgb:3000/0a00/2400\007'
+        printf '\033]10;rgb:ee00/ee00/ee00\007'
+        printf '\033]12;rgb:e900/5400/2000\007'
     fi
 }
 
@@ -18,21 +19,16 @@ berrycore_splash() {
 
     _rst='\033[0m'
     _ita='\033[3m'
-    _dim='\033[38;5;60m'
-    _lbl='\033[38;5;117m'
-    _acc='\033[1;38;5;81m'
-    _cyn='\033[1;38;5;51m'
-    _ice='\033[1;38;5;159m'
-    _blu='\033[1;38;5;75m'
-    _sky='\033[1;38;5;123m'
-    _wht='\033[1;38;5;231m'
-    _mut='\033[38;5;109m'
-    _box='\033[38;5;25m'
-    _g1='\033[1;38;5;27m'
-    _g2='\033[1;38;5;33m'
-    _g3='\033[1;38;5;39m'
-    _g4='\033[1;38;5;45m'
-    _g5='\033[1;38;5;51m'
+    _dim='\033[38;5;96m'
+    _lbl='\033[38;5;183m'
+    _acc='\033[1;38;5;177m'
+    _cyn='\033[1;38;5;171m'
+    _ice='\033[1;38;5;219m'
+    _blu='\033[1;38;5;135m'
+    _sky='\033[1;38;5;176m'
+    _wht='\033[1;38;5;255m'
+    _mut='\033[38;5;139m'
+    _box='\033[38;5;89m'
 
     _ver="?"
     [ -n "$NATIVE_TOOLS" ] && [ -f "$NATIVE_TOOLS/VERSION" ] && _ver=$(cat "$NATIVE_TOOLS/VERSION")
@@ -43,9 +39,9 @@ berrycore_splash() {
     printf '\033[2J\033[H'
 
     printf "\n"
-    printf "  ${_g1}█▀▀▄${_rst} ${_g2}█▀▀▀${_rst} ${_g3}█▀▀▄${_rst} ${_g4}█▀▀▄${_rst} ${_g5}█  █${_rst} ${_g2}▄▀▀▄${_rst} ${_g3}▄▀▀▄${_rst} ${_g4}█▀▀▄${_rst} ${_g5}█▀▀▀${_rst}\n"
-    printf "  ${_g1}█▀▀▄${_rst} ${_g2}█▀▀ ${_rst} ${_g3}█▀▀▄${_rst} ${_g4}█▀▀▄${_rst} ${_g5}▀▄▀ ${_rst} ${_g2}█   ${_rst} ${_g3}█  █${_rst} ${_g4}█▀▀▄${_rst} ${_g5}█▀▀ ${_rst}\n"
-    printf "  ${_g1}█▄▄▀${_rst} ${_g2}█▄▄▄${_rst} ${_g3}█ ▀▄${_rst} ${_g4}█ ▀▄${_rst} ${_g5} █  ${_rst} ${_g2}▀▄▄▀${_rst} ${_g3}▀▄▄▀${_rst} ${_g4}█ ▀▄${_rst} ${_g5}█▄▄▄${_rst}\n"
+    printf "  ${_wht}█▀█ █▀▀ █▀█ █▀█ █ █ █▀▀ █▀█ █▀█ █▀▀${_rst}\n"
+    printf "  ${_wht}█▀█ █▀  █▀▄ █▀▄ ▀█▀ █   █ █ █▀▄ █▀ ${_rst}\n"
+    printf "  ${_wht}█▄█ █▄▄ █ █ █ █  █  █▄▄ █▄█ █ █ █▄▄${_rst}\n"
     printf "\n"
     printf "     ${_ice}◆${_rst} ${_wht}Q N X  U S E R L A N D${_rst}  ${_dim}·${_rst}  ${_cyn}T E R M  4 9${_rst} ${_ice}◆${_rst}\n"
     printf "\n"
@@ -63,7 +59,7 @@ berrycore_splash() {
     printf "\n"
 
     unset _rst _ita _dim _lbl _acc _cyn _ice _blu _sky _wht _mut _box
-    unset _g1 _g2 _g3 _g4 _g5 _ver _host _when
+    unset _ver _host _when
 }
 
 term49_theme() { berrycore_theme; }

@@ -1,7 +1,7 @@
 font_path = "/usr/fonts/font_repository/monotype/courbd.ttf";
 font_size = 38;
-text_color = [ 236, 228, 255 ];
-background_color = [ 8, 0, 18 ];
+text_color = [ 238, 238, 238 ];
+background_color = [ 48, 10, 36 ];
 screen_idle_awake = false;
 auto_show_vkb = true;
 metamode_doubletap_key = 61666;
