@@ -1,0 +1,10 @@
+piano — Term49 sine piano
+
+  piano            interactive (asdfghjkl = C4..C5, q quit)
+  piano c4 [ms]    play a note (default 350 ms)
+  piano c4 e4 g4   play a chord sequence
+  piano scale      C major
+
+Notes: c3..c5
+
+Install: qpkg install piano

@@ -50,8 +50,10 @@ bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI - Electrum sync over TLS (testn
 openport|util|1.0.0|19K|OpenPort 2.0 OBD diagnostic CLI - identify, voltage, probe, scan, CAN log (Passport USB)
 telnet|net|0.17|39K|Classic netkit telnet client - interactive TELNET to LAN hosts (qpkg install telnet)
 usbdbg|util|1.0.0|9K|Generic USB serial debugger - sniff, probe, send on /dev/serusb* (qpkg install usbdbg)
-sensors|util|1.0|12K|Motion sensors from Term49 — accel/gyro/mag/compass (qpkg install sensors)
+sensors|util|1.1|14K|Motion sensors + battery + cpu from Term49 (qpkg install sensors)
 gps|util|1.0|12K|GNSS / hybrid location from Term49 (qpkg install gps)
+notify|util|1.0|12K|Hub notifications from Term49 (qpkg install notify)
+piano|util|1.0|16K|Sine piano from Term49 (qpkg install piano)
 dropbear|net|2026.91|853K|Dropbear SSH client (dbclient/ssh) and server for Passport (qpkg install dropbear)
 bbm|net|1.0.0|12K|Berry Bridge Messenger — native relay client for berrycore.sw7ft.com (bbm who/send/poll)
 

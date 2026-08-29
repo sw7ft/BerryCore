@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [piano-1.0] - 2026-08-29
+
+### Added
+
+- **piano** qpkg — Term49 sine piano (QSA, play-audio fallback). `qpkg install piano`. Interactive `asdfghjkl` or `piano c4 e4 g4`.
+
+---
+
+## [notify-1.0] - 2026-08-29
+
+### Added
+
+- **notify** qpkg — Term49 CLI for BB10 Hub notifications (BPS + PPS). `qpkg install notify`.
+
+---
+
+## [sensors-1.1] - 2026-08-29
+
+### Added
+
+- **sensors battery** / **sensors cpu** / **sensors sys** — BPS battery info and a one-shot `hogs` CPU sample. Bare `sensors` now prints battery + cpu after the motion one-shot.
+
+---
+
 ## [gps-1.0] - 2026-08-29
 
 ### Added

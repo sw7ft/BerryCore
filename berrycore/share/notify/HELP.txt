@@ -1,0 +1,17 @@
+notify — BB10 Hub notifications from Term49
+
+  notify                 BPS post: title BerryCore, subtitle test
+  notify TITLE [SUB]     BPS notification_notify
+  notify post TITLE SUB  same
+  notify rocket TITLE SUB
+                         BPS using the RocketChat2 recipe
+                         (title, itemid RocketChat-<ms>)
+  notify pps TITLE SUB   PPS /pps/services/notify/control
+  notify alert TITLE SUB BPS dialog (prompt: Ok)
+  notify cancel [ID]     stop LED / lingering effects
+  notify delete [ID]     remove from Hub
+  notify ppsdump         dump notify PPS objects
+  notify -i ID ...       item id (default BerryCore-<ms>)
+  notify -u URL ...      tap payload URI
+
+Install: qpkg install notify

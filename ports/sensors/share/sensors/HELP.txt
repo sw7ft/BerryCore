@@ -1,11 +1,14 @@
-sensors — BB10 motion sensors from Term49
+sensors — BB10 motion + system sensors from Term49
 
-  sensors              one sample of every supported sensor
+  sensors              one sample of every supported sensor, then battery + cpu
   sensors accel        stream accelerometer (Ctrl-C)
   sensors gyro
   sensors mag
   sensors all          accel + gyro + mag
   sensors pps          PPS fusion (holster, in_hand, steps)
+  sensors battery      charge, health, charger (BPS)
+  sensors cpu          ncpu + one hogs sample
+  sensors sys          battery + cpu
   sensors list         which types the device reports
   sensors -n 20 accel  twenty samples
   sensors -r 40000 ... period in microseconds (default 25 Hz)

@@ -14,6 +14,8 @@ qpkg install sensors
 
 ```sh
 sensors
+sensors battery
+sensors cpu
 sensors accel
 sensors -n 10 all
 sensors pps

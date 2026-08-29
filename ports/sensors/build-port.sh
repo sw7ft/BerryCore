@@ -1,10 +1,10 @@
 #!/bin/sh
-# Build util-sensors-1.0.zip for qpkg install sensors
+# Build util-sensors-1.1.zip for qpkg install sensors
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-PORT_ZIP="$REPO_ROOT/ports/util-sensors-1.0.zip"
-BUNDLED="$REPO_ROOT/berrycore/packages/util-sensors-1.0.zip"
+PORT_ZIP="$REPO_ROOT/ports/util-sensors-1.1.zip"
+BUNDLED="$REPO_ROOT/berrycore/packages/util-sensors-1.1.zip"
 BIN="$REPO_ROOT/berrycore/bin/sensors"
 PKG_ROOT="$SCRIPT_DIR/.build/pkg"
 
