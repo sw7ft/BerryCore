@@ -1,0 +1,14 @@
+mem — read our own process memory from Term49
+
+  mem                         RAM totals + help
+  mem free                    same
+  mem maps [pid]              /proc/pid/mappings (default: parent)
+  mem pmap [pid]              /proc/pid/pmap (default: parent)
+  mem vmstat [pid]            /proc/pid/vmstat (default: parent)
+  mem read ADDR [len]         hex dump parent as
+  mem read -p PID ADDR [len]  same for a pid we own
+
+ADDR is hex. Seek to a mapped vaddr (see maps). Offset 0 faults.
+Does not open /dev/mem.
+
+Install: qpkg install mem
