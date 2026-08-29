@@ -54,6 +54,7 @@ sensors|util|1.1|14K|Motion + battery + cpu + thermal — base install
 gps|util|1.0|12K|GNSS / hybrid location — base install
 notify|util|1.0|12K|Hub notifications from Term49 (qpkg install notify)
 piano|util|1.0|16K|Sine piano from Term49 (qpkg install piano)
+fm|util|1.0|16K|Analog FM tuner from Term49 (qpkg install fm)
 dropbear|net|2026.91|853K|Dropbear SSH client (dbclient/ssh) and server for Passport (qpkg install dropbear)
 bbm|net|1.0.0|12K|Berry Bridge Messenger — native relay client for berrycore.sw7ft.com (bbm who/send/poll)
 

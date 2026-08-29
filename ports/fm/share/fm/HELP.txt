@@ -1,0 +1,14 @@
+fm — analog FM from Term49 (OpenMAX AL)
+
+  fm                 availability + help
+  fm avail           check without tuning
+  fm 95.1 [sec]      tune and play (default: until Ctrl-C)
+  fm seek [up|down]  seek and print the stop
+  fm now [95.1]      frequency, strength, stereo, RDS
+  fm scan            seek up around the band
+  fm status          open radio, dump current
+  fm off             this CLI is process-local (Ctrl-C the player)
+
+Freq: 95.1 or 95100 (kHz). Headset is usually the antenna.
+
+Install: qpkg install fm
