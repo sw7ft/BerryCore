@@ -189,9 +189,9 @@ ticker|web|Alias for stocks — ticker on port 8096
 sttlab|web|STT lab — ice/black UI, Term49 text, Android drop (port 8093; qpkg install sttlab)
 sttlabs|web|Term49 text front-end for STT lab (qpkg install sttlabs)
 vosk|ai|Offline Vosk speech-to-text (qpkg install vosk)
-sensors|util|Motion sensors + battery + cpu from Term49 (qpkg install sensors)
+sensors|util|Motion + battery + cpu + thermal — base install
 sensor|util|Alias for sensors
-gps|util|GNSS / hybrid location from Term49 (qpkg install gps)
+gps|util|GNSS / hybrid location — base install
 notify|util|Hub notifications from Term49 (qpkg install notify)
 piano|util|Sine piano from Term49 (qpkg install piano)
 browse|web|Alias for berry-browser CLI (qpkg install berry-browser)

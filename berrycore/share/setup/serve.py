@@ -17,7 +17,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 NATIVE = os.environ.get("NATIVE_TOOLS", os.path.normpath(os.path.join(BASE, "..", "..")))
 ICON_DIR = os.path.join(BASE, "icons")
 VERSION = "2.2"
-BC_VERSION = "0.88.0"
+BC_VERSION = "0.89.0"
 _PKG_JOBS = {}
 _PKG_FAIL = {}
 

@@ -16,6 +16,8 @@ claude-code|dev|2.1.91|45M|Claude Code AI agent for BB10 (requires node-term49)
 bcllm|ai|1.2.1|19M|On-device LLM assistant via llama.cpp (run: ai download model)
 vosk|ai|1.0|42M|Offline Vosk STT + small English model (qpkg install vosk; then sttlab)
 sttlab|web|1.1|43K|STT lab — ice/black UI, Term49 sttlabs, Android drop (port 8093)
+sensors|util|1.1|14K|Motion + battery + cpu + thermal — ships in BerryCore
+gps|util|1.0|12K|GNSS / hybrid location — ships in BerryCore
 bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI — Electrum sync over TLS (testnet)
 dropbear|net|2026.91|853K|Dropbear SSH client and server (dbclient, ssh, dropbearkey)
 bbm|net|1.0.0|12K|Berry Bridge Messenger — device relay for berrycore.sw7ft.com
@@ -29,7 +31,5 @@ berrypy|web|2.1.0|75K|BlackBerry app platform manager (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence
 telnet|net|0.17|39K|Classic netkit telnet client
 usbdbg|util|1.0.0|9K|Generic USB serial debugger (/dev/serusb*)
-sensors|util|1.1|14K|Motion sensors + battery + cpu from Term49
-gps|util|1.0|12K|GNSS / hybrid location from Term49
 notify|util|1.0|12K|Hub notifications from Term49 (BPS + PPS)
 piano|util|1.0|16K|Sine piano from Term49

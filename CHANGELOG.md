@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.89.0] - 2026-08-29
+
+### Added
+
+- **sensors** is a base install binary (`sensors` / `sensor`) — motion, battery, cpu, thermal. Ships in `berrycore.zip`.
+- **gps** is a base install binary — GNSS / hybrid location. Featured as a valuable default. Ships in `berrycore.zip`.
+
+### Changed
+
+- **VERSION** → 0.89.0
+- Hub / MOTD / env.sh welcome line for v0.89.0
+- qpkg catalog marks sensors and gps as core (replaces=core)
+
+---
+
 ## [piano-1.0] - 2026-08-29
 
 ### Added
