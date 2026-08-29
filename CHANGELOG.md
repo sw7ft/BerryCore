@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [sensors-1.0] - 2026-08-29
+
+### Added
+
+- **sensors** qpkg — Term49 CLI for BB10 motion sensors (BPS). Accel, gyro, mag, gravity, linaccel, APR, compass, orientation, light, proximity, holster. `qpkg install sensors`. Alias: `sensor`. PPS dump: `sensors pps`.
+
+---
+
 ## [0.88.0] - 2026-08-22
 
 ### Added

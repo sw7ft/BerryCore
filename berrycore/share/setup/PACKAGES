@@ -34,6 +34,8 @@ mic|web|0.1|18K|Alias for webrtc-mic|web-webrtc-mic-0.1.zip|webrtc-mic
 voice2text|web|0.2|20K|QSA mic + Vosk; copies transcript to clipboard (8029)|web-voice2text-0.1.zip|none
 talk|web|0.2|20K|Alias for voice2text|web-voice2text-0.1.zip|voice2text
 talkbutton|util|1.0|13K|Play/pause dictation — QSA mic, Vosk, clipboard + Hub (requires vosk)|util-talkbutton-1.0.zip|none
+sensors|util|1.0|12K|Motion sensors from Term49 — accel/gyro/mag/compass|util-sensors-1.0.zip|none
+sensor|util|1.0|12K|Alias for sensors|util-sensors-1.0.zip|sensors
 maps|web|1.0|36K|OpenStreetMap navigation|web-maps-1.0.zip|none
 waterwaymap|web|1.0|18K|Waterway Map — OSM river basins (port 8095)|web-waterwaymap-1.0.zip|none
 waterway|web|1.0|18K|Alias for waterwaymap|web-waterwaymap-1.0.zip|waterwaymap

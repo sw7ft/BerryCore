@@ -29,3 +29,4 @@ berrypy|web|2.1.0|75K|BlackBerry app platform manager (requires python3)
 tmux|sys|3.3a|2.5M|Terminal multiplexer with session persistence
 telnet|net|0.17|39K|Classic netkit telnet client
 usbdbg|util|1.0.0|9K|Generic USB serial debugger (/dev/serusb*)
+sensors|util|1.0|12K|Motion sensors from Term49 — accel/gyro/mag/compass
