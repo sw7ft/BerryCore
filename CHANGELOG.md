@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [gps-1.0] - 2026-08-29
+
+### Added
+
+- **gps** qpkg — Term49 CLI for BB10 geolocation (BPS). Last-known and live GNSS/hybrid fixes, satellite list, PPS dump. `qpkg install gps`.
+
+---
+
 ## [sensors-1.0] - 2026-08-29
 
 ### Added

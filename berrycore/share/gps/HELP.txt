@@ -1,0 +1,9 @@
+gps — BB10 location from Term49
+
+  gps              wait for one fix
+  gps last         last known only
+  gps watch        stream
+  gps sats         one fix + satellites
+  gps pps          readable PPS
+  gps -t 60        timeout seconds
+  gps -p gnss      GNSS only (or hybrid / network)

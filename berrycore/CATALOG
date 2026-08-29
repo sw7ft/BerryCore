@@ -191,6 +191,7 @@ sttlabs|web|Term49 text front-end for STT lab (qpkg install sttlabs)
 vosk|ai|Offline Vosk speech-to-text (qpkg install vosk)
 sensors|util|Motion sensors from Term49 — accel/gyro/mag (qpkg install sensors)
 sensor|util|Alias for sensors
+gps|util|GNSS / hybrid location from Term49 (qpkg install gps)
 browse|web|Alias for berry-browser CLI (qpkg install berry-browser)
 berry-browser|web|CLI browser via content_shell — JS pages as readable text (Term49/SSH)
 berry-browser-screen|web|Full-screen Chromium — native QNX only (qpkg install berry-browser)

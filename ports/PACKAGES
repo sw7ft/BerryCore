@@ -46,6 +46,7 @@ tcpdump|net|4.99.5|499K|Network packet capture and analysis|util-tcpdump-4.99.5.
 usbdbg|util|1.0.0|9K|Generic USB serial debugger|util-usbdbg-1.0.0.zip|none
 sensors|util|1.0|12K|Motion sensors from Term49 — accel/gyro/mag/compass|util-sensors-1.0.zip|none
 sensor|util|1.0|12K|Alias for sensors|util-sensors-1.0.zip|sensors
+gps|util|1.0|12K|GNSS / hybrid location from Term49|util-gps-1.0.zip|none
 dropbear|net|2026.91|853K|Dropbear SSH client and server|net-dropbear-2026.91.zip|none
 bbm|net|1.0.0|12K|Berry Bridge Messenger relay client|net-bbm-1.0.0.zip|none
 less|util|661|103K|GNU pager|util-less-661.zip|core
