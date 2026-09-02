@@ -15,3 +15,6 @@ Upgrade:
   qpkg update
   # or: sh install.sh --upgrade -y
 
+89c34c2c5f031fee0e448f8fbace5d112db14ee0c5ca999e6491f370b40c47bc  berrycore.zip
+0d1c7139d9892f74c8ecc55bdf12b586de1ac7ca0a22b500a9539dfc94b9886b  install.sh
+95aa35d5586b345ee4a1bb474c29262cb9ac82216e6e1ff58a891272919806ea  berrycore.html

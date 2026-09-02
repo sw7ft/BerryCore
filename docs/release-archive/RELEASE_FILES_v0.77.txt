@@ -37,6 +37,12 @@ New Ports:
 - wifi-chat - P2P chat over WiFi (12 KB)
 - berrybot - Command-line teaching assistant (600 KB)
 
+android-apps: term49-dashboard, term49-bridge (Bridge), RDP, Kiwi, Launcher, etc.
+  qpkg install android-apps -> misc/android-apps/
+
+Node.js: node-term49 (v22, npm 10.5.1, --jitless)
+bb-tools: dashboard, drawing-board, editors, compass, virtual-keyboard (port 8765)
+
 Catalog: All port binaries now in qpkg catalog
 
 Full release notes: GITHUB_RELEASE_v0.77.md

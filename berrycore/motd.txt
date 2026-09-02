@@ -1,4 +1,4 @@
-BerryCore v0.89.0 — sensors + gps in the base install
-Hub running locally at 127.0.0.1:8098
-Type splash to redraw · setup for Apps / Packages / Core
-Full notes: github.com/sw7ft/BerryCore/releases/tag/v0.89.0
+BerryCore v0.90.0 — Berry Browser Chromium (first beta)
+qpkg install berry-remote · berryremote · http://127.0.0.1:8080/
+BAR (rooted): GitHub releases v0.90.0
+Hub: 127.0.0.1:8098

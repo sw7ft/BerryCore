@@ -33,6 +33,7 @@ sttlabs|web|1.1|43K|Alias for sttlab (qpkg install sttlabs)
 vosk|ai|1.0|42M|Offline Vosk/Kaldi speech-to-text + small English model
 content-shell-term49|web|1.0|62M|DEPRECATED — use berry-browser (qpkg install berry-browser)
 berry-browser|web|1.0.27|111M|CLI browser via content_shell — berry-browser URL (Term49/SSH), berry-browser-screen (native UI)
+berry-remote|web|1.0|80K|Berry Browser Chromium viewer on :8080 (qpkg install berry-remote)
 node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX - --jitless by default, npm 10.5.1 included
 android-apps|util|1.0|89M|RDP, Bridge, Kiwi Browser, Launcher, XServer, SublimeText, term49-dashboard, BB10Terminal, ExFAT - installs to misc/android-apps/
 wifi-chat|util|1.0.0|12K|P2P chat over WiFi - UDP discovery, TCP messages, run: wifi-chat [name]

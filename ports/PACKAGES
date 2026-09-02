@@ -22,6 +22,8 @@ sttlabs|web|1.1|43K|Alias for sttlab — Term49 text UI + web lab on port 8093|w
 vosk|ai|1.0|42M|Offline Vosk/Kaldi speech-to-text + small English model|ai-vosk-1.0.zip|none
 content-shell-term49|web|1.0|62M|DEPRECATED — aliases to berry-browser|web-content-shell-term49-1.0.zip|none
 berry-browser|web|1.0.27|111M|CLI browser via content_shell|web-berry-browser-1.0.27.zip|none
+berry-remote|web|1.0|80K|Berry Browser Chromium viewer on :8080|web-berry-remote-1.0.zip|none
+berryremote|web|1.0|80K|Alias for berry-remote (:8080)|web-berry-remote-1.0.zip|berry-remote
 node-term49|lang|22.0.0|18M|Node.js v22 for Term49/QNX|lang-node-term49-22.0.0.zip|none
 android-apps|util|1.0|89M|Curated Android APKs for sideloading|util-android-apps-1.0.zip|none
 wifi-chat|util|1.0.0|12K|P2P chat over WiFi|util-wifi-chat-1.0.0.zip|none

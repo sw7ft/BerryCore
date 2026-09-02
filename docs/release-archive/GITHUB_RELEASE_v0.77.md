@@ -37,6 +37,38 @@ bot lessons
 bot help
 ```
 
+### android-apps — Term49 Dashboard & Bridge
+
+The **android-apps** port includes curated Android apps for BB10, including:
+
+- **term49-dashboard** — Dashboard for Term49 terminal
+- **term49-bridge** (Bridge) — Bridge app for Term49
+- RDP, Kiwi Browser, Launcher, XServer, SublimeText, BB10Terminal, ExFAT
+
+```bash
+qpkg install android-apps
+```
+
+Apps install to `/accounts/1000/shared/misc/android-apps/` for sideloading with Sachesi or Chrome extension.
+
+### Node.js & bb-tools
+
+**node-term49** — Node.js v22 for Term49/QNX (--jitless by default, npm 10.5.1 included):
+
+```bash
+qpkg install node-term49
+node -e "console.log('Hello!')"
+npm init
+```
+
+**bb-tools** — BerryCore web tools: dashboard, drawing-board, markdown-editor, code-editor, compass, virtual-keyboard. Native HTTP server on port 8765:
+
+```bash
+qpkg install bb-tools
+tools
+# Open http://localhost:8765/dashboard/
+```
+
 ### Catalog Update
 
 `qpkg catalog` now lists all port binaries: tools, node, npm, content_shell, wifi-chat, bot, tetris, qnxdesktop, voiceagent, term49-web.

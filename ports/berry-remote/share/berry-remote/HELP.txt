@@ -1,0 +1,14 @@
+Berry Remote — Chromium viewer on :8080
+=======================================
+
+  berryremote                 Start
+  berryremote https://…       Start or navigate
+  berryremote stop
+  berryremote status
+
+Open http://127.0.0.1:8080/ (or http://<device-ip>:8080/).
+
+Engine: content_shell from qpkg install berry-browser, or the Berry Browser BAR
+(rooted device). Node must run --jitless.
+
+This is a screenshot viewer (captureScreenshot). Not full-device VNC.

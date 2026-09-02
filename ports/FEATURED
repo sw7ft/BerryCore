@@ -4,6 +4,7 @@
 # Full install catalog: ports/PACKAGES (qpkg search / qpkg available)
 
 python3|lang|3.11.10|25M|Python 3.11 interpreter with pip and full standard library
+berry-remote|web|1.0|80K|Berry Browser Chromium — viewer on :8080 (berryremote)
 berry-browser|web|1.0.27|111M|CLI browser via content_shell — berry-browser URL (Term49/SSH)
 telegram|web|2.1|40K|Telegram Messenger v2.1 for BB10 (port 8010)
 youtube|web|2.0|21K|YouTube Navigator v2 — search and embed playback (port 8070)

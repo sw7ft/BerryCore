@@ -1,0 +1,115 @@
+#!/bin/sh
+# berrybrowser — run Berry Remote (content_shell + viewer) by hand from Term49.
+# The engine ELF stays in Term49 home (needs paks/libs beside it). This is the PATH command.
+
+BC="${BERRYCORE:-/accounts/1000/shared/misc/berrycore}"
+TERM49_HOME="${HOME:-/accounts/1000/appdata/com.update.Term49.gYABgHeOVx7TI8ajV86LufpS8jM/data}"
+ROOT="${BERRY_REMOTE_ROOT:-$TERM49_HOME/berry-remote}"
+BUNDLE="$ROOT/berry-browser-bundle"
+PORT="${PORT:-8080}"
+URL="${URL:-https://html.duckduckgo.com/html/}"
+RENDER="${RENDER:-360}"
+CURL="$BC/bin/curl"
+[ -x "$CURL" ] || CURL=curl
+
+usage() {
+    cat <<'EOF'
+berrybrowser — Chromium remote viewer on this Passport
+
+  berrybrowser                 Start (DuckDuckGo HTML)
+  berrybrowser https://...     Start, or navigate if already up
+  berrybrowser stop            Stop service + engine
+  berrybrowser status          Pids + /status
+  berrybrowser dump            Page title + innerText via CDP
+  berrybrowser -f              Start in foreground
+
+Open http://<device-ip>:8080 on the same Wi-Fi.
+EOF
+}
+
+lan_ip() {
+    ifconfig bcm0 2>/dev/null | awk '/inet /{print $2; exit}'
+}
+
+http_status() {
+    $CURL -s -m 4 "http://127.0.0.1:$PORT/status" 2>/dev/null
+}
+
+nav() {
+    $CURL -s -m 4 -X POST -H "Content-Type: application/json" \
+        -d "{\"url\":\"$1\"}" "http://127.0.0.1:$PORT/nav" >/dev/null 2>&1
+}
+
+if [ ! -d "$BUNDLE" ]; then
+    echo "berrybrowser: bundle missing at $BUNDLE"
+    exit 1
+fi
+
+cmd="${1:-start}"
+case "$cmd" in
+    help|-h|--help) usage; exit 0 ;;
+    stop)
+        sh "$BUNDLE/remote-stop.sh"
+        ;;
+    dump|text)
+        txt=$($CURL -s -m 8 "http://127.0.0.1:$PORT/text" 2>/dev/null)
+        if [ -n "$txt" ]; then
+            echo "$txt"
+        else
+            echo "berrybrowser: /text empty — is the engine up?"
+            exit 1
+        fi
+        ;;
+    status)
+        echo "berrybrowser: bundle $BUNDLE"
+        echo "berrybrowser: engine $BUNDLE/content_shell"
+        for n in supervisor service engine; do
+            f="$BUNDLE/.$n.pid"
+            if [ -f "$f" ]; then
+                p=$(cat "$f")
+                if kill -0 "$p" 2>/dev/null; then
+                    echo "berrybrowser: $n pid $p (alive)"
+                else
+                    echo "berrybrowser: $n pid $p (stale)"
+                fi
+            fi
+        done
+        st=$(http_status)
+        if [ -n "$st" ]; then
+            echo "berrybrowser: http $st"
+        else
+            echo "berrybrowser: http :$PORT not answering"
+        fi
+        ip=$(lan_ip)
+        [ -n "$ip" ] && echo "berrybrowser: open http://$ip:$PORT"
+        ;;
+    -f|--foreground)
+        PORT="$PORT" URL="$URL" RENDER="$RENDER" sh "$BUNDLE/remote-start.sh"
+        ;;
+    start|"")
+        st=$(http_status)
+        if [ -n "$st" ]; then
+            echo "berrybrowser: already up"
+            echo "$st"
+            ip=$(lan_ip)
+            [ -n "$ip" ] && echo "open http://$ip:$PORT"
+            exit 0
+        fi
+        PORT="$PORT" URL="$URL" RENDER="$RENDER" sh "$BUNDLE/remote-start.sh"
+        ;;
+    http://*|https://*|about:*)
+        st=$(http_status)
+        if [ -n "$st" ]; then
+            nav "$cmd"
+            echo "berrybrowser: navigated $cmd"
+        else
+            PORT="$PORT" URL="$cmd" RENDER="$RENDER" sh "$BUNDLE/remote-start.sh"
+        fi
+        ip=$(lan_ip)
+        [ -n "$ip" ] && echo "open http://$ip:$PORT"
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac

@@ -67,7 +67,7 @@ fi
 if [ "${BERRYCORE_QUIET:-0}" != "1" ]; then
 echo ""
 echo "==========================================================="
-echo "     BerryCore v0.89.0 - QNX Extended Userland"
+echo "     BerryCore v0.90.0 - QNX Extended Userland"
 echo "==========================================================="
 echo ""
 echo "Browse available tools:"

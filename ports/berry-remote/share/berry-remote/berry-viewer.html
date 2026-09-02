@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Berry Remote</title>
+<style>
+html,body{margin:0;background:#300A24;color:#f5f0ea;font-family:Georgia,"Times New Roman",serif;height:100%;overflow:hidden;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#chrome{position:relative;z-index:4}
+#bar{padding:6px 6px 0;background:#1a0614;border-bottom:1px solid #4a1840}
+#row{width:100%;border-collapse:collapse;font-family:sans-serif}
+#row td{padding:0 3px 6px 0;vertical-align:middle}
+#row td.last{padding-right:0}
+#lamp{display:inline-block;width:8px;height:8px;border-radius:50%;background:#666}
+#lamp.on{background:#4ade80}
+#lamp.bad{background:#f97316}
+#url{width:100%;box-sizing:border-box;padding:7px 8px;border:1px solid #4a1840;background:#0d0409;color:#fff;font-size:16px}
+#go,#menuBtn,.nav{padding:7px 10px;border:0;background:#f97316;color:#1a0614;font-weight:700;font-size:14px}
+#menuBtn,.nav{background:#4a1840;color:#f5f0ea}
+#go:active{background:#c084fc}
+#menuBtn:active,.nav:active,#sheet button:active{background:#c084fc;color:#1a0614}
+#sheet{display:none;position:absolute;left:8px;right:8px;top:100%;margin-top:4px;z-index:6;
+  max-height:72vh;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:#1a0614;border:1px solid #5a2250;padding:8px 10px 12px;font-family:sans-serif;
+  box-shadow:0 10px 28px rgba(0,0,0,.5);touch-action:pan-y}
+#sheet.open{display:block}
+#sheet button{display:block;width:100%;box-sizing:border-box;text-align:left;padding:10px 12px;margin:0 0 5px;border:0;background:#4a1840;color:#f5f0ea;font-size:15px}
+#sheet .sub{margin:4px 0 0;padding:0}
+#sheet .item{display:block;padding:7px 10px;margin:0 0 3px;background:#0d0409;border:1px solid #4a1840;color:#f5f0ea;text-decoration:none;font-size:13px;word-break:break-all}
+#sheet .item .x{float:right;color:#f97316;padding-left:8px}
+#toast{display:none;padding:6px 10px;font:13px sans-serif;color:#c084fc}
+.set-lab{padding:10px 2px 4px;font:12px sans-serif;color:#c4b5c8;letter-spacing:.04em}
+.set-row{margin:0 0 6px}
+#sheet .set-row button{display:inline-block;width:auto;padding:7px 10px;margin:0 4px 4px 0}
+#sheet .set-row button.on{background:#f97316;color:#1a0614}
+#sheet #mApply{background:#f97316;color:#1a0614}
+#wrap{text-align:center;padding:6px;-webkit-user-select:none;user-select:none;position:relative}
+#screen{background:#000;max-width:100%;height:auto;cursor:crosshair;border:1px solid #4a1840;
+  -webkit-user-select:none;user-select:none;-webkit-user-drag:none;
+  image-rendering:auto;touch-action:none}
+#dot{display:none;position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border:2px solid #f97316;border-radius:50%;pointer-events:none}
+#dot.show{display:block}
+#stat{font:11px/1.4 sans-serif;color:#c4b5c8;padding:2px 10px 6px}
+#lamp.load{background:#f97316}
+#fsExit{display:none;position:fixed;top:8px;right:8px;z-index:5;padding:7px 12px;border:0;background:#f97316;color:#1a0614;font:700 13px sans-serif}
+body.fs #bar,body.fs #sheet,body.fs #stat{display:none}
+body.fs #wrap{padding:0}
+body.fs #screen{border:0;width:100%;max-width:100%}
+body.fs #fsExit{display:block}
+</style></head><body role="application">
+<button id="fsExit">Exit</button>
+<div id="chrome">
+<div id="bar">
+<table id="row"><tr>
+<td style="width:16px"><span id="lamp"></span></td>
+<td style="width:36px"><button class="nav" id="backBtn" title="Back">◀</button></td>
+<td style="width:36px"><button class="nav" id="reloadBtn" title="Reload">↻</button></td>
+<td><input id="url" placeholder="https://..." value="%%START_URL%%" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></td>
+<td style="width:44px"><button id="go">Go</button></td>
+<td class="last" style="width:56px"><button id="menuBtn">Menu</button></td>
+</tr></table>
+</div>
+<div id="sheet">
+<button id="mBack">Back</button>
+<button id="mFwd">Forward</button>
+<button id="mReload">Reload</button>
+<button id="mSave">Save link</button>
+<button id="mHome">Browse home</button>
+<button id="mFull">Fullscreen</button>
+<button id="mSaved">Saved links</button>
+<div id="savedBox" class="sub" style="display:none"></div>
+<div class="set-lab">RESOLUTION</div>
+<div id="resRow" class="set-row"></div>
+<div class="set-lab">QUALITY</div>
+<div id="qualRow" class="set-row"></div>
+<button id="mApply">Apply (restarts engine)</button>
+<div id="toast"></div>
+</div>
+</div>
+<div id="wrap">
+  <img id="screen" alt="" draggable="false">
+  <div id="dot"></div>
+</div>
+<div id="stat"><span id="statline">connecting…</span></div>
+<script>
+// ES5 — BB10 stock / Android 4.x / old WebKit can be the display.
+var START_URL = "%%START_URL%%";
+var img = document.getElementById("screen");
+var wrap = document.getElementById("wrap");
+var dot = document.getElementById("dot");
+var urlBox = document.getElementById("url");
+function post(p, b) {
+  try {
+    var x = new XMLHttpRequest();
+    x.open("POST", p, true);
+    x.setRequestHeader("Content-Type", "application/json");
+    x.send(JSON.stringify(b || {}));
+  } catch (e) {}
+}
+function postJson(p, b, cb) {
+  try {
+    var x = new XMLHttpRequest();
+    x.open("POST", p, true);
+    x.setRequestHeader("Content-Type", "application/json");
+    x.onreadystatechange = function () {
+      if (x.readyState === 4 && cb) {
+        var o = null;
+        try { o = JSON.parse(x.responseText); } catch (e) {}
+        cb(x.status, o);
+      }
+    };
+    x.send(JSON.stringify(b || {}));
+  } catch (e) {}
+}
+var useMjpeg = window.location.search.indexOf("mjpeg") >= 0;
+function startPoll() {
+  var busy = false, lastF = 0, misses = 0;
+  var next = function () {
+    if (busy) { setTimeout(next, 40); return; }
+    busy = true;
+    var x = new XMLHttpRequest();
+    x.open("GET", "/frame.seq", true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      if (x.status !== 200) {
+        busy = false;
+        setTimeout(next, 400);
+        return;
+      }
+      var f = parseInt(x.responseText, 10) || 0;
+      if (f && f !== lastF) {
+        lastF = f;
+        misses = 0;
+        var i = new Image();
+        i.onload = function () { img.src = i.src; busy = false; setTimeout(next, 70); };
+        i.onerror = function () { busy = false; setTimeout(next, 280); };
+        i.src = "/frame.jpg?f=" + f;
+      } else {
+        misses++;
+        busy = false;
+        setTimeout(next, misses > 8 ? 280 : 120);
+      }
+    };
+    x.onerror = function () { busy = false; setTimeout(next, 400); };
+    try { x.send(null); } catch (e) { busy = false; setTimeout(next, 400); }
+  };
+  next();
+}
+if (useMjpeg) img.src = "/stream";
+else startPoll();
+
+function prevent(e) { if (e.preventDefault) e.preventDefault(); else e.returnValue = false; }
+function clientPt(e) {
+  e = e || window.event;
+  if (e.touches && e.touches.length) return { x: e.touches[0].clientX, y: e.touches[0].clientY, n: e.touches.length };
+  if (e.changedTouches && e.changedTouches.length) return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY, n: e.changedTouches.length };
+  return { x: e.clientX, y: e.clientY, n: 1 };
+}
+function rel(e) {
+  var r = img.getBoundingClientRect();
+  var p = clientPt(e);
+  return {
+    fx: Math.max(0, Math.min(1, (p.x - r.left) / Math.max(1, r.width))),
+    fy: Math.max(0, Math.min(1, (p.y - r.top) / Math.max(1, r.height))),
+    w: r.width, h: r.height
+  };
+}
+function showDot(fx, fy) {
+  var r = img.getBoundingClientRect();
+  var wr = wrap.getBoundingClientRect();
+  dot.style.left = (r.left - wr.left + fx * r.width) + "px";
+  dot.style.top = (r.top - wr.top + fy * r.height) + "px";
+  dot.className = "show";
+  setTimeout(function () { dot.className = ""; }, 280);
+}
+function wheelGain(r) {
+  return (360 / Math.max(80, r.h || 360)) * 3.4;
+}
+
+var press = null, lastPt = null, scrolled = false, holding = false;
+var lastMove = 0, velX = 0, velY = 0, lastT = 0, holdT = null, flickT = null;
+function clearHold() { if (holdT) { clearTimeout(holdT); holdT = null; } }
+function onDown(e) {
+  e = e || window.event;
+  var c = rel(e), p = clientPt(e);
+  press = { fx: c.fx, fy: c.fy, x: p.x, y: p.y, two: p.n >= 2 };
+  lastPt = p; scrolled = false; holding = false;
+  velX = 0; velY = 0; lastT = new Date().getTime();
+  clearHold();
+  if (flickT) { clearTimeout(flickT); flickT = null; }
+  if (!press.two) {
+    holdT = setTimeout(function () {
+      if (!press || scrolled) return;
+      holding = true;
+      post("/input", { kind: "down", fx: press.fx, fy: press.fy, buttons: 1 });
+      showDot(press.fx, press.fy);
+    }, 420);
+  }
+  prevent(e);
+}
+function onMove(e) {
+  e = e || window.event;
+  if (!press) return;
+  var p = clientPt(e);
+  var adx = p.x - press.x, ady = p.y - press.y;
+  var now = new Date().getTime();
+  var dt = Math.max(8, now - lastT);
+  if (!holding && !press.two && (adx * adx + ady * ady) < 144) { prevent(e); return; }
+  if (!holding && !scrolled) {
+    scrolled = true;
+    clearHold();
+  }
+  if (now - lastMove < 16) { prevent(e); return; }
+  lastMove = now;
+  velX = (p.x - lastPt.x) / dt;
+  velY = (p.y - lastPt.y) / dt;
+  lastT = now;
+  var c = rel(e);
+  if (holding) {
+    post("/input", { kind: "move", fx: c.fx, fy: c.fy, buttons: 1 });
+  } else {
+    var g = wheelGain(c) * (press.two || p.n >= 2 ? 1.6 : 1);
+    post("/input", {
+      kind: "wheel", fx: c.fx, fy: c.fy,
+      dx: -(p.x - lastPt.x) * g, dy: -(p.y - lastPt.y) * g
+    });
+  }
+  lastPt = p;
+  prevent(e);
+}
+function flickStep(fx, fy, vx, vy, n) {
+  if (n <= 0 || (vx * vx + vy * vy) < 0.0004) return;
+  var g = 42;
+  post("/input", { kind: "wheel", fx: fx, fy: fy, dx: -vx * g, dy: -vy * g });
+  flickT = setTimeout(function () {
+    flickStep(fx, fy, vx * 0.78, vy * 0.78, n - 1);
+  }, 32);
+}
+function onUp(e) {
+  e = e || window.event;
+  if (!press) return;
+  clearHold();
+  var c = rel(e);
+  if (holding) {
+    post("/input", { kind: "up", fx: c.fx, fy: c.fy, buttons: 0 });
+  } else if (!scrolled) {
+    showDot(press.fx, press.fy);
+    post("/input", { kind: "down", fx: press.fx, fy: press.fy, buttons: 1 });
+    post("/input", { kind: "up", fx: press.fx, fy: press.fy, buttons: 0 });
+  } else if (velY * velY + velX * velX > 0.12) {
+    flickStep(c.fx, c.fy, velX, velY, 8);
+  }
+  press = null;
+  prevent(e);
+}
+function onWheel(e) {
+  e = e || window.event;
+  var c = rel(e);
+  post("/input", {
+    kind: "wheel", fx: c.fx, fy: c.fy,
+    dx: e.deltaX || 0,
+    dy: (e.deltaY !== undefined) ? e.deltaY : (e.wheelDelta ? -e.wheelDelta : 0)
+  });
+  prevent(e);
+}
+img.onmousedown = onDown;
+document.onmouseup = onUp;
+img.onmousemove = onMove;
+if ("onwheel" in img) img.onwheel = onWheel; else img.onmousewheel = onWheel;
+img.ontouchstart = onDown;
+img.ontouchmove = onMove;
+img.ontouchend = onUp;
+img.ontouchcancel = onUp;
+
+var SPECIAL = {
+  Backspace: 8, Tab: 9, Enter: 13, Escape: 27, " ": 32,
+  PageUp: 33, PageDown: 34, End: 35, Home: 36,
+  ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40, Delete: 46
+};
+function sendSpecial(name) {
+  var code = SPECIAL[name] || 0;
+  post("/key", { type: "keyDown", key: name, keyCode: code });
+  post("/key", { type: "keyUp", key: name, keyCode: code });
+}
+function sendText(t) { post("/key", { type: "insert", text: t }); }
+
+function keyName(e) {
+  if (e.key !== undefined) return e.key;
+  var kc = e.keyCode || e.which;
+  var names = { 8: "Backspace", 9: "Tab", 13: "Enter", 27: "Escape", 32: " ",
+    33: "PageUp", 34: "PageDown", 35: "End", 36: "Home",
+    37: "ArrowLeft", 38: "ArrowUp", 39: "ArrowRight", 40: "ArrowDown", 46: "Delete" };
+  return names[kc] || String.fromCharCode(kc);
+}
+function hwLetter(e) {
+  var kc = e.keyCode || e.which;
+  if (e.ctrlKey || e.altKey || e.metaKey) return null;
+  if (kc >= 65 && kc <= 90) {
+    return String.fromCharCode(kc + (e.shiftKey ? 0 : 32));
+  }
+  var k = keyName(e);
+  if (k.length !== 1) return null;
+  if (!e.shiftKey && k >= "A" && k <= "Z") return k.toLowerCase();
+  return k;
+}
+function inUrl(e) {
+  var t = (e && (e.target || e.srcElement)) || document.activeElement;
+  return t === urlBox;
+}
+function eatKey(e) {
+  e = e || window.event;
+  prevent(e);
+  if (e.stopPropagation) e.stopPropagation();
+  if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+  e.cancelBubble = true;
+  e.returnValue = false;
+  return false;
+}
+function onAppKeyDown(e) {
+  e = e || window.event;
+  if (inUrl(e)) return true;
+  if ((e.key === "Escape" || e.keyCode === 27) && /(?:^|\s)fs(?:\s|$)/.test(document.body.className)) {
+    exitFs();
+    return eatKey(e);
+  }
+  var k = keyName(e);
+  if (k === "Shift" || k === "Control" || k === "Alt" || k === "Meta") return eatKey(e);
+  var ch = hwLetter(e);
+  if (ch) sendText(ch);
+  else if (SPECIAL[k] !== undefined) sendSpecial(k);
+  else if (k.length === 1) sendText(k);
+  return eatKey(e);
+}
+function onAppKeyOther(e) {
+  e = e || window.event;
+  if (inUrl(e)) return true;
+  return eatKey(e);
+}
+document.onkeydown = onAppKeyDown;
+document.onkeypress = onAppKeyOther;
+document.onkeyup = onAppKeyOther;
+window.onkeydown = onAppKeyDown;
+window.onkeypress = onAppKeyOther;
+window.onkeyup = onAppKeyOther;
+if (document.addEventListener) {
+  document.addEventListener("keydown", onAppKeyDown, true);
+  document.addEventListener("keypress", onAppKeyOther, true);
+  document.addEventListener("keyup", onAppKeyOther, true);
+}
+
+function goUrl() { post("/nav", { url: urlBox.value }); }
+document.getElementById("go").onclick = goUrl;
+document.getElementById("backBtn").onclick = function () { post("/back", {}); };
+document.getElementById("reloadBtn").onclick = function () { post("/reload", {}); };
+urlBox.onkeydown = function (e) {
+  e = e || window.event;
+  if ((e.keyCode || e.which) === 13) goUrl();
+};
+
+var sheet = document.getElementById("sheet");
+var savedBox = document.getElementById("savedBox");
+var toast = document.getElementById("toast");
+function closeSheet() { sheet.className = ""; }
+document.getElementById("menuBtn").onclick = function () {
+  sheet.className = (sheet.className === "open") ? "" : "open";
+};
+document.getElementById("mBack").onclick = function () { post("/back", {}); closeSheet(); };
+document.getElementById("mFwd").onclick = function () { post("/forward", {}); closeSheet(); };
+document.getElementById("mReload").onclick = function () { post("/reload", {}); closeSheet(); };
+document.getElementById("mHome").onclick = function () {
+  window.location.href = "http://127.0.0.1:8040/";
+};
+function enterFs() {
+  document.body.className = "fs";
+  closeSheet();
+  var el = document.documentElement;
+  try {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullScreen) el.webkitRequestFullScreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } catch (e) {}
+}
+function exitFs() {
+  document.body.className = "";
+  try {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+  } catch (e) {}
+}
+document.getElementById("mFull").onclick = enterFs;
+document.getElementById("fsExit").onclick = exitFs;
+function flash(msg) {
+  toast.innerHTML = msg;
+  toast.style.display = "block";
+  setTimeout(function () { toast.style.display = "none"; }, 1800);
+}
+document.getElementById("mSave").onclick = function () {
+  var url = urlBox.value;
+  postJson("/bookmark", { url: url, title: lastTitle || url }, function (st, o) {
+    if (st === 200 && o && o.already) flash("Already saved");
+    else if (st === 200) flash("Saved");
+    else flash("Could not save");
+    if (o && o.bookmarks) drawSaved(o.bookmarks);
+  });
+};
+function drawSaved(list) {
+  savedBox.innerHTML = "";
+  if (!list || !list.length) {
+    savedBox.innerHTML = "<div class=\"item\">No saved links yet</div>";
+    return;
+  }
+  var i;
+  for (i = 0; i < list.length; i++) {
+    (function (bm) {
+      var a = document.createElement("a");
+      a.className = "item";
+      a.href = "#";
+      a.innerHTML = "<span class=\"x\">×</span>" + (bm.title || bm.url);
+      a.onclick = function (e) {
+        e = e || window.event;
+        var t = e.target || e.srcElement;
+        if (t && t.className === "x") {
+          postJson("/bookmark/delete", { id: bm.id, url: bm.url }, function (st, o) {
+            if (o && o.bookmarks) drawSaved(o.bookmarks);
+          });
+        } else {
+          urlBox.value = bm.url;
+          post("/nav", { url: bm.url });
+          closeSheet();
+        }
+        prevent(e);
+        return false;
+      };
+      savedBox.appendChild(a);
+    })(list[i]);
+  }
+}
+document.getElementById("mSaved").onclick = function () {
+  if (savedBox.style.display === "block") {
+    savedBox.style.display = "none";
+    return;
+  }
+  savedBox.style.display = "block";
+  try {
+    var x = new XMLHttpRequest();
+    x.open("GET", "/bookmarks", true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      var o = {};
+      try { o = JSON.parse(x.responseText); } catch (e) {}
+      drawSaved(o.bookmarks || []);
+    };
+    x.send(null);
+  } catch (e) {}
+};
+
+var wantW = 360, wantH = 360, wantQ = 40;
+var PRESETS = [
+  { name: "360", w: 360, h: 360 },
+  { name: "480", w: 480, h: 480 },
+  { name: "640", w: 640, h: 640 },
+  { name: "720", w: 720, h: 720 },
+  { name: "360×640", w: 360, h: 640 },
+  { name: "640×360", w: 640, h: 360 }
+];
+var QUALS = [30, 40, 50, 70];
+function paintSets() {
+  var res = document.getElementById("resRow");
+  var qual = document.getElementById("qualRow");
+  var html = "", i, p, on;
+  for (i = 0; i < PRESETS.length; i++) {
+    p = PRESETS[i];
+    on = (p.w === wantW && p.h === wantH) ? " on" : "";
+    html += "<button type=\"button\" class=\"" + on + "\" data-w=\"" + p.w + "\" data-h=\"" + p.h + "\">" + p.name + "</button>";
+  }
+  res.innerHTML = html;
+  html = "";
+  for (i = 0; i < QUALS.length; i++) {
+    on = (QUALS[i] === wantQ) ? " on" : "";
+    html += "<button type=\"button\" class=\"" + on + "\" data-q=\"" + QUALS[i] + "\">" + QUALS[i] + "</button>";
+  }
+  qual.innerHTML = html;
+}
+document.getElementById("resRow").onclick = function (e) {
+  e = e || window.event;
+  var t = e.target || e.srcElement;
+  if (!t || !t.getAttribute || !t.getAttribute("data-w")) return;
+  wantW = parseInt(t.getAttribute("data-w"), 10);
+  wantH = parseInt(t.getAttribute("data-h"), 10);
+  paintSets();
+};
+document.getElementById("qualRow").onclick = function (e) {
+  e = e || window.event;
+  var t = e.target || e.srcElement;
+  if (!t || !t.getAttribute || !t.getAttribute("data-q")) return;
+  wantQ = parseInt(t.getAttribute("data-q"), 10);
+  paintSets();
+};
+document.getElementById("mApply").onclick = function () {
+  flash("Applying " + wantW + "×" + wantH + " q" + wantQ + "…");
+  postJson("/settings", { width: wantW, height: wantH, quality: wantQ }, function (st) {
+    if (st !== 200) { flash("Could not apply"); return; }
+    flash("Engine restarting…");
+    var n = 0, tmr = setInterval(function () {
+      n++;
+      try {
+        var x = new XMLHttpRequest();
+        x.open("GET", "/status", true);
+        x.onreadystatechange = function () {
+          if (x.readyState !== 4) return;
+          if (x.status === 200) {
+            clearInterval(tmr);
+            flash("Live " + wantW + "×" + wantH);
+          }
+        };
+        x.send(null);
+      } catch (e2) {}
+      if (n > 24) { clearInterval(tmr); flash("Still starting — reload"); }
+    }, 700);
+  });
+};
+function loadSets() {
+  try {
+    var x = new XMLHttpRequest();
+    x.open("GET", "/settings", true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4 || x.status !== 200) return;
+      var o = {};
+      try { o = JSON.parse(x.responseText); } catch (e) {}
+      if (o.width) wantW = o.width;
+      if (o.height) wantH = o.height;
+      if (o.quality) wantQ = o.quality;
+      paintSets();
+    };
+    x.send(null);
+  } catch (e) { paintSets(); }
+}
+loadSets();
+
+var lamp = document.getElementById("lamp");
+var statline = document.getElementById("statline");
+var lastTitle = "";
+function tick() {
+  try {
+    var x = new XMLHttpRequest();
+    x.open("GET", "/status", true);
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      if (x.status !== 200) {
+        lamp.className = "bad";
+        statline.innerHTML = "service not ready";
+        return;
+      }
+      var o; try { o = JSON.parse(x.responseText); } catch (e) { return; }
+      lamp.className = o.navigating ? "load" : (o.session ? "on" : "bad");
+      var bits = [];
+      bits.push(o.navigating ? "loading" : (o.session ? "live" : "no session"));
+      if (o.title) { lastTitle = o.title; bits.push(o.title); }
+      if (o.width && o.height) bits.push(o.width + "×" + o.height);
+      else if (o.render) bits.push(o.render + "px");
+      bits.push(o.frames + " frames");
+      if (o.version) bits.push("v" + o.version);
+      statline.innerHTML = bits.join(" · ");
+      if (o.url && document.activeElement !== urlBox) urlBox.value = o.url;
+    };
+    x.send(null);
+  } catch (e) {}
+}
+setInterval(tick, 2000);
+tick();
+</script></body></html>

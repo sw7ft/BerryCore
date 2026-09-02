@@ -1,121 +1,39 @@
-# 🍇 **Introducing BerryCore for BlackBerry 10 Devices**
+# BerryCore
 
-### **BerryCore – QNX Extended Userland**
+**QNX extended userland for BlackBerry 10.** First beta of **Berry Browser — Chromium** ships in [v0.90.0](https://github.com/sw7ft/BerryCore/releases/tag/v0.90.0).
 
-For installation instructions please visit the [releases section](https://github.com/sw7ft/BerryCore/releases) — download `berrycore.zip`, `install.sh`, and the **`berrycore.html`** catalog guide.
+Years of work restoring a real browser to BB10. This is the first public beta.
 
----
+## Berry Browser — Chromium (first beta)
 
-## 🧭 **Overview**
+A Chromium `content_shell` on the Passport. Not the frozen stock WebKit. Modern sites can render. You need a **rooted device** — the app is a `.bar`.
 
-**BerryCore** is the **QNX Extended Userland** — a modernized continuation of the open-source legacy started by **Berry Much OS**.  
-It’s designed to breathe new life into **BlackBerry 10 and QNX devices**, transforming them into capable development and experimentation environments once again.  
+| | |
+|---|---|
+| **BAR** | [BerryBrowserV3-3.0.2-build83.bar](https://github.com/sw7ft/BerryCore/releases/tag/v0.90.0) — install on a rooted BB10 device |
+| **Also in the BAR** | `content_shell` and a Term49 bin to play with (that part will get better) |
+| **qpkg :8080 viewer** | `qpkg install berry-remote` then `berryremote` — open `http://127.0.0.1:8080/` |
 
-BerryCore provides an expanded runtime layer, updated binaries, and streamlined environment scripts (`env.sh`) that make adding and using modern software on QNX simple and consistent.
+```sh
+qpkg install berry-remote
+berryremote
+# http://127.0.0.1:8080/
+```
 
----
+The :8080 view is the Chromium remote we built (screenshot + tap/keys). Engine comes from the BAR or `qpkg install berry-browser`.
 
-## 📺 **How-To Videos**
+## Install BerryCore
 
-New to BerryCore? Watch these step-by-step video guides:
+Download `berrycore.zip` and `install.sh` from [Releases](https://github.com/sw7ft/BerryCore/releases). How-to videos:
 
-### 1️⃣ **Transferring Files to Your Device**
-Learn how to download the release files and transfer them to your BlackBerry 10 device.
+1. [Transfer files](https://www.youtube.com/shorts/j-kRBxrv4XI)
+2. [Install](https://www.youtube.com/shorts/6paUBxsP2yU)
+3. [SSH](https://youtube.com/shorts/pKX2x4o4w1I)
 
-👉 **[Watch: How to Transfer BerryCore Files](https://www.youtube.com/shorts/j-kRBxrv4XI)**
+Site: [berrycore.sw7ft.com](https://berrycore.sw7ft.com/)
 
-### 2️⃣ **Installing BerryCore**
-Complete installation walkthrough from start to finish.
+## What this is
 
-👉 **[Watch: How to Install BerryCore](https://www.youtube.com/shorts/6paUBxsP2yU)**
+BerryCore is a modernized continuation of **Berry Much OS** — extra binaries, `env.sh`, and `qpkg` so BB10/QNX can be a development box again. Not affiliated with BlackBerry Limited.
 
-### 3️⃣ **Setting Up SSH to Your Device**
-Configure SSH access for remote development and file transfers.  
-*View video description for detailed instructions.*
-
-👉 **[Watch: How to Setup SSH to Your Device](https://youtube.com/shorts/pKX2x4o4w1I)**
-
----
-
-## 🕰️ **Honoring the Legacy**
-
-This project is built as a **continuation and tribute** to the incredible work done by the developers of **Berry Much OS**.  
-Their dedication to keeping the **BlackBerry 10 and QNX platform alive** laid the foundation for everything that follows here.  
-
-Without their ingenuity — rebuilding toolchains, porting compilers, and proving that these devices could still be productive, programmable, and free — this project would simply **not be possible**.  
-
-Berry Much OS didn’t just keep QNX breathing; it **redefined what persistence in open-source looks like**.  
-BerryCore exists as a **homage** to that spirit — to extend their work, modernize it, and continue making BlackBerry hardware relevant in a new era.
-
----
-
-## 🎯 **Purpose**
-
-The goal of BerryCore is to **carry the torch forward** — refining, expanding, and repackaging the Berry Much ecosystem into a modern, modular, and extensible runtime environment for QNX devices.  
-
-This new effort focuses on **streamlining the process of adding and maintaining modern binaries** (Python, Git, GCC, SSH, etc.) while expanding the **system layer** with new libraries, command-line tools, and utilities that make QNX more capable for developers and experimenters.
-
----
-
-## ⚙️ **Core Objectives**
-
-- 🧱 **Streamline Binary Integration**  
-  Simplify the process of compiling and adding modern binaries to QNX, ensuring compatibility, stability, and clean system paths.  
-
-- ⚙️ **Expand the System Environment**  
-  Add more tools, libraries, and utilities to bring the QNX userland closer to a modern UNIX-like experience — while retaining its reliability and small footprint.  
-
-- 💻 **Enable Modern App Development**  
-  Support application development using **Python**, **C**, **X servers**, and any other frameworks that can be adapted to QNX.  
-  The goal is to create a flexible environment where both graphical and command-line applications can coexist and evolve.  
-
-- 🐍 **Modern Scripting and APIs**  
-  Continue support for Python, JavaScript, and REST-based control layers, allowing automation and local system scripting.  
-
-- 🔄 **Cross-Platform Portability**  
-  Maintain compatibility with **legacy BB10 devices**, while expanding to **QNX 8.x**, **ARM**, and **RISC-V** embedded builds.  
-
-- 🤝 **Community Collaboration**  
-  Build an open developer ecosystem for sharing precompiled binaries, system extensions, and QNX development tools.
-
----
-
-## 🙏 **Acknowledgements**
-
-To the **Berry Much OS developers**, contributors, testers, and community — **thank you**.  
-Your work has preserved a piece of computing history and inspired a generation of hobbyists, engineers, and educators.  
-
-This project is dedicated to you, and to the enduring legacy of the **BlackBerry and QNX development community** — those who believed these devices still had something to give.
-
----
-
-## ⚖️ **Legal & Licensing**
-
-BerryCore is an **open-source project** that compiles and packages existing open-source software for QNX/BlackBerry 10 devices.  
-
-**Important Notes:**
-- All included packages respect their original licenses (GPL, MIT, Apache, etc.)
-- This project does **not** distribute proprietary BlackBerry or QNX system files
-- Not affiliated with or endorsed by BlackBerry Limited
-- BlackBerry®, BB10®, and QNX® are registered trademarks of BlackBerry Limited
-
-**For developers**: A Docker container with pre-configured toolchain access is available. The BB10 NDK is licensed by BlackBerry for registered developers. See `toolchain/` for details.
-
----
-
-## 🚀 **Moving Forward**
-
-Our mission is simple:  
-To **extend**, **modernize**, and **streamline** the vision of Berry Much OS.  
-
-By uniting QNX's real-time reliability with modern open-source tooling, we aim to make these devices **usable, hackable, and developer-friendly again** — both as daily drivers and as educational systems for embedded computing.
-
-## 💖 **Support Development**
-
-BerryCore and the broader **SW7FT QNX Initiative** are community-driven projects built out of passion for open systems, education, and the preservation of embedded computing.  
-
-If you’d like to help sustain ongoing development, testing, and device support, consider supporting the project through Patreon:  
-
-👉 **[Support on Patreon – Sw7ft Developer](https://www.patreon.com/c/Sw7ft)**  
-
-Every contribution directly supports continued development of QNX ports, documentation, and new open-source tooling for the next generation of embedded devices.
+Support: [Patreon – Sw7ft](https://www.patreon.com/c/Sw7ft)

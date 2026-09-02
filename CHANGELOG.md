@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.90.0] - 2026-09-02
+
+### Added
+
+- **Berry Browser — Chromium, first public beta.** BAR `BerryBrowserV3-3.0.2-build83.bar` (rooted device). Includes `content_shell` and a Term49 bin.
+- **berry-remote** qpkg — the :8080 Chromium viewer (`berryremote` / `berrybrowser`). `qpkg install berry-remote`.
+
+### Changed
+
+- **VERSION** → 0.90.0
+- GitHub README is the official release statement; old `GITHUB_RELEASE_*` / `RELEASE_FILES_*` notes moved to `docs/release-archive/`
+
+---
+
 ## [0.89.0] - 2026-08-29
 
 ### Added

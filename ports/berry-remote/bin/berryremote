@@ -1,0 +1,12 @@
+#!/bin/sh
+# berryremote — alias for berrybrowser (same bundle, same commands).
+BC="${BERRYCORE:-/accounts/1000/shared/misc/berrycore}"
+HERE="$(cd "$(dirname "$0")" && pwd)"
+if [ -x "$HERE/berrybrowser" ]; then
+    exec "$HERE/berrybrowser" "$@"
+fi
+if [ -x "$BC/bin/berrybrowser" ]; then
+    exec "$BC/bin/berrybrowser" "$@"
+fi
+echo "berryremote: berrybrowser missing"
+exit 1
