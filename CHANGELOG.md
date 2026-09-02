@@ -13,14 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **qpkg remove / uninstall** — uninstall a port by deleting only the files from that port's zip. `qpkg remove NAME` or `qpkg uninstall NAME`. `-y` / `QPKG_YES=1` for non-interactive. Base packages (`replaces=core`) need `--force`.
+- **qpkg remove / uninstall**. Deletes only the files from that port zip. `qpkg remove NAME` or `qpkg uninstall NAME`. `-y` / `QPKG_YES=1` for non-interactive. Base packages (`replaces=core`) need `--force`.
 - Install now records a file list under `.qpkg/files/` so later removes are exact.
 - `qpkg list` shows ports from the install log (not the bundled zip pile).
 
 ### Changed
 
 - **VERSION** → 0.90.1
-- qpkg 0.2.0 — refuses to remove `qpkg` / BerryCore itself; keeps `env.sh`, `VERSION`, `bin/qpkg`.
+- qpkg 0.2.0. Refuses to remove `qpkg` / BerryCore itself. Keeps `env.sh`, `VERSION`, `bin/qpkg`.
 
 ---
 
@@ -28,8 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Berry Browser — Chromium, first public beta.** BAR `BerryBrowserV3-3.0.2-build83.bar` (rooted device). Includes `content_shell` and a Term49 bin.
-- **berry-remote** qpkg — the :8080 Chromium viewer (`berryremote` / `berrybrowser`). `qpkg install berry-remote`.
+- **Berry Browser Chromium, first public beta.** BAR `BerryBrowserV3-3.0.2-build83.bar` (rooted device). Includes `content_shell` and a Term49 bin.
+- **berry-remote** qpkg. The :8080 Chromium viewer (`berryremote` / `berrybrowser`). `qpkg install berry-remote`.
 
 ### Changed
 
