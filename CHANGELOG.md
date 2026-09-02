@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.90.1] - 2026-09-02
+
+### Added
+
+- **qpkg remove / uninstall** — uninstall a port by deleting only the files from that port's zip. `qpkg remove NAME` or `qpkg uninstall NAME`. `-y` / `QPKG_YES=1` for non-interactive. Base packages (`replaces=core`) need `--force`.
+- Install now records a file list under `.qpkg/files/` so later removes are exact.
+- `qpkg list` shows ports from the install log (not the bundled zip pile).
+
+### Changed
+
+- **VERSION** → 0.90.1
+- qpkg 0.2.0 — refuses to remove `qpkg` / BerryCore itself; keeps `env.sh`, `VERSION`, `bin/qpkg`.
+
+---
+
 ## [0.90.0] - 2026-09-02
 
 ### Added

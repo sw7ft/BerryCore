@@ -18,6 +18,7 @@ A Chromium `content_shell` on the Passport. Not the frozen stock WebKit. Modern 
 qpkg install berry-remote
 berryremote
 # http://127.0.0.1:8080/
+qpkg remove berry-remote    # or: qpkg uninstall
 ```
 
 The :8080 view is the Chromium remote we built (screenshot + tap/keys). Engine comes from the BAR or `qpkg install berry-browser`.

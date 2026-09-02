@@ -2,7 +2,7 @@
 # qpkg - QNX Package Manager for BerryCore
 # Manage BerryCore updates and install additional ports
 
-VERSION="0.1.0"
+VERSION="0.2.0"
 GITHUB_REPO="sw7ft/BerryCore"
 GITHUB_API="https://api.github.com/repos/$GITHUB_REPO"
 GITHUB_RAW="https://raw.githubusercontent.com/$GITHUB_REPO/main"
@@ -233,7 +233,192 @@ log_installed_port() {
     _log="${NATIVE_TOOLS}/.qpkg/installed"
     mkdir -p "${NATIVE_TOOLS}/.qpkg" 2>/dev/null || true
     _date=$(date +%Y-%m-%d 2>/dev/null || echo "unknown")
-    echo "${_name}|${_ver}|${_date}|${_zip}" >> "$_log" 2>/dev/null || true
+    _tmp="${_log}.tmp.$$"
+    if [ -f "$_log" ]; then
+        grep -v "^${_name}|" "$_log" > "$_tmp" 2>/dev/null || true
+    else
+        : > "$_tmp"
+    fi
+    echo "${_name}|${_ver}|${_date}|${_zip}" >> "$_tmp"
+    mv "$_tmp" "$_log" 2>/dev/null || true
+}
+
+qpkg_unlog_port() {
+    _name="$1"
+    _log="${NATIVE_TOOLS}/.qpkg/installed"
+    [ -f "$_log" ] || return 0
+    _tmp="${_log}.tmp.$$"
+    grep -v "^${_name}|" "$_log" > "$_tmp" 2>/dev/null || true
+    mv "$_tmp" "$_log" 2>/dev/null || true
+    rm -f "${NATIVE_TOOLS}/.qpkg/files/${_name}.list" 2>/dev/null || true
+}
+
+qpkg_canonical_name() {
+    _n="$1"
+    case "$_n" in
+        content-shell-term49) echo "berry-browser" ;;
+        sttlabs|stt-labs) echo "sttlab" ;;
+        berrycore-assistant) echo "assistant" ;;
+        desk3) echo "rocketchat3" ;;
+        desk4) echo "rocketchat4" ;;
+        berryremote) echo "berry-remote" ;;
+        *) echo "$_n" ;;
+    esac
+}
+
+qpkg_install_dir_for() {
+    _n="$1"
+    case "$_n" in
+        android-apps|bcllm|bdk-cli)
+            qpkg_misc_app_root
+            ;;
+        openport|telnet|usbdbg|dropbear|bbm|ftp)
+            qpkg_misc_root
+            ;;
+        *)
+            echo "$NATIVE_TOOLS"
+            ;;
+    esac
+}
+
+# Names inside a port zip (files only, no directories, no ..).
+qpkg_zip_names() {
+    _zip="$1"
+    [ -f "$_zip" ] || return 1
+    if unzip -Z -1 "$_zip" >/dev/null 2>&1; then
+        unzip -Z -1 "$_zip" 2>/dev/null | grep -v '/$' | grep -v '\.\.'
+        return 0
+    fi
+    unzip -l "$_zip" 2>/dev/null | awk '
+        $1 ~ /^[0-9]+$/ && NF >= 4 {
+            $1=$2=$3=""
+            sub(/^ +/, "")
+            if ($0 != "" && $0 !~ /\/$/ && $0 !~ /\.\./) print
+        }'
+}
+
+qpkg_write_filelist() {
+    _name="$1"
+    _zip="$2"
+    _dir="${NATIVE_TOOLS}/.qpkg/files"
+    mkdir -p "$_dir" 2>/dev/null || return 0
+    qpkg_zip_names "$_zip" > "${_dir}/${_name}.list" 2>/dev/null || true
+}
+
+qpkg_rel_safe() {
+    case "$1" in
+        ""|.|./|/*|*..*) return 1 ;;
+    esac
+    return 0
+}
+
+qpkg_path_protected() {
+    _rel="$1"
+    _base=$(basename "$_rel")
+    case "$_rel" in
+        env.sh|VERSION|CATALOG|motd.txt|bin/qpkg|sample_profile|qconf-override.mk)
+            return 0
+            ;;
+    esac
+    case "$_base" in
+        qpkg|env.sh|VERSION)
+            return 0
+            ;;
+    esac
+    return 1
+}
+
+# Best-effort stop so we do not delete a live binary.
+qpkg_try_stop() {
+    _name="$1"
+    if [ -x "$NATIVE_TOOLS/bin/$_name" ]; then
+        "$NATIVE_TOOLS/bin/$_name" stop >/dev/null 2>&1 || true
+    fi
+    case "$_name" in
+        berry-remote)
+            if [ -x "$NATIVE_TOOLS/bin/berryremote" ]; then
+                "$NATIVE_TOOLS/bin/berryremote" stop >/dev/null 2>&1 || true
+            fi
+            if [ -x "$NATIVE_TOOLS/bin/berrybrowser" ]; then
+                "$NATIVE_TOOLS/bin/berrybrowser" stop >/dev/null 2>&1 || true
+            fi
+            if [ -x "$NATIVE_TOOLS/share/berry-remote/remote-stop.sh" ]; then
+                sh "$NATIVE_TOOLS/share/berry-remote/remote-stop.sh" >/dev/null 2>&1 || true
+            fi
+            ;;
+    esac
+}
+
+# Remove files listed for one port. Does not delete bundled catalog zips.
+qpkg_remove_files() {
+    _name="$1"
+    _root="$2"
+    _list="$3"
+    _removed=0
+    _skipped=0
+    _missing=0
+
+    while IFS= read -r _rel || [ -n "$_rel" ]; do
+        [ -n "$_rel" ] || continue
+        if ! qpkg_rel_safe "$_rel"; then
+            _skipped=$((_skipped + 1))
+            continue
+        fi
+        if qpkg_path_protected "$_rel"; then
+            print_warning "Keeping protected file: $_rel"
+            _skipped=$((_skipped + 1))
+            continue
+        fi
+        _path="${_root}/${_rel}"
+        if [ -d "$_path" ] && [ ! -L "$_path" ]; then
+            continue
+        fi
+        if [ -e "$_path" ] || [ -L "$_path" ]; then
+            if rm -f "$_path" 2>/dev/null; then
+                echo "  removed $_rel"
+                _removed=$((_removed + 1))
+            else
+                print_warning "Could not remove $_rel"
+                _skipped=$((_skipped + 1))
+            fi
+        else
+            _missing=$((_missing + 1))
+        fi
+        if [ "$_root" != "$NATIVE_TOOLS" ]; then
+            case "$_rel" in
+                bin/*)
+                    _w="$NATIVE_TOOLS/bin/$(basename "$_rel")"
+                    if [ -L "$_w" ] || [ -f "$_w" ]; then
+                        if ! qpkg_path_protected "bin/$(basename "$_rel")"; then
+                            rm -f "$_w" 2>/dev/null || true
+                        fi
+                    fi
+                    ;;
+            esac
+        fi
+    done < "$_list"
+
+    # Empty dirs from the list, longest path first
+    awk '{print length, $0}' "$_list" 2>/dev/null | sort -nr | while read -r _len _rel; do
+        [ -n "$_rel" ] || continue
+        qpkg_rel_safe "$_rel" || continue
+        _path="${_root}/${_rel}"
+        if [ -d "$_path" ]; then
+            rmdir "$_path" 2>/dev/null || true
+        fi
+        _dir=$(dirname "$_rel")
+        while [ -n "$_dir" ] && [ "$_dir" != "." ]; do
+            rmdir "${_root}/${_dir}" 2>/dev/null || true
+            _dir=$(dirname "$_dir")
+        done
+    done
+
+    echo ""
+    echo "Removed $_removed file(s). Skipped $_skipped. Already gone $_missing."
+    if [ "$_removed" -eq 0 ] && [ "$_missing" -gt 0 ]; then
+        return 1
+    fi
+    return 0
 }
 
 check_replaces_warning() {
@@ -671,13 +856,7 @@ install_misc_bin() {
 
 # Install a port
 cmd_install() {
-    PORT_NAME="$1"
-
-    # Legacy port name → berry-browser
-    case "$PORT_NAME" in
-        content-shell-term49) PORT_NAME="berry-browser" ;;
-        sttlabs|stt-labs) PORT_NAME="sttlab" ;;
-    esac
+    PORT_NAME=$(qpkg_canonical_name "$1")
     
     if [ -z "$PORT_NAME" ]; then
         print_error "Usage: qpkg install <package-name>"
@@ -801,6 +980,7 @@ cmd_install() {
     
     echo ""
     print_success "Port '$PORT_NAME' installed successfully!"
+    qpkg_write_filelist "$PORT_NAME" "$TEMP_DIR/$FILENAME"
     log_installed_port "$PORT_NAME" "$VERSION" "$FILENAME"
     echo ""
 
@@ -852,6 +1032,15 @@ cmd_install() {
         echo "  talkbutton -f       # Term49 foreground"
         echo "  talkbutton stop"
         echo "Engine: qpkg install vosk"
+    elif [ "$PORT_NAME" = "assistant" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/assistant" \
+            "$NATIVE_TOOLS/bin/berrycore-assistant" 2>/dev/null || true
+        echo "BerryCore Assistant installed (Vosk + SmolLM2 + TTS)"
+        echo "  assistant            # background — web + play/pause"
+        echo "  assistant -f         # Term49 foreground"
+        echo "  assistant stop"
+        echo "Open http://127.0.0.1:8086/"
+        echo "Needs: qpkg install vosk && qpkg install bcllm && ai download smollm2_135m"
     elif [ "$PORT_NAME" = "vosk" ]; then
         chmod +x "$NATIVE_TOOLS/bin/vosk" "$NATIVE_TOOLS/bin/vosk.bin" 2>/dev/null || true
         echo "Vosk offline STT installed"
@@ -922,6 +1111,16 @@ cmd_install() {
         echo "RocketChat v3 installed (port 8026)"
         echo "  rocketchat"
         echo "  Open http://localhost:8026"
+    elif [ "$PORT_NAME" = "rocketchat3" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/rocketchat3" "$NATIVE_TOOLS/bin/desk3" 2>/dev/null || true
+        echo "RocketChat3 installed (transcript desk, port 8030)"
+        echo "  rocketchat3"
+        echo "  Open http://127.0.0.1:8030/"
+    elif [ "$PORT_NAME" = "rocketchat4" ]; then
+        chmod +x "$NATIVE_TOOLS/bin/rocketchat4" "$NATIVE_TOOLS/bin/desk4" 2>/dev/null || true
+        echo "RocketChat4 installed (newspaper desk, port 8031)"
+        echo "  rocketchat4"
+        echo "  Open http://127.0.0.1:8031/"
     elif [ "$PORT_NAME" = "berry-browser" ]; then
         if [ -d "$NATIVE_TOOLS/share/berry-browser/bin" ]; then
             chmod +x "$NATIVE_TOOLS/share/berry-browser/bin/"* 2>/dev/null || true
@@ -944,6 +1143,169 @@ cmd_install() {
     rm -rf "$TEMP_DIR"
     
     echo ""
+}
+
+# Uninstall a port (alias: uninstall). Only deletes files from that port's zip.
+cmd_remove() {
+    FORCE=0
+    YES="${QPKG_YES:-0}"
+    NAMES=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -f|--force) FORCE=1; shift ;;
+            -y|--yes) YES=1; shift ;;
+            -h|--help)
+                echo "Usage: qpkg remove [--force] [-y] <package> [package...]"
+                echo "       qpkg uninstall  (same command)"
+                echo ""
+                echo "Deletes files that belong to the port zip. Does not remove"
+                echo "BerryCore itself, bin/qpkg, or bundled catalog zips."
+                echo "Base packages (replaces=core) need --force."
+                exit 0
+                ;;
+            -*)
+                print_error "Unknown option: $1"
+                echo "Usage: qpkg remove [--force] [-y] <package> [package...]"
+                exit 1
+                ;;
+            *)
+                NAMES="$NAMES $1"
+                shift
+                ;;
+        esac
+    done
+
+    NAMES=$(echo "$NAMES" | sed 's/^ *//')
+    if [ -z "$NAMES" ]; then
+        print_error "Usage: qpkg remove [--force] [-y] <package> [package...]"
+        exit 1
+    fi
+
+    PACKAGES_CONTENT=$(fetch_packages_content 2>/dev/null || true)
+    FAIL=0
+
+    for RAW in $NAMES; do
+        PORT_NAME=$(qpkg_canonical_name "$RAW")
+        ZIP=""
+        print_header "Remove: $PORT_NAME"
+
+        case "$PORT_NAME" in
+            qpkg|berrycore)
+                print_error "Refusing to remove $PORT_NAME"
+                FAIL=1
+                continue
+                ;;
+        esac
+
+        FILENAME=""
+        PKG_REPLACES="none"
+        VERSION=""
+        if [ -n "$PACKAGES_CONTENT" ]; then
+            PORT_INFO=$(lookup_package_line "$PORT_NAME" "$PACKAGES_CONTENT")
+            if [ -z "$PORT_INFO" ]; then
+                PORT_INFO=$(lookup_package_line "$RAW" "$PACKAGES_CONTENT")
+            fi
+            if [ -n "$PORT_INFO" ]; then
+                parse_package_fields "$PORT_INFO"
+                FILENAME="$PKG_ZIP"
+                VERSION="$PKG_VERSION"
+            fi
+        fi
+
+        if [ -z "$FILENAME" ] && [ -f "${NATIVE_TOOLS}/.qpkg/installed" ]; then
+            _line=$(grep "^${PORT_NAME}|" "${NATIVE_TOOLS}/.qpkg/installed" 2>/dev/null | tail -1)
+            if [ -n "$_line" ]; then
+                FILENAME=$(echo "$_line" | cut -d'|' -f4)
+                VERSION=$(echo "$_line" | cut -d'|' -f2)
+            fi
+        fi
+
+        if [ "$PKG_REPLACES" = "core" ] && [ "$FORCE" != "1" ]; then
+            print_error "'$PORT_NAME' ships in the BerryCore base install (replaces=core)."
+            echo "Leave it, or: qpkg remove --force $PORT_NAME"
+            FAIL=1
+            continue
+        fi
+
+        INSTALL_DIR=$(qpkg_install_dir_for "$PORT_NAME")
+        LIST="${NATIVE_TOOLS}/.qpkg/files/${PORT_NAME}.list"
+        TMP_LIST="${NATIVE_TOOLS}/.tmp/qpkg-rm-${PORT_NAME}-$$.list"
+        mkdir -p "${NATIVE_TOOLS}/.tmp" 2>/dev/null || true
+
+        if [ -s "$LIST" ]; then
+            print_info "Using recorded file list from last install"
+            cp "$LIST" "$TMP_LIST"
+        else
+            ZIP=""
+            if [ -n "$FILENAME" ] && [ -f "$NATIVE_TOOLS/packages/$FILENAME" ]; then
+                ZIP="$NATIVE_TOOLS/packages/$FILENAME"
+                print_info "Using bundled zip to decide what to delete: $FILENAME"
+            elif [ -n "$FILENAME" ]; then
+                print_info "No recorded file list — downloading catalog zip once to list files"
+                if download_file "$GITHUB_RAW/ports/$FILENAME" "${NATIVE_TOOLS}/.tmp/$FILENAME"; then
+                    ZIP="${NATIVE_TOOLS}/.tmp/$FILENAME"
+                fi
+            fi
+            if [ -n "$ZIP" ]; then
+                qpkg_zip_names "$ZIP" > "$TMP_LIST"
+            else
+                print_warning "No zip and no file list — conservative fallback (bin + share/$PORT_NAME)"
+                {
+                    echo "bin/$PORT_NAME"
+                    echo "share/$PORT_NAME"
+                    echo "share/doc/$PORT_NAME"
+                    if [ "$PORT_NAME" = "berry-remote" ]; then
+                        echo "bin/berrybrowser"
+                        echo "bin/berryremote"
+                    fi
+                } > "$TMP_LIST"
+            fi
+        fi
+
+        if [ ! -s "$TMP_LIST" ]; then
+            print_error "Nothing to remove for $PORT_NAME"
+            rm -f "$TMP_LIST"
+            FAIL=1
+            continue
+        fi
+
+        echo "Port: $PORT_NAME${VERSION:+ v$VERSION}"
+        echo "From: $INSTALL_DIR"
+        echo "Files:"
+        sed 's/^/  /' "$TMP_LIST"
+        echo ""
+
+        if [ "$YES" = "1" ]; then
+            CONFIRM="y"
+        else
+            echo -n "Remove this port? [y/N]: "
+            read CONFIRM
+        fi
+        if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+            echo "Cancelled."
+            rm -f "$TMP_LIST"
+            continue
+        fi
+
+        echo ""
+        print_info "Stopping $PORT_NAME if it is running..."
+        qpkg_try_stop "$PORT_NAME"
+
+        if qpkg_remove_files "$PORT_NAME" "$INSTALL_DIR" "$TMP_LIST"; then
+            qpkg_unlog_port "$PORT_NAME"
+            print_success "Port '$PORT_NAME' removed"
+        else
+            print_warning "No installed files found for '$PORT_NAME' (already gone?)"
+            qpkg_unlog_port "$PORT_NAME"
+        fi
+        rm -f "$TMP_LIST"
+        case "$ZIP" in
+            "${NATIVE_TOOLS}/.tmp/"*) rm -f "$ZIP" ;;
+        esac
+        echo ""
+    done
+
+    [ "$FAIL" -eq 0 ]
 }
 
 # Search full package catalog
@@ -1080,13 +1442,23 @@ cmd_show() {
 
 # List installed packages
 cmd_list() {
-    print_header "Installed Packages"
-    
-    if [ -d "$NATIVE_TOOLS/packages" ]; then
-        ls -1 "$NATIVE_TOOLS/packages/" | sed 's/.zip$//' | nl
-    else
-        print_error "Packages directory not found"
+    print_header "Installed Ports"
+    _log="${NATIVE_TOOLS}/.qpkg/installed"
+    if [ -f "$_log" ] && grep -v '^#' "$_log" | grep -q .; then
+        printf "  %-20s %-10s %s\n" "NAME" "VERSION" "INSTALLED"
+        echo "  ----------------------------------------------"
+        awk -F'|' 'NF>=2 { row[$1]=$0 } END { for (n in row) print row[n] }' "$_log" | sort | while IFS='|' read -r n v d z; do
+            printf "  %-20s %-10s %s\n" "$n" "$v" "$d"
+        done
+        echo ""
+        echo "Remove with: qpkg remove NAME"
+        echo ""
+        return 0
     fi
+    echo "No qpkg install log yet."
+    echo "Ports installed before v0.90.1 were not recorded."
+    echo "qpkg remove NAME still works from the catalog zip file list."
+    echo ""
 }
 
 # Show package/binary info
@@ -1340,10 +1712,12 @@ ${BOLD}COMMANDS:${NC}
   ${GREEN}search${NC} <keyword>    Search full package catalog
   ${GREEN}show${NC} <package>      Show package details
   ${GREEN}install${NC} <package>   Install a package from catalog
+  ${GREEN}remove${NC} <package>    Uninstall a port (files from that zip only)
+  ${GREEN}uninstall${NC}           Same as remove
   ${GREEN}catalog${NC} [options]   Browse installed binaries (replaces bclist)
   ${GREEN}bins${NC}                List all installed binaries (replaces bcbins)
   ${GREEN}info${NC} <binary>       Show binary information (replaces bcinfo)
-  list                List installed packages
+  list                List ports recorded by qpkg install
   help                Show this help message
 
 ${BOLD}CATALOG OPTIONS:${NC}
@@ -1362,6 +1736,8 @@ ${BOLD}EXAMPLES:${NC}
   qpkg available -c net        # List net packages
   qpkg show telegram           # Package details
   qpkg install hydra           # Install from catalog
+  qpkg remove hydra            # Uninstall that port
+  qpkg uninstall berry-remote  # Same as remove
 
 ${BOLD}REPOSITORY:${NC}
   https://github.com/$GITHUB_REPO
@@ -1388,6 +1764,9 @@ main() {
             ;;
         install)
             cmd_install "$@"
+            ;;
+        remove|uninstall|rm)
+            cmd_remove "$@"
             ;;
         catalog)
             cmd_catalog "$@"

@@ -1,4 +1,3 @@
-BerryCore v0.90.0 — Berry Browser Chromium (first beta)
-qpkg install berry-remote · berryremote · http://127.0.0.1:8080/
-BAR (rooted): GitHub releases v0.90.0
+BerryCore v0.90.1 — qpkg remove / uninstall
+qpkg remove NAME · qpkg uninstall NAME
 Hub: 127.0.0.1:8098
