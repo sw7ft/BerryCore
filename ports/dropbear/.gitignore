@@ -1,2 +1,4 @@
 .build/
+.extract/
+.tmp-bin/
 dropbear-passport-qnx8.tar.gz

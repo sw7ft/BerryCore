@@ -63,7 +63,7 @@ ftp|net|1.0.0|109K|FTP client (netkit) + bftpd server|util-ftp-1.0.0.zip|core
 ping|net|1.0.0|5K|ICMP echo — network reachability test|util-ping-1.0.0.zip|none
 tcpdump|net|4.99.5|499K|Network packet capture and analysis|util-tcpdump-4.99.5.zip|none
 usbdbg|util|1.0.0|9K|Generic USB serial debugger|util-usbdbg-1.0.0.zip|none
-dropbear|net|2026.91|853K|Dropbear SSH client and server|net-dropbear-2026.91.zip|none
+dropbear|net|2026.91.1|1.1M|Dropbear SSH client and server (QNX client fix)|net-dropbear-2026.91.1.zip|none
 bbm|net|1.0.0|12K|Berry Bridge Messenger relay client|net-bbm-1.0.0.zip|none
 less|util|661|103K|GNU pager|util-less-661.zip|core
 pv|util|1.8.14|30K|Pipe progress meter|util-pv-1.8.14.zip|core

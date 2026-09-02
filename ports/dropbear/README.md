@@ -1,6 +1,8 @@
 # Dropbear SSH for BlackBerry Passport
 
-**Dropbear 2026.91** — lightweight SSH client (`dbclient`/`ssh`) and server for QNX 8 / BerryCore.
+**Dropbear 2026.91.1** — lightweight SSH client (`dbclient`/`ssh`) and server for QNX 8 / BerryCore.
+
+Patched so `dbclient`/`ssh` do not exit on QNX with "Non-multiuser Dropbear requires a non-multiuser kernel" (GitHub #6). Upstream is still 2026.91.
 
 Built on xps (bb10-kitchen-sink Docker) for **armle-v7 / QNX 8**.
 

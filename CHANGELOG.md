@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [dropbear-2026.91.1] - 2026-09-02
+
+### Fixed
+
+- **Dropbear client on QNX** (GitHub #6). `dbclient`/`ssh` no longer exit with "Non-multiuser Dropbear requires a non-multiuser kernel". The getgroups check is skipped on QNX. `qpkg install dropbear`.
+
+---
+
 ## [0.90.1] - 2026-09-02
 
 ### Added

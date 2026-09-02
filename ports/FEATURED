@@ -20,7 +20,7 @@ sttlab|web|1.1|43K|STT lab — ice/black UI, Term49 sttlabs, Android drop (port 
 sensors|util|1.1|14K|Motion + battery + cpu + thermal — ships in BerryCore
 gps|util|1.0|12K|GNSS / hybrid location — ships in BerryCore
 bdk-cli|crypto|2.0.0|9.1M|BDK Bitcoin wallet CLI — Electrum sync over TLS (testnet)
-dropbear|net|2026.91|853K|Dropbear SSH client and server (dbclient, ssh, dropbearkey)
+dropbear|net|2026.91.1|1.1M|Dropbear SSH client and server (dbclient, ssh, dropbearkey)
 bbm|net|1.0.0|12K|Berry Bridge Messenger — device relay for berrycore.sw7ft.com
 android-apps|util|1.0|89M|Curated Android APKs — RDP, Kiwi, Term49Bridge, XServer, etc.
 elinks|web|0.17.0|1.3M|Text web browser with SSL/TLS and JavaScript (QuickJS)

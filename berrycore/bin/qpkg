@@ -1011,7 +1011,7 @@ cmd_install() {
     elif [ "$PORT_NAME" = "dropbear" ]; then
         mkdir -p "$(qpkg_misc_root)/etc/dropbear" 2>/dev/null || true
         install_misc_bin dbclient dropbear dropbearkey ssh && {
-            echo "Dropbear SSH installed (2026.91)"
+            echo "Dropbear SSH installed (2026.91.1)"
             echo "  ssh mp@192.168.1.179"
             echo "  dropbearkey -t ed25519 -f $(qpkg_misc_root)/etc/dropbear/id_ed25519"
             echo "Manual: $(qpkg_port_doc dropbear)"

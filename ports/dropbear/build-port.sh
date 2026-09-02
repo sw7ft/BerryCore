@@ -1,18 +1,18 @@
 #!/bin/sh
-# Build net-dropbear-2026.91.zip for qpkg install dropbear
+# Build net-dropbear-2026.91.1.zip for qpkg install dropbear
 # Usage: ./build-port.sh [path-to-dropbear-passport-qnx8.tar.gz]
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 INPUT_TGZ="${1:-$SCRIPT_DIR/dropbear-passport-qnx8.tar.gz}"
-PORT_ZIP="$REPO_ROOT/ports/net-dropbear-2026.91.zip"
+PORT_ZIP="$REPO_ROOT/ports/net-dropbear-2026.91.1.zip"
 BUILD_DIR="$SCRIPT_DIR/.build"
 STAGING="$BUILD_DIR/staging"
 PKG_ROOT="$BUILD_DIR/pkg"
 SRC_PREFIX="accounts/1000/shared/misc"
 
-echo "Building dropbear 2026.91 port..."
+echo "Building dropbear 2026.91.1 port..."
 echo "  Input:  $INPUT_TGZ"
 echo "  Output: $PORT_ZIP"
 

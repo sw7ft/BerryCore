@@ -53,7 +53,7 @@ notify|util|1.0|12K|Hub notifications from Term49 (BPS + PPS)|util-notify-1.0.zi
 piano|util|1.0|16K|Sine piano from Term49 (QSA / play-audio)|util-piano-1.0.zip|none
 fm|util|1.0|16K|Analog FM tuner from Term49 (OpenMAX AL + RDS)|util-fm-1.0.zip|none
 mem|util|1.0|12K|Process memory peek from Term49 (own as only)|util-mem-1.0.zip|none
-dropbear|net|2026.91|853K|Dropbear SSH client and server|net-dropbear-2026.91.zip|none
+dropbear|net|2026.91.1|1.1M|Dropbear SSH client and server (QNX client fix)|net-dropbear-2026.91.1.zip|none
 bbm|net|1.0.0|12K|Berry Bridge Messenger relay client|net-bbm-1.0.0.zip|none
 less|util|661|103K|GNU pager|util-less-661.zip|core
 pv|util|1.8.14|30K|Pipe progress meter|util-pv-1.8.14.zip|core

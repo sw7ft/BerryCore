@@ -18,7 +18,7 @@ Source: XPS `portupdate.md` vs BerryCore core bundle vs existing qpkg ports.
 | Tool | BerryCore port / core | XPS build | Decision |
 |------|----------------------|-----------|----------|
 | telnet | `net-telnet-0.17.zip` | XPS tarball | Compare builds in Phase 2; bump if XPS newer |
-| dropbear | `net-dropbear-2026.91.zip` | XPS tarball | Same |
+| dropbear | `net-dropbear-2026.91.1.zip` | XPS tarball | Same |
 | ftp/bftpd | core util-ftp | XPS `build-ftp-passport.sh` | Phase 2 compare |
 | vim | core package | XPS vim 9.1.2148 | Core v0.85 already aligned |
 | pv | core binary? | XPS pv 1.8.14 on Passport | PACKAGES entry `replaces=core` |
