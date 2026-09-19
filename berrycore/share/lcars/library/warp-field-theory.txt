@@ -1,0 +1,77 @@
+# TITLE: WARP FIELD THEORY
+# CAT: technical
+# ICON: WF
+# COLOR: c-peach
+
+WARP DRIVE FUNDAMENTALS
+Technical Manual — Starfleet Engineering
+
+
+CHAPTER 1: SUBSPACE MECHANICS
+
+The warp drive functions by generating warp fields to form a subspace
+bubble that envelops the starship, distorting the local spacetime
+continuum and moving the starship at velocities that exceed the speed
+of light.
+
+The cochrane is the unit of measure for subspace distortion. One
+cochrane equals the field strength necessary to achieve a velocity of
+one times the speed of light (c). The unit is named for Zefram Cochrane,
+who conducted the first successful warp flight on Earth in 2063.
+
+
+CHAPTER 2: WARP VELOCITIES
+
+Traditional Scale (TOS Era):
+  Warp 1  =    1c
+  Warp 2  =    8c
+  Warp 3  =   27c
+  Warp 4  =   64c
+  Warp 5  =  125c
+  Warp 6  =  216c
+
+Revised Scale (TNG Era):
+  Warp 1  =      1c
+  Warp 5  =    214c
+  Warp 6  =    392c
+  Warp 7  =    656c
+  Warp 8  =  1,024c
+  Warp 9  =  1,516c
+  Warp 9.9 = 3,053c
+
+Warp 10 is considered infinite velocity — occupying all points in the
+universe simultaneously. It remains theoretical.
+
+
+CHAPTER 3: MATTER/ANTIMATTER REACTION
+
+The warp core operates by combining deuterium (matter) with antideuterium
+(antimatter) in a controlled reaction mediated by dilithium crystals.
+The resulting plasma is channeled to the warp nacelles, where it powers
+the warp field coils.
+
+Reaction Formula:
+  D + antiD → Energy (via dilithium regulation)
+
+Dilithium is the only known element capable of being rendered porous to
+antimatter when subjected to high-frequency electromagnetic fields.
+
+
+CHAPTER 4: STRUCTURAL INTEGRITY
+
+At warp velocities, the structural integrity field (SIF) maintains the
+physical cohesion of the vessel. Without this field, the vessel would
+be torn apart by the stresses of the warp bubble's formation.
+
+The inertial dampening field (IDF) compensates for acceleration forces
+that would otherwise flatten the crew against bulkheads during rapid
+maneuvers.
+
+
+CHAPTER 5: SAFETY PROTOCOLS
+
+Emergency core ejection procedures are to be followed when antimatter
+containment failure is imminent. The warp core can be ejected from the
+engineering hull to prevent total vessel destruction.
+
+Never exceed warp 9.9 for extended periods. Subspace damage may result.

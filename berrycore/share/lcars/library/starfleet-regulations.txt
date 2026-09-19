@@ -1,0 +1,69 @@
+# TITLE: STARFLEET REGULATIONS
+# CAT: technical
+# ICON: SR
+# COLOR: c-peach
+
+STARFLEET GENERAL ORDERS AND REGULATIONS
+
+
+GENERAL ORDER 1 — THE PRIME DIRECTIVE
+
+No starship may interfere with the normal development of any alien life
+or society. This directive takes precedence over any and all other
+considerations, and carries with it the highest moral obligation.
+
+
+GENERAL ORDER 4
+
+No Federation vessel shall enter the Romulan Neutral Zone without
+explicit authorization from Starfleet Command.
+
+
+GENERAL ORDER 6
+
+If all combatant personnel have perished, the computer shall assume
+command of the vessel and attempt to return to a Federation starbase.
+
+
+GENERAL ORDER 7
+
+No vessel under any condition, emergency or otherwise, is to visit
+Talos IV. Violation of this order is the only offense remaining on the
+books that is punishable by death.
+
+
+GENERAL ORDER 12
+
+On the approach of any combatant vessel, all Federation starships shall
+determine the identity of said combatant and take appropriate defensive
+action.
+
+
+GENERAL ORDER 15
+
+No commanding officer shall leave their vessel unless they are assured
+of the safety of their crew.
+
+
+GENERAL ORDER 24
+
+Upon issuance of this order, a starship shall destroy all life on an
+entire planet. This order has never been executed.
+
+
+REGULATION 46-A
+
+If transmissions are being monitored during a mission, the use of
+uncoded messages is prohibited.
+
+
+REGULATION 157, SECTION 3, PARAGRAPH 18
+
+Starfleet officers shall not interfere with the internal affairs of
+other civilizations.
+
+
+PROTOCOL 28, SUBSECTION D
+
+In the absence of commissioned officers, command falls to the highest
+ranking crew member on duty.

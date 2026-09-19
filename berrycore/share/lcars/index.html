@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LCARS · Star Trek 60 · BerryCore</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LCARS">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="/static/lcars.css?v=1.7">
+<style>
+/* Star Trek 60th Anniversary Splash — SW7FT */
+.trek60-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 20px;
+}
+.trek60-overlay.hidden { display: none; }
+.trek60-badge {
+  font-size: 96px;
+  font-weight: bold;
+  color: #ff9900;
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -4px;
+}
+.trek60-years {
+  font-size: 18px;
+  color: #9999ff;
+  letter-spacing: 6px;
+  margin-bottom: 24px;
+}
+.trek60-title {
+  font-size: 28px;
+  color: #ffcc99;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.trek60-sub {
+  font-size: 14px;
+  color: #cc99cc;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  max-width: 280px;
+  line-height: 1.5;
+}
+.trek60-sw7ft {
+  font-size: 12px;
+  color: #ff9900;
+  letter-spacing: 3px;
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+.trek60-tap {
+  font-size: 13px;
+  color: #9999ff;
+  letter-spacing: 2px;
+  animation: trek60-pulse 2s ease-in-out infinite;
+}
+@keyframes trek60-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<!-- Star Trek 60th Anniversary Splash -->
+<div class="trek60-overlay" id="trek60" onclick="this.classList.add('hidden')">
+  <div class="trek60-badge">60</div>
+  <div class="trek60-years">1966 — 2026</div>
+  <div class="trek60-title">Star Trek</div>
+  <div class="trek60-sub">Celebrating six decades of boldly going where no one has gone before</div>
+  <div class="trek60-sw7ft">A SW7FT PRODUCTION</div>
+  <div class="trek60-tap">TAP TO ENTER</div>
+</div>
+<table class="shell" cellspacing="0" cellpadding="0">
+  <tr class="row-top">
+    <td class="cap-tl"></td>
+    <td class="bar-top">
+      <span class="title">LCARS</span>
+      <span class="stamp" id="stardate">SD 00000.0</span>
+      <span class="stamp dim">BERRYCORE</span>
+      <span class="stamp right" id="clock">00:00</span>
+      <span class="stamp aud" id="aud-toggle" title="AUDIO">♫ ON</span>
+    </td>
+    <td class="cap-tr"></td>
+  </tr>
+  <tr class="row-band">
+    <td class="band-cap"></td>
+    <td class="band" colspan="2">
+      <div class="sweep">
+        <span class="band-label" id="panel-title">STATION DESK</span>
+        <span class="band-bar c-orange" id="band-bar"></span>
+        <span class="band-num" id="band-num">01-4470</span>
+        <button type="button" class="pill tiny c-lilac off" id="btn-full">FULL</button>
+        <button type="button" class="pill tiny c-dust off" id="btn-close-ws">CLOSE</button>
+      </div>
+    </td>
+  </tr>
+  <tr class="row-mid">
+    <td class="rail" id="rail-cell">
+      <div class="nav c-orange on" data-panel="access">DESK<span>01-4470</span></div>
+      <div class="nav c-peach" data-panel="programs">PROGRAMS<span>02-1108</span></div>
+      <div class="nav c-lilac" data-panel="files">FILES<span>03-1977</span></div>
+      <div class="nav c-peri" data-panel="notes">NOTES<span>04-2711</span></div>
+      <div class="nav c-apricot" data-panel="systems">SYSTEMS<span>05-3604</span></div>
+      <div class="nav c-dust" data-panel="ai">COMPUTER<span>06-4701</span></div>
+      <div class="nav c-rose" data-panel="audio">AUDIO<span>07-8812</span></div>
+      <div class="rail-fill c-orange" id="rail-fill"></div>
+    </td>
+    <td class="view" id="view-cell">
+      <div id="toast" class="toast"></div>
+
+      <div class="panel on" id="panel-access">
+        <div class="status-row">
+          <span>BC <b id="bc-ver">—</b></span>
+          <span>LIVE <b id="live-n">0</b></span>
+          <span>AI <b id="ai-ready">STANDBY</b></span>
+        </div>
+        <div class="desk" id="desk"></div>
+      </div>
+
+      <div class="panel" id="panel-programs">
+        <div class="cats" id="cats"></div>
+        <form action="javascript:void(0)" method="post" onsubmit="return false;">
+          <input type="text" id="q" class="find" placeholder="SEARCH PROGRAMS" autocomplete="off" autocorrect="off" autocapitalize="off">
+        </form>
+        <div class="hint">TAP TO OPEN · HOLD TO STOP</div>
+        <div class="prog-list fill" id="prog-list"></div>
+      </div>
+
+      <div class="panel" id="panel-files">
+        <div id="file-browse">
+          <div class="roots" id="roots"></div>
+          <div class="pathline" id="pathline">DOCUMENTS /</div>
+          <form action="javascript:void(0)" method="post" onsubmit="return false;">
+            <input type="text" id="file-newname" class="find" placeholder="NEW NAME" autocomplete="off" autocorrect="off">
+          </form>
+          <div class="row">
+            <button type="button" class="pill c-orange" id="btn-new">NEW FILE</button>
+            <button type="button" class="pill c-lilac" id="btn-mkdir">NEW FOLDER</button>
+            <button type="button" class="pill c-dust" id="btn-delete">DELETE</button>
+          </div>
+          <div class="hint">TAP FILE TO EDIT · TAP FOLDER TO OPEN</div>
+          <div class="file-list fill" id="file-list"></div>
+        </div>
+        <div id="file-edit" class="off">
+          <div class="file-name" id="file-name">NO FILE OPEN</div>
+          <textarea id="file-text" class="area fill-area"></textarea>
+          <div class="row">
+            <button type="button" class="pill c-peach" id="btn-back">BACK</button>
+            <button type="button" class="pill c-orange" id="btn-save">SAVE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-notes">
+        <textarea id="note-text" class="area short" placeholder="ENTER NOTE"></textarea>
+        <div class="row">
+          <button type="button" class="pill c-peach" id="btn-note">LOG NOTE</button>
+        </div>
+        <div class="notes fill" id="notes"></div>
+      </div>
+
+      <div class="panel" id="panel-systems">
+        <div class="sys-grid" id="sys-box">SCANNING…</div>
+      </div>
+
+      <div class="panel" id="panel-ai">
+        <div class="log fill" id="ai-log"></div>
+        <form action="javascript:void(0)" method="post" onsubmit="return false;">
+          <input type="text" id="ai-q" class="find" placeholder="COMPUTER…" autocomplete="off" autocorrect="off">
+        </form>
+        <div class="row">
+          <button type="button" class="pill c-orange" id="btn-ask">QUERY</button>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-audio">
+        <div class="sys-grid" id="aud-box"></div>
+        <div class="row">
+          <button type="button" class="pill c-orange" id="aud-mute">SOUND ON</button>
+          <button type="button" class="pill c-peri" id="aud-voice">VOICE ON</button>
+          <button type="button" class="pill c-lilac" id="aud-fx">FX ON</button>
+          <button type="button" class="pill c-dust" id="aud-route">BROWSER</button>
+        </div>
+        <form action="javascript:void(0)" method="post" onsubmit="return false;">
+          <input type="text" id="aud-say" class="find" placeholder="COMPUTER, SAY…" autocomplete="off" autocorrect="off">
+        </form>
+        <div class="row">
+          <button type="button" class="pill c-orange" id="aud-speak">SPEAK</button>
+          <button type="button" class="pill c-peach" id="aud-vsel">VOICE: AUTO</button>
+          <button type="button" class="pill c-rose" id="aud-test">SELF TEST</button>
+        </div>
+        <div class="hint">TAP A TONE TO HEAR IT · LINES SPEAK IN THE COMPUTER VOICE</div>
+        <div class="aud-tests fill" id="aud-tests"></div>
+      </div>
+
+      <div class="panel" id="panel-workspace">
+        <iframe id="ws" src="about:blank"></iframe>
+      </div>
+    </td>
+    <td class="rframe" id="rframe"></td>
+  </tr>
+  <tr class="row-bot">
+    <td class="elbow">
+      <div class="elbow-in"></div>
+    </td>
+    <td class="shelf" colspan="2">
+      <span class="chip c-orange" data-panel="programs" id="start-btn">START</span>
+      <div class="shelf-row" id="shelf"></div>
+    </td>
+  </tr>
+</table>
+<script src="/static/lcars-audio.js?v=1.7"></script>
+<script src="/static/lcars.js?v=1.7"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+# TITLE: REPLICATOR PATTERNS
+# CAT: technical
+# ICON: RP
+# COLOR: c-apricot
+
+REPLICATOR PATTERN DATABASE
+Starfleet Standard Issue — Revision 47.3
+
+
+FOOD AND BEVERAGE PATTERNS
+
+  Pattern 42-Alpha ....... Tea, Earl Grey, Hot
+  Pattern 42-Beta ........ Tea, Earl Grey, Iced
+  Pattern 43-Alpha ....... Coffee, Jamaican Blend, Double Strong
+  Pattern 117-Gamma ...... Raktajino (Klingon coffee)
+  Pattern 118-Alpha ...... Prune juice, chilled
+  Pattern 201-Delta ...... Croissant with butter
+  Pattern 891-Epsilon .... Cellular peptide cake (with mint frosting)
+  Pattern 892-Alpha ...... Banana split, traditional
+  Pattern 893-Gamma ...... Chocolate sundae, hot fudge
+
+
+EQUIPMENT PATTERNS
+
+  Pattern 12-Delta ....... Isolinear chip, standard
+  Pattern 12-Epsilon ..... Isolinear chip, high-density
+  Pattern 24-Beta ........ Tricorder, standard issue
+  Pattern 24-Gamma ....... Tricorder, medical
+  Pattern 31-Alpha ....... Hyperspanner
+  Pattern 31-Beta ........ Plasma torch
+  Pattern 45-Delta ....... Combadge, Starfleet issue
+  Pattern 67-Alpha ....... PADD, standard
+  Pattern 67-Beta ........ PADD, engineering
+
+
+UNIFORM PATTERNS
+
+  Pattern 501-Alpha ...... Uniform, command (red/maroon)
+  Pattern 501-Beta ....... Uniform, operations (gold)
+  Pattern 501-Gamma ...... Uniform, sciences (blue)
+  Pattern 502-Alpha ...... Dress uniform, formal
+
+
+MEDICAL SUPPLIES
+
+  Pattern 701-Alpha ...... Hypospray, standard
+  Pattern 701-Beta ....... Hypospray cartridge (analgesic)
+  Pattern 702-Alpha ...... Dermal regenerator
+  Pattern 703-Alpha ...... Medical tricorder
+  Pattern 704-Delta ...... Cortical stimulator
+
+
+RESTRICTED PATTERNS
+(Authorization Required)
+
+  Pattern X-01 ........... Type-1 hand phaser
+  Pattern X-02 ........... Type-2 phaser
+  Pattern X-03 ........... Phaser rifle
+  Pattern X-10 ........... Photon torpedo casing
+  Pattern X-15 ........... Tricobalt device
+
+
+NOTE: Weapons patterns require command authorization and are not
+available from civilian replicator units.

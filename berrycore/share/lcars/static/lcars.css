@@ -1,0 +1,509 @@
+/* BerryCore LCARS 1.5 — Passport 720px square, ES5/BB10 safe */
+
+/* Real LCARS is Swiss 911 Ultra Compressed. SlatePro Bold Condensed is the
+   closest face on a BB10 device; the server picks it and falls back to DejaVu. */
+@font-face {
+  font-family: "LCARS";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/font/lcars.ttf") format("truetype");
+}
+
+* { -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  color: #ffcc99;
+  font-family: "LCARS", "Slate Pro Bold Condensed", "Arial Narrow", Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: none;
+}
+body { overflow: hidden; }
+
+.shell {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.row-top { height: 36px; }
+.row-band { height: 36px; }
+.row-bot { height: 70px; }
+
+/* ── top bar ─────────────────────────────── */
+.cap-tl { width: 118px; background: #ff9900; }
+.cap-tr { width: 26px; background: #ff9900; }
+.bar-top {
+  background: #ff9900;
+  color: #000;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 36px;
+}
+.bar-top .title {
+  font-size: 23px;
+  letter-spacing: 5px;
+  padding: 0 14px 0 0;
+}
+
+/* ── the elbow ───────────────────────────────
+   The signature LCARS shape: the top bar sweeps down into the left rail as one
+   continuous frame. The concave fillet is a black block with a rounded corner
+   laid over the orange, and it carries the panel title so the sweep costs no
+   vertical space of its own. */
+.band-cap { background: #ff9900; }
+.band { background: #ff9900; padding: 0; }
+.sweep {
+  height: 36px;
+  background: #000;
+  border-radius: 34px 0 0 0;
+  padding: 0 4px 0 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 36px;
+}
+.band-label {
+  color: #ff9900;
+  font-size: 21px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+.band-bar {
+  display: inline-block;
+  vertical-align: middle;
+  height: 18px;
+  width: 22%;
+  border-radius: 9px;
+  margin: 0 8px;
+}
+.band-num {
+  color: #9999ff;
+  font-size: 14px;
+  letter-spacing: 3px;
+}
+.sweep .pill.tiny { margin-left: 6px; }
+
+/* ── right frame ─────────────────────────── */
+.rframe {
+  width: 26px;
+  background: #000;
+  vertical-align: top;
+  padding: 0 0 0 4px;
+}
+.rblk {
+  margin: 0 0 4px 0;
+  border-radius: 11px 0 0 11px;
+}
+.bar-top .stamp {
+  font-size: 15px;
+  letter-spacing: 2px;
+  margin-right: 14px;
+}
+.bar-top .dim { color: #7a3f00; }
+.bar-top .right { float: right; }
+/* Mute lives in the top bar so it is reachable from any panel. Black inset,
+   because an orange control on the orange bar is invisible. */
+.bar-top .aud {
+  float: right;
+  background: #000;
+  color: #ff9900;
+  border-radius: 13px;
+  padding: 0 12px;
+  line-height: 26px;
+  margin: 9px 12px 0 0;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.bar-top .aud.off { color: #cc6666; }
+
+/* ── left rail ───────────────────────────── */
+.rail {
+  width: 118px;
+  vertical-align: top;
+  background: #000;
+  padding: 4px 0 0 0;
+}
+.nav {
+  height: 52px;
+  margin: 0 0 4px 0;
+  border-radius: 0 22px 22px 0;
+  color: #000;
+  font-size: 17px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: right;
+  padding: 6px 10px 0 6px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.nav span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-align: right;
+  color: #000;
+  opacity: 0.55;
+  margin-top: 1px;
+}
+.nav.on { outline: 3px solid #fff; outline-offset: -3px; }
+.rail-fill { height: 60px; margin-top: 4px; }
+
+.view {
+  vertical-align: top;
+  background: #000;
+  padding: 6px 8px 4px 10px;
+  overflow: hidden;
+}
+
+/* ── bottom elbow + shelf ────────────────── */
+.elbow { background: #ff9900; vertical-align: top; position: relative; }
+.elbow-in {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 38px;
+  height: 38px;
+  background: #000;
+  border-radius: 0 0 0 32px;
+}
+.shelf {
+  background: #ff9900;
+  vertical-align: middle;
+  padding: 0 8px 0 42px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* Width is set by fitShelf() from the space actually left beside START — a
+   percentage next to a fixed-width sibling sliced the last chip in half. */
+.shelf-row {
+  display: inline-block;
+  vertical-align: middle;
+  height: 52px;
+  padding-top: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.chip {
+  display: inline-block;
+  height: 40px;
+  min-width: 60px;
+  max-width: 132px;
+  margin: 0 4px 0 0;
+  padding: 0 12px;
+  border-radius: 20px;
+  color: #000;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 40px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.chip.cur { outline: 3px solid #fff; outline-offset: -3px; }
+/* Black inset on the orange shelf — an orange chip would be invisible. */
+#start-btn {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 8px 0 0;
+  background: #000;
+  color: #ff9900;
+  font-size: 17px;
+  letter-spacing: 3px;
+}
+
+/* ── panels ──────────────────────────────── */
+.panel { display: none; height: 100%; overflow: hidden; }
+.panel.on { display: block; }
+
+.c-orange { background: #ff9900; }
+.c-peach { background: #ffcc99; }
+.c-lilac { background: #cc99cc; }
+.c-peri { background: #9999ff; }
+.c-apricot { background: #ff9966; }
+.c-dust { background: #cc6666; }
+.c-rose { background: #cc8899; }
+
+/* ── desk ────────────────────────────────── */
+.status-row {
+  color: #9999ff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.status-row span { margin-right: 14px; }
+.status-row b { color: #ff9900; }
+
+.desk { margin: 0; }
+.desk-icon {
+  display: inline-block;
+  width: 32%;
+  height: 78px;
+  margin: 0 2% 6px 0;
+  border-radius: 0 26px 0 0;
+  color: #000;
+  font-size: 17px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 8px 0 10px;
+  vertical-align: top;
+  overflow: hidden;
+  cursor: pointer;
+}
+.desk-icon.last { margin-right: 0; }
+.desk-icon .sub {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-top: 20px;   /* JS retunes this so the tag sits on the bottom edge */
+  opacity: 0.6;
+}
+
+/* ── chips / filters ─────────────────────── */
+.cats { margin: 0 0 6px 0; white-space: nowrap; overflow: hidden; }
+.cat {
+  display: inline-block;
+  padding: 0 11px;
+  margin: 0 4px 4px 0;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 16px;
+  color: #000;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.cat.on { outline: 3px solid #fff; outline-offset: -3px; }
+.hint {
+  color: #9999ff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin: 0 0 5px 0;
+}
+/* .pill sets display later in the file, so name both to win on specificity. */
+.off, .pill.off { display: none; }
+.brief {
+  color: #ffcc99;
+  font-size: 16px;
+  line-height: 1.3;
+  margin: 4px 0 10px 0;
+}
+
+/* ── inputs ──────────────────────────────── */
+.find, .area {
+  display: block;
+  width: 100%;
+  background: #000;
+  color: #ffcc99;
+  border: 0;
+  border-bottom: 3px solid #ff9900;
+  font-family: "LCARS", "Arial Narrow", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 7px 6px;
+  margin: 0 0 7px 0;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+.area {
+  text-transform: none;
+  border: 3px solid #ff9900;
+  border-radius: 0 18px 0 0;
+  resize: none;
+  height: 170px;
+}
+.area.short { height: 62px; }
+
+.row { margin: 0 0 6px 0; white-space: nowrap; }
+.pill {
+  display: inline-block;
+  border: 0;
+  color: #000;
+  font-family: "LCARS", "Arial Narrow", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 16px;
+  border-radius: 20px;
+  margin: 0 5px 0 0;
+  cursor: pointer;
+}
+.pill.tiny { height: 22px; line-height: 22px; font-size: 13px; padding: 0 10px; }
+
+/* ── lists ───────────────────────────────── */
+.prog-list, .file-list, .notes, .log {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  height: 280px;
+}
+.prog {
+  height: 50px;
+  margin: 0 0 4px 0;
+  border-radius: 0 25px 25px 0;
+  color: #000;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 50px;
+  padding: 0 14px 0 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.prog.miss { opacity: 0.38; }
+.prog .meta { float: right; font-size: 13px; letter-spacing: 2px; opacity: 0.65; }
+
+.roots { margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; }
+.root-btn {
+  display: inline-block;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 11px;
+  margin: 0 4px 4px 0;
+  border-radius: 16px;
+  color: #000;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.root-btn.on { outline: 3px solid #fff; outline-offset: -3px; }
+.pathline {
+  color: #9999ff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 14px;
+  margin: 0 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.frow {
+  height: 44px;
+  line-height: 44px;
+  padding: 0 10px;
+  margin: 0 0 4px 0;
+  background: #ffcc99;
+  color: #000;
+  font-size: 17px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 0 22px 22px 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+.frow.dir { background: #9999ff; }
+.frow.sel { outline: 3px solid #fff; outline-offset: -3px; }
+.file-name {
+  color: #cc99cc;
+  letter-spacing: 3px;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin: 0 0 5px 0;
+}
+
+.note {
+  background: #141414;
+  border-radius: 0 18px 0 0;
+  padding: 8px 10px;
+  margin: 0 0 5px 0;
+  color: #ffcc99;
+  font-size: 16px;
+  line-height: 1.3;
+}
+.note .when {
+  color: #9999ff;
+  font-size: 13px;
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+}
+
+/* ── systems ─────────────────────────────── */
+/* ── audio panel ─────────────────────────── */
+/* Readouts here are one short value each, so they get compact tiles and leave
+   the room for the tone and voice chips. */
+#aud-box .sys {
+  min-height: 0;
+  height: 44px;
+  padding: 3px 10px;
+  margin-bottom: 4px;
+}
+#aud-box .sys .v { font-size: 16px; }
+.aud-tests {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.aud-tests .chip {
+  /* paintAudio() overrides the width: three columns clip their labels on the
+     504px viewport the Passport browser reports. */
+  width: 30%;
+  max-width: none;
+  margin: 0 4px 5px 0;
+  padding: 0;
+  text-align: center;
+}
+.aud-tests .chip.last { margin-right: 0; }
+.aud-tests .said {
+  display: block;
+  clear: both;
+  color: #ff9900;
+  font-size: 15px;
+  letter-spacing: 1px;
+  padding: 4px 0 6px 0;
+}
+
+.sys-grid { overflow: auto; -webkit-overflow-scrolling: touch; }
+.sys-grid .sys {
+  display: inline-block;
+  width: 49%;
+  min-height: 92px;
+  margin: 0 2% 6px 0;
+  padding: 8px 10px;
+  background: #141414;
+  border-radius: 0 18px 0 0;
+  vertical-align: top;
+  overflow: hidden;
+}
+.sys-grid .sys.last { margin-right: 0; }
+.sys .k { color: #9999ff; letter-spacing: 3px; font-size: 13px; }
+.sys .v {
+  color: #ffcc99;
+  font-size: 15px;
+  line-height: 1.25;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 3px;
+}
+
+.log .line { margin: 0 0 8px 0; }
+.log .who { color: #9999ff; letter-spacing: 3px; font-size: 13px; }
+.log .txt { color: #ffcc99; font-size: 16px; line-height: 1.3; }
+
+/* block, or the inline baseline gap pushes the shelf down a pixel */
+iframe { display: block; width: 100%; height: 320px; border: 0; background: #000; }
+
+.toast {
+  display: none;
+  position: absolute;
+  right: 14px;
+  top: 54px;
+  background: #cc6666;
+  color: #000;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 15px;
+  padding: 8px 14px;
+  border-radius: 18px;
+  z-index: 20;
+}
+.toast.on { display: block; }

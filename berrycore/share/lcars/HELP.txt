@@ -1,0 +1,37 @@
+LCARS — BerryCore station desktop
+
+  lcars
+  lcars start|stop|status
+  station
+
+Open http://127.0.0.1:8110/ in the BB10 browser.
+
+DESK       desktop icons (files, programs, notes, terminal, pinned apps)
+TERMINAL   Term49 Web shell (:7681) — runs inside the LCARS frame; FULL for
+           the whole screen
+PROGRAMS   start menu — tap open, hold stop, category chips
+FILES      Documents + folders (new file / new folder / delete)
+NOTES      persistent station log
+SYSTEMS    version, battery, cpu, thermal, GPS, active typeface
+COMPUTER   on-device LLM (needs bcllm) — answers are chirped and spoken
+AUDIO      sound engine state, mute, voice, FX, and a tap-to-hear tone list
+START      bottom rail opens Programs
+
+SOUND
+  Every tap, panel change, launch, save and error has a tone. They are
+  synthesized from recipes, not sample files: the browser builds them with
+  Web Audio, and any browser without it falls back to the same recipes
+  rendered server-side as /sound/<name>.wav.
+  The computer voice uses the offline TTS on the device — flite's slt voice,
+  else Pico — filtered through ffmpeg for the flat LCARS delivery. Lines are
+  cached, so a repeat is instant.
+  Mute is the note in the top bar, on every panel. WebKit will not play audio
+  until you have touched the page once, so the first tap is silent.
+
+Active programs sit on the bottom rail, Photon-style. If more are running than
+fit, the extras collapse into a +n chip that opens Programs.
+Full opens the app in its own browser page.
+
+Panels are sized to the screen, so nothing scrolls off the Passport.
+Type is the device condensed face; drop a TTF at share/lcars/lcars.ttf
+(or set LCARS_FONT) to use a real LCARS face like Antonio.

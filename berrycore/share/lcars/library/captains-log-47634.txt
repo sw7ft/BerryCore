@@ -1,0 +1,50 @@
+# TITLE: CAPTAIN'S LOG 47634.44
+# CAT: logs
+# ICON: CL
+# COLOR: c-peri
+
+CAPTAIN'S LOG — STARDATE 47634.44
+USS Enterprise NCC-1701-D
+
+
+Captain's Log, Stardate 47634.44.
+
+We have entered the Devron system in response to what appears to be a
+spatial anomaly. Long-range sensors have detected unusual readings that
+warrant closer investigation.
+
+The crew remains on high alert. Commander Data has been running
+continuous scans since we entered the system, attempting to determine
+the nature of the anomaly.
+
+
+SUPPLEMENTAL — STARDATE 47634.51
+
+The anomaly appears to be some form of temporal disruption. Initial
+readings suggest it may be related to the anti-time phenomena we
+encountered near the Neutral Zone.
+
+I have ordered all departments to submit status reports and have
+convened a senior staff meeting for 0800 hours.
+
+
+SUPPLEMENTAL — STARDATE 47634.78
+
+Counselor Troi reports that several crew members have experienced
+unusual dreams and a sense of displacement. Medical is investigating.
+
+Commander La Forge has proposed modifying the main deflector to emit
+an inverse tachyon pulse. If successful, this may allow us to scan the
+interior of the anomaly more thoroughly.
+
+
+PERSONAL LOG — STARDATE 47634.85
+
+There are times when I question the nature of our mission out here.
+We seek out new life, new civilizations — but at what cost? How many
+of our crew have we lost to the unknown?
+
+And yet, I would not trade this life for any other. The stars call to
+us, and we must answer.
+
+End log.

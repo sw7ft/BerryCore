@@ -1,0 +1,119 @@
+# TITLE: HAMLET — ACT I
+# CAT: fiction
+# ICON: WS
+# COLOR: c-dust
+
+THE TRAGEDY OF HAMLET, PRINCE OF DENMARK
+by William Shakespeare
+
+
+DRAMATIS PERSONAE
+
+  CLAUDIUS, King of Denmark
+  HAMLET, son of the late, and nephew to the present, King
+  POLONIUS, Lord Chamberlain
+  HORATIO, friend to Hamlet
+  LAERTES, son to Polonius
+  GHOST of Hamlet's Father
+  GERTRUDE, Queen of Denmark, mother to Hamlet
+  OPHELIA, daughter to Polonius
+
+
+ACT I, SCENE I
+Elsinore. A platform before the castle.
+
+FRANCISCO at his post. Enter to him BERNARDO
+
+BERNARDO:
+  Who's there?
+
+FRANCISCO:
+  Nay, answer me: stand, and unfold yourself.
+
+BERNARDO:
+  Long live the king!
+
+FRANCISCO:
+  Bernardo?
+
+BERNARDO:
+  He.
+
+FRANCISCO:
+  You come most carefully upon your hour.
+
+BERNARDO:
+  'Tis now struck twelve; get thee to bed, Francisco.
+
+FRANCISCO:
+  For this relief much thanks: 'tis bitter cold,
+  And I am sick at heart.
+
+BERNARDO:
+  Have you had quiet guard?
+
+FRANCISCO:
+  Not a mouse stirring.
+
+BERNARDO:
+  Well, good night.
+  If you do meet Horatio and Marcellus,
+  The rivals of my watch, bid them make haste.
+
+Enter HORATIO and MARCELLUS
+
+FRANCISCO:
+  I think I hear them. Stand, ho! Who's there?
+
+HORATIO:
+  Friends to this ground.
+
+MARCELLUS:
+  And liegemen to the Dane.
+
+FRANCISCO:
+  Give you good night.
+
+MARCELLUS:
+  O, farewell, honest soldier:
+  Who hath relieved you?
+
+FRANCISCO:
+  Bernardo has my place.
+  Give you good night.
+
+Exit FRANCISCO
+
+MARCELLUS:
+  Holla! Bernardo!
+
+BERNARDO:
+  Say, what, is Horatio there?
+
+HORATIO:
+  A piece of him.
+
+BERNARDO:
+  Welcome, Horatio: welcome, good Marcellus.
+
+MARCELLUS:
+  What, has this thing appear'd again to-night?
+
+BERNARDO:
+  I have seen nothing.
+
+MARCELLUS:
+  Horatio says 'tis but our fantasy,
+  And will not let belief take hold of him
+  Touching this dreaded sight, twice seen of us:
+  Therefore I have entreated him along
+  With us to watch the minutes of this night;
+  That if again this apparition come,
+  He may approve our eyes and speak to it.
+
+HORATIO:
+  Tush, tush, 'twill not appear.
+
+---
+
+[Document continues in LIBRARY archives]

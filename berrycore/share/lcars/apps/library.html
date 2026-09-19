@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LIBRARY</title>
+<style>
+/* LCARS Library — ES5/BB10 safe */
+@font-face {
+  font-family: "LCARS";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/font/lcars.ttf") format("truetype");
+}
+* { -webkit-box-sizing: border-box; box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background: #000; color: #ffcc99;
+  font-family: "LCARS", "Slate Pro Bold Condensed", "Arial Narrow", Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: none;
+  overflow: hidden;
+}
+.shell {
+  display: flex; flex-direction: column;
+  width: 100%; height: 100%;
+}
+.header {
+  flex: 0 0 auto;
+  display: flex; align-items: center;
+  background: #000; padding: 6px 8px;
+  border-bottom: 3px solid #cc6699;
+}
+.header-label {
+  font-size: 18px; letter-spacing: 3px; color: #cc6699;
+  text-transform: uppercase; flex: 1;
+}
+.header-code {
+  font-size: 13px; letter-spacing: 2px; color: #9999ff;
+}
+.cats {
+  flex: 0 0 auto;
+  padding: 6px 8px 2px 8px;
+  white-space: nowrap; overflow-x: auto;
+}
+.cat {
+  display: inline-block;
+  height: 32px; line-height: 32px;
+  padding: 0 14px; margin: 0 4px 4px 0;
+  border-radius: 16px;
+  font-size: 14px; letter-spacing: 1px;
+  color: #000; cursor: pointer;
+  text-transform: uppercase;
+}
+.cat.on { outline: 2px solid #fff; outline-offset: -2px; }
+.c-orange { background: #ff9900; }
+.c-peach { background: #ffaa66; }
+.c-lilac { background: #cc99cc; }
+.c-peri { background: #9999ff; }
+.c-apricot { background: #ff9966; }
+.c-dust { background: #cc9966; }
+.c-rose { background: #cc6699; }
+.c-sky { background: #99ccff; }
+.content {
+  flex: 1 1 auto;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 4px 8px;
+}
+.item {
+  display: flex; align-items: center;
+  background: #1a1a1a;
+  margin: 0 0 4px 0; padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.item:active { background: #333; }
+.item-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  margin-right: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #000;
+}
+.item-info { flex: 1; overflow: hidden; }
+.item-title {
+  font-size: 16px; letter-spacing: 1px; color: #ffcc99;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.item-sub {
+  font-size: 12px; letter-spacing: 1px; color: #996633;
+  margin-top: 2px;
+}
+.reader {
+  display: none;
+  flex-direction: column;
+  width: 100%; height: 100%;
+}
+.reader.on { display: flex; }
+.reader-head {
+  flex: 0 0 auto;
+  display: flex; align-items: center;
+  padding: 6px 8px;
+  border-bottom: 3px solid #ff9900;
+}
+.reader-title {
+  flex: 1;
+  font-size: 16px; letter-spacing: 2px; color: #ff9900;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.btn {
+  display: inline-block;
+  height: 32px; line-height: 32px;
+  padding: 0 16px; margin-left: 6px;
+  border-radius: 16px;
+  font-size: 14px; letter-spacing: 1px;
+  color: #000; cursor: pointer;
+  border: none; outline: none;
+  font-family: inherit;
+}
+.reader-body {
+  flex: 1 1 auto;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 10px 12px;
+  font-size: 15px; line-height: 1.5;
+  color: #ffddaa;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.browse.off, .reader.off { display: none; }
+.browse.on { display: flex; flex-direction: column; height: 100%; }
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #996633;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- Browse view -->
+  <div class="browse on" id="browse">
+    <div class="header">
+      <span class="header-label">SHIP'S LIBRARY</span>
+      <span class="header-code">47-1701</span>
+    </div>
+    <div class="cats" id="cats"></div>
+    <div class="content" id="list"></div>
+  </div>
+  <!-- Reader view -->
+  <div class="reader off" id="reader">
+    <div class="reader-head">
+      <span class="reader-title" id="reader-title">DOCUMENT</span>
+      <button class="btn c-peach" id="btn-back">BACK</button>
+    </div>
+    <div class="reader-body" id="reader-body"></div>
+  </div>
+</div>
+<script>
+(function () {
+  "use strict";
+  var CATS = [
+    { id: "all", name: "ALL", color: "c-orange" },
+    { id: "technical", name: "TECHNICAL", color: "c-peach" },
+    { id: "reference", name: "REFERENCE", color: "c-lilac" },
+    { id: "logs", name: "LOGS", color: "c-peri" },
+    { id: "fiction", name: "FICTION", color: "c-apricot" }
+  ];
+  var ITEMS = [];
+  var CAT = "all";
+
+  function $(id) { return document.getElementById(id); }
+
+  function sfx(name) {
+    if (window.parent && window.parent.LCARSAudio) {
+      window.parent.LCARSAudio.play(name);
+    }
+  }
+
+  function paintCats() {
+    var el = $("cats"), html = "", i, c;
+    for (i = 0; i < CATS.length; i++) {
+      c = CATS[i];
+      html += '<span class="cat ' + c.color + (c.id === CAT ? ' on' : '') +
+              '" data-cat="' + c.id + '">' + c.name + '</span>';
+    }
+    el.innerHTML = html;
+    var cats = el.getElementsByClassName("cat");
+    for (i = 0; i < cats.length; i++) {
+      cats[i].onclick = function () {
+        CAT = this.getAttribute("data-cat");
+        sfx("tap");
+        paintCats();
+        paintList();
+      };
+    }
+  }
+
+  function paintList() {
+    var el = $("list"), html = "", i, it, show;
+    for (i = 0; i < ITEMS.length; i++) {
+      it = ITEMS[i];
+      show = (CAT === "all" || it.cat === CAT);
+      if (!show) continue;
+      html += '<div class="item" data-idx="' + i + '">' +
+              '<div class="item-icon ' + (it.color || 'c-peach') + '">' + (it.icon || 'DOC') + '</div>' +
+              '<div class="item-info"><div class="item-title">' + it.title + '</div>' +
+              '<div class="item-sub">' + (it.sub || it.cat.toUpperCase()) + '</div></div></div>';
+    }
+    if (!html) html = '<div class="empty">NO ENTRIES IN THIS CATEGORY</div>';
+    el.innerHTML = html;
+    var items = el.getElementsByClassName("item");
+    for (i = 0; i < items.length; i++) {
+      items[i].onclick = function () {
+        var idx = parseInt(this.getAttribute("data-idx"), 10);
+        openItem(ITEMS[idx]);
+      };
+    }
+  }
+
+  /* ES5/BB10-compatible XHR helper */
+  function xhr(method, url, cb) {
+    var req = new XMLHttpRequest();
+    req.open(method, url, true);
+    req.onreadystatechange = function () {
+      if (req.readyState !== 4) return;
+      cb(req.status === 200 ? req.responseText : null);
+    };
+    req.send(null);
+  }
+
+  function openItem(it) {
+    sfx("open");
+    $("browse").className = "browse off";
+    $("reader").className = "reader on";
+    $("reader-title").textContent = it.title;
+    if (it.file) {
+      xhr("GET", "/library/" + it.file, function (txt) {
+        $("reader-body").textContent = txt || "UNABLE TO RETRIEVE DOCUMENT";
+      });
+    } else if (it.text) {
+      $("reader-body").textContent = it.text;
+    } else {
+      $("reader-body").textContent = "NO CONTENT AVAILABLE";
+    }
+  }
+
+  function closeReader() {
+    sfx("close");
+    $("reader").className = "reader off";
+    $("browse").className = "browse on";
+  }
+
+  function loadLibrary() {
+    xhr("GET", "/api/library", function (txt) {
+      var data;
+      if (txt) {
+        try { data = JSON.parse(txt); } catch (e) { data = null; }
+      }
+      if (data && data.items) {
+        ITEMS = data.items;
+        paintList();
+      } else {
+        /* Fallback data if API fails */
+        ITEMS = [
+          { title: "FEDERATION CHARTER", cat: "reference", icon: "FC", color: "c-lilac",
+            text: "We the lifeforms of the United Federation of Planets..." },
+          { title: "STARFLEET REGULATIONS", cat: "technical", icon: "SR", color: "c-peach",
+            text: "GENERAL ORDER 1 (PRIME DIRECTIVE)..." }
+        ];
+        paintList();
+      }
+    });
+  }
+
+  $("btn-back").onclick = closeReader;
+  paintCats();
+  loadLibrary();
+})();
+</script>
+</body>
+</html>
