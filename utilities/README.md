@@ -96,3 +96,7 @@ rm berrycore/packages/*.zip.bak
 - Safe to run multiple times
 - POSIX-compliant bash scripts
 
+
+## Passport Wi-Fi scan workaround
+
+[passport-wifi-fix](passport-wifi-fix/README.md) contains an opt-in, exact-build RAM patch for the oversized-IE scan rejection in issue #8, with getroot v4 startup support and rollback instructions. It was tested on a Passport running BB10 10.3.3.3216; it is not part of the default install.
